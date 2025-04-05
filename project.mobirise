@@ -22,7 +22,7 @@
         "display7Font": "Inter Tight",
         "display7Size": 1.4,
         "display4Font": "Montserrat Alternates",
-        "display4Size": "1.6",
+        "display4Size": "1",
         "isRoundedImages": true,
         "isRoundedButtons": false,
         "isLargeButtons": false,
@@ -82,7 +82,7 @@
     "gdpr": false,
     "pwa-switcher": false,
     "screenshot": "screenshot.png",
-    "publishChangesOnly": true
+    "publishChangesOnly": false
   },
   "pages": {
     "index.html": {
