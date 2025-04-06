@@ -1316,10 +1316,10 @@ a {
 }
 @media (min-width: 768px) {
   .cid-uHqn0ILOSA {
-    align-items: flex-end;
+    align-items: center;
   }
   .cid-uHqn0ILOSA .row {
-    justify-content: flex-start;
+    justify-content: flex-end;
   }
   .cid-uHqn0ILOSA .content-wrap {
     padding: 1rem 3rem;
@@ -1333,7 +1333,7 @@ a {
 @media (max-width: 767px) {
   .cid-uHqn0ILOSA {
     -webkit-align-items: center;
-    align-items: flex-end;
+    align-items: center;
   }
   .cid-uHqn0ILOSA .mbr-row {
     -webkit-justify-content: center;
