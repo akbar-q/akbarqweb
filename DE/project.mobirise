@@ -1,6 +1,6 @@
 {
   "settings": {
-    "name": "English Site-clone",
+    "name": "DE Site",
     "currentPage": "home.html",
     "theme": {
       "name": "startm5",
@@ -85,7 +85,7 @@
     "imageResize": true,
     "chatbutton": {},
     "favicon": false,
-    "mbrsiteDomain": "084xrdpwko",
+    "mbrsiteDomain": "ixhf4hnkte",
     "usedWebp": false,
     "cssOptimize": false,
     "lazyLoad": false,
