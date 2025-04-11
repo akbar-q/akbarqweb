@@ -1313,6 +1313,8 @@ a {
 }
 .cid-uHqn0ILOSA {
   display: flex;
+  padding-top: 16rem;
+  padding-bottom: 12rem;
 }
 @media (min-width: 768px) {
   .cid-uHqn0ILOSA {
@@ -1370,7 +1372,7 @@ a {
   text-align: left;
 }
 .cid-tJS6uM4N87 {
-  padding-top: 11rem;
+  padding-top: 5rem;
   padding-bottom: 6rem;
   background-color: #ffb800;
 }
