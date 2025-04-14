@@ -1,65 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Memeify - Meme Generator</title>
-    <!--CSS-->
-    <link rel="stylesheet" href="assets/css/style.css" />
-    <!--boxicons link-->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"
-    />
-    <!--remixicons-->
-    <link
-      href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css"
-      rel="stylesheet"
-    />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <header>
-      <a href="#" class="logo"
-        ><img src="./assets/images/logo.png" id="logo-img"
-      /></a>
-      <ul class="navlist" id="navlist">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="pages/chooseMeme.html">Generate</a></li>
-        <li><a href="pages/viewmemes.html">View Your Work</a></li>
-      </ul>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson 7 Challenge Starter</title>
+  <link rel="stylesheet" href="./style.css" />
+  <script src="script.js"></script>
+  <style>
+    /* Inline styles for the requested color changes and scaling */
+    body {
+      background-color: #002724; /* Dark teal background */
+      color: #ffb800; /* Warm yellow foreground */
+      font-size: 1.5rem; /* Increase base font size by 50% */
+    }
 
-      <div class="bx bx-menu" id="menu-icon"></div>
-    </header>
+    a {
+      color: #ffb800; /* Ensure links match the foreground color */
+      text-decoration: none;
+      font-size: 1.5rem; /* Scale up link font size */
+    }
 
-    <section class="hero">
-      <div class="hero-text">
-        <h1>Meme Magic Unleashed!</h1>
-        <p>
-          Create, Share, Laugh. Endless Fun, One Click Away!
-          <br />
-          Turn Your Ideas into Memes with over 100 meme templates! No sign-up
-          required.
-        </p>
+    a:hover {
+      text-decoration: underline;
+    }
 
-        <a href="pages/chooseMeme.html">Generate New</a>
-        <a href="pages/viewmemes.html" class="ctaa"
-          ><i class="ri-play-fill"></i>View Your Memes</a
-        >
+    button {
+      background-color: #ffb800; /* Button background matches foreground */
+      color: #002724; /* Button text matches background */
+      border: none;
+      padding: 20px 30px; /* Increased padding for better fit */
+      font-size: 1.5rem; /* Scale up button text size */
+      cursor: pointer;
+      display: flex; /* Use flexbox for centering */
+      align-items: center; /* Center text vertically */
+      justify-content: center; /* Center text horizontally */
+      width: 100%; /* Make buttons take full width of the container */
+      box-sizing: border-box; /* Include padding in width calculation */
+    }
+
+    button:hover {
+      background-color: #ffd966; /* Slightly lighter yellow for hover effect */
+    }
+
+    h1, h3 {
+      font-size: 1.5em; /* Scale up headings */
+    }
+
+    .sidebar h1 {
+      text-align: center; /* Center the "Actions" heading */
+    }
+
+    .attribution {
+      font-size: 1.5rem; /* Scale up attribution text */
+    }
+
+    .meme-content img {
+      width: 200%; /* Scale the image width by 200% */
+      height: auto; /* Maintain aspect ratio */
+      display: block; /* Ensure proper alignment */
+      margin: 0; /* Remove centering and align to the left */
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <section class="content">
+      <h1>Output</h1>
+      <h3>Hand Picked Memes</h3>
+      <div class="meme-content">
+        <img src="path-to-your-meme.jpg" alt="Meme Image" />
       </div>
-      <div class="hero-img">
-        <img
-          src="./assets/images/476ed502196619e6b8e9ebbc10349cf1-removebg-preview.png"
-          alt="landing-page image"
-        />
+      <h3>Tell me something funny!</h3>
+      <div class="joke-content"></div>
+      <h3>Give me some wisdom..</h3>
+      <div class="qoute-content"></div>
+      <h3>I want a riddle!</h3>
+      <div class="riddle-content">
+        <p id="riddle-answer"></p>
       </div>
     </section>
-    <script src="assets/js/scripts.js"></script>
-  </body>
+
+    <section class="sidebar">
+      <h1>Actions</h1>
+      <button onclick="showMeme()">Show a Meme</button>
+      <button onclick="showJoke()">Tell Me a Joke</button>
+      <button onclick="showQuote()">Random Quote</button>
+      <button onclick="showRiddle()">Riddle me</button>
+      <button class="reveal-btn" onclick="revealAnswers()">Reveal Riddle Answer</button>
+      <p class="attribution">
+        Memes are at the heart of 
+        <a href="https://akbarq.com" target="_top">akbarq.com</a>
+      </p>
+    </section>
+  </main>
+  <script src="./script.js"></script>
+</body>
+
 </html>
