@@ -21,18 +21,17 @@
   <link rel="preload" href="https://fonts.googleapis.com/css?family=Oxanium:200,300,400,500,600,700,800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oxanium:200,300,400,500,600,700,800&display=swap"></noscript>
   <style>
-    /* Inline styles for the requested color changes and scaling */
     body {
-      background-color: #002724; /* Dark teal background */
-      color: #ffb800; /* Warm yellow foreground */
-      font-family: 'Oxanium', sans-serif; /* Apply Oxanium font */
-      font-size: 1.5rem; /* Increase base font size by 50% */
+      background-color: #002724;
+      color: #ffb800;
+      font-family: 'Oxanium', sans-serif;
+      font-size: 1.5rem;
     }
 
     a {
-      color: #ffb800; /* Ensure links match the foreground color */
+      color: #ffb800;
       text-decoration: none;
-      font-size: 1.5rem; /* Scale up link font size */
+      font-size: 1.5rem;
     }
 
     a:hover {
@@ -40,20 +39,20 @@
     }
 
     button {
-      background-color: #ffb800; /* Button background matches foreground */
-      color: #002724; /* Button text matches background */
+      background-color: #ffb800;
+      color: #002724;
       border: none;
-      padding: 10px 20px; /* Adjusted padding for better fit */
-      font-size: 1.2rem; /* Adjusted button text size */
+      padding: 10px 20px;
+      font-size: 1.2rem;
       cursor: pointer;
-      display: block; /* Ensure buttons stack vertically */
-      width: 100%; /* Make buttons take full width of the container */
-      box-sizing: border-box; /* Include padding in width calculation */
-      margin-bottom: 10px; /* Add spacing between buttons */
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 10px;
     }
 
     button:hover {
-      background-color: #ffd966; /* Slightly lighter yellow for hover effect */
+      background-color: #ffd966;
     }
 
     .container-flex {
@@ -61,39 +60,53 @@
       flex-wrap: wrap;
       gap: 20px;
       padding: 20px;
-      margin-top: 80px; /* Push content downward to avoid navbar overlap */
+      margin-top: 80px;
     }
 
     .content {
       flex: 1;
       padding: 20px;
-      background-color: transparent; /* Remove white box background */
+      background-color: transparent;
     }
 
     .sidebar {
       flex: 1;
       padding: 20px;
-      background-color: #003b3b; /* Slightly darker background for sidebar */
-      border-radius: 10px; /* Add rounded corners */
-      margin-top: 20px; /* Push the sidebar further down */
+      background-color: #003b3b;
+      border-radius: 10px;
+      margin-top: 20px;
     }
 
     .meme-content img {
-      max-width: 300px; /* Limit the image width */
-      height: auto; /* Maintain aspect ratio */
-      display: block; /* Ensure proper alignment */
-      margin: 0 auto; /* Center the image */
+      max-width: 300px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
     }
 
     .attribution {
-      font-size: 1.2rem; /* Adjust attribution text size */
+      font-size: 1.2rem;
       text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .container-flex {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        order: 1;
+      }
+
+      .content {
+        order: 2;
+      }
     }
   </style>
 </head>
 
 <body>
-  <!-- Navbar copied from index.html -->
+  <!-- Navbar -->
   <section data-bs-version="5.1" class="menu menu2 cid-uHBINRz9j8" once="menu" id="menu02-2n">
     <nav class="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg">
       <div class="container">
@@ -144,14 +157,7 @@
   <!-- Main content -->
   <main>
     <div class="container-flex">
-      <!-- Left Content -->
-      <section class="content">
-        <div class="meme-content">
-          <img src="assets/images/meme.jpg" alt="Meme Image" />
-        </div>
-      </section>
-
-      <!-- Right Sidebar -->
+      <!-- Sidebar -->
       <section class="sidebar">
         <h1>Actions</h1>
         <button onclick="showMeme()">Show a Meme</button>
@@ -164,17 +170,53 @@
           <a href="https://akbarq.com" target="_top">akbarq.com</a>
         </p>
       </section>
+
+      <!-- Content -->
+      <section class="content">
+        <div class="meme-content">
+          <img id="meme-image" src="" alt="Meme Image" style="display: none;" />
+        </div>
+        <div class="joke-content"></div>
+        <div class="qoute-content"></div>
+        <div class="riddle-content">
+          <p id="riddle-text"></p>
+          <p id="riddle-answer" style="display: none;"></p>
+        </div>
+      </section>
     </div>
   </main>
 
-  <!-- Updated paths for scripts -->
-  <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/smoothscroll/smooth-scroll.js"></script>
-  <script src="assets/ytplayer/index.js"></script>
-  <script src="assets/dropdown/js/navbar-dropdown.js"></script>
-  <script src="assets/vimeoplayer/player.js"></script>
-  <script src="assets/theme/js/script.js"></script>
-  <script src="./script.js"></script>
+  <!-- Scripts -->
+  <script>
+    function showMeme() {
+      const memeImage = document.getElementById("meme-image");
+      memeImage.src = "assets/images/meme.jpg"; // Replace with dynamic meme source
+      memeImage.style.display = "block";
+    }
+
+    function showJoke() {
+      const jokeContent = document.querySelector(".joke-content");
+      jokeContent.textContent = "Why don't skeletons fight each other? They don't have the guts!";
+    }
+
+    function showQuote() {
+      const quoteContent = document.querySelector(".qoute-content");
+      quoteContent.textContent = "The best way to predict the future is to invent it.";
+    }
+
+    function showRiddle() {
+      const riddleText = document.getElementById("riddle-text");
+      const riddleAnswer = document.getElementById("riddle-answer");
+      riddleText.textContent = "What has keys but can't open locks?";
+      riddleAnswer.textContent = "A piano.";
+      riddleAnswer.style.display = "none";
+    }
+
+    function revealAnswers() {
+      const riddleAnswer = document.getElementById("riddle-answer");
+      riddleAnswer.style.display = "block";
+    }
+  </script>
 </body>
 
 </html>
