@@ -173,9 +173,7 @@
 
       <!-- Content -->
       <section class="content">
-        <div class="meme-content">
-          <img id="meme-image" src="" alt="Meme Image" />
-        </div>
+        <div class="meme-content"></div>
         <div class="joke-content"></div>
         <div class="qoute-content"></div>
         <div class="riddle-content">
@@ -188,13 +186,39 @@
 
   <!-- Scripts -->
   <script>
-    const memes = Array.from({ length: 20 }, (_, i) => `/memes/meme (${i + 1}).png`);
+    // Dynamically generate the list of meme file paths
+    const memes = Array.from({ length: 20 }, (_, i) => `./memes/meme (${i + 1}).jpg`);
 
+    // Function to clear all content
+    function clearAll() {
+      const memeContainer = document.querySelector('.meme-content');
+      const jokeContainer = document.querySelector('.joke-content');
+      const quoteContainer = document.querySelector('.qoute-content');
+      const riddleText = document.getElementById('riddle-text');
+      const riddleAnswer = document.getElementById('riddle-answer');
+
+      memeContainer.innerHTML = ''; // Clear meme content
+      jokeContainer.innerHTML = ''; // Clear joke content
+      quoteContainer.innerHTML = ''; // Clear quote content
+      riddleText.textContent = ''; // Clear riddle question
+      riddleAnswer.textContent = ''; // Clear riddle answer
+      riddleAnswer.style.display = 'none'; // Hide riddle answer
+    }
+
+    // Function to show a random meme
     function showMeme() {
-      const memeImage = document.getElementById("meme-image");
-      const randomMeme = memes[Math.floor(Math.random() * memes.length)];
-      memeImage.src = randomMeme;
-      memeImage.style.display = "block";
+      const randomMemeUrl = memes[Math.floor(Math.random() * memes.length)];
+      const memeContainer = document.querySelector('.meme-content');
+      clearAll(); // Clear previous content
+
+      // Create a new <img> element for the meme
+      const newImg = document.createElement('img');
+      newImg.setAttribute('src', randomMemeUrl);
+      newImg.setAttribute('alt', 'Meme Image');
+      newImg.style.maxWidth = '100%';
+      newImg.style.height = 'auto';
+
+      memeContainer.appendChild(newImg); // Append the new image to the container
     }
 
     const jokes = [
@@ -224,30 +248,37 @@
       }
     ];
 
+    // Function to show a random joke
     function showJoke() {
-      const jokeContent = document.querySelector(".joke-content");
+      const jokeContent = document.querySelector('.joke-content');
       const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+      clearAll();
       jokeContent.textContent = randomJoke;
     }
 
+    // Function to show a random quote
     function showQuote() {
-      const quoteContent = document.querySelector(".qoute-content");
+      const quoteContent = document.querySelector('.qoute-content');
       const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      clearAll();
       quoteContent.textContent = randomQuote;
     }
 
+    // Function to show a random riddle
     function showRiddle() {
-      const riddleText = document.getElementById("riddle-text");
-      const riddleAnswer = document.getElementById("riddle-answer");
+      const riddleText = document.getElementById('riddle-text');
+      const riddleAnswer = document.getElementById('riddle-answer');
       const randomRiddle = riddles[Math.floor(Math.random() * riddles.length)];
-      riddleText.textContent = randomRiddle.question;
-      riddleAnswer.textContent = randomRiddle.answer;
-      riddleAnswer.style.display = "none";
+      clearAll();
+      riddleText.textContent = randomRiddle.question; // Display riddle question
+      riddleAnswer.textContent = randomRiddle.answer; // Set riddle answer
+      riddleAnswer.style.display = 'none'; // Hide the answer initially
     }
 
+    // Function to reveal the riddle answer
     function revealAnswers() {
-      const riddleAnswer = document.getElementById("riddle-answer");
-      riddleAnswer.style.display = "block";
+      const riddleAnswer = document.getElementById('riddle-answer');
+      riddleAnswer.style.display = 'block'; // Show the riddle answer
     }
   </script>
 </body>
