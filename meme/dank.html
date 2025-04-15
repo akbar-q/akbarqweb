@@ -188,11 +188,7 @@
 
   <!-- Scripts -->
   <script>
-    const memes = [
-      "assets/images/meme1.jpg",
-      "assets/images/meme2.jpg",
-      "assets/images/meme3.jpg"
-    ];
+    const memes = Array.from({ length: 20 }, (_, i) => `assets/images/meme (${i + 1}).png`);
 
     const jokes = [
       "Why don't skeletons fight each other? They don't have the guts!",
