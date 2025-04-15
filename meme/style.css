@@ -22,15 +22,14 @@ p {
 }
 
 .attribution {
-  position: absolute;
-  right: 20px;
-  bottom: 20px;
+  margin-top: auto; /* Push the attribution to the bottom */
   font-size: 0.8rem;
   background-color: #8097a6;
   padding: 10px;
   border-radius: 5px;
   color: #1d2326;
   box-shadow: 1px 2px 5px 1px rgba(255, 255, 255, 0.2);
+  text-align: center; /* Center the text */
 }
 
 a {
@@ -67,6 +66,7 @@ a:hover {
   padding-right: 30px;
   border-left: 1px dotted #bfa38a;
   height: 85vh;
+  position: relative; /* Ensure proper positioning */
 }
 
 .sidebar h1 {
@@ -101,7 +101,7 @@ button:hover {
   color: white;
   background-color: transparent;
 }
-
+  
 /* Add responsive styles for mobile devices */
 @media (max-width: 768px) {
   /* Adjust the layout for smaller screens */
