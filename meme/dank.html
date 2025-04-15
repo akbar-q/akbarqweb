@@ -459,6 +459,47 @@
         answer: "A surge protector."
       }
     ];
+
+    // Function to show a random joke
+    function showJoke() {
+      const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+      const jokeContainer = document.querySelector('.joke-content');
+      clearAll(); // Clear previous content
+
+      // Add the joke to the container
+      jokeContainer.textContent = randomJoke;
+    }
+
+    // Function to show a random quote
+    function showQuote() {
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      const quoteContainer = document.querySelector('.qoute-content');
+      clearAll(); // Clear previous content
+
+      // Add the quote to the container
+      quoteContainer.textContent = randomQuote;
+    }
+
+    // Function to show a random riddle
+    function showRiddle() {
+      const randomRiddle = riddles[Math.floor(Math.random() * riddles.length)];
+      const riddleText = document.getElementById('riddle-text');
+      const riddleAnswer = document.getElementById('riddle-answer');
+      clearAll(); // Clear previous content
+
+      // Add the riddle question and hide the answer
+      riddleText.textContent = randomRiddle.question;
+      riddleAnswer.textContent = randomRiddle.answer;
+      riddleAnswer.style.display = 'none';
+    }
+
+    // Function to reveal the riddle answer
+    function revealAnswers() {
+      const riddleAnswer = document.getElementById('riddle-answer');
+      if (riddleAnswer.textContent) {
+        riddleAnswer.style.display = 'block'; // Show the riddle answer
+      }
+    }
   </script>
 </body>
 
