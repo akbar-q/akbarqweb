@@ -1915,6 +1915,101 @@ a {
 .cid-uIfLzQ6ZNI .copyright {
   color: #000000;
 }
+.cid-uIsbOfX4lM {
+  padding-top: 10rem;
+  padding-bottom: 8rem;
+  background-color: #ffffff;
+}
+.cid-uIsbOfX4lM .item:focus,
+.cid-uIsbOfX4lM span:focus {
+  outline: none;
+}
+.cid-uIsbOfX4lM .item {
+  cursor: pointer;
+}
+.cid-uIsbOfX4lM .container-fluid {
+  padding-left: 0;
+  padding-right: 0;
+  overflow: hidden;
+}
+.cid-uIsbOfX4lM .content-head {
+  max-width: 800px;
+}
+@keyframes ticker {
+  0% {
+    transform: translate3d(0, 0, 0);
+    visibility: visible;
+  }
+  100% {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+.cid-uIsbOfX4lM .ticker-wrap {
+  width: 100%;
+  overflow: hidden;
+  padding-left: 100%;
+  box-sizing: content-box;
+}
+.cid-uIsbOfX4lM .ticker-wrap .ticker {
+  display: inline-block;
+  line-height: 4rem;
+  white-space: nowrap;
+  padding-right: 100%;
+  box-sizing: content-box;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-name: ticker;
+  animation-duration: 30s;
+}
+.cid-uIsbOfX4lM .ticker-wrap .ticker__item {
+  display: inline-block;
+  padding: 0 2rem;
+  color: #232323;
+}
+@keyframes ticker__center {
+  0% {
+    transform: translate3d(0, 0, 0);
+    visibility: visible;
+  }
+  100% {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+.cid-uIsbOfX4lM .ticker-wrap .ticker__center {
+  display: inline-block;
+  line-height: 4rem;
+  white-space: nowrap;
+  padding-right: 100%;
+  box-sizing: content-box;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-name: ticker__center;
+  animation-duration: 30s;
+}
+@keyframes ticker__end {
+  0% {
+    transform: translate3d(0, 0, 0);
+    visibility: visible;
+  }
+  100% {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+.cid-uIsbOfX4lM .ticker-wrap .ticker__end {
+  display: inline-block;
+  line-height: 4rem;
+  white-space: nowrap;
+  padding-right: 100%;
+  box-sizing: content-box;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-name: ticker__end;
+  animation-duration: 30s;
+}
+.cid-uIsbOfX4lM .mbr-section-title,
+.cid-uIsbOfX4lM .mbr-section-subtitle {
+  color: #000000;
+}
 .cid-uHBINRz9j8 {
   z-index: 1000;
   width: 100%;
