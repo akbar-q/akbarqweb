@@ -7,55 +7,65 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dank Memes</title>
   <link rel="stylesheet" href="./style.css" />
-  <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="../assets/theme/css/style.css" />
   <script src="script.js"></script>
+  <style>
+    /* Inline styles for the requested color changes and scaling */
+    body {
+      background-color: #002724; /* Dark teal background */
+      color: #ffb800; /* Warm yellow foreground */
+      font-size: 1.5rem; /* Increase base font size by 50% */
+    }
+
+    a {
+      color: #ffb800; /* Ensure links match the foreground color */
+      text-decoration: none;
+      font-size: 1.5rem; /* Scale up link font size */
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    button {
+      background-color: #ffb800; /* Button background matches foreground */
+      color: #002724; /* Button text matches background */
+      border: none;
+      padding: 20px 30px; /* Increased padding for better fit */
+      font-size: 1.5rem; /* Scale up button text size */
+      cursor: pointer;
+      display: flex; /* Use flexbox for centering */
+      align-items: center; /* Center text vertically */
+      justify-content: center; /* Center text horizontally */
+      width: 100%; /* Make buttons take full width of the container */
+      box-sizing: border-box; /* Include padding in width calculation */
+    }
+
+    button:hover {
+      background-color: #ffd966; /* Slightly lighter yellow for hover effect */
+    }
+
+    h1, h3 {
+      font-size: 1.5em; /* Scale up headings */
+    }
+
+    .sidebar h1 {
+      text-align: center; /* Center the "Actions" heading */
+    }
+
+    .attribution {
+      font-size: 1.5rem; /* Scale up attribution text */
+    }
+
+    .meme-content img {
+      width: 200%; /* Scale the image width by 200% */
+      height: auto; /* Maintain aspect ratio */
+      display: block; /* Ensure proper alignment */
+      margin: 0; /* Remove centering and align to the left */
+    }
+  </style>
 </head>
 
 <body>
-  <!-- Navigation Bar -->
-  <section data-bs-version="5.1" class="menu menu2 cid-uHBINRz9j8" once="menu" id="menu02-2n">
-    <nav class="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg">
-      <div class="container">
-        <div class="navbar-brand">
-          <span class="navbar-logo">
-            <a href="https://akbarq.com/errorhidden">
-              <img src="../assets/images/logospin.gif" alt="Click for an Easter Egg" style="height: 3rem;">
-            </a>
-          </span>
-          <span class="navbar-caption-wrap">
-            <a class="navbar-caption text-white display-4" href="../index.html#header05-1">Akbar Q Hardware Design</a>
-          </span>
-        </div>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbarSupportedContent" data-bs-target="#navbarSupportedContent" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-          <div class="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav nav-dropdown" data-app-modern-menu="true">
-            <li class="nav-item">
-              <a class="nav-link link text-white display-4" href="../index.html#features04-w">Services</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link link text-white text-primary display-4" href="../index.html#header01-7">About</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link link text-white text-primary display-4" href="../index.html#form02-6">Contact</a>
-            </li>
-          </ul>
-          <div class="navbar-buttons mbr-section-btn">
-            <a class="btn btn-success display-4" href="https://www.fiverr.com/s/BRl5PWz/" target="_blank">Purchase Services</a>
-          </div>
-        </div>
-      </div>
-    </nav>
-  </section>
-
-  <!-- Main Content -->
   <main>
     <section class="content">
       <h1>Output</h1>
@@ -86,8 +96,7 @@
       </p>
     </section>
   </main>
-
-  <script src="../assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="./script.js"></script>
 </body>
 
 </html>
