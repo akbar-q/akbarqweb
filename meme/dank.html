@@ -190,6 +190,13 @@
   <script>
     const memes = Array.from({ length: 20 }, (_, i) => `assets/images/meme (${i + 1}).png`);
 
+    function showMeme() {
+      const memeImage = document.getElementById("meme-image");
+      const randomMeme = memes[Math.floor(Math.random() * memes.length)];
+      memeImage.src = randomMeme;
+      memeImage.style.display = "block";
+    }
+
     const jokes = [
       "Why don't skeletons fight each other? They don't have the guts!",
       "Why did the scarecrow win an award? Because he was outstanding in his field!",
@@ -216,13 +223,6 @@
         answer: "A candle."
       }
     ];
-
-    function showMeme() {
-      const memeImage = document.getElementById("meme-image");
-      const randomMeme = memes[Math.floor(Math.random() * memes.length)];
-      memeImage.src = randomMeme;
-      memeImage.style.display = "block";
-    }
 
     function showJoke() {
       const jokeContent = document.querySelector(".joke-content");
