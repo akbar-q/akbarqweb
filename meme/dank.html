@@ -222,64 +222,129 @@
     }
 
     const jokes = [
-      "Why don't skeletons fight each other? They don't have the guts!",
-      "Why did the scarecrow win an award? Because he was outstanding in his field!",
-      "What do you call fake spaghetti? An impasta!"
+      "Why did the capacitor break up with the resistor? It couldn't handle the resistance!",
+      "Why do engineers always carry a pencil? To draw current!",
+      "Why was the PCB so calm? It had great grounding!",
+      "Why did the diode go to school? To learn how to conduct!",
+      "Why did the circuit break up? It had too much resistance in the relationship!",
+      "Why do electrons never get into arguments? They always have a negative charge!",
+      "Why did the LED apply for a job? It wanted to lighten up the workplace!",
+      "Why did the engineer bring a ladder to the lab? To reach new heights in voltage!",
+      "Why was the oscilloscope so happy? It was on the same wavelength as its friends!",
+      "Why did the PCB designer go broke? Too many short circuits!",
+      "Why did the capacitor blush? It saw a shocking voltage!",
+      "Why did the resistor refuse to play cards? It didn’t want to deal with current issues!",
+      "Why did the inductor get promoted? It had great potential!",
+      "Why did the circuit board go to therapy? It had too many connections!",
+      "Why did the engineer love Ohm's Law? It was a real turn-on!",
+      "Why did the multimeter start a band? It wanted to measure up to the competition!",
+      "Why did the transistor start a blog? It wanted to amplify its voice!",
+      "Why did the PCB go to the party? To make some solid connections!",
+      "Why did the diode fail the test? It couldn’t handle the reverse bias!",
+      "Why did the engineer bring a magnet to the meeting? To attract some positive energy!"
     ];
 
     const quotes = [
-      "The best way to predict the future is to invent it.",
-      "Life is 10% what happens to us and 90% how we react to it.",
-      "Success is not the key to happiness. Happiness is the key to success."
+      "Good design is as little design as possible. – Dieter Rams",
+      "An engineer is someone who can do for a dollar what any fool can do for two. – Arthur Mellen Wellington",
+      "The best way to predict the future is to invent it. – Alan Kay",
+      "Innovation distinguishes between a leader and a follower. – Steve Jobs",
+      "The PCB is the canvas of the electronics artist.",
+      "A good PCB design is like a good story: it flows naturally.",
+      "Simplicity is the ultimate sophistication – even in circuit design.",
+      "Every great design begins with an even better idea.",
+      "The best designs are the ones you don’t notice.",
+      "Electronics is the poetry of the modern world.",
+      "A well-grounded PCB is a well-grounded engineer.",
+      "Design is not just what it looks like and feels like. Design is how it works. – Steve Jobs",
+      "The future of electronics lies in the hands of those who dare to innovate.",
+      "A PCB is not just a board; it’s the heart of every device.",
+      "The beauty of engineering lies in its precision.",
+      "A great engineer sees the invisible and does the impossible.",
+      "The best circuits are the ones that solve real problems.",
+      "Engineering is the art of directing the great sources of power in nature for the use and convenience of man. – Thomas Tredgold",
+      "A good engineer is a person who makes a design that works with as few original ideas as possible. – Freeman Dyson",
+      "The best designs are the ones that make you say, 'Why didn’t I think of that?'"
     ];
 
     const riddles = [
       {
-        question: "What has keys but can't open locks?",
-        answer: "A piano."
+        question: "I have a positive side and a negative side, and I store energy. What am I?",
+        answer: "A capacitor."
       },
       {
-        question: "What has to be broken before you can use it?",
-        answer: "An egg."
+        question: "I control the flow of current in one direction. What am I?",
+        answer: "A diode."
       },
       {
-        question: "I’m tall when I’m young, and I’m short when I’m old. What am I?",
-        answer: "A candle."
+        question: "I amplify signals and can switch them on and off. What am I?",
+        answer: "A transistor."
+      },
+      {
+        question: "I’m the backbone of every electronic device, but I’m flat and green. What am I?",
+        answer: "A PCB (Printed Circuit Board)."
+      },
+      {
+        question: "I’m a law that governs voltage, current, and resistance. What am I?",
+        answer: "Ohm's Law."
+      },
+      {
+        question: "I’m a tool that measures voltage, current, and resistance. What am I?",
+        answer: "A multimeter."
+      },
+      {
+        question: "I’m a component that opposes the flow of current. What am I?",
+        answer: "A resistor."
+      },
+      {
+        question: "I’m a component that emits light when current flows through me. What am I?",
+        answer: "An LED."
+      },
+      {
+        question: "I’m a device that converts AC to DC. What am I?",
+        answer: "A rectifier."
+      },
+      {
+        question: "I’m a component that stores energy in a magnetic field. What am I?",
+        answer: "An inductor."
+      },
+      {
+        question: "I’m a device that steps voltage up or down. What am I?",
+        answer: "A transformer."
+      },
+      {
+        question: "I’m a tool that displays voltage over time. What am I?",
+        answer: "An oscilloscope."
+      },
+      {
+        question: "I’m a component that protects circuits from overcurrent. What am I?",
+        answer: "A fuse."
+      },
+      {
+        question: "I’m a component that can open or close a circuit. What am I?",
+        answer: "A switch."
+      },
+      {
+        question: "I’m a material that allows current to flow easily. What am I?",
+        answer: "A conductor."
+      },
+      {
+        question: "I’m a material that resists the flow of current. What am I?",
+        answer: "An insulator."
+      },
+      {
+        question: "I’m a device that stores energy chemically and provides power. What am I?",
+        answer: "A battery."
+      },
+      {
+        question: "I’m a component that can oscillate between two states. What am I?",
+        answer: "A flip-flop."
+      },
+      {
+        question: "I’m a device that converts electrical energy into mechanical motion. What am I?",
+        answer: "A motor."
       }
     ];
-
-    // Function to show a random joke
-    function showJoke() {
-      const jokeContent = document.querySelector('.joke-content');
-      const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
-      clearAll();
-      jokeContent.textContent = randomJoke;
-    }
-
-    // Function to show a random quote
-    function showQuote() {
-      const quoteContent = document.querySelector('.qoute-content');
-      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-      clearAll();
-      quoteContent.textContent = randomQuote;
-    }
-
-    // Function to show a random riddle
-    function showRiddle() {
-      const riddleText = document.getElementById('riddle-text');
-      const riddleAnswer = document.getElementById('riddle-answer');
-      const randomRiddle = riddles[Math.floor(Math.random() * riddles.length)];
-      clearAll();
-      riddleText.textContent = randomRiddle.question; // Display riddle question
-      riddleAnswer.textContent = randomRiddle.answer; // Set riddle answer
-      riddleAnswer.style.display = 'none'; // Hide the answer initially
-    }
-
-    // Function to reveal the riddle answer
-    function revealAnswers() {
-      const riddleAnswer = document.getElementById('riddle-answer');
-      riddleAnswer.style.display = 'block'; // Show the riddle answer
-    }
   </script>
 </body>
 
