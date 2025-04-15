@@ -188,27 +188,64 @@
 
   <!-- Scripts -->
   <script>
+    const memes = [
+      "assets/images/meme1.jpg",
+      "assets/images/meme2.jpg",
+      "assets/images/meme3.jpg"
+    ];
+
+    const jokes = [
+      "Why don't skeletons fight each other? They don't have the guts!",
+      "Why did the scarecrow win an award? Because he was outstanding in his field!",
+      "What do you call fake spaghetti? An impasta!"
+    ];
+
+    const quotes = [
+      "The best way to predict the future is to invent it.",
+      "Life is 10% what happens to us and 90% how we react to it.",
+      "Success is not the key to happiness. Happiness is the key to success."
+    ];
+
+    const riddles = [
+      {
+        question: "What has keys but can't open locks?",
+        answer: "A piano."
+      },
+      {
+        question: "What has to be broken before you can use it?",
+        answer: "An egg."
+      },
+      {
+        question: "I’m tall when I’m young, and I’m short when I’m old. What am I?",
+        answer: "A candle."
+      }
+    ];
+
     function showMeme() {
       const memeImage = document.getElementById("meme-image");
-      memeImage.src = "assets/images/meme.jpg"; // Replace with dynamic meme source
+      const randomMeme = memes[Math.floor(Math.random() * memes.length)];
+      memeImage.src = randomMeme;
       memeImage.style.display = "block";
     }
 
     function showJoke() {
       const jokeContent = document.querySelector(".joke-content");
-      jokeContent.textContent = "Why don't skeletons fight each other? They don't have the guts!";
+      const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+      jokeContent.textContent = randomJoke;
     }
 
     function showQuote() {
       const quoteContent = document.querySelector(".qoute-content");
-      quoteContent.textContent = "The best way to predict the future is to invent it.";
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      quoteContent.textContent = randomQuote;
     }
 
     function showRiddle() {
       const riddleText = document.getElementById("riddle-text");
       const riddleAnswer = document.getElementById("riddle-answer");
-      riddleText.textContent = "What has keys but can't open locks?";
-      riddleAnswer.textContent = "A piano.";
+      const randomRiddle = riddles[Math.floor(Math.random() * riddles.length)];
+      riddleText.textContent = randomRiddle.question;
+      riddleAnswer.textContent = randomRiddle.answer;
       riddleAnswer.style.display = "none";
     }
 
