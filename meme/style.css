@@ -101,3 +101,48 @@ button:hover {
   color: white;
   background-color: transparent;
 }
+
+/* Add responsive styles for mobile devices */
+@media (max-width: 768px) {
+  /* Adjust the layout for smaller screens */
+  main {
+    flex-direction: column;
+  }
+
+  .content {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 10px;
+    border-left: none;
+    border-top: 1px dotted #bfa38a;
+  }
+
+  /* Ensure the meme image scales properly */
+  .meme-content img {
+    width: 100%; /* Scale image to fit container */
+    max-width: 100%; /* Prevent overflow */
+    height: auto; /* Maintain aspect ratio */
+  }
+
+  /* Adjust button styles for smaller screens */
+  button {
+    font-size: 1rem; /* Reduce font size */
+    padding: 10px 15px; /* Adjust padding */
+    width: 100%; /* Make buttons take full width */
+  }
+
+  /* Adjust heading sizes for smaller screens */
+  .content h1, .content h3, .sidebar h1 {
+    font-size: 1.2rem; /* Scale down heading sizes */
+  }
+
+  /* Attribution text adjustments */
+  .attribution {
+    font-size: 0.7rem; /* Reduce font size */
+    padding: 5px; /* Adjust padding */
+  }
+}
