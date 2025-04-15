@@ -174,7 +174,7 @@
       <!-- Content -->
       <section class="content">
         <div class="meme-content">
-          <img id="meme-image" src="" alt="Meme Image" style="display: none;" />
+          <img id="meme-image" src="" alt="Meme Image" />
         </div>
         <div class="joke-content"></div>
         <div class="qoute-content"></div>
@@ -188,7 +188,7 @@
 
   <!-- Scripts -->
   <script>
-    const memes = Array.from({ length: 20 }, (_, i) => `assets/images/meme (${i + 1}).png`);
+    const memes = Array.from({ length: 20 }, (_, i) => `/memes/meme (${i + 1}).png`);
 
     function showMeme() {
       const memeImage = document.getElementById("meme-image");
