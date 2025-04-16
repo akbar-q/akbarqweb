@@ -4,6 +4,17 @@
   <title>Basic Snake HTML Game</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Include CSS files -->
+  <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../assets/dropdown/css/style.css">
+  <link rel="stylesheet" href="../assets/theme/css/style.css">
+  <link rel="stylesheet" href="../assets/mobirise/css/mbr-additional.css">
+
+  <!-- Include Fonts -->
+  <link rel="preload" href="https://fonts.googleapis.com/css?family=Oxanium:200,300,400,500,600,700,800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oxanium:200,300,400,500,600,700,800&display=swap"></noscript>
+
   <style>
     html, body {
       height: 100%;
@@ -22,154 +33,129 @@
     canvas {
       border: 1px solid #ffb800; /* Updated border color */
     }
-
-    nav {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background-color: #003b3b; /* Updated navbar background */
-      color: #ffb800;
-      padding: 10px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 1000;
-    }
-
-    nav a {
-      color: #ffb800;
-      text-decoration: none;
-      font-size: 1.2rem;
-      margin: 0 10px;
-    }
-
-    nav a:hover {
-      text-decoration: underline;
-    }
-
-    .navbar-logo img {
-      height: 3rem;
-    }
   </style>
 </head>
 <body>
   <!-- Navbar -->
-  <nav>
-    <div class="navbar-logo">
-      <a href="https://akbarq.com/errorhidden">
-        <img src="../assets/images/logospin.gif" alt="Click for an Easter Egg">
-      </a>
-    </div>
-    <div class="navbar-links">
-      <a href="../index.html#features04-w">Services</a>
-      <a href="../index.html#header01-7">About</a>
-      <a href="../index.html#form02-6">Contact</a>
-    </div>
-    <div class="navbar-buttons">
-      <a class="btn btn-success" href="https://www.fiverr.com/s/BRl5PWz/" target="_blank" style="background-color: #ffb800; color: #002724; padding: 5px 10px; text-decoration: none; border-radius: 5px;">Purchase Services</a>
-    </div>
-  </nav>
+  <section data-bs-version="5.1" class="menu menu2 cid-uHBINRz9j8" once="menu" id="menu02-2n">
+    <nav class="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg">
+      <div class="container">
+        <div class="navbar-brand">
+          <span class="navbar-logo">
+            <a href="https://akbarq.com/errorhidden">
+              <img src="../assets/images/logospin.gif" alt="Click for an Easter Egg" style="height: 3rem;">
+            </a>
+          </span>
+          <span class="navbar-caption-wrap">
+            <a class="navbar-caption text-white display-4" href="../index.html#header05-1">Akbar Q Hardware Design</a>
+          </span>
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbarSupportedContent" data-bs-target="#navbarSupportedContent" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav nav-dropdown" data-app-modern-menu="true">
+            <li class="nav-item">
+              <a class="nav-link link text-white display-4" href="../index.html#features04-w" aria-expanded="false">
+                <span class="mobi-mbri mobi-mbri-menu mbr-iconfont mbr-iconfont-btn"></span>Services
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link link text-white text-primary display-4" href="../index.html#header01-7">
+                <span class="mobi-mbri mobi-mbri-menu mbr-iconfont mbr-iconfont-btn"></span>About
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link link text-white text-primary display-4" href="../index.html#form02-6">
+                <span class="mobi-mbri mobi-mbri-menu mbr-iconfont mbr-iconfont-btn"></span>Contact&nbsp;&nbsp;
+              </a>
+            </li>
+          </ul>
+          <div class="navbar-buttons mbr-section-btn">
+            <a class="btn btn-success display-4" href="https://www.fiverr.com/s/BRl5PWz/" target="_blank">Purchase Services</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </section>
 
   <!-- Game Canvas -->
   <canvas width="400" height="400" id="game"></canvas>
+
+  <!-- Include JavaScript files -->
+  <script src="../assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/dropdown/js/navbar-dropdown.js"></script>
+
+  <!-- Snake Game Logic -->
   <script>
-    var canvas = document.getElementById('game');
-    var context = canvas.getContext('2d');
+    const canvas = document.getElementById('game');
+    const context = canvas.getContext('2d');
 
-    // the canvas width & height, snake x & y, and the apple x & y, all need to be a multiples of the grid size in order for collision detection to work
-    // (e.g. 16 * 25 = 400)
-    var grid = 16;
-    var count = 0;
+    const grid = 16;
+    let count = 0;
 
-    var snake = {
+    const snake = {
       x: 160,
       y: 160,
-
-      // snake velocity. moves one grid length every frame in either the x or y direction
       dx: grid,
       dy: 0,
-
-      // keep track of all grids the snake body occupies
       cells: [],
-
-      // length of the snake. grows when eating an apple
       maxCells: 4
     };
-    var apple = {
+
+    const apple = {
       x: 320,
       y: 320
     };
 
-    // get random whole numbers in a specific range
-    // @see https://stackoverflow.com/a/1527820/2124254
     function getRandomInt(min, max) {
       return Math.floor(Math.random() * (max - min)) + min;
     }
 
-    // game loop
     function loop() {
       requestAnimationFrame(loop);
 
-      // slow game loop to 15 fps instead of 60 (60/15 = 4)
       if (++count < 4) {
         return;
       }
 
       count = 0;
-      context.clearRect(0,0,canvas.width,canvas.height);
+      context.clearRect(0, 0, canvas.width, canvas.height);
 
-      // move snake by its velocity
       snake.x += snake.dx;
       snake.y += snake.dy;
 
-      // wrap snake position horizontally on edge of screen
-      if (snake.x < 0) {
-        snake.x = canvas.width - grid;
-      }
-      else if (snake.x >= canvas.width) {
-        snake.x = 0;
-      }
+      if (snake.x < 0) snake.x = canvas.width - grid;
+      else if (snake.x >= canvas.width) snake.x = 0;
 
-      // wrap snake position vertically on edge of screen
-      if (snake.y < 0) {
-        snake.y = canvas.height - grid;
-      }
-      else if (snake.y >= canvas.height) {
-        snake.y = 0;
-      }
+      if (snake.y < 0) snake.y = canvas.height - grid;
+      else if (snake.y >= canvas.height) snake.y = 0;
 
-      // keep track of where snake has been. front of the array is always the head
-      snake.cells.unshift({x: snake.x, y: snake.y});
+      snake.cells.unshift({ x: snake.x, y: snake.y });
 
-      // remove cells as we move away from them
       if (snake.cells.length > snake.maxCells) {
         snake.cells.pop();
       }
 
-      // draw apple
-      context.fillStyle = '#ffb800'; // Updated apple color
-      context.fillRect(apple.x, apple.y, grid-1, grid-1);
+      context.fillStyle = '#ffb800';
+      context.fillRect(apple.x, apple.y, grid - 1, grid - 1);
 
-      // draw snake one cell at a time
-      context.fillStyle = '#00ff00'; // Updated snake color
-      snake.cells.forEach(function(cell, index) {
+      context.fillStyle = '#00ff00';
+      snake.cells.forEach((cell, index) => {
+        context.fillRect(cell.x, cell.y, grid - 1, grid - 1);
 
-        // drawing 1 px smaller than the grid creates a grid effect in the snake body so you can see how long it is
-        context.fillRect(cell.x, cell.y, grid-1, grid-1);
-
-        // snake ate apple
         if (cell.x === apple.x && cell.y === apple.y) {
           snake.maxCells++;
-
-          // canvas is 400x400 which is 25x25 grids
           apple.x = getRandomInt(0, 25) * grid;
           apple.y = getRandomInt(0, 25) * grid;
         }
 
-        // check collision with all cells after this one (modified bubble sort)
-        for (var i = index + 1; i < snake.cells.length; i++) {
-
-          // snake occupies same space as a body part. reset game
+        for (let i = index + 1; i < snake.cells.length; i++) {
           if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
             snake.x = 160;
             snake.y = 160;
@@ -177,7 +163,6 @@
             snake.maxCells = 4;
             snake.dx = grid;
             snake.dy = 0;
-
             apple.x = getRandomInt(0, 25) * grid;
             apple.y = getRandomInt(0, 25) * grid;
           }
@@ -185,36 +170,22 @@
       });
     }
 
-    // listen to keyboard events to move the snake
-    document.addEventListener('keydown', function(e) {
-      // prevent snake from backtracking on itself by checking that it's
-      // not already moving on the same axis (pressing left while moving
-      // left won't do anything, and pressing right while moving left
-      // shouldn't let you collide with your own body)
-
-      // left arrow key
+    document.addEventListener('keydown', (e) => {
       if (e.which === 37 && snake.dx === 0) {
         snake.dx = -grid;
         snake.dy = 0;
-      }
-      // up arrow key
-      else if (e.which === 38 && snake.dy === 0) {
+      } else if (e.which === 38 && snake.dy === 0) {
         snake.dy = -grid;
         snake.dx = 0;
-      }
-      // right arrow key
-      else if (e.which === 39 && snake.dx === 0) {
+      } else if (e.which === 39 && snake.dx === 0) {
         snake.dx = grid;
         snake.dy = 0;
-      }
-      // down arrow key
-      else if (e.which === 40 && snake.dy === 0) {
+      } else if (e.which === 40 && snake.dy === 0) {
         snake.dy = grid;
         snake.dx = 0;
       }
     });
 
-    // start the game
     requestAnimationFrame(loop);
   </script>
 </body>
