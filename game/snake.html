@@ -14,8 +14,10 @@
   <!-- Include Fonts -->
   <link rel="preload" href="https://fonts.googleapis.com/css?family=Oxanium:200,300,400,500,600,700,800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oxanium:200,300,400,500,600,700,800&display=swap"></noscript>
-  <link rel="preload" href="https://fonts.googleapis.com/css?family=Inter+Tight:100,200,300,400,500,600,700,800,900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter+Tight:100,200,300,400,500,600,700,800,900&display=swap"></noscript>
+  <link rel="preload" href="https://fonts.googleapis.com/css?family=Inter+Tight:100,200,300,400,500,600,700,800,900,100i,200i,300i,400i,500i,600i,700i,800i,900i&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter+Tight:100,200,300,400,500,600,700,800,900,100i,200i,300i,400i,500i,600i,700i,800i,900i&display=swap"></noscript>
+  <link rel="preload" href="https://fonts.googleapis.com/css?family=Montserrat+Alternates:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat+Alternates:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap"></noscript>
 
   <style>
     html, body {
@@ -27,6 +29,7 @@
       background-color: #002724; /* Updated background color */
       color: #ffb800; /* Updated text color */
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       font-family: 'Oxanium', sans-serif; /* Updated font */
@@ -34,6 +37,15 @@
 
     canvas {
       border: 1px solid #ffb800; /* Updated border color */
+      margin-top: 20px;
+    }
+
+    .game-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      width: 100%;
     }
   </style>
 </head>
@@ -86,8 +98,10 @@
     </nav>
   </section>
 
-  <!-- Game Canvas -->
-  <canvas width="400" height="400" id="game"></canvas>
+  <!-- Game Container -->
+  <div class="game-container">
+    <canvas width="400" height="400" id="game"></canvas>
+  </div>
 
   <!-- Include JavaScript files -->
   <script src="../assets/bootstrap/js/bootstrap.bundle.min.js"></script>
