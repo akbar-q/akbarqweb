@@ -1,2 +1,2 @@
-# testmobirise
-GitHub Pages
+# Personal Website
+Hosted on GitHub Pages
