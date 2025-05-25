@@ -100,3 +100,81 @@ body {
   position: relative;
   top: 0;
 }
+
+/* General mobile styles */
+@media screen and (max-width: 768px) {
+  body {
+    font-size: 14px; /* Adjust base font size for smaller screens */
+  }
+
+  .container {
+    width: 100%;
+    padding: 0 10px;
+  }
+
+  .one {
+    font-size: 3rem; /* Adjust heading size */
+  }
+
+  .two {
+    font-size: 1rem; /* Adjust subheading size */
+  }
+
+  .three {
+    font-size: 2rem; /* Adjust text size */
+  }
+
+  .four .text-box {
+    width: 90%; /* Make the text box fit smaller screens */
+    padding: 10px;
+  }
+
+  .text-box .fake-btn {
+    bottom: -30px; /* Adjust button position */
+    right: 10px;
+  }
+
+  .six img.lydia-dp {
+    width: 80%; /* Scale the image */
+    margin: 0 auto;
+  }
+
+  .wish-hbd {
+    font-size: 2rem; /* Adjust wish heading size */
+  }
+
+  .nine p {
+    font-size: 1rem; /* Adjust outro text size */
+  }
+}
+
+/* Very small screens (e.g., phones in portrait mode) */
+@media screen and (max-width: 480px) {
+  .one {
+    font-size: 2.5rem;
+  }
+
+  .two {
+    font-size: 0.9rem;
+  }
+
+  .three {
+    font-size: 1.5rem;
+  }
+
+  .four .text-box {
+    width: 95%;
+  }
+
+  .six img.lydia-dp {
+    width: 70%;
+  }
+
+  .wish-hbd {
+    font-size: 1.8rem;
+  }
+
+  .nine p {
+    font-size: 0.9rem;
+  }
+}
