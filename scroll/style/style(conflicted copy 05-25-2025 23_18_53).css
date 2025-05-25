@@ -1,0 +1,102 @@
+/* General body styling */
+body {
+  margin: 0;
+  font-family: "Work Sans", sans-serif;
+  background-color: #f4f4f4; /* Light background */
+  color: #004d4d; /* Teal text */
+  font-size: 16px; /* Adjust as needed */
+}
+
+/* Container styling */
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+  margin: 0 auto;
+  text-align: center;
+  visibility: hidden;
+  position: relative;
+  background-color: #ffeb3b; /* Yellow background */
+  border: 2px solid #004d4d; /* Teal border */
+}
+
+/* Headings */
+.one {
+  font-size: 5rem; /* Adjust for larger headings */
+  color: #004d4d; /* Teal headings */
+}
+
+.two {
+  font-size: 1.5rem; /* Adjust for better readability */
+  font-weight: lighter;
+  color: #004d4d; /* Teal text */
+}
+
+.three {
+  font-size: 3rem;
+  color: #004d4d; /* Teal text */
+}
+
+/* Text Box */
+.four .text-box {
+  width: 600px;
+  margin: 0 auto;
+  border: 3px solid #004d4d; /* Teal border */
+  border-radius: 5px;
+  padding: 10px;
+  position: relative;
+  background-color: #ffeb3b; /* Yellow background */
+}
+
+.text-box .fake-btn {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  color: #ffeb3b; /* Yellow text */
+  background-color: #004d4d; /* Teal button background */
+  padding: 5px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.text-box .fake-btn:hover {
+  background-color: #ffeb3b; /* Yellow hover background */
+  color: #004d4d; /* Teal hover text */
+}
+
+/* Balloons */
+.baloons img {
+  display: inline-block;
+  position: absolute;
+  filter: hue-rotate(180deg); /* Adjust balloon colors */
+}
+
+/* Circles */
+.eight svg circle {
+  fill: #ffeb3b; /* Yellow circles */
+  stroke: #004d4d; /* Teal stroke */
+}
+
+/* Outro text */
+.nine p {
+  font-size: 1.5rem; /* Adjust for better readability */
+  font-weight: lighter;
+  color: #004d4d; /* Teal text */
+}
+
+.six {
+  text-align: center;
+  position: relative;
+}
+
+.six img.lydia-dp {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  position: relative;
+  top: 0;
+}
