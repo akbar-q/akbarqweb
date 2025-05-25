@@ -4,7 +4,9 @@ html {
 
 body {
   margin: 0;
+  padding: 0;
   font-family: "Work Sans", sans-serif;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .container {
@@ -15,8 +17,12 @@ body {
   visibility: hidden;
   position: relative;
   overflow: hidden;
+  max-width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
+/* General styles for responsiveness */
 .container div.six {
   top: 10vh;
   z-index: 1;
@@ -230,6 +236,47 @@ body {
 #replay {
   z-index: 3;
   cursor: pointer;
+}
+
+/* Ensure text wraps properly */
+h1,
+p {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Adjust styles for smaller screens */
+@media (max-width: 768px) {
+  h1.one {
+    font-size: 1.8rem; /* Reduce font size for smaller screens */
+    text-align: center; /* Center-align text */
+  }
+
+  p.two,
+  p.hbd-chatbox,
+  p.idea-1,
+  p.idea-2,
+  p.idea-3,
+  p.idea-4,
+  p.idea-5,
+  p.idea-6 {
+    font-size: 1rem; /* Adjust paragraph font size */
+    text-align: center; /* Center-align text */
+  }
+
+  .text-box {
+    padding: 10px;
+  }
+
+  .lydia-dp {
+    width: 80%; /* Scale down images */
+    margin: 0 auto;
+    display: block;
+  }
+
+  .baloons img {
+    width: 50px; /* Scale down balloons */
+  }
 }
 
 /* Media Queries */
