@@ -4,29 +4,33 @@ body {
   font-family: "Work Sans", sans-serif;
   background-color: #f4f4f4; /* Light background */
   color: #004d4d; /* Teal text */
+  font-size: 16px; /* Adjust as needed */
 }
 
 /* Container styling */
 .container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   height: 100vh;
-  width: 100vw;
+  overflow: hidden;
   margin: 0 auto;
   text-align: center;
   visibility: hidden;
   position: relative;
-  overflow: hidden;
   background-color: #ffeb3b; /* Yellow background */
   border: 2px solid #004d4d; /* Teal border */
 }
 
 /* Headings */
 .one {
-  font-size: 4.5rem;
+  font-size: 5rem; /* Adjust for larger headings */
   color: #004d4d; /* Teal headings */
 }
 
 .two {
-  font-size: 1.2rem;
+  font-size: 1.5rem; /* Adjust for better readability */
   font-weight: lighter;
   color: #004d4d; /* Teal text */
 }
@@ -78,7 +82,21 @@ body {
 
 /* Outro text */
 .nine p {
-  font-size: 2rem;
+  font-size: 1.5rem; /* Adjust for better readability */
   font-weight: lighter;
   color: #004d4d; /* Teal text */
+}
+
+.six {
+  text-align: center;
+  position: relative;
+}
+
+.six img.lydia-dp {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  position: relative;
+  top: 0;
 }
