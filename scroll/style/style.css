@@ -4,6 +4,8 @@ html {
 
 body {
   margin: 0;
+  background-color: #f4f4f4; /* Light background */
+  color: #004d4d; /* Teal text */
   font-family: "Work Sans", sans-serif;
 }
 
@@ -15,6 +17,10 @@ body {
   visibility: hidden;
   position: relative;
   overflow: hidden;
+  background-color: #ffeb3b; /* Yellow background */
+  border: 2px solid #004d4d; /* Teal border */
+  border-radius: 10px;
+  padding: 20px;
 }
 
 .container div.six {
@@ -133,6 +139,7 @@ body {
 .baloons img {
   display: inline-block;
   position: absolute;
+  filter: hue-rotate(180deg); /* Adjust balloon colors to match the theme */
 }
 
 .baloons img:nth-child(even) {
@@ -225,6 +232,7 @@ body {
 .nine p {
   font-size: 2rem;
   font-weight: lighter;
+  color: #004d4d; /* Teal text */
 }
 
 #replay {
