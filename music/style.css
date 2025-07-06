@@ -1,7 +1,10 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@400;700&family=Montserrat+Alternates:wght@400;700&display=swap');
+
 body {
-  background: linear-gradient(135deg, #191414 0%, #1db954 100%);
-  font-family: 'Segoe UI', Arial, sans-serif;
-  color: #fff;
+  background: linear-gradient(135deg, #002724 0%, #2B7A69 100%);
+  font-family: 'Oxanium', 'Montserrat Alternates', Arial, sans-serif;
+  color: #FFCB00;
   margin: 0;
   min-height: 100vh;
 }
@@ -9,7 +12,7 @@ body {
 .container {
   max-width: 600px;
   margin: 40px auto;
-  background: #181818;
+  background: #002724;
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.3);
   padding: 24px;
@@ -20,6 +23,8 @@ header h1 {
   margin-bottom: 24px;
   font-size: 2rem;
   letter-spacing: 2px;
+  font-family: 'Montserrat Alternates', 'Oxanium', Arial, sans-serif;
+  color: #FFB800;
 }
 
 .album-list {
@@ -30,7 +35,7 @@ header h1 {
 }
 
 .album-card {
-  background: #222;
+  background: #2B7A69;
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.2);
   padding: 16px;
@@ -38,11 +43,13 @@ header h1 {
   text-align: center;
   cursor: pointer;
   transition: background 0.2s, transform 0.2s;
+  color: #FFCB00;
+  font-family: 'Oxanium', Arial, sans-serif;
 }
 
 .album-card:hover {
-  background: #1db954;
-  color: #191414;
+  background: #FFCB00;
+  color: #002724;
   transform: scale(1.04);
 }
 
@@ -71,14 +78,15 @@ header h1 {
   margin-bottom: 12px;
   background: none;
   border: none;
-  color: #1db954;
+  color: #FFB800;
   font-size: 1.1rem;
   cursor: pointer;
   transition: color 0.2s;
+  font-family: 'Montserrat Alternates', Arial, sans-serif;
 }
 
 .back-btn:hover {
-  color: #fff;
+  color: #FFCB00;
 }
 
 .album-cover {
@@ -94,6 +102,8 @@ header h1 {
   margin: 8px 0 16px 0;
   font-size: 1.4rem;
   text-align: center;
+  color: #FFB800;
+  font-family: 'Montserrat Alternates', Arial, sans-serif;
 }
 
 #song-list {
@@ -107,19 +117,21 @@ header h1 {
   padding: 10px 16px;
   border-radius: 8px;
   margin-bottom: 6px;
-  background: #333;
+  background: #002724;
+  color: #FFCB00;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
+  font-family: 'Oxanium', Arial, sans-serif;
 }
 
 #song-list li:hover {
-  background: #1db954;
-  color: #191414;
+  background: #FFCB00;
+  color: #002724;
 }
 
 .player-bar {
   width: 100%;
-  background: #222;
+  background: #2B7A69;
   border-radius: 8px;
   padding: 12px;
   display: flex;
@@ -130,9 +142,10 @@ header h1 {
 #now-playing {
   font-size: 1rem;
   margin-bottom: 8px;
-  color: #1db954;
+  color: #FFB800;
 }
 
 audio {
   width: 100%;
+  accent-color: #FFB800;
 }
