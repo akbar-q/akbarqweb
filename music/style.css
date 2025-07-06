@@ -10,12 +10,13 @@ body {
 }
 
 .container {
-  max-width: 600px;
+  max-width: 1100px; /* Make this much wider */
+  width: 90vw;
   margin: 40px auto;
   background: #002724;
-  border-radius: 16px;
+  border-radius: 24px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  padding: 24px;
+  padding: 40px 40px 32px 40px;
 }
 
 header h1 {
@@ -70,16 +71,18 @@ header h1 {
 .album-view {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 0 16px;
+  align-items: stretch; /* Stretch children to full width */
+  padding: 0 0;
   width: 100%;
 }
 
 .album-header {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 32px;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
+  width: 100%;
 }
 
 .back-btn {
@@ -99,19 +102,21 @@ header h1 {
 }
 
 .album-cover {
-  width: 260px;
-  height: 260px;
+  width: 340px;
+  height: 340px;
   object-fit: cover;
-  border-radius: 16px;
-  margin-bottom: 24px;
+  border-radius: 24px;
+  margin: 0 auto 32px auto;
   box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  display: block;
 }
 
 #album-title {
-  font-size: 2rem;
+  font-size: 2.4rem;
   color: #FFB800;
   font-family: 'Montserrat Alternates', Arial, sans-serif;
   margin: 0;
+  flex: 0 0 auto;
 }
 
 #song-list {
@@ -140,23 +145,26 @@ header h1 {
 .player-bar {
   width: 100%;
   background: #2B7A69;
-  border-radius: 12px;
-  padding: 16px;
+  border-radius: 16px;
+  padding: 24px 32px 16px 32px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-top: 24px;
+  align-items: stretch;
+  margin-top: 32px;
+  box-sizing: border-box;
 }
 
 #now-playing {
-  font-size: 1rem;
-  margin-bottom: 8px;
+  font-size: 1.2rem;
+  margin-bottom: 12px;
   color: #FFB800;
+  text-align: left;
 }
 
 audio {
   width: 100%;
   accent-color: #FFB800;
+  margin: 0;
 }
 
 .album-play-btn {
@@ -164,13 +172,13 @@ audio {
   color: #002724;
   border: none;
   border-radius: 32px;
-  padding: 14px 36px;
-  font-size: 1.2rem;
+  padding: 18px 48px;
+  font-size: 1.3rem;
   font-family: 'Montserrat Alternates', Arial, sans-serif;
   cursor: pointer;
   transition: background 0.2s;
   font-weight: bold;
-  margin-left: 16px;
+  margin-left: 32px;
 }
 .album-play-btn:hover {
   background: #FFCB00;
@@ -179,11 +187,12 @@ audio {
 .song-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
   table-layout: fixed;
+  font-size: 1.1rem;
 }
 .song-table th, .song-table td {
-  padding: 12px 8px;
+  padding: 16px 10px;
   text-align: left;
   font-family: 'Oxanium', Arial, sans-serif;
   word-break: break-word;
@@ -201,14 +210,14 @@ audio {
   background: #2B7A69;
 }
 .song-table td.play-cell {
-  width: 40px;
+  width: 60px;
   text-align: center;
 }
 .song-play-btn {
   background: none;
   border: none;
   color: #FFCB00;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   cursor: pointer;
   transition: color 0.2s;
 }
