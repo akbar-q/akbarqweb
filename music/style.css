@@ -253,6 +253,8 @@ audio {
   #album-title {
     font-size: 1.3rem;
     margin-bottom: 6px;
+    text-align: center;
+    width: 100%;
   }
 
   .album-play-btn {
@@ -302,10 +304,15 @@ audio {
   audio {
     width: 100%;
   }
+
+  .song-table th,
+  .song-table td {
+    text-align: center !important;
+  }
 }
 
-/* Optional: Stack each song row as a card for very small screens */
-@media (max-width: 480px) {
+/* Remove or comment out this block! */
+/* @media (max-width: 480px) {
   .song-table, .song-table thead, .song-table tbody, .song-table tr {
     display: block;
     width: 100%;
@@ -337,4 +344,4 @@ audio {
     display: inline-block;
     width: 90px;
   }
-}
+} */
