@@ -112,15 +112,16 @@ function showAlbum(idx) {
 window.playSongFromTable = function(sidx) {
   playSong(sidx);
 };
-  playSong(sidx);
-};nction playSong(sidx) {
+
+function playSong(sidx) {
   currentSong = sidx;
-function playSong(sidx) {rentAlbum].songs[sidx];
-  currentSong = sidx;le;
   const song = albums[currentAlbum].songs[sidx];
-  audio.src = song.file; = `Now Playing: ${song.title}`;
+  audio.src = song.file;
   audio.play();
   nowPlaying.textContent = `Now Playing: ${song.title}`;
-}ackBtn.onclick = showAlbums;
+}
 
-backBtn.onclick = showAlbums;showAlbums();
+backBtn.onclick = showAlbums;
+
+// Initialize the album list on page load
+showAlbums();
