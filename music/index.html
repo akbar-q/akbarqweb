@@ -16,8 +16,21 @@
       <div id="album-view" class="album-view" style="display:none;">
         <button id="back" class="back-btn">← Back</button>
         <img id="album-cover" class="album-cover" src="" alt="Album Cover"/>
-        <h2 id="album-title"></h2>
-        <ul id="song-list"></ul>
+        <div class="album-header">
+          <h2 id="album-title"></h2>
+          <button id="album-play" class="album-play-btn">▶ Play</button>
+        </div>
+        <table id="song-table" class="song-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Title</th>
+              <th>Duration</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="song-list"></tbody>
+        </table>
         <div class="player-bar">
           <span id="now-playing"></span>
           <audio id="audio" controls></audio>

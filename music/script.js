@@ -51,14 +51,30 @@ function showAlbum(idx) {
   const album = albums[idx];
   albumCover.src = album.cover;
   albumTitle.textContent = album.title;
+
+  // Album play button
+  document.getElementById('album-play').onclick = () => playSong(0);
+
+  // Render song table
   songList.innerHTML = '';
   album.songs.forEach((song, sidx) => {
-    const li = document.createElement('li');
-    li.textContent = song.title;
-    li.onclick = () => playSong(sidx);
-    songList.appendChild(li);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${sidx + 1}</td>
+      <td>${song.title}</td>
+      <td>${song.duration || '--:--'}</td>
+      <td class="play-cell">
+        <button class="song-play-btn" title="Play" onclick="playSongFromTable(${sidx})">▶</button>
+      </td>
+    `;
+    songList.appendChild(tr);
   });
 }
+
+// Helper for play button in table (needed for inline onclick)
+window.playSongFromTable = function(sidx) {
+  playSong(sidx);
+};
 
 function playSong(sidx) {
   currentSong = sidx;
