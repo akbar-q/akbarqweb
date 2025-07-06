@@ -1,5 +1,5 @@
 body {
-  background: linear-gradient(135deg, #1db954 0%, #191414 100%);
+  background: linear-gradient(135deg, #191414 0%, #1db954 100%);
   font-family: 'Segoe UI', Arial, sans-serif;
   color: #fff;
   margin: 0;
@@ -7,9 +7,9 @@ body {
 }
 
 .container {
-  max-width: 400px;
+  max-width: 600px;
   margin: 40px auto;
-  background: #222;
+  background: #181818;
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.3);
   padding: 24px;
@@ -22,61 +22,88 @@ header h1 {
   letter-spacing: 2px;
 }
 
-.player {
+.album-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+}
+
+.album-card {
+  background: #222;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  padding: 16px;
+  width: 160px;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.album-card:hover {
+  background: #1db954;
+  color: #191414;
+  transform: scale(1.04);
+}
+
+.album-card img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.album-name {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.album-view {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.player img {
-  width: 220px;
-  height: 220px;
+.back-btn {
+  align-self: flex-start;
+  margin-bottom: 12px;
+  background: none;
+  border: none;
+  color: #1db954;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.back-btn:hover {
+  color: #fff;
+}
+
+.album-cover {
+  width: 180px;
+  height: 180px;
   object-fit: cover;
   border-radius: 12px;
   margin-bottom: 16px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.4);
 }
 
-.player h2 {
+#album-title {
   margin: 8px 0 16px 0;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   text-align: center;
 }
 
-audio {
-  width: 100%;
-  margin-bottom: 12px;
-}
-
-.controls {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-.controls button {
-  background: #1db954;
-  border: none;
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  font-size: 1.5rem;
-  color: #fff;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.controls button:hover {
-  background: #14833b;
-}
-
-#playlist {
+#song-list {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 0 0 16px 0;
+  width: 100%;
 }
 
-#playlist li {
+#song-list li {
   padding: 10px 16px;
   border-radius: 8px;
   margin-bottom: 6px;
@@ -85,7 +112,27 @@ audio {
   transition: background 0.2s;
 }
 
-#playlist li.active, #playlist li:hover {
+#song-list li:hover {
   background: #1db954;
   color: #191414;
+}
+
+.player-bar {
+  width: 100%;
+  background: #222;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#now-playing {
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: #1db954;
+}
+
+audio {
+  width: 100%;
 }

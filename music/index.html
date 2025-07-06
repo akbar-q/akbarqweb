@@ -3,26 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Music Player</title>
+  <title>My Music Albums</title>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>My Music Player</h1>
+      <h1>My Music Albums</h1>
     </header>
     <main>
-      <div class="player">
-        <img id="cover" src="https://placehold.co/300x300?text=Album+Art" alt="Album Art"/>
-        <h2 id="title">Song Title</h2>
-        <audio id="audio" controls></audio>
-        <div class="controls">
-          <button id="prev">⏮️</button>
-          <button id="play">▶️</button>
-          <button id="next">⏭️</button>
+      <div id="album-list" class="album-list"></div>
+      <div id="album-view" class="album-view" style="display:none;">
+        <button id="back" class="back-btn">← Back</button>
+        <img id="album-cover" class="album-cover" src="" alt="Album Cover"/>
+        <h2 id="album-title"></h2>
+        <ul id="song-list"></ul>
+        <div class="player-bar">
+          <span id="now-playing"></span>
+          <audio id="audio" controls></audio>
         </div>
       </div>
-      <ul id="playlist"></ul>
     </main>
   </div>
   <script src="script.js"></script>
