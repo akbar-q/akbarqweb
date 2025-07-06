@@ -68,11 +68,15 @@ function showAlbum(idx) {
     const tr = document.createElement('tr');
     if (isMobile()) {
       tr.innerHTML = `
+        <td></td>
         <td style="text-align:center;">${song.title}</td>
+        <td></td>
+        <td></td>
         <td id="duration-${sidx}" style="text-align:center;">
           <span class="mobile-duration">--:--</span>
           <button class="song-play-btn" title="Play" onclick="playSongFromTable(${sidx})">▶</button>
         </td>
+        <td></td>
       `;
     } else {
       tr.innerHTML = `
