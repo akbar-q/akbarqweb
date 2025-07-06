@@ -308,6 +308,7 @@ audio {
   .song-table th,
   .song-table td {
     text-align: center !important;
+    vertical-align: middle;
   }
 }
 

@@ -68,8 +68,9 @@ function showAlbum(idx) {
     const tr = document.createElement('tr');
     if (isMobile()) {
       tr.innerHTML = `
-        <td>${song.title}</td>
-        <td id="duration-${sidx}">
+        <td style="text-align:center;">${song.title}</td>
+        <td id="duration-${sidx}" style="text-align:center;">
+          <span class="mobile-duration">--:--</span>
           <button class="song-play-btn" title="Play" onclick="playSongFromTable(${sidx})">▶</button>
         </td>
       `;
@@ -87,15 +88,17 @@ function showAlbum(idx) {
     }
     songList.appendChild(tr);
 
-    // Dynamically load duration (desktop only)
-    if (!isMobile()) {
-      const tempAudio = new Audio(song.file);
-      tempAudio.addEventListener('loadedmetadata', function() {
-        const mins = Math.floor(tempAudio.duration / 60);
-        const secs = Math.floor(tempAudio.duration % 60).padStart(2, '0');
+    // Dynamically load duration
+    const tempAudio = new Audio(song.file);
+    tempAudio.addEventListener('loadedmetadata', function() {
+      const mins = Math.floor(tempAudio.duration / 60);
+      const secs = Math.floor(tempAudio.duration % 60).toString().padStart(2, '0');
+      if (isMobile()) {
+        tr.querySelector('.mobile-duration').textContent = `${mins}:${secs}`;
+      } else {
         document.getElementById(`duration-${sidx}`).textContent = `${mins}:${secs}`;
-      });
-    }
+      }
+    });
   });
 }
 
