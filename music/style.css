@@ -264,85 +264,25 @@ audio {
     font-size: 1.1rem;
   }
 
-  /* Show only Title and Duration columns on mobile */
+  /* Hide all but Title, Duration, Play columns */
   .song-table th:nth-child(1),  /* # */
   .song-table th:nth-child(3),  /* Artist */
   .song-table th:nth-child(4),  /* Description */
-  .song-table th:nth-child(6),  /* Play button */
   .song-table td:nth-child(1),
   .song-table td:nth-child(3),
-  .song-table td:nth-child(4),
-  .song-table td:nth-child(6) {
+  .song-table td:nth-child(4) {
     display: none;
   }
-  .song-table {
-    font-size: 1rem;
-    display: block;
-    overflow-x: auto;
-    width: 100%;
-  }
-  .song-table table, .song-table thead, .song-table tbody, .song-table tr, .song-table th, .song-table td {
-    display: revert;
-    width: revert;
-    padding: revert;
-    font-size: revert;
-    white-space: nowrap;
-  }
-
-  .player-bar {
-    padding: 10px 2vw 8px 2vw;
-    border-radius: 10px;
-    margin-top: 12px;
-  }
-
-  #now-playing {
-    font-size: 1rem;
-    margin-bottom: 6px;
-    text-align: left;
-  }
-
-  audio {
-    width: 100%;
-  }
-
   .song-table th,
   .song-table td {
     text-align: center !important;
     vertical-align: middle;
-  }
-}
-
-/* Remove or comment out this block! */
-/* @media (max-width: 480px) {
-  .song-table, .song-table thead, .song-table tbody, .song-table tr {
-    display: block;
-    width: 100%;
+    padding-left: 12px;
+    padding-right: 12px;
+    font-size: 1.05rem;
   }
   .song-table tr {
-    margin-bottom: 16px;
-    border-radius: 8px;
-    background: #2B7A69;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    padding: 8px 0;
+    /* Add more space between rows if needed */
+    height: 56px;
   }
-  .song-table th {
-    display: none;
-  }
-  .song-table td {
-    display: block;
-    width: 100%;
-    padding: 6px 8px;
-    font-size: 1rem;
-  }
-  .song-table td.play-cell {
-    text-align: right;
-    padding-top: 0;
-  }
-  .song-table td:before {
-    content: attr(data-label) ": ";
-    font-weight: bold;
-    color: #FFCB00;
-    display: inline-block;
-    width: 90px;
-  }
-} */
+}

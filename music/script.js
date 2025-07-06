@@ -68,15 +68,13 @@ function showAlbum(idx) {
     const tr = document.createElement('tr');
     if (isMobile()) {
       tr.innerHTML = `
-        <td></td>
         <td style="text-align:center;">${song.title}</td>
-        <td></td>
-        <td></td>
         <td id="duration-${sidx}" style="text-align:center;">
           <span class="mobile-duration">--:--</span>
+        </td>
+        <td style="text-align:center;">
           <button class="song-play-btn" title="Play" onclick="playSongFromTable(${sidx})">▶</button>
         </td>
-        <td></td>
       `;
     } else {
       tr.innerHTML = `
@@ -110,15 +108,15 @@ function showAlbum(idx) {
 window.playSongFromTable = function(sidx) {
   playSong(sidx);
 };
-
-function playSong(sidx) {
+  playSong(sidx);
+};nction playSong(sidx) {
   currentSong = sidx;
+function playSong(sidx) {rentAlbum].songs[sidx];
+  currentSong = sidx;le;
   const song = albums[currentAlbum].songs[sidx];
-  audio.src = song.file;
+  audio.src = song.file; = `Now Playing: ${song.title}`;
   audio.play();
   nowPlaying.textContent = `Now Playing: ${song.title}`;
-}
+}ackBtn.onclick = showAlbums;
 
-backBtn.onclick = showAlbums;
-
-showAlbums();
+backBtn.onclick = showAlbums;showAlbums();
