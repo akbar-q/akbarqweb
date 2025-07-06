@@ -29,7 +29,7 @@ const audio = document.getElementById('audio');
 const nowPlaying = document.getElementById('now-playing');
 
 function showAlbums() {
-  albumList.innerHTML = '';
+  albumList.innerHTML = ''; // <-- This line ensures the album cards are cleared before rendering
   albums.forEach((album, idx) => {
     const div = document.createElement('div');
     div.className = 'album-card';
@@ -67,8 +67,12 @@ function showAlbum(idx) {
   album.songs.forEach((song, sidx) => {
     const tr = document.createElement('tr');
     if (isMobile()) {
+      // Always render 6 <td>s to match the table headers
       tr.innerHTML = `
+        <td></td>
         <td style="text-align:center;">${song.title}</td>
+        <td></td>
+        <td></td>
         <td id="duration-${sidx}" style="text-align:center;">
           <span class="mobile-duration">--:--</span>
         </td>
