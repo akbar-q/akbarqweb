@@ -63,11 +63,10 @@ function showAlbum(idx) {
   album.songs.forEach((song, sidx) => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>${sidx + 1}</td>
-      <td>${song.title}</td>
-      <td>${song.artist || ""}</td>
-      <td>${song.description || ""}</td>
-      <td id="duration-${sidx}">--:--</td>
+      <td data-label="Title">${song.title}</td>
+      <td data-label="Artist">${song.artist || ""}</td>
+      <td data-label="Description">${song.description || ""}</td>
+      <td data-label="Duration" id="duration-${sidx}">--:--</td>
       <td class="play-cell">
         <button class="song-play-btn" title="Play" onclick="playSongFromTable(${sidx})">▶</button>
       </td>
