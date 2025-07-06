@@ -262,12 +262,22 @@ audio {
     font-size: 1.1rem;
   }
 
+  /* Show only Title and Duration columns on mobile */
+  .song-table th:nth-child(1),  /* # */
+  .song-table th:nth-child(3),  /* Artist */
+  .song-table th:nth-child(4),  /* Description */
+  .song-table th:nth-child(6),  /* Play button */
+  .song-table td:nth-child(1),
+  .song-table td:nth-child(3),
+  .song-table td:nth-child(4),
+  .song-table td:nth-child(6) {
+    display: none;
+  }
   .song-table {
-    display: block;
-    width: 100%;
-    overflow-x: auto;
     font-size: 1rem;
-    margin-bottom: 18px;
+    display: block;
+    overflow-x: auto;
+    width: 100%;
   }
   .song-table table, .song-table thead, .song-table tbody, .song-table tr, .song-table th, .song-table td {
     display: revert;
