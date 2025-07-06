@@ -1,10 +1,10 @@
 const albums = [
   {
     title: "Album 1",
-    cover: "https://placehold.co/300x300?text=Album+1",
+    cover: "https://placehold.co/400x400?text=Album+1",
     songs: [
-      { title: "Song 1", file: "music/song1.mp3" },
-      { title: "Song 2", file: "music/song2.mp3" }
+      { title: "Song 1", artist: "Artist 1", description: "A great intro track.", file: "music/song1.mp3" },
+      { title: "Song 2", artist: "Artist 1", description: "The follow-up hit.", file: "music/song2.mp3" }
     ]
   },
   {
@@ -42,32 +42,45 @@ function showAlbums() {
   });
   albumList.style.display = 'flex';
   albumView.style.display = 'none';
+  document.querySelector('header').style.display = ''; // Show header
 }
 
 function showAlbum(idx) {
   currentAlbum = idx;
   albumList.style.display = 'none';
   albumView.style.display = 'block';
+  document.querySelector('header').style.display = 'none'; // Hide header
+
   const album = albums[idx];
   albumCover.src = album.cover;
+  albumCover.style.width = "260px";
+  albumCover.style.height = "260px";
   albumTitle.textContent = album.title;
 
-  // Album play button
   document.getElementById('album-play').onclick = () => playSong(0);
 
-  // Render song table
   songList.innerHTML = '';
   album.songs.forEach((song, sidx) => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${sidx + 1}</td>
       <td>${song.title}</td>
-      <td>${song.duration || '--:--'}</td>
+      <td>${song.artist || ""}</td>
+      <td>${song.description || ""}</td>
+      <td id="duration-${sidx}">--:--</td>
       <td class="play-cell">
         <button class="song-play-btn" title="Play" onclick="playSongFromTable(${sidx})">▶</button>
       </td>
     `;
     songList.appendChild(tr);
+
+    // Dynamically load duration
+    const tempAudio = new Audio(song.file);
+    tempAudio.addEventListener('loadedmetadata', function() {
+      const mins = Math.floor(tempAudio.duration / 60);
+      const secs = Math.floor(tempAudio.duration % 60).toString().padStart(2, '0');
+      document.getElementById(`duration-${sidx}`).textContent = `${mins}:${secs}`;
+    });
   });
 }
 
