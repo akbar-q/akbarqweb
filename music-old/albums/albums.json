@@ -1,8 +1,0 @@
-{
-  "title": "Lofi Nights",
-  "cover": "assets/lofi-cover.jpg",
-  "tracks": [
-    { "title": "Rainy Day", "file": "rainy-day.mp3" },
-    { "title": "Late Drive", "file": "late-drive.mp3" }
-  ]
-}
