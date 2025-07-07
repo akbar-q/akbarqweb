@@ -1,6 +1,9 @@
 const albums = [
   {
     title: "Album 1",
+    artist: "Artist Name",
+    ageRating: "PG",
+    description: "This is a description of Album 1. You can write a paragraph or two here about the album, its style, or any background info.",
     cover: "https://placehold.co/400x400?text=Album+1",
     songs: [
       { title: "Song 1", artist: "Artist 1", description: "A great intro track.", file: "music/song1.mp3" },
@@ -29,20 +32,23 @@ const audio = document.getElementById('audio');
 const nowPlaying = document.getElementById('now-playing');
 
 function showAlbums() {
-  albumList.innerHTML = ''; // <-- This line ensures the album cards are cleared before rendering
+  albumList.innerHTML = '';
   albums.forEach((album, idx) => {
     const div = document.createElement('div');
     div.className = 'album-card';
     div.innerHTML = `
       <img src="${album.cover}" alt="${album.title}" />
       <div class="album-name">${album.title}</div>
+      <div class="album-artist"><strong>Artist:</strong> ${album.artist || 'Unknown'}</div>
+      <div class="album-age"><strong>Age Rating:</strong> ${album.ageRating || 'N/A'}</div>
+      <div class="album-desc">${album.description || ''}</div>
     `;
     div.onclick = () => showAlbum(idx);
     albumList.appendChild(div);
   });
   albumList.style.display = 'flex';
   albumView.style.display = 'none';
-  document.querySelector('header').style.display = ''; // Show header
+  document.querySelector('header').style.display = '';
 }
 
 function isMobile() {
