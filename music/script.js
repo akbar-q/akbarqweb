@@ -77,12 +77,10 @@ function showAlbum(idx) {
   album.songs.forEach((song, sidx) => {
     const tr = document.createElement('tr');
     if (isMobile()) {
-      // Always render 6 <td>s to match the table headers
+      // Only show: #, Title, Duration, Play
       tr.innerHTML = `
-        <td></td>
+        <td>${sidx + 1}</td>
         <td style="text-align:center;">${song.title}</td>
-        <td></td>
-        <td></td>
         <td id="duration-${sidx}" style="text-align:center;">
           <span class="mobile-duration">--:--</span>
         </td>

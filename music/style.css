@@ -295,10 +295,22 @@ audio {
   box-sizing: border-box;
 }
 
-.music-header-left {
+.music-header-left,
+.music-header-right {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
-  gap: 16px;
+}
+
+.music-header-text {
+  flex: 1 1 auto;
+  text-align: center;
+  font-family: 'Montserrat Alternates', 'Oxanium', Arial, sans-serif;
+  font-size: 1.3rem;
+  color: #FFCB00;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  white-space: nowrap;
 }
 
 .music-logo {
@@ -315,22 +327,6 @@ audio {
   color: #FFCB00;
   font-weight: 700;
   letter-spacing: 1.5px;
-}
-
-.music-header-right {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
-
-.music-header-text {
-  font-family: 'Montserrat Alternates', 'Oxanium', Arial, sans-serif;
-  font-size: 1.3rem;
-  color: #FFCB00;
-  font-weight: 700;
-  letter-spacing: 1.2px;
-  text-align: right;
-  white-space: nowrap;
 }
 
 .music-home-btn {
@@ -412,37 +408,26 @@ audio {
   /* Header: logo left, text center, button right, all in one row */
   .music-header-inner {
     flex-direction: row;
-    align-items: center !important;
-    justify-content: space-between !important;
-    text-align: center;
-    gap: 0;
+    align-items: center;
+    justify-content: space-between;
     padding: 10px 2vw;
+    gap: 0;
   }
-  .music-header-left {
+  .music-header-left,
+  .music-header-right {
     flex: 0 0 auto;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     margin-bottom: 0;
   }
   .music-header-title {
     display: none; /* Hide Akbar Q Music on mobile */
   }
-  .music-header-right {
-    flex: 0 0 auto;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 0;
-  }
   .music-header-text {
     flex: 1 1 auto;
     font-size: 1.1rem;
     text-align: center;
     margin: 0 auto;
-    color: #FFCB00;
-    font-family: 'Montserrat Alternates', 'Oxanium', Arial, sans-serif;
-    font-weight: 700;
-    letter-spacing: 1.2px;
-    white-space: nowrap;
     order: 2;
   }
   .music-home-btn {
@@ -452,5 +437,10 @@ audio {
     margin: 0 0 0 8px;
     display: block;
     order: 3;
+  }
+
+  .song-table th.desktop-only,
+  .song-table td.desktop-only {
+    display: none;
   }
 }
