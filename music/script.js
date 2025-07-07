@@ -160,58 +160,63 @@ function animateBg() {
     avg = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
   }
 
-  // Colors from your branding
-  const dark = "#111417"; // nearly black
-  const grey = "#23282b"; // deep grey
-  const yellow = "#FFCB00"; // bright yellow
+  // Animate color and gradients based on time and beat
+  const t = Date.now() / 1000;
+  const beat = 0.5 + Math.min(1.5, avg / 80); // More aggressive
+  const hueBase = ((t * 20) + avg * 2) % 360;
+  const hueAccent = (hueBase + 60) % 360;
+  const yellow = "#FFCB00";
+  const dark = "#111417";
+  const grey = "#23282b";
 
-  // Fill background with deep black/grey gradient
-  const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-  grad.addColorStop(0, dark);
-  grad.addColorStop(0.5, grey);
-  grad.addColorStop(1, dark);
-  ctx.fillStyle = grad;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // 1. Deep radial gradient (center glow)
+  const radial = ctx.createRadialGradient(
+    canvas.width / 2, canvas.height / 2, canvas.width * 0.1 * beat,
+    canvas.width / 2, canvas.height / 2, canvas.width * 0.7
+  );
+  radial.addColorStop(0, `hsla(${hueBase}, 100%, ${18 + beat * 10}%, 0.85)`);
+  radial.addColorStop(0.4, `hsla(${hueAccent}, 80%, 10%, 0.7)`);
+  radial.addColorStop(1, `${dark}`);
+
+  ctx.fillStyle = radial;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Light bar parameters
-  const barCount = 5;
-  const barLength = canvas.width * 0.38;
-  const barThickness = 16 + avg / 12;
-  const barSpacing = canvas.height / (barCount + 1);
-  const pulse = 0.4 + Math.min(0.6, avg / 128);
+  // 2. Animated angled linear gradient (adds "3D" sweep)
+  const grad = ctx.createLinearGradient(
+    0, canvas.height * (0.2 + 0.1 * Math.sin(t * 0.7)),
+    canvas.width, canvas.height * (0.8 + 0.1 * Math.cos(t * 0.9))
+  );
+  grad.addColorStop(0, `hsla(${hueAccent}, 100%, 12%, 0.7)`);
+  grad.addColorStop(0.5, `hsla(${hueBase}, 100%, ${12 + beat * 10}%, 0.3)`);
+  grad.addColorStop(1, `${grey}CC`);
+  ctx.globalAlpha = 0.7;
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.globalAlpha = 1;
 
-  // Draw left and right light bars
-  for (let i = 0; i < barCount; i++) {
-    // Y position for each bar
-    const y = barSpacing * (i + 1);
+  // 3. Moving "spotlight" (adds highlight and depth)
+  const spotX = canvas.width / 2 + Math.sin(t * 0.8) * canvas.width * 0.18;
+  const spotY = canvas.height / 2 + Math.cos(t * 0.6) * canvas.height * 0.18;
+  const spot = ctx.createRadialGradient(
+    spotX, spotY, 0,
+    spotX, spotY, canvas.width * (0.18 + 0.08 * Math.sin(t * 1.3 + avg / 50))
+  );
+  spot.addColorStop(0, `rgba(255,203,0,${0.18 + 0.18 * beat})`);
+  spot.addColorStop(1, "rgba(255,203,0,0)");
+  ctx.globalAlpha = 0.8;
+  ctx.fillStyle = spot;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.globalAlpha = 1;
 
-    // Animate color: pulse yellow on beat, otherwise white
-    const glowColor = `rgba(255,203,0,${0.7 * pulse})`;
-
-    // Left bar
-    ctx.save();
-    ctx.shadowColor = yellow;
-    ctx.shadowBlur = 40 + avg / 2;
-    ctx.fillStyle = glowColor;
-    ctx.fillRect(40, y - barThickness / 2, barLength, barThickness);
-    ctx.restore();
-
-    // Right bar
-    ctx.save();
-    ctx.shadowColor = yellow;
-    ctx.shadowBlur = 40 + avg / 2;
-    ctx.fillStyle = glowColor;
-    ctx.fillRect(canvas.width - 40 - barLength, y - barThickness / 2, barLength, barThickness);
-    ctx.restore();
-  }
-
-  // Add a strong vignette for depth
+  // 4. Strong vignette for 3D depth
   const vignette = ctx.createRadialGradient(
-    canvas.width / 2, canvas.height / 2, Math.min(canvas.width, canvas.height) / 2.2,
-    canvas.width / 2, canvas.height / 2, Math.max(canvas.width, canvas.height) / 1.1
+    canvas.width / 2, canvas.height / 2, Math.min(canvas.width, canvas.height) / 2.1,
+    canvas.width / 2, canvas.height / 2, Math.max(canvas.width, canvas.height) / 1.05
   );
   vignette.addColorStop(0, 'rgba(0,0,0,0)');
-  vignette.addColorStop(1, 'rgba(0,0,0,0.85)');
+  vignette.addColorStop(1, 'rgba(0,0,0,0.92)');
   ctx.save();
   ctx.globalAlpha = 1;
   ctx.fillStyle = vignette;
