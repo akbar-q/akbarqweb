@@ -238,7 +238,60 @@ audio {
   pointer-events: none;
 }
 
-/* --- Responsive styles for mobile --- */
+/* Music Header Bar */
+.music-header {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto 24px auto;
+  padding: 0;
+  background: rgba(35, 40, 43, 0.82);
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  backdrop-filter: blur(12px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.music-header-inner {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 32px;
+  box-sizing: border-box;
+}
+
+.music-home-btn {
+  background: #FFCB00;
+  color: #23282b;
+  font-family: 'Montserrat Alternates', 'Oxanium', Arial, sans-serif;
+  font-size: 1.3rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 32px;
+  padding: 16px 48px;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  transition: background 0.2s, color 0.2s;
+  display: inline-block;
+}
+
+.music-home-btn:hover {
+  background: #FFB800;
+  color: #23282b;
+}
+
+.music-header-text {
+  font-family: 'Montserrat Alternates', 'Oxanium', Arial, sans-serif;
+  font-size: 2.1rem;
+  color: #FFCB00;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin-left: 32px;
+  white-space: nowrap;
+}
+
 @media (max-width: 700px) {
   .container {
     max-width: 100vw;
@@ -297,4 +350,25 @@ audio {
     font-size: 1.05rem;
   }
   .song-table tr {
-    /* Add more space
+    /* Add more space between rows */
+    height: 60px;
+  }
+
+  /* Music Header Bar */
+  .music-header {
+    margin-bottom: 16px;
+  }
+  .music-header-inner {
+    padding: 12px 8vw;
+  }
+  .music-header-text {
+    font-size: 1.3rem;
+    margin-left: 0;
+  }
+  .music-home-btn {
+    width: 100%;
+    text-align: center;
+    padding: 14px 0;
+    font-size: 1.1rem;
+  }
+}
