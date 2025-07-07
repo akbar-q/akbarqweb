@@ -160,52 +160,63 @@ function animateBg() {
     avg = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
   }
 
-  // More aggressive color and brightness pulsing
-  const hue = ((Date.now() / 25) + avg * 2) % 360;
-  const sat = 70 + Math.min(30, avg / 2); // 70-100%
-  const light = 10 + Math.min(30, avg / 2); // 10-40%
-  const alpha = 0.95;
+  // Colors from your branding
+  const dark = "#111417"; // nearly black
+  const grey = "#23282b"; // deep grey
+  const yellow = "#FFCB00"; // bright yellow
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // Main background
-  ctx.fillStyle = `hsl(${hue}, ${sat}%, ${light}%)`;
+  // Fill background with deep black/grey gradient
+  const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+  grad.addColorStop(0, dark);
+  grad.addColorStop(0.5, grey);
+  grad.addColorStop(1, dark);
+  ctx.fillStyle = grad;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Frosted glass overlay (stronger for more depth)
-  ctx.save();
-  ctx.globalAlpha = 0.22 + Math.min(0.18, avg / 256);
-  ctx.filter = 'blur(24px)';
-  ctx.fillStyle = '#fff';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.restore();
+  // Light bar parameters
+  const barCount = 5;
+  const barLength = canvas.width * 0.38;
+  const barThickness = 16 + avg / 12;
+  const barSpacing = canvas.height / (barCount + 1);
+  const pulse = 0.4 + Math.min(0.6, avg / 128);
 
-  // Vignette for depth
-  const grad = ctx.createRadialGradient(
+  // Draw left and right light bars
+  for (let i = 0; i < barCount; i++) {
+    // Y position for each bar
+    const y = barSpacing * (i + 1);
+
+    // Animate color: pulse yellow on beat, otherwise white
+    const glowColor = `rgba(255,203,0,${0.7 * pulse})`;
+
+    // Left bar
+    ctx.save();
+    ctx.shadowColor = yellow;
+    ctx.shadowBlur = 40 + avg / 2;
+    ctx.fillStyle = glowColor;
+    ctx.fillRect(40, y - barThickness / 2, barLength, barThickness);
+    ctx.restore();
+
+    // Right bar
+    ctx.save();
+    ctx.shadowColor = yellow;
+    ctx.shadowBlur = 40 + avg / 2;
+    ctx.fillStyle = glowColor;
+    ctx.fillRect(canvas.width - 40 - barLength, y - barThickness / 2, barLength, barThickness);
+    ctx.restore();
+  }
+
+  // Add a strong vignette for depth
+  const vignette = ctx.createRadialGradient(
     canvas.width / 2, canvas.height / 2, Math.min(canvas.width, canvas.height) / 2.2,
     canvas.width / 2, canvas.height / 2, Math.max(canvas.width, canvas.height) / 1.1
   );
-  grad.addColorStop(0, 'rgba(0,0,0,0)');
-  grad.addColorStop(1, 'rgba(0,0,0,0.65)');
+  vignette.addColorStop(0, 'rgba(0,0,0,0)');
+  vignette.addColorStop(1, 'rgba(0,0,0,0.85)');
   ctx.save();
-  ctx.globalAlpha = 0.85;
-  ctx.fillStyle = grad;
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = vignette;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.restore();
-
-  // Optional: Add a glowing pulse in the center for more "depth"
-  if (avg > 0) {
-    ctx.save();
-    ctx.globalAlpha = 0.18 + Math.min(0.22, avg / 128);
-    ctx.beginPath();
-    ctx.arc(canvas.width / 2, canvas.height / 2, 120 + avg * 1.5, 0, 2 * Math.PI);
-    ctx.closePath();
-    ctx.fillStyle = `hsl(${hue}, 100%, 60%)`;
-    ctx.shadowColor = `hsl(${hue}, 100%, 60%)`;
-    ctx.shadowBlur = 80 + avg;
-    ctx.fill();
-    ctx.restore();
-  }
 }
 animateBg();
 
