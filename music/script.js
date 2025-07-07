@@ -112,7 +112,7 @@ function showAlbum(idx) {
 window.playSongFromTable = function(sidx) {
   playSong(sidx);
 };
-
+ 
 function playSong(sidx) {
   currentSong = sidx;
   const song = albums[currentAlbum].songs[sidx];
@@ -122,6 +122,73 @@ function playSong(sidx) {
 }
 
 backBtn.onclick = showAlbums;
+
+// --- Animated, audio-reactive background ---
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+// Web Audio API setup
+let audioCtx, analyser, source, dataArray;
+
+function setupAudioAnalyser() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 128;
+    dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+    source = audioCtx.createMediaElementSource(audio);
+    source.connect(analyser);
+    analyser.connect(audioCtx.destination);
+  }
+}
+
+// Animate background based on audio
+function animateBg() {
+  requestAnimationFrame(animateBg);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  if (analyser) {
+    analyser.getByteFrequencyData(dataArray);
+    // Get average volume (for "beat" effect)
+    const avg = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
+
+    // Draw animated circles based on frequency data
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const maxRadius = Math.min(canvas.width, canvas.height) / 3;
+    for (let i = 0; i < dataArray.length; i++) {
+      const angle = (i / dataArray.length) * 2 * Math.PI;
+      const radius = maxRadius * (0.5 + dataArray[i] / 512);
+      const x = centerX + Math.cos(angle) * radius;
+      const y = centerY + Math.sin(angle) * radius;
+      ctx.beginPath();
+      ctx.arc(x, y, 12 + avg / 16, 0, 2 * Math.PI);
+      ctx.fillStyle = `rgba(255,203,0,${0.15 + dataArray[i]/512})`;
+      ctx.fill();
+    }
+
+    // Pulse background color with the beat
+    ctx.fillStyle = `rgba(43,122,105,${0.15 + avg/512})`;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+}
+animateBg();
+
+// Start analyser when audio is played
+audio.addEventListener('play', () => {
+  setupAudioAnalyser();
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+});
 
 // Initialize the album list on page load
 showAlbums();
