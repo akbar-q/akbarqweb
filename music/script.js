@@ -155,29 +155,53 @@ function animateBg() {
   requestAnimationFrame(animateBg);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  // Draw a dark overlay for contrast
+  ctx.fillStyle = "rgba(0, 39, 36, 0.7)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
   if (analyser) {
     analyser.getByteFrequencyData(dataArray);
-    // Get average volume (for "beat" effect)
-    const avg = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
 
-    // Draw animated circles based on frequency data
+    // Visualizer bars setup
+    const barCount = dataArray.length;
+    const barWidth = Math.min(canvas.width / (barCount * 1.5), 32);
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
-    const maxRadius = Math.min(canvas.width, canvas.height) / 3;
-    for (let i = 0; i < dataArray.length; i++) {
-      const angle = (i / dataArray.length) * 2 * Math.PI;
-      const radius = maxRadius * (0.5 + dataArray[i] / 512);
-      const x = centerX + Math.cos(angle) * radius;
-      const y = centerY + Math.sin(angle) * radius;
-      ctx.beginPath();
-      ctx.arc(x, y, 12 + avg / 16, 0, 2 * Math.PI);
-      ctx.fillStyle = `rgba(255,203,0,${0.15 + dataArray[i]/512})`;
-      ctx.fill();
+    const maxBarHeight = Math.min(canvas.height, canvas.width) / 2.2;
+
+    for (let i = 0; i < barCount; i++) {
+      const value = dataArray[i];
+      const percent = value / 255;
+      const barHeight = percent * maxBarHeight;
+
+      // Spread bars in a circle (disco style)
+      const angle = (i / barCount) * 2 * Math.PI;
+      const x = centerX + Math.cos(angle) * (maxBarHeight * 0.5);
+      const y = centerY + Math.sin(angle) * (maxBarHeight * 0.5);
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+
+      // Disco color: cycle through hues for a rainbow effect
+      const hue = (i * 360 / barCount + Date.now() / 10) % 360;
+      ctx.fillStyle = `hsl(${hue}, 95%, ${40 + percent * 60}%)`;
+
+      // Draw the bar (rectangle)
+      ctx.fillRect(-barWidth / 2, 0, barWidth, -barHeight);
+
+      ctx.restore();
     }
 
-    // Pulse background color with the beat
-    ctx.fillStyle = `rgba(43,122,105,${0.15 + avg/512})`;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // Optional: Add a flashing pulse in the center based on average volume
+    const avg = dataArray.reduce((a, b) => a + b, 0) / barCount;
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 60 + avg / 2, 0, 2 * Math.PI);
+    ctx.fillStyle = `rgba(255, 203, 0, ${0.2 + avg / 512})`;
+    ctx.shadowColor = "#FFCB00";
+    ctx.shadowBlur = 40 + avg / 2;
+    ctx.fill();
+    ctx.shadowBlur = 0;
   }
 }
 animateBg();
