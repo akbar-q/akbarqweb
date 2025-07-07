@@ -376,7 +376,7 @@ audio {
   .container {
     max-width: 100vw;
     width: 100vw;
-    padding: 12px 0;
+    padding: 12px 3vw;
     border-radius: 0;
     box-shadow: none;
     background: rgba(35, 40, 43, 0.92);
@@ -387,11 +387,9 @@ audio {
   .album-card {
     flex-direction: column;
     align-items: center;
-    padding: 14px 2vw;
-    min-height: unset;
-    gap: 12px;
-    width: 94vw;
-    max-width: 96vw;
+    padding: 14px 4vw;
+    width: 100%;
+    max-width: 100vw;
     box-sizing: border-box;
   }
   .album-card-img img {
@@ -442,5 +440,9 @@ audio {
   .song-table th.desktop-only,
   .song-table td.desktop-only {
     display: none;
+  }
+  .song-table th,
+  .song-table td {
+    text-align: center !important;
   }
 }
