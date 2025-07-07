@@ -4,7 +4,7 @@ const albums = [
     artist: "Artist Name",
     ageRating: "PG",
     description: "This is a description of Album 1. You can write a paragraph or two here about the album, its style, or any background info.",
-    cover: "https://placehold.co/400x400?text=Album+1",
+    cover: "images/image1.jpg",
     songs: [
       { title: "Song 1", artist: "Artist 1", description: "A great intro track.", file: "music/song1.mp3" },
       { title: "Song 2", artist: "Artist 1", description: "The follow-up hit.", file: "music/song2.mp3" }
@@ -12,7 +12,7 @@ const albums = [
   },
   {
     title: "Album 2",
-    cover: "https://placehold.co/300x300?text=Album+2",
+    cover: "images/image2.jpg",
     songs: [
       // Add more songs here
     ]
