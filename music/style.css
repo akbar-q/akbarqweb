@@ -29,6 +29,7 @@ header h1 {
   color: #FFB800;
 }
 
+/* Album List and Card */
 .album-list {
   display: flex;
   flex-direction: column;
@@ -46,14 +47,14 @@ header h1 {
   box-shadow: 0 4px 24px rgba(0,0,0,0.35);
   padding: 32px 48px;
   width: 100%;
-  max-width: 1100px; /* Match header/player width */
-  min-height: 220px;
+  max-width: 900px; /* Match inner header width */
+  min-height: 180px;
   cursor: pointer;
   transition: background 0.2s, transform 0.2s;
   color: #FFCB00;
   font-family: 'Oxanium', Arial, sans-serif;
   backdrop-filter: blur(10px);
-  gap: 48px;
+  gap: 36px;
 }
 
 .album-card:hover {
@@ -63,8 +64,8 @@ header h1 {
 }
 
 .album-card-img img {
-  width: 280px;   /* 200% of previous 140px */
-  height: 280px;
+  width: 140px;
+  height: 140px;
   object-fit: cover;
   border-radius: 16px;
   box-shadow: 0 2px 16px rgba(0,0,0,0.28);
@@ -95,7 +96,7 @@ header h1 {
 }
 
 .album-desc {
-  font-size: 1.08rem;
+  font-size: 0.97rem;
   color: #FFCB00;
   margin-top: 10px;
   font-family: 'Montserrat Alternates', Arial, sans-serif;
@@ -458,5 +459,53 @@ audio {
     width: auto;
     padding: 10px 18px;
     font-size: 1rem;
+  }
+
+  .album-card {
+    flex-direction: column;
+    align-items: center;
+    padding: 14px 4vw;
+    min-height: unset;
+    gap: 12px;
+    width: 98vw;
+    max-width: 99vw;
+  }
+  .album-card-img img {
+    width: 70px;   /* 50% of 140px */
+    height: 70px;
+    margin-bottom: 10px;
+  }
+  .album-card-info {
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+  .music-header-inner {
+    flex-direction: column;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center;
+    gap: 10px;
+    padding: 10px 4vw;
+  }
+  .music-header-left,
+  .music-header-right {
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100%;
+    gap: 10px;
+  }
+  .music-header-title,
+  .music-header-text {
+    font-size: 1.05rem;
+    text-align: center;
+    width: 100%;
+  }
+  .music-home-btn {
+    width: auto;
+    padding: 10px 18px;
+    font-size: 1rem;
+    margin: 0 auto;
+    display: block;
   }
 }
