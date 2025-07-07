@@ -387,91 +387,19 @@ audio {
     backdrop-filter: blur(12px);
   }
 
-  .album-cover {
-    width: 90vw;
-    height: 90vw;
-    max-width: 340px;
-    max-height: 340px;
-    margin-bottom: 16px;
-  }
-
-  .album-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-
-  #album-title {
-    font-size: 1.3rem;
-    margin-bottom: 6px;
-    text-align: center;
-    width: 100%;
-  }
-
-  .album-play-btn {
-    width: 100%;
-    margin-left: 0;
-    padding: 12px 0;
-    font-size: 1.1rem;
-  }
-
-  /* Hide all but Title, Duration, Play columns */
-  .song-table th:nth-child(1),  /* # */
-  .song-table th:nth-child(3),  /* Artist */
-  .song-table th:nth-child(4),  /* Description */
-  .song-table td:nth-child(1),
-  .song-table td:nth-child(3),
-  .song-table td:nth-child(4) {
-    display: none;
-  }
-  .song-table th,
-  .song-table td {
-    text-align: center !important;
-    vertical-align: middle;
-    padding-left: 12px;
-    padding-right: 12px;
-    font-size: 1.05rem;
-  }
-  .song-table tr {
-    /* Add more space between rows for easier tapping */
-    height: 60px;
-  }
-  .music-header-inner {
-    flex-direction: column;
-    gap: 10px;
-    padding: 10px 4vw;
-    align-items: stretch;
-  }
-  .music-header-left {
-    justify-content: center;
-    margin-bottom: 6px;
-  }
-  .music-header-right {
-    justify-content: flex-end;
-    gap: 10px;
-  }
-  .music-header-title,
-  .music-header-text {
-    font-size: 1.05rem;
-  }
-  .music-home-btn {
-    width: auto;
-    padding: 10px 18px;
-    font-size: 1rem;
-  }
-
+  /* Album card: fit inside container, no overflow */
   .album-card {
     flex-direction: column;
     align-items: center;
-    padding: 14px 4vw;
+    padding: 14px 2vw;
     min-height: unset;
     gap: 12px;
-    width: 98vw;
-    max-width: 99vw;
+    width: 94vw;
+    max-width: 96vw;
+    box-sizing: border-box;
   }
   .album-card-img img {
-    width: 70px;   /* 50% of 140px */
+    width: 70px;
     height: 70px;
     margin-bottom: 10px;
   }
@@ -480,32 +408,49 @@ audio {
     text-align: center;
     width: 100%;
   }
+
+  /* Header: logo left, text center, button right, all in one row */
   .music-header-inner {
-    flex-direction: column;
+    flex-direction: row;
     align-items: center !important;
-    justify-content: center !important;
+    justify-content: space-between !important;
     text-align: center;
-    gap: 10px;
-    padding: 10px 4vw;
+    gap: 0;
+    padding: 10px 2vw;
   }
-  .music-header-left,
+  .music-header-left {
+    flex: 0 0 auto;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 0;
+  }
+  .music-header-title {
+    display: none; /* Hide Akbar Q Music on mobile */
+  }
   .music-header-right {
-    justify-content: center !important;
-    align-items: center !important;
-    width: 100%;
-    gap: 10px;
+    flex: 0 0 auto;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0;
   }
-  .music-header-title,
   .music-header-text {
-    font-size: 1.05rem;
+    flex: 1 1 auto;
+    font-size: 1.1rem;
     text-align: center;
-    width: 100%;
+    margin: 0 auto;
+    color: #FFCB00;
+    font-family: 'Montserrat Alternates', 'Oxanium', Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    white-space: nowrap;
+    order: 2;
   }
   .music-home-btn {
     width: auto;
     padding: 10px 18px;
     font-size: 1rem;
-    margin: 0 auto;
+    margin: 0 0 0 8px;
     display: block;
+    order: 3;
   }
 }
