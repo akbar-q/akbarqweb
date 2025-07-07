@@ -154,30 +154,58 @@ function setupAudioAnalyser() {
 function animateBg() {
   requestAnimationFrame(animateBg);
 
-  // Default/fallback color
   let avg = 0;
   if (analyser) {
     analyser.getByteFrequencyData(dataArray);
     avg = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
   }
 
-  // Animate background color based on the beat (avg volume)
-  // HSL: hue cycles, lightness/opacity pulses with the beat
-  const hue = (Date.now() / 40) % 360;
-  const light = 18 + Math.min(30, avg / 4); // 18-48%
-  const alpha = 0.85 + Math.min(0.12, avg / 512); // 0.85-0.97
+  // More aggressive color and brightness pulsing
+  const hue = ((Date.now() / 25) + avg * 2) % 360;
+  const sat = 70 + Math.min(30, avg / 2); // 70-100%
+  const light = 10 + Math.min(30, avg / 2); // 10-40%
+  const alpha = 0.95;
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = `hsla(${hue}, 60%, ${light}%, ${alpha})`;
+
+  // Main background
+  ctx.fillStyle = `hsl(${hue}, ${sat}%, ${light}%)`;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Frosted glass effect: add a blurred white overlay
+  // Frosted glass overlay (stronger for more depth)
   ctx.save();
-  ctx.globalAlpha = 0.18 + Math.min(0.12, avg / 512);
-  ctx.filter = 'blur(18px)';
+  ctx.globalAlpha = 0.22 + Math.min(0.18, avg / 256);
+  ctx.filter = 'blur(24px)';
   ctx.fillStyle = '#fff';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.restore();
+
+  // Vignette for depth
+  const grad = ctx.createRadialGradient(
+    canvas.width / 2, canvas.height / 2, Math.min(canvas.width, canvas.height) / 2.2,
+    canvas.width / 2, canvas.height / 2, Math.max(canvas.width, canvas.height) / 1.1
+  );
+  grad.addColorStop(0, 'rgba(0,0,0,0)');
+  grad.addColorStop(1, 'rgba(0,0,0,0.65)');
+  ctx.save();
+  ctx.globalAlpha = 0.85;
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.restore();
+
+  // Optional: Add a glowing pulse in the center for more "depth"
+  if (avg > 0) {
+    ctx.save();
+    ctx.globalAlpha = 0.18 + Math.min(0.22, avg / 128);
+    ctx.beginPath();
+    ctx.arc(canvas.width / 2, canvas.height / 2, 120 + avg * 1.5, 0, 2 * Math.PI);
+    ctx.closePath();
+    ctx.fillStyle = `hsl(${hue}, 100%, 60%)`;
+    ctx.shadowColor = `hsl(${hue}, 100%, 60%)`;
+    ctx.shadowBlur = 80 + avg;
+    ctx.fill();
+    ctx.restore();
+  }
 }
 animateBg();
 
