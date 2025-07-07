@@ -37,11 +37,15 @@ function showAlbums() {
     const div = document.createElement('div');
     div.className = 'album-card';
     div.innerHTML = `
-      <img src="${album.cover}" alt="${album.title}" />
-      <div class="album-name">${album.title}</div>
-      <div class="album-artist"><strong>Artist:</strong> ${album.artist || 'Unknown'}</div>
-      <div class="album-age"><strong>Age Rating:</strong> ${album.ageRating || 'N/A'}</div>
-      <div class="album-desc">${album.description || ''}</div>
+      <div class="album-card-img">
+        <img src="${album.cover}" alt="${album.title}" />
+      </div>
+      <div class="album-card-info">
+        <div class="album-name">${album.title}</div>
+        <div class="album-artist"><strong>Artist:</strong> ${album.artist || 'Unknown'}</div>
+        <div class="album-age"><strong>Age Rating:</strong> ${album.ageRating || 'N/A'}</div>
+        <div class="album-desc">${album.description || ''}</div>
+      </div>
     `;
     div.onclick = () => showAlbum(idx);
     albumList.appendChild(div);
