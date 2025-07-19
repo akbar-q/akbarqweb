@@ -1,0 +1,83 @@
+.navbar {
+    min-height: 90px;
+    transition: all 0.3s;
+    border-bottom: 1px solid transparent;
+    background: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    width: 100%;
+    position: relative;
+    z-index: 1000;
+}
+
+.navbar .container {
+    display: flex;
+    height: 90px;
+    padding: 0.5rem 0.6rem;
+    flex-wrap: nowrap;
+    background: rgba(35, 35, 35, 0.8) !important;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 4px !important;
+    width: 95%;
+    margin: 1rem auto;
+}
+
+.navbar-logo {
+    padding-left: 2rem;
+    margin: 0 !important;
+}
+
+.navbar-brand {
+    flex-shrink: 0;
+    align-items: center;
+    margin-right: 0;
+    padding: 10px 0;
+    transition: all 0.3s;
+    word-break: break-word;
+    z-index: 1;
+}
+
+.navbar-nav {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-item {
+    padding: 0 !important;
+    transition: .3s all !important;
+}
+
+.nav-link {
+    padding: 16px !important;
+    margin: 0 !important;
+    border-radius: 4px !important;
+    transition: .3s all !important;
+    color: white;
+    text-decoration: none;
+    display: block;
+}
+
+.nav-link:hover {
+    background-color: rgba(27, 31, 10, 0.06);
+}
+
+@media (max-width: 767px) {
+    .navbar {
+        min-height: 72px;
+    }
+    
+    .navbar .container {
+        height: 56px !important;
+        padding-right: 1rem;
+        margin-top: 0rem;
+    }
+    
+    .navbar-logo {
+        padding-left: 1rem;
+    }
+}
