@@ -9,17 +9,16 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Oxanium', 'Montserrat Alternates', Arial, sans-serif;
   list-style: none;
   text-decoration: none;
 }
 
 body {
   background: linear-gradient(
-    245.59deg,
-    #4d9558 0%,
-    #38703d 28.53%,
-    #133917 75.52%
+    135deg,
+    #002724 0%,
+    #2b7a69 100%
   );
 }
 
@@ -76,10 +75,9 @@ header {
   align-items: center;
   gap: 2rem;
   background: linear-gradient(
-    245.59deg,
-    #4d9558 0%,
-    #38703d 28.53%,
-    #133917 75.52%
+    135deg,
+    #002724 0%,
+    #2b7a69 100%
   );
 }
 
@@ -284,10 +282,9 @@ section {
   box-sizing: border-box;
   padding: 0 0 0 0px;
   background: linear-gradient(
-    245.59deg,
-    #4d9558 0%,
-    #38703d 28.53%,
-    #133917 75.52%
+    135deg,
+    #002724 0%,
+    #2b7a69 100%
   );
 }
 
@@ -384,10 +381,9 @@ img {
   align-items: center;
   gap: 2rem;
   background: linear-gradient(
-    245.59deg,
-    #4d9558 0%,
-    #38703d 28.53%,
-    #133917 75.52%
+    135deg,
+    #002724 0%,
+    #2b7a69 100%
   );
 }
 
@@ -657,55 +653,22 @@ input {
   background-color: #27ae60; /* Custom color for the new button */
   padding: 20px;
 }
-/* Existing CSS styles */
 
-/* For screens with a maximum width of 768px (typical for phones) */
-@media screen and (max-width: 768px) {
-  body {
-    background: linear-gradient(
-      245.59deg,
-      #4d9558 0%,
-      #38703d 28.53%,
-      #133917 75.52%
-    );
-  }
+/* Use Oxanium for headings, Montserrat Alternates for body text */
+body, p, .hero-text p, .view-meme-hero-text p, .meme-container, .caption-input, .action-buttons button, input {
+  font-family: 'Montserrat Alternates', 'Oxanium', Arial, sans-serif;
+}
 
-  #meme-gen-section {
-    display: flex;
-    flex-direction: column; /* Stack elements vertically on smaller screens */
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-  }
+h1, h2, h3, h4, h5, h6, #view-meme-text, .hero-text h1, .view-meme-hero-text h1 {
+  font-family: 'Oxanium', 'Montserrat Alternates', Arial, sans-serif;
+}
 
-  #meme-container {
-    display: flex;
-    flex-direction: column; /* Stack elements vertically on smaller screens */
-    align-items: center;
-    gap: 10px;
-  }
+/* Remove any font-family: cursive or Permanent Marker */
+#view-meme-text {
+  font-family: 'Oxanium', 'Montserrat Alternates', Arial, sans-serif;
+}
 
-  #meme-image {
-    max-width: 100%;
-    max-height: 70vh;
-    border: 10px solid white;
-    margin-top: 20px; /* Adjust margin as needed */
-    height: auto; /* Let the image maintain its aspect ratio */
-    width: auto;
-  }
-
-  #text-boxes input {
-    width: 100%; /* Expand text boxes to full width */
-    max-width: 450px; /* Limit maximum width on smaller screens */
-  }
-
-  .meme-gen-btn {
-    margin: 10px 0;
-    padding: 10px 20px; /* Reduce button padding for smaller screens */
-  }
-
-  #view-work-button {
-    padding: 10px; /* Adjust padding for the new button */
-  }
+.hero-text h1,
+.view-meme-hero-text h1 {
+  font-family: 'Oxanium', 'Montserrat Alternates', Arial, sans-serif;
 }
