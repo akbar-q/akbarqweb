@@ -387,8 +387,8 @@ function updateLoopButton() {
 }
 
 function updatePlayPauseButton() {
-  // Use simple symbols that won't be converted to emoji on mobile
-  playPauseBtn.textContent = isPlaying ? '‖' : '▶'; // Using double vertical bar instead of pause emoji
+  // Use better spaced pause symbol that won't be converted to emoji on mobile
+  playPauseBtn.textContent = isPlaying ? '❙❙' : '▶'; // Using better spaced pause bars
 }
 
 function updateNowPlaying() {
