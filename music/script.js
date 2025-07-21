@@ -171,13 +171,11 @@ function showAlbum(idx) {
   updateShuffleButton();
   updateLoopButton();
   
-  // Ensure buttons have correct initial styling
-  shuffleBtn.style.color = '#FFB800';
-  shuffleBtn.style.backgroundColor = 'transparent';
-  shuffleBtn.style.border = '1px solid rgba(255, 184, 0, 0.3)';
-  loopBtn.style.color = '#FFB800';
-  loopBtn.style.backgroundColor = 'transparent';
-  loopBtn.style.border = '1px solid rgba(255, 184, 0, 0.3)';
+  // Ensure lyrics button has correct initial styling
+  lyricsBtn.style.color = '#FFB800';
+  lyricsBtn.style.backgroundColor = 'transparent';
+  lyricsBtn.style.border = '1px solid rgba(255, 184, 0, 0.3)';
+  lyricsBtn.style.opacity = '0.7';
 
   songList.innerHTML = '';
   album.songs.forEach((song, sidx) => {
@@ -355,15 +353,15 @@ function toggleLoop() {
 function updateShuffleButton() {
   shuffleBtn.textContent = '⤮'; // Clean shuffle symbol
   if (isShuffled) {
-    shuffleBtn.style.opacity = '1';
-    shuffleBtn.style.color = '#000000'; // Black text when active
-    shuffleBtn.style.backgroundColor = '#FFB800'; // Solid yellow background when active
-    shuffleBtn.style.border = '1px solid #FFB800';
+    shuffleBtn.style.setProperty('opacity', '1', 'important');
+    shuffleBtn.style.setProperty('color', '#000000', 'important'); // Black text when active
+    shuffleBtn.style.setProperty('background-color', '#FFB800', 'important'); // Solid yellow background when active
+    shuffleBtn.style.setProperty('border', '1px solid #FFB800', 'important');
   } else {
-    shuffleBtn.style.opacity = '0.7';
-    shuffleBtn.style.color = '#FFB800'; // Yellow text when inactive
-    shuffleBtn.style.backgroundColor = 'transparent'; // No fill when inactive
-    shuffleBtn.style.border = '1px solid rgba(255, 184, 0, 0.3)';
+    shuffleBtn.style.setProperty('opacity', '0.7', 'important');
+    shuffleBtn.style.setProperty('color', '#FFB800', 'important'); // Yellow text when inactive
+    shuffleBtn.style.setProperty('background-color', 'transparent', 'important'); // No fill when inactive
+    shuffleBtn.style.setProperty('border', '1px solid rgba(255, 184, 0, 0.3)', 'important');
   }
   shuffleBtn.title = isShuffled ? 'Shuffle: On' : 'Shuffle: Off';
 }
@@ -375,15 +373,15 @@ function updateLoopButton() {
   loopBtn.textContent = loopIcons[loopMode];
   
   if (loopMode === 0) {
-    loopBtn.style.opacity = '0.7';
-    loopBtn.style.color = '#FFB800'; // Yellow text when inactive
-    loopBtn.style.backgroundColor = 'transparent'; // No fill when inactive
-    loopBtn.style.border = '1px solid rgba(255, 184, 0, 0.3)';
+    loopBtn.style.setProperty('opacity', '0.7', 'important');
+    loopBtn.style.setProperty('color', '#FFB800', 'important'); // Yellow text when inactive
+    loopBtn.style.setProperty('background-color', 'transparent', 'important'); // No fill when inactive
+    loopBtn.style.setProperty('border', '1px solid rgba(255, 184, 0, 0.3)', 'important');
   } else {
-    loopBtn.style.opacity = '1';
-    loopBtn.style.color = '#000000'; // Black text when active
-    loopBtn.style.backgroundColor = '#FFB800'; // Solid yellow background when active
-    loopBtn.style.border = '1px solid #FFB800';
+    loopBtn.style.setProperty('opacity', '1', 'important');
+    loopBtn.style.setProperty('color', '#000000', 'important'); // Black text when active
+    loopBtn.style.setProperty('background-color', '#FFB800', 'important'); // Solid yellow background when active
+    loopBtn.style.setProperty('border', '1px solid #FFB800', 'important');
   }
   loopBtn.title = loopTitles[loopMode];
 }
@@ -559,10 +557,10 @@ function toggleLyrics() {
   
   if (lyricsVisible) {
     lyricsPanel.style.display = 'block';
-    lyricsBtn.style.opacity = '1';
-    lyricsBtn.style.color = '#000000'; // Black text when active
-    lyricsBtn.style.backgroundColor = '#FFB800'; // Solid yellow background when active
-    lyricsBtn.style.border = '1px solid #FFB800';
+    lyricsBtn.style.setProperty('opacity', '1', 'important');
+    lyricsBtn.style.setProperty('color', '#000000', 'important'); // Black text when active
+    lyricsBtn.style.setProperty('background-color', '#FFB800', 'important'); // Solid yellow background when active
+    lyricsBtn.style.setProperty('border', '1px solid #FFB800', 'important');
     displayLyrics();
     
     // Add scroll detection to prevent auto-scroll interference (only if not already added)
@@ -579,20 +577,20 @@ function toggleLyrics() {
     }
   } else {
     lyricsPanel.style.display = 'none';
-    lyricsBtn.style.opacity = '0.7';
-    lyricsBtn.style.color = '#FFB800'; // Yellow text when inactive
-    lyricsBtn.style.backgroundColor = 'transparent'; // No fill when inactive
-    lyricsBtn.style.border = '1px solid rgba(255, 184, 0, 0.3)';
+    lyricsBtn.style.setProperty('opacity', '0.7', 'important');
+    lyricsBtn.style.setProperty('color', '#FFB800', 'important'); // Yellow text when inactive
+    lyricsBtn.style.setProperty('background-color', 'transparent', 'important'); // No fill when inactive
+    lyricsBtn.style.setProperty('border', '1px solid rgba(255, 184, 0, 0.3)', 'important');
   }
 }
 
 function closeLyrics() {
   lyricsVisible = false;
   lyricsPanel.style.display = 'none';
-  lyricsBtn.style.opacity = '0.7';
-  lyricsBtn.style.color = '#FFB800'; // Yellow text when inactive
-  lyricsBtn.style.backgroundColor = 'transparent'; // No fill when inactive
-  lyricsBtn.style.border = '1px solid rgba(255, 184, 0, 0.3)';
+  lyricsBtn.style.setProperty('opacity', '0.7', 'important');
+  lyricsBtn.style.setProperty('color', '#FFB800', 'important'); // Yellow text when inactive
+  lyricsBtn.style.setProperty('background-color', 'transparent', 'important'); // No fill when inactive
+  lyricsBtn.style.setProperty('border', '1px solid rgba(255, 184, 0, 0.3)', 'important');
 }
 
 async function loadSongLyrics(song) {
@@ -610,10 +608,10 @@ async function loadSongLyrics(song) {
       if (!lyricsVisible) {
         lyricsVisible = true;
         lyricsPanel.style.display = 'block';
-        lyricsBtn.style.opacity = '1';
-        lyricsBtn.style.color = '#000000';
-        lyricsBtn.style.backgroundColor = '#FFB800';
-        lyricsBtn.style.border = '1px solid #FFB800';
+        lyricsBtn.style.setProperty('opacity', '1', 'important');
+        lyricsBtn.style.setProperty('color', '#000000', 'important');
+        lyricsBtn.style.setProperty('background-color', '#FFB800', 'important');
+        lyricsBtn.style.setProperty('border', '1px solid #FFB800', 'important');
         
         // Add scroll detection for auto-opened lyrics
         if (!lyricsContent.hasAttribute('data-scroll-listener')) {
