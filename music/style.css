@@ -1,6 +1,98 @@
 /* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@400;700&family=Montserrat+Alternates:wght@400;700&display=swap');
 
+/* Custom navbar styling to match the meme page exactly */
+.cid-uHBINRz9j8 {
+  z-index: 1000;
+  width: 100%;
+  position: relative;
+}
+
+.cid-uHBINRz9j8 .navbar-brand {
+  flex-shrink: 0;
+  align-items: center;
+  margin-right: 0;
+  padding: 10px 0;
+  transition: all 0.3s;
+  word-break: break-word;
+  z-index: 1;
+}
+
+.cid-uHBINRz9j8 .navbar-brand .navbar-caption {
+  color: #ffffff !important; /* White text like in meme page */
+  font-family: 'Montserrat Alternates', Arial, sans-serif !important;
+  font-weight: 700 !important;
+  line-height: inherit !important;
+}
+
+.cid-uHBINRz9j8 .navbar-nav .nav-item .nav-link {
+  color: #ffffff !important; /* White text like in meme page */
+  font-family: 'Montserrat Alternates', Arial, sans-serif !important;
+  padding: 16px !important;
+  margin: 0 !important;
+  border-radius: 4px !important;
+  transition: .3s all !important;
+}
+
+.cid-uHBINRz9j8 .navbar-nav .nav-item .nav-link:hover {
+  background-color: rgba(27, 31, 10, 0.06);
+}
+
+.cid-uHBINRz9j8 .btn-success {
+  background-color: #ffcb00 !important; /* Match the theme yellow */
+  border-color: #ffcb00 !important;
+  color: #000000 !important; /* Black text on yellow button */
+  font-family: 'Montserrat Alternates', Arial, sans-serif !important;
+  font-weight: 700 !important;
+}
+
+.cid-uHBINRz9j8 .btn-success:hover {
+  background-color: #ffd966 !important;
+  border-color: #ffd966 !important;
+}
+
+.cid-uHBINRz9j8 .container {
+  display: flex;
+  height: 90px;
+  padding: 0.5rem 0.6rem;
+  flex-wrap: nowrap;
+  background: rgba(35, 35, 35, 0.8) !important;
+  left: 0;
+  right: 0;
+  justify-content: flex-end;
+  align-items: center;
+  border-radius: 4px !important;
+  margin-top: 1rem;
+  background-color: #232323;
+  box-shadow: 0 30px 60px 0 rgba(27, 31, 10, 0.08);
+  width: 95%; /* Match the width from meme page */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cid-uHBINRz9j8 .navbar-logo {
+  padding-left: 2rem;
+  margin: 0 !important;
+}
+
+.cid-uHBINRz9j8 .navbar-caption {
+  padding-left: 1rem;
+  padding-right: .5rem;
+}
+
+@media (max-width: 767px) {
+  .cid-uHBINRz9j8 .container {
+    width: 95%;
+    height: 56px !important;
+    padding-right: 1rem;
+    margin-top: 0rem;
+  }
+  
+  .cid-uHBINRz9j8 .navbar-logo {
+    padding-left: 1rem;
+  }
+}
+
 body {
   background: linear-gradient(135deg, #002724 0%, #2B7A69 100%);
   font-family: 'Oxanium', 'Montserrat Alternates', Arial, sans-serif;
@@ -10,11 +102,11 @@ body {
 }
 
 .container {
-  max-width: 1100px;
-  width: 90vw;
-  margin: 40px auto;
+  max-width: 1200px; /* Made wider to match navbar */
+  width: 95vw; /* Match navbar width */
+  margin: 120px auto 40px auto; /* Added top margin for navbar */
   background: rgba(35, 40, 43, 0.82); /* frosted dark grey */
-  border-radius: 24px;
+  border-radius: 4px; /* Match navbar border radius */
   box-shadow: 0 8px 32px rgba(0,0,0,0.5);
   padding: 40px 40px 32px 40px;
   backdrop-filter: blur(16px);
@@ -43,11 +135,11 @@ header h1 {
   flex-direction: row;
   align-items: flex-start;
   background: rgba(35, 40, 43, 0.92);
-  border-radius: 18px;
+  border-radius: 4px; /* Match theme border radius */
   box-shadow: 0 4px 24px rgba(0,0,0,0.35);
   padding: 32px 48px;
   width: 100%;
-  max-width: 900px; /* Match inner header width */
+  max-width: 1000px; /* Increased to match wider container */
   min-height: 180px;
   cursor: pointer;
   transition: background 0.2s, transform 0.2s;
@@ -67,7 +159,7 @@ header h1 {
   width: 140px;
   height: 140px;
   object-fit: cover;
-  border-radius: 16px;
+  border-radius: 4px; /* Match theme border radius */
   box-shadow: 0 2px 16px rgba(0,0,0,0.28);
   background: #23282b;
 }
@@ -142,7 +234,7 @@ header h1 {
   width: 340px;
   height: 340px;
   object-fit: cover;
-  border-radius: 24px;
+  border-radius: 4px; /* Match theme border radius */
   margin: 0 auto 32px auto;
   box-shadow: 0 4px 24px rgba(0,0,0,0.4);
   display: block;
@@ -182,7 +274,7 @@ header h1 {
 .player-bar {
   width: 100%;
   background: rgba(35, 40, 43, 0.82); /* frosted dark grey */
-  border-radius: 16px;
+  border-radius: 4px; /* Match theme border radius */
   padding: 24px 32px 16px 32px;
   display: flex;
   flex-direction: column;
@@ -209,7 +301,7 @@ audio {
   background: #FFB800;
   color: #002724;
   border: none;
-  border-radius: 32px;
+  border-radius: 4px; /* Match theme border radius */
   padding: 18px 48px;
   font-size: 1.3rem;
   font-family: 'Montserrat Alternates', Arial, sans-serif;
@@ -272,112 +364,13 @@ audio {
   pointer-events: none;
 }
 
-/* Music Header Bar */
-.music-header {
-  width: 100%;
-  max-width: 1100px;
-  margin: 0 auto 24px auto;
-  background: rgba(35, 40, 43, 0.82);
-  border-radius: 16px 16px 0 0;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
-  backdrop-filter: blur(12px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.music-header-inner {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 32px;
-  box-sizing: border-box;
-}
-
-.music-header-left,
-.music-header-right {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-}
-
-.music-header-text {
-  flex: 1 1 auto;
-  text-align: center;
-  font-family: 'Montserrat Alternates', 'Oxanium', Arial, sans-serif;
-  font-size: 1.3rem;
-  color: #FFCB00;
-  font-weight: 700;
-  letter-spacing: 1.2px;
-  white-space: nowrap;
-}
-
-.music-logo {
-  height: 48px;
-  width: 48px;
-  border-radius: 50%;
-  background: #23282b;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
-}
-
-.music-header-title {
-  font-family: 'Montserrat Alternates', 'Oxanium', Arial, sans-serif;
-  font-size: 1.5rem;
-  color: #FFCB00;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-}
-
-.music-home-btn {
-  background: #FFCB00;
-  color: #23282b;
-  font-family: 'Montserrat Alternates', 'Oxanium', Arial, sans-serif;
-  font-size: 1.1rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 32px;
-  padding: 12px 36px;
-  text-decoration: none;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
-  transition: background 0.2s, color 0.2s;
-  display: inline-block;
-  margin-left: 8px;
-}
-
-.music-home-btn:hover {
-  background: #FFB800;
-  color: #23282b;
-}
-
-.album-artist {
-  font-size: 1rem;
-  color: #FFCB00;
-  margin-top: 6px;
-  font-family: 'Oxanium', Arial, sans-serif;
-}
-.album-age {
-  font-size: 0.95rem;
-  color: #FFCB00;
-  margin-top: 2px;
-  font-family: 'Oxanium', Arial, sans-serif;
-}
-.album-desc {
-  font-size: 0.97rem;
-  color: #FFCB00;
-  margin-top: 10px;
-  font-family: 'Montserrat Alternates', Arial, sans-serif;
-  line-height: 1.5;
-  text-align: left;
-}
-
 /* --- Responsive styles for mobile --- */
 @media (max-width: 700px) {
   .container {
     max-width: 100vw;
-    width: 100vw;
+    width: 95vw; /* Match navbar width on mobile */
     padding: 12px 3vw;
-    border-radius: 0;
+    border-radius: 4px; /* Keep consistent border radius */
     box-shadow: none;
     background: rgba(35, 40, 43, 0.92);
     backdrop-filter: blur(12px);
@@ -401,40 +394,6 @@ audio {
     align-items: center;
     text-align: center;
     width: 100%;
-  }
-
-  /* Header: logo left, text center, button right, all in one row */
-  .music-header-inner {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 2vw;
-    gap: 0;
-  }
-  .music-header-left,
-  .music-header-right {
-    flex: 0 0 auto;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 0;
-  }
-  .music-header-title {
-    display: none; /* Hide Akbar Q Music on mobile */
-  }
-  .music-header-text {
-    flex: 1 1 auto;
-    font-size: 1.1rem;
-    text-align: center;
-    margin: 0 auto;
-    order: 2;
-  }
-  .music-home-btn {
-    width: auto;
-    padding: 10px 18px;
-    font-size: 1rem;
-    margin: 0 0 0 8px;
-    display: block;
-    order: 3;
   }
 
   .song-table th.desktop-only,
