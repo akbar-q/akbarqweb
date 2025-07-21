@@ -351,7 +351,7 @@ function toggleLoop() {
 }
 
 function updateShuffleButton() {
-  shuffleBtn.textContent = '⤮'; // Clean shuffle symbol
+  shuffleBtn.textContent = '⤮'; // This symbol should work consistently
   if (isShuffled) {
     shuffleBtn.style.setProperty('opacity', '1', 'important');
     shuffleBtn.style.setProperty('color', '#000000', 'important'); // Black text when active
@@ -367,7 +367,7 @@ function updateShuffleButton() {
 }
 
 function updateLoopButton() {
-  const loopIcons = ['↻', '↻', '1']; // no loop, loop album, loop single (show "1" for single)
+  const loopIcons = ['⟲', '⟲', '1']; // Using different loop symbol that's more universally supported
   const loopTitles = ['Loop: Off', 'Loop: Album', 'Loop: Single Track'];
   
   loopBtn.textContent = loopIcons[loopMode];
@@ -387,7 +387,8 @@ function updateLoopButton() {
 }
 
 function updatePlayPauseButton() {
-  playPauseBtn.textContent = isPlaying ? '⏸' : '▶';
+  // Use simple symbols that won't be converted to emoji on mobile
+  playPauseBtn.textContent = isPlaying ? '‖' : '▶'; // Using double vertical bar instead of pause emoji
 }
 
 function updateNowPlaying() {

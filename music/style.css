@@ -473,6 +473,11 @@ audio {
   justify-content: center;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; /* Use system fonts for consistent icons */
   line-height: 1; /* Better vertical centering */
+  text-align: center; /* Ensure horizontal centering */
+  vertical-align: middle; /* Additional centering help */
+  font-variant-emoji: text; /* Force text rendering instead of emoji */
+  -webkit-font-feature-settings: "liga" off; /* Disable ligatures that might convert to emoji */
+  font-feature-settings: "liga" off;
 }
 
 .control-btn:hover:not(:disabled) {
@@ -495,6 +500,11 @@ audio {
   color: #002724;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; /* Use system fonts for consistent icons */
   line-height: 1; /* Better vertical centering */
+  text-align: center;
+  vertical-align: middle;
+  font-variant-emoji: text; /* Force text rendering instead of emoji */
+  -webkit-font-feature-settings: "liga" off;
+  font-feature-settings: "liga" off;
 }
 
 .main-play-btn:hover {
@@ -908,6 +918,11 @@ audio {
     align-items: center;
     justify-content: center;
     line-height: 1; /* Better vertical centering */
+    text-align: center; /* Ensure horizontal centering */
+    vertical-align: middle; /* Additional centering help */
+    font-variant-emoji: text; /* Force text rendering instead of emoji */
+    -webkit-font-feature-settings: "liga" off; /* Disable ligatures that might convert to emoji */
+    font-feature-settings: "liga" off;
   }
 
   .main-play-btn {
@@ -915,6 +930,11 @@ audio {
     height: 54px;
     font-size: 1.6rem; /* Bigger play/pause button */
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; /* Consistent font family */
+    text-align: center;
+    vertical-align: middle;
+    font-variant-emoji: text; /* Force text rendering instead of emoji */
+    -webkit-font-feature-settings: "liga" off;
+    font-feature-settings: "liga" off;
   }
 
   #now-playing {
