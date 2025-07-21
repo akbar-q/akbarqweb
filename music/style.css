@@ -548,6 +548,38 @@ audio {
   font-family: 'Oxanium', Arial, sans-serif;
 }
 
+/* Loading indicator */
+.loading-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 203, 0, 0.3);
+  border-top: 3px solid #FFCB00;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-indicator p {
+  color: rgba(255, 255, 255, 0.8);
+  font-family: 'Montserrat Alternates', Arial, sans-serif;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
 .album-play-btn {
   background: #FFB800;
   color: #002724;
@@ -574,7 +606,7 @@ audio {
   border-collapse: collapse;
   margin-bottom: 32px;
   table-layout: fixed;
-  font-size: 1rem;
+  font-size: 1.1rem; /* Increased from 1rem */
   background: rgba(35, 40, 43, 0.5);
   border-radius: 8px;
   overflow: hidden;
@@ -582,7 +614,7 @@ audio {
 }
 
 .song-table th, .song-table td {
-  padding: 16px 12px;
+  padding: 18px 12px; /* Increased padding from 16px */
   text-align: left;
   font-family: 'Oxanium', Arial, sans-serif;
   word-break: break-word;
@@ -595,6 +627,50 @@ audio {
   background: rgba(35, 40, 43, 0.8);
   font-family: 'Montserrat Alternates', Arial, sans-serif;
   letter-spacing: 0.5px;
+  font-size: 1.05rem; /* Slightly larger headers */
+}
+
+/* Desktop column widths - optimized spacing */
+.song-table th:nth-child(1), /* # */
+.song-table td:nth-child(1) {
+  width: 8%; /* Reduced from default - less wasted space */
+  text-align: center;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.song-table th:nth-child(2), /* Title */
+.song-table td:nth-child(2) {
+  width: 25%; /* Reasonable title width */
+  font-weight: 600;
+}
+
+.song-table th:nth-child(3), /* Artist */
+.song-table td:nth-child(3) {
+  width: 15%; /* Compact artist column */
+}
+
+.song-table th:nth-child(4), /* Description */
+.song-table td:nth-child(4) {
+  width: 35%; /* Much wider for descriptions */
+  line-height: 1.4;
+  font-size: 1rem;
+}
+
+.song-table th:nth-child(5), /* Duration */
+.song-table td:nth-child(5) {
+  width: 10%; /* Compact duration */
+  text-align: center;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.song-table th:nth-child(6), /* Play button */
+.song-table td:nth-child(6) {
+  width: 7%; /* Minimal play button column */
+  text-align: center;
+  padding-left: 6px;
+  padding-right: 6px;
 }
 
 .song-table tr {
@@ -608,31 +684,43 @@ audio {
 
 .song-table tr.playing {
   background: rgba(255, 203, 0, 0.15) !important;
-  border-left: 3px solid #FFCB00;
+  border-left: 4px solid #FFCB00; /* Slightly thicker highlight */
 }
 
 .song-table tr.playing td {
   color: #FFCB00;
-  font-weight: 500;
+  font-weight: 600; /* Increased from 500 */
+}
+
+.song-table tr.playing td:first-child {
+  font-weight: 700; /* Make track number stand out more */
 }
 
 .song-table tr:last-child td {
   border-bottom: none;
 }
 .song-table td.play-cell {
-  width: 60px;
+  width: 7%; /* Updated to match new column width */
   text-align: center;
+  padding-left: 6px;
+  padding-right: 6px;
 }
+
 .song-play-btn {
   background: none;
   border: none;
   color: #FFCB00;
-  font-size: 1.4rem;
+  font-size: 1.5rem; /* Increased from 1.4rem */
   cursor: pointer;
-  transition: color 0.2s;
+  transition: all 0.2s ease;
+  padding: 4px 8px;
+  border-radius: 4px;
 }
+
 .song-play-btn:hover {
-  color: #FFCB00;
+  color: #FFB800;
+  background: rgba(255, 203, 0, 0.1);
+  transform: scale(1.1);
 }
 
 #bg-canvas {

@@ -1,0 +1,70 @@
+{
+  "albums": [
+    {
+      "title": "Cycle of Design",
+      "artist": "Akbar Q",
+      "ageRating": "All Ages",
+      "description": "An electronic journey through the engineering design process, where each track represents a different phase of bringing ideas to life through technology.",
+      "cover": "music/Cycle of Design/01.png",
+      "songs": [
+        {
+          "title": "Power On",
+          "artist": "Akbar Q",
+          "description": "The beginning of every great design - the moment when circuits come to life and possibilities become reality",
+          "file": "music/Cycle of Design/1. Power On.mp3",
+          "duration": null
+        },
+        {
+          "title": "Ground Loop",
+          "artist": "Akbar Q",
+          "description": "Finding stability in the chaos - establishing the foundation that keeps everything connected and balanced",
+          "file": "music/Cycle of Design/2. Ground Loop.mp3",
+          "duration": null
+        },
+        {
+          "title": "Clock Domain",
+          "artist": "Akbar Q",
+          "description": "Synchronizing the rhythm of innovation - when timing becomes the heartbeat of digital creation",
+          "file": "music/Cycle of Design/3. Clock Domain.mp3",
+          "duration": null
+        },
+        {
+          "title": "Printed Circuit Heart",
+          "artist": "Akbar Q",
+          "description": "The soul of electronic creation - where copper traces carry dreams and components breathe life into ideas",
+          "file": "music/Cycle of Design/4. Printed Circuit Heart.mp3",
+          "duration": null
+        },
+        {
+          "title": "Logic High",
+          "artist": "Akbar Q",
+          "description": "When everything clicks into place - the euphoric moment when code, hardware, and vision unite perfectly",
+          "file": "music/Cycle of Design/5. Logic High.mp3",
+          "duration": null
+        },
+        {
+          "title": "Thermal Runaway",
+          "artist": "Akbar Q",
+          "description": "When things get too hot to handle - the intense challenge of pushing boundaries while managing limits",
+          "file": "music/Cycle of Design/6. Thermal Runaway.mp3",
+          "duration": null
+        },
+        {
+          "title": "Debug Mode",
+          "artist": "Akbar Q",
+          "description": "Finding and fixing the final pieces - the methodical art of perfecting what was once just a dream",
+          "file": "music/Cycle of Design/7. Debug Mode.mp3",
+          "duration": null
+        }
+      ]
+    },
+    {
+      "title": "Signal's Path",
+      "artist": "Akbar Q",
+      "ageRating": "All Ages",
+      "description": "A forthcoming album exploring the journey of electrical signals through complex systems. Coming soon.",
+      "cover": "images/image2.png",
+      "songs": []
+    }
+  ]
+}

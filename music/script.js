@@ -1,29 +1,35 @@
-const albums = [
-  {
-    title: "Cycle of Design",
-    artist: "Akbar Q",
-    ageRating: "All Ages",
-    description: "An electronic journey through the engineering design process, where each track represents a different phase of bringing ideas to life through technology.",
-    cover: "music/Cycle of Design/01.png",
-    songs: [
-      { title: "Power On", artist: "Akbar Q", description: "The beginning of every great design", file: "music/Cycle of Design/1. Power On.mp3", duration: null },
-      { title: "Ground Loop", artist: "Akbar Q", description: "Finding stability in the chaos", file: "music/Cycle of Design/2. Ground Loop.mp3", duration: null },
-      { title: "Clock Domain", artist: "Akbar Q", description: "Synchronizing the rhythm of innovation", file: "music/Cycle of Design/3. Clock Domain.mp3", duration: null },
-      { title: "Printed Circuit Heart", artist: "Akbar Q", description: "The soul of electronic creation", file: "music/Cycle of Design/4. Printed Circuit Heart.mp3", duration: null },
-      { title: "Logic High", artist: "Akbar Q", description: "When everything clicks into place", file: "music/Cycle of Design/5. Logic High.mp3", duration: null },
-      { title: "Thermal Runaway", artist: "Akbar Q", description: "When things get too hot to handle", file: "music/Cycle of Design/6. Thermal Runaway.mp3", duration: null },
-      { title: "Debug Mode", artist: "Akbar Q", description: "Finding and fixing the final pieces", file: "music/Cycle of Design/7. Debug Mode.mp3", duration: null }
-    ]
-  },
-  {
-    title: "Signal's Path",
-    artist: "Akbar Q",
-    ageRating: "All Ages", 
-    description: "A forthcoming album exploring the journey of electrical signals through complex systems. Coming soon.",
-    cover: "images/image2.png",
-    songs: []
+// Music data will be loaded from JSON file
+let albums = [];
+
+// Load music data from JSON file
+async function loadMusicData() {
+  try {
+    const response = await fetch('music-data.json');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    albums = data.albums;
+    console.log('Music data loaded successfully:', albums.length, 'albums');
+    
+    // Initialize the album list after data is loaded
+    showAlbums();
+  } catch (error) {
+    console.error('Error loading music data:', error);
+    // Fallback: show error message to user
+    document.querySelector('.container').innerHTML = `
+      <div style="text-align: center; padding: 40px;">
+        <h2 style="color: #FFB800;">Error Loading Music Data</h2>
+        <p style="color: rgba(255, 255, 255, 0.8);">
+          Unable to load music library. Please check that music-data.json is available.
+        </p>
+        <p style="color: rgba(255, 203, 0, 0.6); font-size: 0.9rem;">
+          Error: ${error.message}
+        </p>
+      </div>
+    `;
   }
-];
+}
 
 let currentAlbum = null;
 let currentSong = 0;
@@ -50,6 +56,12 @@ const currentTimeSpan = document.getElementById('current-time');
 const totalTimeSpan = document.getElementById('total-time');
 
 function showAlbums() {
+  // Hide loading indicator
+  const loadingIndicator = document.getElementById('loading-indicator');
+  if (loadingIndicator) {
+    loadingIndicator.style.display = 'none';
+  }
+  
   albumList.innerHTML = '';
   albums.forEach((album, idx) => {
     const div = document.createElement('div');
@@ -162,8 +174,8 @@ function showAlbum(idx) {
     } else {
       tr.innerHTML = `
         <td>${sidx + 1}</td>
-        <td>${song.title}</td>
-        <td>${song.artist || ""}</td>
+        <td><strong>${song.title}</strong></td>
+        <td>${song.artist || "Akbar Q"}</td>
         <td>${song.description || ""}</td>
         <td id="duration-${sidx}">--:--</td>
         <td class="play-cell">
@@ -380,7 +392,7 @@ function setupAudioAnalyser() {
   }
 }
 
-// Enhanced but subtle background animation
+// Enhanced background animation - more noticeable but not overwhelming
 function animateBg() {
   requestAnimationFrame(animateBg);
 
@@ -391,52 +403,105 @@ function animateBg() {
   }
 
   const t = Date.now() / 1000;
-  const beat = 0.3 + Math.min(1.2, avg / 80); // Reduced intensity
-  const hueBase = ((t * 15) + avg * 1.5) % 360;
+  const beat = 0.5 + Math.min(1.8, avg / 70); // Increased intensity
+  const hueBase = ((t * 20) + avg * 2.5) % 360; // Faster color cycling
   const hueAccent = (hueBase + 120) % 360;
   const hueComplement = (hueBase + 240) % 360;
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // 1. Subtle shifting background gradients
+  // 1. Dynamic background gradients
   const deepGrad = ctx.createRadialGradient(
     canvas.width / 2, canvas.height / 2, 0,
     canvas.width / 2, canvas.height / 2, Math.max(canvas.width, canvas.height) * 0.9
   );
-  deepGrad.addColorStop(0, `hsla(${hueBase}, 60%, ${6 + beat * 4}%, 0.8)`);
-  deepGrad.addColorStop(0.5, `hsla(${hueAccent}, 50%, 4%, 0.7)`);
-  deepGrad.addColorStop(1, '#000205');
+  deepGrad.addColorStop(0, `hsla(${hueBase}, 75%, ${8 + beat * 6}%, 0.9)`);
+  deepGrad.addColorStop(0.4, `hsla(${hueAccent}, 65%, 6%, 0.8)`);
+  deepGrad.addColorStop(0.8, `hsla(${hueComplement}, 55%, 4%, 0.75)`);
+  deepGrad.addColorStop(1, '#000308');
   ctx.fillStyle = deepGrad;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // 2. Subtle moving gradient overlay (no visible circle)
-  const moveX = Math.sin(t * 0.3) * canvas.width * 0.15;
-  const moveY = Math.cos(t * 0.2) * canvas.height * 0.15;
+  // 2. Central pulsing glow (more noticeable)
+  const centralGlow = ctx.createRadialGradient(
+    canvas.width / 2, canvas.height / 2, 0,
+    canvas.width / 2, canvas.height / 2, canvas.width * (0.25 + beat * 0.2)
+  );
+  centralGlow.addColorStop(0, `rgba(255, 203, 0, ${0.25 + beat * 0.3})`);
+  centralGlow.addColorStop(0.4, `hsla(${hueBase}, 90%, 45%, ${0.2 + beat * 0.25})`);
+  centralGlow.addColorStop(1, 'rgba(0,0,0,0)');
+  
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  ctx.fillStyle = centralGlow;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.restore();
+
+  // 3. Moving gradient layers (more visible)
+  const moveX = Math.sin(t * 0.4) * canvas.width * 0.2;
+  const moveY = Math.cos(t * 0.3) * canvas.height * 0.2;
   
   const overlayGrad = ctx.createLinearGradient(
-    canvas.width * 0.3 + moveX, 
-    canvas.height * 0.3 + moveY,
-    canvas.width * 0.7 - moveX, 
-    canvas.height * 0.7 - moveY
+    canvas.width * 0.2 + moveX, 
+    canvas.height * 0.2 + moveY,
+    canvas.width * 0.8 - moveX, 
+    canvas.height * 0.8 - moveY
   );
-  overlayGrad.addColorStop(0, `hsla(${hueBase}, 70%, 20%, ${0.1 + beat * 0.05})`);
-  overlayGrad.addColorStop(0.5, `hsla(${hueAccent}, 60%, 15%, ${0.08 + beat * 0.04})`);
+  overlayGrad.addColorStop(0, `hsla(${hueBase}, 80%, 25%, ${0.15 + beat * 0.1})`);
+  overlayGrad.addColorStop(0.5, `hsla(${hueAccent}, 70%, 20%, ${0.12 + beat * 0.08})`);
   overlayGrad.addColorStop(1, 'rgba(0,0,0,0)');
   
   ctx.save();
-  ctx.globalAlpha = 0.6;
+  ctx.globalAlpha = 0.8;
   ctx.fillStyle = overlayGrad;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.restore();
 
-  // 3. Enhanced vignette
+  // 4. Audio-reactive sparkles (moderate intensity)
+  if (beat > 0.8) {
+    for (let i = 0; i < (beat - 0.5) * 12; i++) {
+      const sparkleX = Math.random() * canvas.width;
+      const sparkleY = Math.random() * canvas.height;
+      const sparkleSize = Math.random() * 3 + 1;
+      const sparkleAlpha = Math.random() * (beat - 0.5) * 0.6;
+      
+      ctx.save();
+      ctx.globalAlpha = sparkleAlpha;
+      ctx.fillStyle = `hsla(${hueBase + Math.random() * 60}, 95%, 75%, ${sparkleAlpha})`;
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = ctx.fillStyle;
+      ctx.beginPath();
+      ctx.arc(sparkleX, sparkleY, sparkleSize, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  // 5. Subtle moving spotlight (not too bright)
+  const spotX = canvas.width / 2 + Math.sin(t * 0.6) * canvas.width * 0.2;
+  const spotY = canvas.height / 2 + Math.cos(t * 0.4) * canvas.height * 0.2;
+  const spot = ctx.createRadialGradient(
+    spotX, spotY, 0,
+    spotX, spotY, canvas.width * (0.12 + 0.08 * Math.sin(t * 1.2 + avg / 50))
+  );
+  spot.addColorStop(0, `rgba(255,203,0,${0.15 + 0.2 * beat})`);
+  spot.addColorStop(0.7, `hsla(${hueAccent}, 85%, 50%, ${0.1 + 0.15 * beat})`);
+  spot.addColorStop(1, "rgba(0,0,0,0)");
+  
+  ctx.save();
+  ctx.globalAlpha = 0.7;
+  ctx.fillStyle = spot;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.restore();
+
+  // 6. Enhanced vignette
   const vignette = ctx.createRadialGradient(
     canvas.width / 2, canvas.height / 2, Math.min(canvas.width, canvas.height) * 0.2,
     canvas.width / 2, canvas.height / 2, Math.max(canvas.width, canvas.height) * 0.7
   );
   vignette.addColorStop(0, 'rgba(0,0,0,0)');
-  vignette.addColorStop(0.7, `rgba(0,0,0,${0.4 - beat * 0.05})`);
-  vignette.addColorStop(1, 'rgba(0,0,0,0.9)');
+  vignette.addColorStop(0.7, `rgba(0,0,0,${0.35 - beat * 0.05})`);
+  vignette.addColorStop(1, 'rgba(0,0,0,0.88)');
   
   ctx.save();
   ctx.fillStyle = vignette;
@@ -445,8 +510,8 @@ function animateBg() {
 }
 animateBg();
 
-// Initialize the album list on page load
-showAlbums();
+// Load music data and initialize the page
+loadMusicData();
 
 // Handle window resize for responsive updates
 window.addEventListener('resize', function() {

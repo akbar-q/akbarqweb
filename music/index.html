@@ -77,7 +77,11 @@
     </header>
     
     <main>
-      <div id="album-list" class="album-list"></div>
+      <div id="loading-indicator" class="loading-indicator">
+        <div class="loading-spinner"></div>
+        <p>Loading music library...</p>
+      </div>
+      <div id="album-list" class="album-list" style="display: none;"></div>
       <div id="album-view" class="album-view" style="display:none;">
         <button id="back" class="back-btn">← Back</button>
         <img id="album-cover" class="album-cover" src="" alt="Album Cover"/>
