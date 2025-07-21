@@ -12,7 +12,8 @@
           "artist": "Akbar Q",
           "description": "The beginning of every great design - the moment when circuits come to life and possibilities become reality",
           "file": "music/Cycle of Design/1. Power On.mp3",
-          "duration": null
+          "duration": null,
+          "lyrics": "lyrics/power-on.lrc"
         },
         {
           "title": "Ground Loop",

@@ -38,6 +38,8 @@ let isDragging = false;
 let isShuffled = false;
 let shuffledOrder = [];
 let loopMode = 0; // 0: no loop, 1: loop album, 2: loop single track
+let currentLyrics = null;
+let lyricsVisible = false;
 
 const albumList = document.getElementById('album-list');
 const albumView = document.getElementById('album-view');
@@ -54,11 +56,18 @@ const prevBtn = document.getElementById('prev-btn');
 const nextBtn = document.getElementById('next-btn');
 const shuffleBtn = document.getElementById('shuffle-btn');
 const loopBtn = document.getElementById('loop-btn');
+const lyricsBtn = document.getElementById('lyrics-btn');
 const progressFill = document.getElementById('progress-fill');
 const progressHandle = document.getElementById('progress-handle');
 const progressBar = document.querySelector('.progress-bar');
 const currentTimeSpan = document.getElementById('current-time');
 const totalTimeSpan = document.getElementById('total-time');
+
+// Lyrics elements
+const lyricsPanel = document.getElementById('lyrics-panel');
+const lyricsTitle = document.getElementById('lyrics-title');
+const lyricsContent = document.getElementById('lyrics-content');
+const closeLyricsBtn = document.getElementById('close-lyrics');
 
 function showAlbums() {
   // Hide loading indicator
@@ -229,6 +238,7 @@ function playSong(sidx) {
     updateNowPlaying();
     updateNavigationButtons();
     highlightCurrentSong();
+    loadSongLyrics(song); // Load lyrics for the new song
   }).catch(error => {
     console.error('Error playing audio:', error);
   });
@@ -335,17 +345,19 @@ function toggleLoop() {
 }
 
 function updateShuffleButton() {
-  shuffleBtn.textContent = isShuffled ? '🔀' : '🔀';
+  shuffleBtn.textContent = '⤮'; // Clean shuffle symbol
   shuffleBtn.style.opacity = isShuffled ? '1' : '0.5';
+  shuffleBtn.style.color = isShuffled ? '#FFB800' : 'rgba(255, 255, 255, 0.7)';
   shuffleBtn.title = isShuffled ? 'Shuffle: On' : 'Shuffle: Off';
 }
 
 function updateLoopButton() {
-  const loopIcons = ['🔁', '🔁', '🔂']; // no loop, loop album, loop single
+  const loopIcons = ['↻', '↻', '⟲']; // Clean loop symbols: no loop, loop album, loop single
   const loopTitles = ['Loop: Off', 'Loop: Album', 'Loop: Single Track'];
   
   loopBtn.textContent = loopIcons[loopMode];
   loopBtn.style.opacity = loopMode === 0 ? '0.5' : '1';
+  loopBtn.style.color = loopMode === 0 ? 'rgba(255, 255, 255, 0.7)' : '#FFB800';
   loopBtn.title = loopTitles[loopMode];
 }
 
@@ -399,6 +411,11 @@ function updateProgress() {
   progressFill.style.width = `${progress}%`;
   progressHandle.style.left = `${progress}%`;
   currentTimeSpan.textContent = formatTime(audio.currentTime);
+  
+  // Update lyrics if visible
+  if (lyricsVisible && currentLyrics) {
+    updateLyricsHighlight(audio.currentTime);
+  }
 }
 
 function setProgress(e) {
@@ -412,12 +429,146 @@ function setProgress(e) {
   progressHandle.style.left = `${percentage}%`;
 }
 
+// ==================== LYRICS FUNCTIONALITY ====================
+
+async function loadLyrics(lyricsFile) {
+  if (!lyricsFile) return null;
+  
+  try {
+    const response = await fetch(lyricsFile);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const lrcText = await response.text();
+    return parseLRC(lrcText);
+  } catch (error) {
+    console.error('Error loading lyrics:', error);
+    return null;
+  }
+}
+
+function parseLRC(lrcText) {
+  const lines = lrcText.split('\n');
+  const lyrics = [];
+  const timeRegex = /\[(\d{2}):(\d{2})\.(\d{2})\](.*)/;
+  
+  lines.forEach(line => {
+    const match = line.match(timeRegex);
+    if (match) {
+      const minutes = parseInt(match[1]);
+      const seconds = parseInt(match[2]);
+      const centiseconds = parseInt(match[3]);
+      const time = minutes * 60 + seconds + centiseconds / 100;
+      const text = match[4].trim();
+      
+      if (text) { // Only add non-empty lines
+        lyrics.push({ time, text });
+      }
+    }
+  });
+  
+  return lyrics.sort((a, b) => a.time - b.time);
+}
+
+function displayLyrics() {
+  if (!currentLyrics || currentLyrics.length === 0) {
+    lyricsContent.innerHTML = '<div class="lyrics-error">No lyrics available for this track</div>';
+    return;
+  }
+  
+  const song = albums[currentAlbum].songs[currentSong];
+  lyricsTitle.textContent = `${song.title} - ${song.artist || 'Akbar Q'}`;
+  
+  lyricsContent.innerHTML = currentLyrics
+    .map((lyric, index) => 
+      `<div class="lyrics-line" data-time="${lyric.time}" data-index="${index}">${lyric.text}</div>`
+    )
+    .join('');
+}
+
+function updateLyricsHighlight(currentTime) {
+  const lines = lyricsContent.querySelectorAll('.lyrics-line');
+  let currentIndex = -1;
+  
+  // Find the current line
+  for (let i = 0; i < currentLyrics.length; i++) {
+    if (currentLyrics[i].time <= currentTime) {
+      currentIndex = i;
+    } else {
+      break;
+    }
+  }
+  
+  // Update line classes
+  lines.forEach((line, index) => {
+    line.classList.remove('current', 'past');
+    if (index === currentIndex) {
+      line.classList.add('current');
+      // Auto-scroll to current line
+      line.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else if (index < currentIndex) {
+      line.classList.add('past');
+    }
+  });
+}
+
+function toggleLyrics() {
+  lyricsVisible = !lyricsVisible;
+  
+  if (lyricsVisible) {
+    lyricsPanel.style.display = 'block';
+    lyricsBtn.style.opacity = '1';
+    lyricsBtn.style.color = '#FFB800';
+    displayLyrics();
+  } else {
+    lyricsPanel.style.display = 'none';
+    lyricsBtn.style.opacity = '0.5';
+    lyricsBtn.style.color = 'rgba(255, 255, 255, 0.7)';
+  }
+}
+
+function closeLyrics() {
+  lyricsVisible = false;
+  lyricsPanel.style.display = 'none';
+  lyricsBtn.style.opacity = '0.5';
+  lyricsBtn.style.color = 'rgba(255, 255, 255, 0.7)';
+}
+
+async function loadSongLyrics(song) {
+  currentLyrics = null;
+  
+  if (song.lyrics) {
+    lyricsContent.innerHTML = '<div class="lyrics-loading">Loading lyrics...</div>';
+    currentLyrics = await loadLyrics(song.lyrics);
+    
+    // Show lyrics button if lyrics are available
+    if (currentLyrics && currentLyrics.length > 0) {
+      lyricsBtn.style.display = 'inline-block';
+      if (lyricsVisible) {
+        displayLyrics();
+      }
+    } else {
+      lyricsBtn.style.display = 'none';
+      if (lyricsVisible) {
+        lyricsContent.innerHTML = '<div class="lyrics-error">Failed to load lyrics</div>';
+      }
+    }
+  } else {
+    lyricsBtn.style.display = 'none';
+    if (lyricsVisible) {
+      lyricsContent.innerHTML = '<div class="lyrics-error">No lyrics available for this track</div>';
+    }
+  }
+}
+
 // Event listeners for the new player
 playPauseBtn.addEventListener('click', togglePlayPause);
 nextBtn.addEventListener('click', playNext);
 prevBtn.addEventListener('click', playPrevious);
 shuffleBtn.addEventListener('click', toggleShuffle);
 loopBtn.addEventListener('click', toggleLoop);
+lyricsBtn.addEventListener('click', toggleLyrics);
+closeLyricsBtn.addEventListener('click', closeLyrics);
 
 // Progress bar interactions
 progressBar.addEventListener('click', setProgress);
