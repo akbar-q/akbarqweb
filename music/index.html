@@ -86,7 +86,30 @@
             <h2 id="album-title"></h2>
           </div>
           <div class="album-controls">
-            <button id="album-play" class="album-play-btn">▶ Play</button>
+            <button id="album-play" class="album-play-btn">▶ Play Album</button>
+          </div>
+        </div>
+        
+        <!-- Music Player Controls -->
+        <div class="music-player-controls">
+          <div class="now-playing-section">
+            <span id="now-playing">Select a track to start playing</span>
+          </div>
+          <div class="player-controls">
+            <button id="prev-btn" class="control-btn" disabled>⏮</button>
+            <button id="play-pause-btn" class="control-btn main-play-btn">▶</button>
+            <button id="next-btn" class="control-btn" disabled>⏭</button>
+          </div>
+          <div class="progress-section">
+            <audio id="audio" preload="metadata"></audio>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-fill"></div>
+              <div class="progress-handle" id="progress-handle"></div>
+            </div>
+            <div class="time-display">
+              <span id="current-time">0:00</span>
+              <span id="total-time">0:00</span>
+            </div>
           </div>
         </div>
         <table id="song-table" class="song-table">
@@ -102,9 +125,8 @@
           </thead>
           <tbody id="song-list"></tbody>
         </table>
-        <div class="player-bar">
-          <span id="now-playing"></span>
-          <audio id="audio" controls></audio>
+        <div class="player-bar" style="display: none;">
+          <!-- Hidden old player bar - functionality moved above -->
         </div>
       </div>
     </main>

@@ -27,6 +27,8 @@ const albums = [
 
 let currentAlbum = null;
 let currentSong = 0;
+let isPlaying = false;
+let isDragging = false;
 
 const albumList = document.getElementById('album-list');
 const albumView = document.getElementById('album-view');
@@ -36,6 +38,16 @@ const albumTitle = document.getElementById('album-title');
 const songList = document.getElementById('song-list');
 const audio = document.getElementById('audio');
 const nowPlaying = document.getElementById('now-playing');
+
+// New player controls
+const playPauseBtn = document.getElementById('play-pause-btn');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const progressFill = document.getElementById('progress-fill');
+const progressHandle = document.getElementById('progress-handle');
+const progressBar = document.querySelector('.progress-bar');
+const currentTimeSpan = document.getElementById('current-time');
+const totalTimeSpan = document.getElementById('total-time');
 
 function showAlbums() {
   albumList.innerHTML = '';
@@ -126,6 +138,7 @@ function showAlbum(idx) {
   
   albumTitle.textContent = album.title;
 
+  // Update album play button to play first song
   document.getElementById('album-play').onclick = () => playSong(0);
 
   songList.innerHTML = '';
@@ -180,14 +193,163 @@ function showAlbum(idx) {
 window.playSongFromTable = function(sidx) {
   playSong(sidx);
 };
- 
+
+// Enhanced music player functions
 function playSong(sidx) {
+  if (currentAlbum === null) return;
+  
   currentSong = sidx;
   const song = albums[currentAlbum].songs[sidx];
+  
   audio.src = song.file;
-  audio.play();
-  nowPlaying.textContent = `Now Playing: ${song.title}`;
+  audio.play().then(() => {
+    isPlaying = true;
+    updatePlayPauseButton();
+    updateNowPlaying();
+    updateNavigationButtons();
+    highlightCurrentSong();
+  }).catch(error => {
+    console.error('Error playing audio:', error);
+  });
 }
+
+function togglePlayPause() {
+  if (currentAlbum === null || albums[currentAlbum].songs.length === 0) return;
+  
+  if (isPlaying) {
+    audio.pause();
+    isPlaying = false;
+  } else {
+    if (audio.src) {
+      audio.play().then(() => {
+        isPlaying = true;
+      });
+    } else {
+      playSong(currentSong);
+    }
+  }
+  updatePlayPauseButton();
+}
+
+function playNext() {
+  if (currentAlbum === null) return;
+  
+  const albumSongs = albums[currentAlbum].songs;
+  if (currentSong < albumSongs.length - 1) {
+    playSong(currentSong + 1);
+  }
+}
+
+function playPrevious() {
+  if (currentAlbum === null) return;
+  
+  if (currentSong > 0) {
+    playSong(currentSong - 1);
+  }
+}
+
+function updatePlayPauseButton() {
+  playPauseBtn.textContent = isPlaying ? '⏸' : '▶';
+}
+
+function updateNowPlaying() {
+  if (currentAlbum !== null && albums[currentAlbum].songs[currentSong]) {
+    const song = albums[currentAlbum].songs[currentSong];
+    nowPlaying.textContent = `${song.title} - ${song.artist || 'Akbar Q'}`;
+  }
+}
+
+function updateNavigationButtons() {
+  if (currentAlbum === null) {
+    prevBtn.disabled = true;
+    nextBtn.disabled = true;
+    return;
+  }
+  
+  const albumSongs = albums[currentAlbum].songs;
+  prevBtn.disabled = currentSong === 0;
+  nextBtn.disabled = currentSong >= albumSongs.length - 1;
+}
+
+function highlightCurrentSong() {
+  // Remove previous highlights
+  document.querySelectorAll('.song-table tr').forEach(row => {
+    row.classList.remove('playing');
+  });
+  
+  // Add highlight to current song
+  const rows = document.querySelectorAll('.song-table tbody tr');
+  if (rows[currentSong]) {
+    rows[currentSong].classList.add('playing');
+  }
+}
+
+function formatTime(seconds) {
+  if (isNaN(seconds)) return '0:00';
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+function updateProgress() {
+  if (isDragging) return;
+  
+  const progress = (audio.currentTime / audio.duration) * 100;
+  progressFill.style.width = `${progress}%`;
+  progressHandle.style.left = `${progress}%`;
+  currentTimeSpan.textContent = formatTime(audio.currentTime);
+}
+
+function setProgress(e) {
+  const rect = progressBar.getBoundingClientRect();
+  const clickX = e.clientX - rect.left;
+  const percentage = (clickX / rect.width) * 100;
+  const newTime = (percentage / 100) * audio.duration;
+  
+  audio.currentTime = newTime;
+  progressFill.style.width = `${percentage}%`;
+  progressHandle.style.left = `${percentage}%`;
+}
+
+// Event listeners for the new player
+playPauseBtn.addEventListener('click', togglePlayPause);
+nextBtn.addEventListener('click', playNext);
+prevBtn.addEventListener('click', playPrevious);
+
+// Progress bar interactions
+progressBar.addEventListener('click', setProgress);
+
+// Audio event listeners
+audio.addEventListener('loadedmetadata', () => {
+  totalTimeSpan.textContent = formatTime(audio.duration);
+  updateProgress();
+});
+
+audio.addEventListener('timeupdate', updateProgress);
+
+audio.addEventListener('ended', () => {
+  isPlaying = false;
+  updatePlayPauseButton();
+  
+  // Auto-play next song
+  if (currentAlbum !== null && currentSong < albums[currentAlbum].songs.length - 1) {
+    setTimeout(() => playNext(), 500); // Small delay for better UX
+  }
+});
+
+audio.addEventListener('play', () => {
+  isPlaying = true;
+  updatePlayPauseButton();
+  setupAudioAnalyser();
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+});
+
+audio.addEventListener('pause', () => {
+  isPlaying = false;
+  updatePlayPauseButton();
+});
 
 backBtn.onclick = showAlbums;
 
@@ -218,7 +380,7 @@ function setupAudioAnalyser() {
   }
 }
 
-// Enhanced dramatic background animation that actually works
+// Enhanced but subtle background animation
 function animateBg() {
   requestAnimationFrame(animateBg);
 
@@ -228,112 +390,52 @@ function animateBg() {
     avg = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
   }
 
-  // More dramatic animation parameters
   const t = Date.now() / 1000;
-  const beat = 0.5 + Math.min(2.5, avg / 60); // Increased intensity
-  const hueBase = ((t * 25) + avg * 3) % 360; // Faster color cycling
+  const beat = 0.3 + Math.min(1.2, avg / 80); // Reduced intensity
+  const hueBase = ((t * 15) + avg * 1.5) % 360;
   const hueAccent = (hueBase + 120) % 360;
   const hueComplement = (hueBase + 240) % 360;
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // 1. Enhanced deep space background
+  // 1. Subtle shifting background gradients
   const deepGrad = ctx.createRadialGradient(
     canvas.width / 2, canvas.height / 2, 0,
     canvas.width / 2, canvas.height / 2, Math.max(canvas.width, canvas.height) * 0.9
   );
-  deepGrad.addColorStop(0, `hsla(${hueBase}, 80%, ${8 + beat * 8}%, 0.95)`);
-  deepGrad.addColorStop(0.4, `hsla(${hueAccent}, 70%, 6%, 0.8)`);
-  deepGrad.addColorStop(0.8, `hsla(${hueComplement}, 60%, 4%, 0.7)`);
+  deepGrad.addColorStop(0, `hsla(${hueBase}, 60%, ${6 + beat * 4}%, 0.8)`);
+  deepGrad.addColorStop(0.5, `hsla(${hueAccent}, 50%, 4%, 0.7)`);
   deepGrad.addColorStop(1, '#000205');
   ctx.fillStyle = deepGrad;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // 2. Central pulsing glow
-  const centralGlow = ctx.createRadialGradient(
-    canvas.width / 2, canvas.height / 2, 0,
-    canvas.width / 2, canvas.height / 2, canvas.width * (0.2 + beat * 0.3)
+  // 2. Subtle moving gradient overlay (no visible circle)
+  const moveX = Math.sin(t * 0.3) * canvas.width * 0.15;
+  const moveY = Math.cos(t * 0.2) * canvas.height * 0.15;
+  
+  const overlayGrad = ctx.createLinearGradient(
+    canvas.width * 0.3 + moveX, 
+    canvas.height * 0.3 + moveY,
+    canvas.width * 0.7 - moveX, 
+    canvas.height * 0.7 - moveY
   );
-  centralGlow.addColorStop(0, `rgba(255, 203, 0, ${0.4 + beat * 0.5})`);
-  centralGlow.addColorStop(0.3, `hsla(${hueBase}, 100%, 50%, ${0.3 + beat * 0.4})`);
-  centralGlow.addColorStop(1, 'rgba(0,0,0,0)');
+  overlayGrad.addColorStop(0, `hsla(${hueBase}, 70%, 20%, ${0.1 + beat * 0.05})`);
+  overlayGrad.addColorStop(0.5, `hsla(${hueAccent}, 60%, 15%, ${0.08 + beat * 0.04})`);
+  overlayGrad.addColorStop(1, 'rgba(0,0,0,0)');
   
   ctx.save();
-  ctx.globalCompositeOperation = 'screen';
-  ctx.fillStyle = centralGlow;
+  ctx.globalAlpha = 0.6;
+  ctx.fillStyle = overlayGrad;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.restore();
 
-  // 3. Dynamic wave patterns
-  for (let wave = 0; wave < 2; wave++) {
-    const waveOffset = wave * Math.PI;
-    const waveSpeed = 1 + wave * 0.5;
-    const waveHeight = (30 + beat * 50) * (1 + wave * 0.5);
-    
-    ctx.save();
-    ctx.globalAlpha = 0.6 - wave * 0.2;
-    ctx.strokeStyle = `hsla(${(hueBase + wave * 60) % 360}, 85%, 65%, ${0.8 - wave * 0.2})`;
-    ctx.lineWidth = 4 + wave * 2;
-    ctx.shadowBlur = 20 + wave * 10;
-    ctx.shadowColor = ctx.strokeStyle;
-    
-    ctx.beginPath();
-    for (let x = 0; x <= canvas.width; x += 8) {
-      const y = canvas.height / 2 + 
-        Math.sin((x / 100) + (t * waveSpeed) + waveOffset) * waveHeight * Math.sin(t * 1.5 + waveOffset) +
-        Math.sin((x / 50) + (t * waveSpeed * 1.2) + waveOffset) * (waveHeight * 0.4) * beat;
-      
-      if (x === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    }
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  // 4. Moving spotlight effect
-  const spotX = canvas.width / 2 + Math.sin(t * 0.7) * canvas.width * 0.25;
-  const spotY = canvas.height / 2 + Math.cos(t * 0.5) * canvas.height * 0.25;
-  const spot = ctx.createRadialGradient(
-    spotX, spotY, 0,
-    spotX, spotY, canvas.width * (0.15 + 0.1 * Math.sin(t * 1.5 + avg / 40))
-  );
-  spot.addColorStop(0, `rgba(255,203,0,${0.3 + 0.4 * beat})`);
-  spot.addColorStop(0.6, `hsla(${hueAccent}, 90%, 60%, ${0.2 + 0.3 * beat})`);
-  spot.addColorStop(1, "rgba(0,0,0,0)");
-  
-  ctx.save();
-  ctx.globalAlpha = 0.8;
-  ctx.fillStyle = spot;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.restore();
-
-  // 5. Audio-reactive sparkles (simplified)
-  if (beat > 1.2) {
-    for (let i = 0; i < beat * 15; i++) {
-      const sparkleX = Math.random() * canvas.width;
-      const sparkleY = Math.random() * canvas.height;
-      const sparkleSize = Math.random() * 4 + 1;
-      const sparkleAlpha = Math.random() * (beat - 1);
-      
-      ctx.save();
-      ctx.globalAlpha = sparkleAlpha;
-      ctx.fillStyle = `hsla(${hueBase + Math.random() * 80}, 100%, 80%, ${sparkleAlpha})`;
-      ctx.shadowBlur = 15;
-      ctx.shadowColor = ctx.fillStyle;
-      ctx.beginPath();
-      ctx.arc(sparkleX, sparkleY, sparkleSize, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    }
-  }
-
-  // 6. Enhanced vignette
+  // 3. Enhanced vignette
   const vignette = ctx.createRadialGradient(
     canvas.width / 2, canvas.height / 2, Math.min(canvas.width, canvas.height) * 0.2,
     canvas.width / 2, canvas.height / 2, Math.max(canvas.width, canvas.height) * 0.7
   );
   vignette.addColorStop(0, 'rgba(0,0,0,0)');
-  vignette.addColorStop(0.7, `rgba(0,0,0,${0.4 - beat * 0.1})`);
+  vignette.addColorStop(0.7, `rgba(0,0,0,${0.4 - beat * 0.05})`);
   vignette.addColorStop(1, 'rgba(0,0,0,0.9)');
   
   ctx.save();
@@ -342,14 +444,6 @@ function animateBg() {
   ctx.restore();
 }
 animateBg();
-
-// Start analyser when audio is played
-audio.addEventListener('play', () => {
-  setupAudioAnalyser();
-  if (audioCtx && audioCtx.state === 'suspended') {
-    audioCtx.resume();
-  }
-});
 
 // Initialize the album list on page load
 showAlbums();
