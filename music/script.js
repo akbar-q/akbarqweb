@@ -174,8 +174,10 @@ function showAlbum(idx) {
   // Ensure buttons have correct initial styling
   shuffleBtn.style.color = '#FFB800';
   shuffleBtn.style.backgroundColor = 'transparent';
+  shuffleBtn.style.border = '1px solid rgba(255, 184, 0, 0.3)';
   loopBtn.style.color = '#FFB800';
   loopBtn.style.backgroundColor = 'transparent';
+  loopBtn.style.border = '1px solid rgba(255, 184, 0, 0.3)';
 
   songList.innerHTML = '';
   album.songs.forEach((song, sidx) => {
@@ -354,12 +356,14 @@ function updateShuffleButton() {
   shuffleBtn.textContent = '⤮'; // Clean shuffle symbol
   if (isShuffled) {
     shuffleBtn.style.opacity = '1';
-    shuffleBtn.style.color = 'rgba(0, 0, 0, 0.8)'; // Dark text when active
-    shuffleBtn.style.backgroundColor = '#FFB800'; // Yellow background when active
+    shuffleBtn.style.color = '#000000'; // Black text when active
+    shuffleBtn.style.backgroundColor = '#FFB800'; // Solid yellow background when active
+    shuffleBtn.style.border = '1px solid #FFB800';
   } else {
     shuffleBtn.style.opacity = '0.7';
     shuffleBtn.style.color = '#FFB800'; // Yellow text when inactive
-    shuffleBtn.style.backgroundColor = 'transparent'; // Transparent background when inactive
+    shuffleBtn.style.backgroundColor = 'transparent'; // No fill when inactive
+    shuffleBtn.style.border = '1px solid rgba(255, 184, 0, 0.3)';
   }
   shuffleBtn.title = isShuffled ? 'Shuffle: On' : 'Shuffle: Off';
 }
@@ -373,11 +377,13 @@ function updateLoopButton() {
   if (loopMode === 0) {
     loopBtn.style.opacity = '0.7';
     loopBtn.style.color = '#FFB800'; // Yellow text when inactive
-    loopBtn.style.backgroundColor = 'transparent'; // Transparent background when inactive
+    loopBtn.style.backgroundColor = 'transparent'; // No fill when inactive
+    loopBtn.style.border = '1px solid rgba(255, 184, 0, 0.3)';
   } else {
     loopBtn.style.opacity = '1';
-    loopBtn.style.color = 'rgba(0, 0, 0, 0.8)'; // Dark text when active
-    loopBtn.style.backgroundColor = '#FFB800'; // Yellow background when active
+    loopBtn.style.color = '#000000'; // Black text when active
+    loopBtn.style.backgroundColor = '#FFB800'; // Solid yellow background when active
+    loopBtn.style.border = '1px solid #FFB800';
   }
   loopBtn.title = loopTitles[loopMode];
 }
@@ -522,9 +528,25 @@ function updateLyricsHighlight(currentTime) {
     line.classList.remove('current', 'past');
     if (index === currentIndex) {
       line.classList.add('current');
-      // Only auto-scroll if the lyrics panel is visible and user hasn't manually scrolled recently
+      
+      // Only auto-scroll if:
+      // 1. Lyrics panel is visible
+      // 2. User hasn't manually scrolled recently
+      // 3. The current line is not already visible in the viewport
       if (lyricsVisible && !line.closest('.lyrics-content').hasAttribute('data-user-scrolled')) {
-        line.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const container = line.closest('.lyrics-content');
+        const containerRect = container.getBoundingClientRect();
+        const lineRect = line.getBoundingClientRect();
+        
+        // Only scroll if the line is not visible in the container
+        const isVisible = (
+          lineRect.top >= containerRect.top &&
+          lineRect.bottom <= containerRect.bottom
+        );
+        
+        if (!isVisible) {
+          line.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       }
     } else if (index < currentIndex) {
       line.classList.add('past');
@@ -538,8 +560,9 @@ function toggleLyrics() {
   if (lyricsVisible) {
     lyricsPanel.style.display = 'block';
     lyricsBtn.style.opacity = '1';
-    lyricsBtn.style.color = 'rgba(0, 0, 0, 0.8)'; // Dark text when active
-    lyricsBtn.style.backgroundColor = '#FFB800'; // Yellow background when active
+    lyricsBtn.style.color = '#000000'; // Black text when active
+    lyricsBtn.style.backgroundColor = '#FFB800'; // Solid yellow background when active
+    lyricsBtn.style.border = '1px solid #FFB800';
     displayLyrics();
     
     // Add scroll detection to prevent auto-scroll interference (only if not already added)
@@ -550,7 +573,7 @@ function toggleLyrics() {
         clearTimeout(scrollTimeout);
         scrollTimeout = setTimeout(() => {
           this.removeAttribute('data-user-scrolled');
-        }, 3000); // Re-enable auto-scroll after 3 seconds of no manual scrolling
+        }, 5000); // Increased to 5 seconds to give user more control
       });
       lyricsContent.setAttribute('data-scroll-listener', 'true');
     }
@@ -558,7 +581,8 @@ function toggleLyrics() {
     lyricsPanel.style.display = 'none';
     lyricsBtn.style.opacity = '0.7';
     lyricsBtn.style.color = '#FFB800'; // Yellow text when inactive
-    lyricsBtn.style.backgroundColor = 'transparent'; // Transparent background when inactive
+    lyricsBtn.style.backgroundColor = 'transparent'; // No fill when inactive
+    lyricsBtn.style.border = '1px solid rgba(255, 184, 0, 0.3)';
   }
 }
 
@@ -567,7 +591,8 @@ function closeLyrics() {
   lyricsPanel.style.display = 'none';
   lyricsBtn.style.opacity = '0.7';
   lyricsBtn.style.color = '#FFB800'; // Yellow text when inactive
-  lyricsBtn.style.backgroundColor = 'transparent'; // Transparent background when inactive
+  lyricsBtn.style.backgroundColor = 'transparent'; // No fill when inactive
+  lyricsBtn.style.border = '1px solid rgba(255, 184, 0, 0.3)';
 }
 
 async function loadSongLyrics(song) {
@@ -586,8 +611,9 @@ async function loadSongLyrics(song) {
         lyricsVisible = true;
         lyricsPanel.style.display = 'block';
         lyricsBtn.style.opacity = '1';
-        lyricsBtn.style.color = 'rgba(0, 0, 0, 0.8)';
+        lyricsBtn.style.color = '#000000';
         lyricsBtn.style.backgroundColor = '#FFB800';
+        lyricsBtn.style.border = '1px solid #FFB800';
         
         // Add scroll detection for auto-opened lyrics
         if (!lyricsContent.hasAttribute('data-scroll-listener')) {
@@ -597,7 +623,7 @@ async function loadSongLyrics(song) {
             clearTimeout(scrollTimeout);
             scrollTimeout = setTimeout(() => {
               this.removeAttribute('data-user-scrolled');
-            }, 3000);
+            }, 5000); // Increased to 5 seconds
           });
           lyricsContent.setAttribute('data-scroll-listener', 'true');
         }
