@@ -170,6 +170,12 @@ function showAlbum(idx) {
   // Initialize shuffle and loop buttons
   updateShuffleButton();
   updateLoopButton();
+  
+  // Ensure buttons have correct initial styling
+  shuffleBtn.style.color = '#FFB800';
+  shuffleBtn.style.backgroundColor = 'transparent';
+  loopBtn.style.color = '#FFB800';
+  loopBtn.style.backgroundColor = 'transparent';
 
   songList.innerHTML = '';
   album.songs.forEach((song, sidx) => {
@@ -346,18 +352,33 @@ function toggleLoop() {
 
 function updateShuffleButton() {
   shuffleBtn.textContent = '⤮'; // Clean shuffle symbol
-  shuffleBtn.style.opacity = isShuffled ? '1' : '0.5';
-  shuffleBtn.style.color = isShuffled ? '#FFB800' : 'rgba(255, 255, 255, 0.7)';
+  if (isShuffled) {
+    shuffleBtn.style.opacity = '1';
+    shuffleBtn.style.color = 'rgba(0, 0, 0, 0.8)'; // Dark text when active
+    shuffleBtn.style.backgroundColor = '#FFB800'; // Yellow background when active
+  } else {
+    shuffleBtn.style.opacity = '0.7';
+    shuffleBtn.style.color = '#FFB800'; // Yellow text when inactive
+    shuffleBtn.style.backgroundColor = 'transparent'; // Transparent background when inactive
+  }
   shuffleBtn.title = isShuffled ? 'Shuffle: On' : 'Shuffle: Off';
 }
 
 function updateLoopButton() {
-  const loopIcons = ['↻', '↻', '⟲']; // Clean loop symbols: no loop, loop album, loop single
+  const loopIcons = ['↻', '↻', '1']; // no loop, loop album, loop single (show "1" for single)
   const loopTitles = ['Loop: Off', 'Loop: Album', 'Loop: Single Track'];
   
   loopBtn.textContent = loopIcons[loopMode];
-  loopBtn.style.opacity = loopMode === 0 ? '0.5' : '1';
-  loopBtn.style.color = loopMode === 0 ? 'rgba(255, 255, 255, 0.7)' : '#FFB800';
+  
+  if (loopMode === 0) {
+    loopBtn.style.opacity = '0.7';
+    loopBtn.style.color = '#FFB800'; // Yellow text when inactive
+    loopBtn.style.backgroundColor = 'transparent'; // Transparent background when inactive
+  } else {
+    loopBtn.style.opacity = '1';
+    loopBtn.style.color = 'rgba(0, 0, 0, 0.8)'; // Dark text when active
+    loopBtn.style.backgroundColor = '#FFB800'; // Yellow background when active
+  }
   loopBtn.title = loopTitles[loopMode];
 }
 
@@ -476,9 +497,6 @@ function displayLyrics() {
     return;
   }
   
-  const song = albums[currentAlbum].songs[currentSong];
-  lyricsTitle.textContent = `${song.title} - ${song.artist || 'Akbar Q'}`;
-  
   lyricsContent.innerHTML = currentLyrics
     .map((lyric, index) => 
       `<div class="lyrics-line" data-time="${lyric.time}" data-index="${index}">${lyric.text}</div>`
@@ -504,8 +522,10 @@ function updateLyricsHighlight(currentTime) {
     line.classList.remove('current', 'past');
     if (index === currentIndex) {
       line.classList.add('current');
-      // Auto-scroll to current line
-      line.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Only auto-scroll if the lyrics panel is visible and user hasn't manually scrolled recently
+      if (lyricsVisible && !line.closest('.lyrics-content').hasAttribute('data-user-scrolled')) {
+        line.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     } else if (index < currentIndex) {
       line.classList.add('past');
     }
@@ -518,20 +538,36 @@ function toggleLyrics() {
   if (lyricsVisible) {
     lyricsPanel.style.display = 'block';
     lyricsBtn.style.opacity = '1';
-    lyricsBtn.style.color = '#FFB800';
+    lyricsBtn.style.color = 'rgba(0, 0, 0, 0.8)'; // Dark text when active
+    lyricsBtn.style.backgroundColor = '#FFB800'; // Yellow background when active
     displayLyrics();
+    
+    // Add scroll detection to prevent auto-scroll interference (only if not already added)
+    if (!lyricsContent.hasAttribute('data-scroll-listener')) {
+      let scrollTimeout;
+      lyricsContent.addEventListener('scroll', function() {
+        this.setAttribute('data-user-scrolled', 'true');
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          this.removeAttribute('data-user-scrolled');
+        }, 3000); // Re-enable auto-scroll after 3 seconds of no manual scrolling
+      });
+      lyricsContent.setAttribute('data-scroll-listener', 'true');
+    }
   } else {
     lyricsPanel.style.display = 'none';
-    lyricsBtn.style.opacity = '0.5';
-    lyricsBtn.style.color = 'rgba(255, 255, 255, 0.7)';
+    lyricsBtn.style.opacity = '0.7';
+    lyricsBtn.style.color = '#FFB800'; // Yellow text when inactive
+    lyricsBtn.style.backgroundColor = 'transparent'; // Transparent background when inactive
   }
 }
 
 function closeLyrics() {
   lyricsVisible = false;
   lyricsPanel.style.display = 'none';
-  lyricsBtn.style.opacity = '0.5';
-  lyricsBtn.style.color = 'rgba(255, 255, 255, 0.7)';
+  lyricsBtn.style.opacity = '0.7';
+  lyricsBtn.style.color = '#FFB800'; // Yellow text when inactive
+  lyricsBtn.style.backgroundColor = 'transparent'; // Transparent background when inactive
 }
 
 async function loadSongLyrics(song) {
@@ -544,9 +580,30 @@ async function loadSongLyrics(song) {
     // Show lyrics button if lyrics are available
     if (currentLyrics && currentLyrics.length > 0) {
       lyricsBtn.style.display = 'inline-block';
-      if (lyricsVisible) {
-        displayLyrics();
+      
+      // Show lyrics by default when available
+      if (!lyricsVisible) {
+        lyricsVisible = true;
+        lyricsPanel.style.display = 'block';
+        lyricsBtn.style.opacity = '1';
+        lyricsBtn.style.color = 'rgba(0, 0, 0, 0.8)';
+        lyricsBtn.style.backgroundColor = '#FFB800';
+        
+        // Add scroll detection for auto-opened lyrics
+        if (!lyricsContent.hasAttribute('data-scroll-listener')) {
+          let scrollTimeout;
+          lyricsContent.addEventListener('scroll', function() {
+            this.setAttribute('data-user-scrolled', 'true');
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+              this.removeAttribute('data-user-scrolled');
+            }, 3000);
+          });
+          lyricsContent.setAttribute('data-scroll-listener', 'true');
+        }
       }
+      
+      displayLyrics();
     } else {
       lyricsBtn.style.display = 'none';
       if (lyricsVisible) {
@@ -555,8 +612,10 @@ async function loadSongLyrics(song) {
     }
   } else {
     lyricsBtn.style.display = 'none';
+    // Hide lyrics panel if no lyrics available
     if (lyricsVisible) {
-      lyricsContent.innerHTML = '<div class="lyrics-error">No lyrics available for this track</div>';
+      lyricsVisible = false;
+      lyricsPanel.style.display = 'none';
     }
   }
 }

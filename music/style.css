@@ -1072,3 +1072,31 @@ audio {
     font-size: 1.1rem;
   }
 }
+
+/* Lyrics text button styling */
+.lyrics-text-btn {
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  padding: 6px 10px !important;
+  min-width: 50px !important;
+  font-family: 'Oxanium', monospace !important;
+}
+
+/* Ensure button colors override any default styles */
+.control-btn {
+  color: #FFB800 !important;
+  background-color: transparent !important;
+  transition: all 0.2s ease !important;
+  border: 1px solid rgba(255, 184, 0, 0.3) !important;
+}
+
+.control-btn:hover {
+  border-color: #FFB800 !important;
+  box-shadow: 0 0 8px rgba(255, 184, 0, 0.3) !important;
+}
+
+.control-btn:disabled {
+  color: rgba(255, 255, 255, 0.3) !important;
+  background-color: transparent !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
