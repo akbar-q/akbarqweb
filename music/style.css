@@ -82,14 +82,42 @@
 
 @media (max-width: 767px) {
   .cid-uHBINRz9j8 .container {
-    width: 95%;
+    width: 98%; /* Slightly wider on mobile to prevent clipping */
     height: 56px !important;
-    padding-right: 1rem;
-    margin-top: 0rem;
+    padding: 0.5rem 0.8rem; /* Better padding for mobile */
+    margin-top: 0.5rem;
+    justify-content: space-between; /* Better distribution */
+  }
+  
+  .cid-uHBINRz9j8 .navbar-brand {
+    flex: 1;
+    min-width: 0; /* Allow shrinking */
   }
   
   .cid-uHBINRz9j8 .navbar-logo {
-    padding-left: 1rem;
+    padding-left: 0.5rem; /* Reduced padding */
+  }
+
+  .cid-uHBINRz9j8 .navbar-caption {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    font-size: 0.9rem !important; /* Smaller font on mobile */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cid-uHBINRz9j8 .navbar-nav {
+    padding-left: 0;
+  }
+
+  .cid-uHBINRz9j8 .navbar-buttons {
+    flex-shrink: 0;
+  }
+
+  .cid-uHBINRz9j8 .btn-success {
+    padding: 0.4rem 0.8rem !important;
+    font-size: 0.85rem !important;
   }
 }
 
@@ -114,11 +142,22 @@ body {
 
 header h1 {
   text-align: center;
-  margin-bottom: 24px;
-  font-size: 2rem;
-  letter-spacing: 2px;
+  margin-bottom: 8px;
+  font-size: 2.2rem;
+  letter-spacing: 1px;
   font-family: 'Montserrat Alternates', 'Oxanium', Arial, sans-serif;
   color: #FFB800;
+  font-weight: 700;
+}
+
+.header-subtitle {
+  text-align: center;
+  margin-bottom: 32px;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: 'Montserrat Alternates', Arial, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.5px;
 }
 
 /* Album List and Card */
@@ -134,34 +173,65 @@ header h1 {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  background: rgba(35, 40, 43, 0.92);
-  border-radius: 4px; /* Match theme border radius */
-  box-shadow: 0 4px 24px rgba(0,0,0,0.35);
-  padding: 32px 48px;
+  background: rgba(35, 40, 43, 0.95);
+  border-radius: 12px; /* More modern rounded corners */
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  border: 1px solid rgba(255, 203, 0, 0.1); /* Subtle golden border */
+  padding: 24px;
   width: 100%;
-  max-width: 1000px; /* Increased to match wider container */
-  min-height: 180px;
+  max-width: 1000px;
+  min-height: 200px;
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
+  transition: all 0.3s ease;
   color: #FFCB00;
   font-family: 'Oxanium', Arial, sans-serif;
-  backdrop-filter: blur(10px);
-  gap: 36px;
+  backdrop-filter: blur(16px);
+  gap: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.album-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 203, 0, 0.05) 0%, rgba(43, 122, 105, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
 .album-card:hover {
-  background: #FFCB00;
-  color: #23282b;
-  transform: scale(1.025);
+  background: rgba(35, 40, 43, 0.98);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.6);
+  border-color: rgba(255, 203, 0, 0.3);
+}
+
+.album-card:hover::before {
+  opacity: 1;
+}
+
+.album-card:hover .album-card-img img {
+  transform: scale(1.05);
+}
+
+.album-card-img {
+  position: relative;
+  flex-shrink: 0;
 }
 
 .album-card-img img {
-  width: 140px;
-  height: 140px;
+  width: 180px; /* Made significantly bigger */
+  height: 180px; /* Made significantly bigger */
   object-fit: cover;
-  border-radius: 4px; /* Match theme border radius */
-  box-shadow: 0 2px 16px rgba(0,0,0,0.28);
+  border-radius: 8px; /* Slightly more rounded */
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
   background: #23282b;
+  transition: transform 0.3s ease;
 }
 
 .album-card-info {
@@ -170,30 +240,67 @@ header h1 {
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 12px;
+  gap: 8px;
+  padding: 8px 0;
 }
 
 .album-name {
-  font-weight: bold;
-  font-size: 1.5rem;
-  margin-bottom: 6px;
+  font-weight: 700;
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+  color: #FFB800;
+  font-family: 'Montserrat Alternates', Arial, sans-serif;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
 }
 
-.album-artist,
-.album-age {
-  font-size: 1.05rem;
+.album-artist {
+  font-size: 1.1rem;
   color: #FFCB00;
-  margin-top: 2px;
+  margin: 4px 0;
   font-family: 'Oxanium', Arial, sans-serif;
+  font-weight: 500;
+}
+
+.album-age {
+  font-size: 0.95rem;
+  color: rgba(255, 203, 0, 0.8);
+  margin: 2px 0;
+  font-family: 'Oxanium', Arial, sans-serif;
+  font-weight: 400;
 }
 
 .album-desc {
-  font-size: 0.97rem;
-  color: #FFCB00;
-  margin-top: 10px;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: 12px;
   font-family: 'Montserrat Alternates', Arial, sans-serif;
-  line-height: 1.5;
+  line-height: 1.6;
   text-align: left;
+  font-weight: 400;
+}
+
+.track-count {
+  font-size: 0.9rem;
+  color: rgba(255, 203, 0, 0.7);
+  margin-top: 8px;
+  font-family: 'Oxanium', Arial, sans-serif;
+  font-weight: 500;
+}
+
+.coming-soon-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: linear-gradient(135deg, #FFB800, #FFCB00);
+  color: #000;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: 'Montserrat Alternates', Arial, sans-serif;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 .album-view {
@@ -216,18 +323,24 @@ header h1 {
 
 .back-btn {
   align-self: flex-start;
-  margin-bottom: 12px;
-  background: none;
-  border: none;
+  margin-bottom: 16px;
+  background: rgba(255, 203, 0, 0.1);
+  border: 1px solid rgba(255, 203, 0, 0.3);
+  border-radius: 8px;
+  padding: 8px 16px;
   color: #FFB800;
-  font-size: 1.1rem;
+  font-size: 1rem;
   cursor: pointer;
-  transition: color 0.2s;
+  transition: all 0.3s ease;
   font-family: 'Montserrat Alternates', Arial, sans-serif;
+  font-weight: 500;
 }
 
 .back-btn:hover {
+  background: rgba(255, 203, 0, 0.2);
+  border-color: rgba(255, 203, 0, 0.5);
   color: #FFCB00;
+  transform: translateX(-2px);
 }
 
 .album-cover {
@@ -273,15 +386,17 @@ header h1 {
 
 .player-bar {
   width: 100%;
-  background: rgba(35, 40, 43, 0.82); /* frosted dark grey */
-  border-radius: 4px; /* Match theme border radius */
-  padding: 24px 32px 16px 32px;
+  background: rgba(35, 40, 43, 0.95);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 203, 0, 0.1);
+  padding: 24px 32px 20px 32px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   margin-top: 32px;
   box-sizing: border-box;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
 }
 
 #now-playing {
@@ -319,25 +434,40 @@ audio {
   border-collapse: collapse;
   margin-bottom: 32px;
   table-layout: fixed;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  background: rgba(35, 40, 43, 0.5);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 203, 0, 0.1);
 }
+
 .song-table th, .song-table td {
-  padding: 16px 10px;
+  padding: 16px 12px;
   text-align: left;
   font-family: 'Oxanium', Arial, sans-serif;
   word-break: break-word;
+  border-bottom: 1px solid rgba(255, 203, 0, 0.1);
 }
+
 .song-table th {
-  color: #FFCB00;
+  color: #FFB800;
   font-weight: 700;
-  border-bottom: 2px solid #23282b;
+  background: rgba(35, 40, 43, 0.8);
+  font-family: 'Montserrat Alternates', Arial, sans-serif;
+  letter-spacing: 0.5px;
 }
+
 .song-table tr {
   background: transparent;
-  transition: background 0.2s;
+  transition: all 0.3s ease;
 }
+
 .song-table tr:hover {
-  background: rgba(35, 40, 43, 0.7);
+  background: rgba(255, 203, 0, 0.1);
+}
+
+.song-table tr:last-child td {
+  border-bottom: none;
 }
 .song-table td.play-cell {
   width: 60px;
@@ -374,34 +504,149 @@ audio {
     box-shadow: none;
     background: rgba(35, 40, 43, 0.92);
     backdrop-filter: blur(12px);
+    margin-top: 80px; /* Reduced top margin for mobile */
   }
 
   /* Album card: fit inside container, no overflow */
   .album-card {
     flex-direction: column;
     align-items: center;
-    padding: 14px 4vw;
+    padding: 20px;
     width: 100%;
     max-width: 100vw;
     box-sizing: border-box;
+    text-align: center;
   }
+  
   .album-card-img img {
-    width: 70px;
-    height: 70px;
-    margin-bottom: 10px;
+    width: 120px; /* Bigger on mobile too */
+    height: 120px;
+    margin-bottom: 16px;
   }
+  
   .album-card-info {
     align-items: center;
     text-align: center;
     width: 100%;
+  }
+  
+  .album-name {
+    font-size: 1.5rem;
+  }
+  
+  .album-desc {
+    font-size: 0.95rem;
+    text-align: center;
+  }
+
+  /* Mobile album view layout */
+  .album-view {
+    padding: 10px 0;
+  }
+
+  .album-header {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .album-cover {
+    width: 220px;
+    height: 220px;
+    margin: 0 auto 20px auto;
+  }
+
+  #album-title {
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .album-play-btn {
+    margin-left: 0; /* Center the button */
+    padding: 12px 32px; /* Smaller padding */
+    font-size: 1.1rem; /* Smaller font */
+    width: fit-content;
+    align-self: center;
+  }
+
+  /* Mobile song table - 2 column layout */
+  .song-table {
+    font-size: 0.9rem;
+    border-radius: 6px;
+    margin-bottom: 20px;
   }
 
   .song-table th.desktop-only,
   .song-table td.desktop-only {
     display: none;
   }
+
   .song-table th,
   .song-table td {
+    padding: 8px 6px; /* Reduced padding for mobile */
+  }
+
+  /* Mobile table structure: #, Title+Artist, Duration, Play */
+  .song-table th:nth-child(1), 
+  .song-table td:nth-child(1) {
+    width: 15%;
     text-align: center !important;
+  }
+
+  .song-table th:nth-child(2), 
+  .song-table td:nth-child(2) {
+    width: 50%;
+    text-align: left !important;
+    padding-left: 8px !important;
+  }
+
+  .song-table th:nth-child(3), 
+  .song-table td:nth-child(3) {
+    width: 20%;
+    text-align: center !important;
+  }
+
+  .song-table th:nth-child(4), 
+  .song-table td:nth-child(4) {
+    width: 15%;
+    text-align: center !important;
+  }
+
+  /* Mobile play button styling */
+  .mobile-play-btn {
+    font-size: 1.2rem !important;
+    padding: 4px 8px;
+    background: rgba(255, 203, 0, 0.1);
+    border: 1px solid rgba(255, 203, 0, 0.3);
+    border-radius: 4px;
+    color: #FFCB00 !important;
+    transition: all 0.2s ease;
+  }
+
+  .mobile-play-btn:hover {
+    background: rgba(255, 203, 0, 0.2);
+    border-color: rgba(255, 203, 0, 0.5);
+  }
+
+  /* Player bar mobile adjustments */
+  .player-bar {
+    padding: 16px 20px;
+    margin-top: 20px;
+  }
+
+  #now-playing {
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  /* Back button mobile */
+  .back-btn {
+    align-self: center;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    padding: 6px 12px;
   }
 }

@@ -1,21 +1,27 @@
 const albums = [
   {
-    title: "Album 1",
-    artist: "Artist Name",
-    ageRating: "PG",
-    description: "This is a description of Album 1. You can write a paragraph or two here about the album, its style, or any background info.",
-    cover: "images/image1.jpg",
+    title: "Cycle of Design",
+    artist: "Akbar Q",
+    ageRating: "All Ages",
+    description: "An electronic journey through the engineering design process, where each track represents a different phase of bringing ideas to life through technology.",
+    cover: "music/Cycle of Design/01.png",
     songs: [
-      { title: "Song 1", artist: "Artist 1", description: "A great intro track.", file: "music/song1.mp3" },
-      { title: "Song 2", artist: "Artist 1", description: "The follow-up hit.", file: "music/song2.mp3" }
+      { title: "Power On", artist: "Akbar Q", description: "The beginning of every great design", file: "music/Cycle of Design/1. Power On.mp3", duration: null },
+      { title: "Ground Loop", artist: "Akbar Q", description: "Finding stability in the chaos", file: "music/Cycle of Design/2. Ground Loop.mp3", duration: null },
+      { title: "Clock Domain", artist: "Akbar Q", description: "Synchronizing the rhythm of innovation", file: "music/Cycle of Design/3. Clock Domain.mp3", duration: null },
+      { title: "Printed Circuit Heart", artist: "Akbar Q", description: "The soul of electronic creation", file: "music/Cycle of Design/4. Printed Circuit Heart.mp3", duration: null },
+      { title: "Logic High", artist: "Akbar Q", description: "When everything clicks into place", file: "music/Cycle of Design/5. Logic High.mp3", duration: null },
+      { title: "Thermal Runaway", artist: "Akbar Q", description: "When things get too hot to handle", file: "music/Cycle of Design/6. Thermal Runaway.mp3", duration: null },
+      { title: "Debug Mode", artist: "Akbar Q", description: "Finding and fixing the final pieces", file: "music/Cycle of Design/7. Debug Mode.mp3", duration: null }
     ]
   },
   {
-    title: "Album 2",
-    cover: "images/image2.jpg",
-    songs: [
-      // Add more songs here
-    ]
+    title: "Signal's Path",
+    artist: "Akbar Q",
+    ageRating: "All Ages", 
+    description: "A forthcoming album exploring the journey of electrical signals through complex systems. Coming soon.",
+    cover: "images/image2.png",
+    songs: []
   }
 ];
 
@@ -36,18 +42,35 @@ function showAlbums() {
   albums.forEach((album, idx) => {
     const div = document.createElement('div');
     div.className = 'album-card';
+    
+    // Add a badge for albums with no songs
+    const comingSoonBadge = album.songs.length === 0 ? 
+      '<div class="coming-soon-badge">Coming Soon</div>' : '';
+    
     div.innerHTML = `
+      ${comingSoonBadge}
       <div class="album-card-img">
         <img src="${album.cover}" alt="${album.title}" />
       </div>
       <div class="album-card-info">
         <div class="album-name">${album.title}</div>
         <div class="album-artist"><strong>Artist:</strong> ${album.artist || 'Unknown'}</div>
-        <div class="album-age"><strong>Age Rating:</strong> ${album.ageRating || 'N/A'}</div>
+        <div class="album-age"><strong>Rating:</strong> ${album.ageRating || 'N/A'}</div>
         <div class="album-desc">${album.description || ''}</div>
+        ${album.songs.length > 0 ? 
+          `<div class="track-count">${album.songs.length} track${album.songs.length !== 1 ? 's' : ''}</div>` : 
+          '<div class="track-count">No tracks available yet</div>'}
       </div>
     `;
-    div.onclick = () => showAlbum(idx);
+    
+    // Only make clickable if album has songs
+    if (album.songs.length > 0) {
+      div.onclick = () => showAlbum(idx);
+    } else {
+      div.style.cursor = 'default';
+      div.style.opacity = '0.7';
+    }
+    
     albumList.appendChild(div);
   });
   albumList.style.display = 'flex';
@@ -67,8 +90,40 @@ function showAlbum(idx) {
 
   const album = albums[idx];
   albumCover.src = album.cover;
-  albumCover.style.width = "260px";
-  albumCover.style.height = "260px";
+  
+  // Adjust album cover size for mobile
+  if (isMobile()) {
+    albumCover.style.width = "220px";
+    albumCover.style.height = "220px";
+    
+    // Update table headers for mobile
+    const tableHead = document.getElementById('song-table-head');
+    tableHead.innerHTML = `
+      <tr>
+        <th style="width: 15%;">#</th>
+        <th style="width: 50%;">Track</th>
+        <th style="width: 20%;">Time</th>
+        <th style="width: 15%;"></th>
+      </tr>
+    `;
+  } else {
+    albumCover.style.width = "340px";
+    albumCover.style.height = "340px";
+    
+    // Reset table headers for desktop
+    const tableHead = document.getElementById('song-table-head');
+    tableHead.innerHTML = `
+      <tr>
+        <th>#</th>
+        <th>Title</th>
+        <th class="desktop-only">Artist</th>
+        <th class="desktop-only">Description</th>
+        <th>Duration</th>
+        <th></th>
+      </tr>
+    `;
+  }
+  
   albumTitle.textContent = album.title;
 
   document.getElementById('album-play').onclick = () => playSong(0);
@@ -77,15 +132,18 @@ function showAlbum(idx) {
   album.songs.forEach((song, sidx) => {
     const tr = document.createElement('tr');
     if (isMobile()) {
-      // Only show: #, Title, Duration, Play
+      // Mobile: #, Title+Artist, Duration, Play (4 columns, optimized spacing)
       tr.innerHTML = `
-        <td>${sidx + 1}</td>
-        <td style="text-align:center;">${song.title}</td>
-        <td id="duration-${sidx}" style="text-align:center;">
+        <td style="text-align:center; width: 15%;">${sidx + 1}</td>
+        <td style="text-align:left; width: 50%; padding-left: 8px;">
+          <div style="font-weight: 600; margin-bottom: 2px; font-size: 0.9rem; line-height: 1.2;">${song.title}</div>
+          <div style="font-size: 0.75rem; color: rgba(255, 203, 0, 0.7); line-height: 1;">${song.artist || 'Akbar Q'}</div>
+        </td>
+        <td id="duration-${sidx}" style="text-align:center; width: 20%; font-size: 0.85rem;">
           <span class="mobile-duration">--:--</span>
         </td>
-        <td style="text-align:center;">
-          <button class="song-play-btn" title="Play" onclick="playSongFromTable(${sidx})">▶</button>
+        <td style="text-align:center; width: 15%;">
+          <button class="song-play-btn mobile-play-btn" title="Play" onclick="playSongFromTable(${sidx})">▶</button>
         </td>
       `;
     } else {
@@ -108,9 +166,11 @@ function showAlbum(idx) {
       const mins = Math.floor(tempAudio.duration / 60);
       const secs = Math.floor(tempAudio.duration % 60).toString().padStart(2, '0');
       if (isMobile()) {
-        tr.querySelector('.mobile-duration').textContent = `${mins}:${secs}`;
+        const durationSpan = tr.querySelector('.mobile-duration');
+        if (durationSpan) durationSpan.textContent = `${mins}:${secs}`;
       } else {
-        document.getElementById(`duration-${sidx}`).textContent = `${mins}:${secs}`;
+        const durationElement = document.getElementById(`duration-${sidx}`);
+        if (durationElement) durationElement.textContent = `${mins}:${secs}`;
       }
     });
   });
@@ -243,3 +303,11 @@ audio.addEventListener('play', () => {
 
 // Initialize the album list on page load
 showAlbums();
+
+// Handle window resize for responsive updates
+window.addEventListener('resize', function() {
+  // If we're viewing an album, refresh the layout
+  if (albumView.style.display !== 'none' && currentAlbum !== null) {
+    showAlbum(currentAlbum);
+  }
+});
