@@ -35,6 +35,9 @@ let currentAlbum = null;
 let currentSong = 0;
 let isPlaying = false;
 let isDragging = false;
+let isShuffled = false;
+let shuffledOrder = [];
+let loopMode = 0; // 0: no loop, 1: loop album, 2: loop single track
 
 const albumList = document.getElementById('album-list');
 const albumView = document.getElementById('album-view');
@@ -49,6 +52,8 @@ const nowPlaying = document.getElementById('now-playing');
 const playPauseBtn = document.getElementById('play-pause-btn');
 const prevBtn = document.getElementById('prev-btn');
 const nextBtn = document.getElementById('next-btn');
+const shuffleBtn = document.getElementById('shuffle-btn');
+const loopBtn = document.getElementById('loop-btn');
 const progressFill = document.getElementById('progress-fill');
 const progressHandle = document.getElementById('progress-handle');
 const progressBar = document.querySelector('.progress-bar');
@@ -153,6 +158,10 @@ function showAlbum(idx) {
   // Update album play button to play first song
   document.getElementById('album-play').onclick = () => playSong(0);
 
+  // Initialize shuffle and loop buttons
+  updateShuffleButton();
+  updateLoopButton();
+
   songList.innerHTML = '';
   album.songs.forEach((song, sidx) => {
     const tr = document.createElement('tr');
@@ -247,17 +256,97 @@ function playNext() {
   if (currentAlbum === null) return;
   
   const albumSongs = albums[currentAlbum].songs;
-  if (currentSong < albumSongs.length - 1) {
-    playSong(currentSong + 1);
+  let nextIndex;
+  
+  if (isShuffled) {
+    const currentShuffleIndex = shuffledOrder.indexOf(currentSong);
+    if (currentShuffleIndex < shuffledOrder.length - 1) {
+      nextIndex = shuffledOrder[currentShuffleIndex + 1];
+    } else if (loopMode === 1) { // Loop album
+      nextIndex = shuffledOrder[0];
+    } else {
+      return; // End of shuffled playlist
+    }
+  } else {
+    if (currentSong < albumSongs.length - 1) {
+      nextIndex = currentSong + 1;
+    } else if (loopMode === 1) { // Loop album
+      nextIndex = 0;
+    } else {
+      return; // End of album
+    }
   }
+  
+  playSong(nextIndex);
 }
 
 function playPrevious() {
   if (currentAlbum === null) return;
   
-  if (currentSong > 0) {
-    playSong(currentSong - 1);
+  let prevIndex;
+  
+  if (isShuffled) {
+    const currentShuffleIndex = shuffledOrder.indexOf(currentSong);
+    if (currentShuffleIndex > 0) {
+      prevIndex = shuffledOrder[currentShuffleIndex - 1];
+    } else if (loopMode === 1) { // Loop album
+      prevIndex = shuffledOrder[shuffledOrder.length - 1];
+    } else {
+      return; // Beginning of shuffled playlist
+    }
+  } else {
+    if (currentSong > 0) {
+      prevIndex = currentSong - 1;
+    } else if (loopMode === 1) { // Loop album
+      prevIndex = albums[currentAlbum].songs.length - 1;
+    } else {
+      return; // Beginning of album
+    }
   }
+  
+  playSong(prevIndex);
+}
+
+function toggleShuffle() {
+  if (currentAlbum === null) return;
+  
+  isShuffled = !isShuffled;
+  
+  if (isShuffled) {
+    // Create shuffled order
+    const albumLength = albums[currentAlbum].songs.length;
+    shuffledOrder = Array.from({length: albumLength}, (_, i) => i);
+    
+    // Remove current song from array, shuffle the rest, then put current song at beginning
+    shuffledOrder.splice(shuffledOrder.indexOf(currentSong), 1);
+    for (let i = shuffledOrder.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledOrder[i], shuffledOrder[j]] = [shuffledOrder[j], shuffledOrder[i]];
+    }
+    shuffledOrder.unshift(currentSong);
+  }
+  
+  updateShuffleButton();
+}
+
+function toggleLoop() {
+  loopMode = (loopMode + 1) % 3; // Cycle through 0, 1, 2
+  updateLoopButton();
+}
+
+function updateShuffleButton() {
+  shuffleBtn.textContent = isShuffled ? '🔀' : '🔀';
+  shuffleBtn.style.opacity = isShuffled ? '1' : '0.5';
+  shuffleBtn.title = isShuffled ? 'Shuffle: On' : 'Shuffle: Off';
+}
+
+function updateLoopButton() {
+  const loopIcons = ['🔁', '🔁', '🔂']; // no loop, loop album, loop single
+  const loopTitles = ['Loop: Off', 'Loop: Album', 'Loop: Single Track'];
+  
+  loopBtn.textContent = loopIcons[loopMode];
+  loopBtn.style.opacity = loopMode === 0 ? '0.5' : '1';
+  loopBtn.title = loopTitles[loopMode];
 }
 
 function updatePlayPauseButton() {
@@ -327,6 +416,8 @@ function setProgress(e) {
 playPauseBtn.addEventListener('click', togglePlayPause);
 nextBtn.addEventListener('click', playNext);
 prevBtn.addEventListener('click', playPrevious);
+shuffleBtn.addEventListener('click', toggleShuffle);
+loopBtn.addEventListener('click', toggleLoop);
 
 // Progress bar interactions
 progressBar.addEventListener('click', setProgress);
@@ -343,10 +434,14 @@ audio.addEventListener('ended', () => {
   isPlaying = false;
   updatePlayPauseButton();
   
-  // Auto-play next song
-  if (currentAlbum !== null && currentSong < albums[currentAlbum].songs.length - 1) {
-    setTimeout(() => playNext(), 500); // Small delay for better UX
+  // Handle different loop modes
+  if (loopMode === 2) { // Loop single track
+    setTimeout(() => playSong(currentSong), 500);
+  } else if (loopMode === 1 || (currentAlbum !== null && currentSong < albums[currentAlbum].songs.length - 1)) {
+    // Loop album mode or auto-play next song
+    setTimeout(() => playNext(), 500);
   }
+  // If loopMode === 0 and it's the last song, just stop
 });
 
 audio.addEventListener('play', () => {
