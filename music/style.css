@@ -471,7 +471,8 @@ audio {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; /* Use system fonts for consistent icons */
+  line-height: 1; /* Better vertical centering */
 }
 
 .control-btn:hover:not(:disabled) {
@@ -492,6 +493,8 @@ audio {
   background: #FFB800;
   border-color: #FFB800;
   color: #002724;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; /* Use system fonts for consistent icons */
+  line-height: 1; /* Better vertical centering */
 }
 
 .main-play-btn:hover {
@@ -740,8 +743,8 @@ audio {
     padding: 12px 3vw;
     border-radius: 4px; /* Keep consistent border radius */
     box-shadow: none;
-    background: rgba(35, 40, 43, 0.92);
-    backdrop-filter: blur(12px);
+    background: rgba(35, 40, 43, 0.65); /* More transparent background on mobile for better effect visibility */
+    backdrop-filter: blur(10px); /* Slightly less blur for better performance and visibility */
     margin-top: 80px; /* Reduced top margin for mobile */
   }
 
@@ -888,6 +891,8 @@ audio {
   .music-player-controls {
     padding: 16px;
     margin: 16px 0;
+    background: rgba(35, 40, 43, 0.75); /* More transparent on mobile for better effect visibility */
+    backdrop-filter: blur(12px); /* Slightly less blur for better performance */
   }
 
   .player-controls {
@@ -895,15 +900,21 @@ audio {
   }
 
   .control-btn {
-    width: 42px;
-    height: 42px;
-    font-size: 1.1rem;
+    width: 44px;
+    height: 44px;
+    font-size: 1.3rem; /* Slightly bigger for better visibility */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; /* Use system fonts for consistent icons */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1; /* Better vertical centering */
   }
 
   .main-play-btn {
-    width: 52px;
-    height: 52px;
-    font-size: 1.4rem;
+    width: 54px;
+    height: 54px;
+    font-size: 1.6rem; /* Bigger play/pause button */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; /* Consistent font family */
   }
 
   #now-playing {
