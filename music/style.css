@@ -315,10 +315,24 @@ header h1 {
 .album-header {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between; /* Space between cover/title and play button */
   gap: 32px;
   margin-bottom: 32px;
   width: 100%;
+}
+
+.album-info {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex: 1;
+}
+
+.album-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
 }
 
 .back-btn {
@@ -421,12 +435,16 @@ audio {
   font-size: 1.3rem;
   font-family: 'Montserrat Alternates', Arial, sans-serif;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.3s ease;
   font-weight: bold;
-  margin-left: 32px;
+  margin-left: 0; /* Remove left margin for proper alignment */
+  box-shadow: 0 4px 16px rgba(255, 184, 0, 0.3);
+  transform: translateY(0);
 }
 .album-play-btn:hover {
   background: #FFCB00;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 203, 0, 0.4);
 }
 
 .song-table {
@@ -549,6 +567,16 @@ audio {
     align-items: center;
     gap: 16px;
     text-align: center;
+  }
+
+  .album-info {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .album-controls {
+    justify-content: center;
   }
 
   .album-cover {
