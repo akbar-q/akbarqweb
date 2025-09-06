@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test New Encrypted Titles</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #1a1a1a; color: #fff; }
+        .test { background: #2a2a2a; padding: 10px; margin: 5px 0; border-radius: 4px; }
+        .success { border-left: 4px solid #0f0; }
+        .error { border-left: 4px solid #f00; }
+    </style>
+</head>
+<body>
+    <h1>Test Decryption of New Encrypted Titles</h1>
+    <div id="results"></div>
+
+    <script>
+        const BLACK_BOOK_KEY = "darkbook2025";
+        
+        const encryptedTitles = [
+            "Qw9PRgdCCAwNBQ5DBwwOGQ==",
+            "QglCBgcaIwZYERA=",
+            "JgREFgZcEQQHBAkaBhwaCgUY",
+            "BwlaEgUHEwFeEwkaEgUH",
+            "UwBQEgUCDAEaAg9TGwkEGw==",
+            "QwwKGQcLQgcOEw==",
+            "GgwZEBwECAQaEwcKFQ==",
+            "BwEaRwtYEQcGEQdJHQQaTgdVDwU=",
+            "UwxDFQVKEQcPBA==",
+            "QwcKGAcKAQdJEAcOGAReDhASFgdeGQMBDgw=",
+            "QwtAEgcXChhGEglfFgcAFkgKDhAV",
+            "JwdAEgcXSQcNBAFLBhQEGgcNDgU=",
+            "RkMBCQkAFAZXRgEHFgwZEQwU",
+            "SQMGAQZcBgUKFgkI",
+            "BwlaEQAfFgkGTAcPBggAGUk=",
+            "TAcKGQVFDwZeCgdOBgU=",
+            "RwcAGgwEDgVLRgEHFgdIFgdNGQVQCwhCFAkNDgU="
+        ];
+
+        const expectedTitles = [
+            "I Don't Want to Wake Up",
+            "You Die Twice", 
+            "The Voices in My Head",
+            "Mirror, Mirror",
+            "Entropy's Lullaby",
+            "Black Book",
+            "Rewind Repeat",
+            "My Favorite Lie Is Me",
+            "Empty Room",
+            "Cradle Song for the Damned",
+            "Clock Without Hands",
+            "Stockholm Syndrome",
+            "Facade of Freewill",
+            "Hug of Death",
+            "Midnight Doomsday",
+            "Leave Me to be",
+            "Goodbye for the Last Time"
+        ];
+
+        function decryptTitle(encryptedTitle, key = BLACK_BOOK_KEY) {
+            try {
+                const decoded = atob(encryptedTitle);
+                let result = '';
+                for (let i = 0; i < decoded.length; i++) {
+                    result += String.fromCharCode(decoded.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+                }
+                return result;
+            } catch (e) {
+                return 'Error: ' + e.message;
+            }
+        }
+
+        let output = '';
+        encryptedTitles.forEach((encrypted, index) => {
+            const decrypted = decryptTitle(encrypted);
+            const expected = expectedTitles[index];
+            const success = decrypted === expected;
+            
+            output += `<div class="test ${success ? 'success' : 'error'}">
+                <strong>Track ${index + 1}:</strong><br>
+                Expected: "${expected}"<br>
+                Decrypted: "${decrypted}"<br>
+                Status: ${success ? '✓ SUCCESS' : '✗ FAILED'}
+            </div>`;
+        });
+        
+        document.getElementById('results').innerHTML = output;
+    </script>
+</body>
+</html>
