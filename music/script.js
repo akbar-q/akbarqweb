@@ -1,6 +1,40 @@
 // Music data will be loaded from JSON file
 let albums = [];
 
+// Hardcoded encryption key for The Black Book album
+const BLACK_BOOK_KEY = "darkbook2025";
+
+// Decryption function for obfuscated titles
+function decryptTitle(encryptedTitle, key = BLACK_BOOK_KEY) {
+  try {
+    // Base64 decode
+    const decoded = atob(encryptedTitle);
+    
+    // Simple XOR cipher with key
+    let result = '';
+    for (let i = 0; i < decoded.length; i++) {
+      result += String.fromCharCode(decoded.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+    }
+    
+    return result;
+  } catch (e) {
+    return 'Unknown Track';
+  }
+}
+
+// Get the display title for a song
+function getDisplayTitle(song, album, forceReal = false) {
+  if (forceReal && album.obfuscateTitles && song.encryptedTitle) {
+    return decryptTitle(song.encryptedTitle);
+  }
+  
+  if (album.obfuscateTitles && song.obfuscatedTitle && !forceReal) {
+    return song.obfuscatedTitle;
+  }
+  
+  return song.title || 'Unknown Track';
+}
+
 // Load music data from JSON file
 async function loadMusicData() {
   try {
@@ -180,12 +214,16 @@ function showAlbum(idx) {
   songList.innerHTML = '';
   album.songs.forEach((song, sidx) => {
     const tr = document.createElement('tr');
+    
+    // Use the getDisplayTitle function to get the appropriate title
+    const displayTitle = getDisplayTitle(song, album, false);
+    
     if (isMobile()) {
       // Mobile: #, Title+Artist, Duration, Play (4 columns, optimized spacing)
       tr.innerHTML = `
         <td style="text-align:center; width: 15%;">${sidx + 1}</td>
         <td style="text-align:left; width: 50%; padding-left: 8px;">
-          <div style="font-weight: 600; margin-bottom: 2px; font-size: 0.9rem; line-height: 1.2;">${song.title}</div>
+          <div style="font-weight: 600; margin-bottom: 2px; font-size: 0.9rem; line-height: 1.2;">${displayTitle}</div>
           <div style="font-size: 0.75rem; color: rgba(255, 203, 0, 0.7); line-height: 1;">${song.artist || 'Akbar Q'}</div>
         </td>
         <td id="duration-${sidx}" style="text-align:center; width: 20%; font-size: 0.85rem;">
@@ -198,7 +236,7 @@ function showAlbum(idx) {
     } else {
       tr.innerHTML = `
         <td>${sidx + 1}</td>
-        <td><strong>${song.title}</strong></td>
+        <td><strong>${displayTitle}</strong></td>
         <td>${song.artist || "Akbar Q"}</td>
         <td>${song.description || ""}</td>
         <td id="duration-${sidx}">--:--</td>
@@ -394,7 +432,10 @@ function updatePlayPauseButton() {
 function updateNowPlaying() {
   if (currentAlbum !== null && albums[currentAlbum].songs[currentSong]) {
     const song = albums[currentAlbum].songs[currentSong];
-    nowPlaying.textContent = `${song.title} - ${song.artist || 'Akbar Q'}`;
+    const album = albums[currentAlbum];
+    // Show the real title when playing (forceReal = true)
+    const realTitle = getDisplayTitle(song, album, true);
+    nowPlaying.textContent = `${realTitle} - ${song.artist || 'Akbar Q'}`;
   }
 }
 

@@ -60,6 +60,152 @@
       ]
     },
     {
+      "title": "The Black Book",
+      "artist": "Akbar Q",
+      "ageRating": "Mature",
+      "description": "A dark and introspective journey through the depths of consciousness, exploring themes of mortality, identity, and existential reflection.",
+      "cover": "music/The Black Book/Cover.png",
+      "obfuscateTitles": true,
+      "songs": [
+        {
+          "encryptedTitle": "X3RoZVN6Zz09",
+          "obfuscatedTitle": "Track 01",
+          "artist": "Akbar Q",
+          "description": "A haunting exploration of escapism and the refusal to face harsh realities",
+          "file": "music/The Black Book/01_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "WW91RGllVHdpY2U=",
+          "obfuscatedTitle": "Track 02",
+          "artist": "Akbar Q",
+          "description": "A meditation on the dual nature of mortality and remembrance",
+          "file": "music/The Black Book/02_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "VGhlVm9pY2VzSW5NeUhlYWQ=",
+          "obfuscatedTitle": "Track 03",
+          "artist": "Akbar Q",
+          "description": "Internal dialogue becomes external cacophony",
+          "file": "music/The Black Book/03_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "TWlycm9yTWlycm9y",
+          "obfuscatedTitle": "Track 04",
+          "artist": "Akbar Q",
+          "description": "Confronting reflections that reveal more than appearance",
+          "file": "music/The Black Book/04_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "RW50cm9weXNMdWxsYWJ5",
+          "obfuscatedTitle": "Track 05",
+          "artist": "Akbar Q",
+          "description": "Finding peace in the universe's tendency toward disorder",
+          "file": "music/The Black Book/05_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "QmxhY2tCb29r",
+          "obfuscatedTitle": "Track 06",
+          "artist": "Akbar Q",
+          "description": "The title track - a repository of secrets and confessions",
+          "file": "music/The Black Book/06_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "UmV3aW5kUmVwZWF0",
+          "obfuscatedTitle": "Track 07",
+          "artist": "Akbar Q",
+          "description": "Trapped in cycles of memory and regret",
+          "file": "music/The Black Book/07_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "TXlGYXZvcml0ZUxpZUlzTWU=",
+          "obfuscatedTitle": "Track 08",
+          "artist": "Akbar Q",
+          "description": "Self-deception as a survival mechanism",
+          "file": "music/The Black Book/08_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "RW1wdHlSb29t",
+          "obfuscatedTitle": "Track 09",
+          "artist": "Akbar Q",
+          "description": "The hollowness of solitude and absence",
+          "file": "music/The Black Book/09_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "Q3JhZGxlU29uZ0ZvclRoZURhbW5lZA==",
+          "obfuscatedTitle": "Track 10",
+          "artist": "Akbar Q",
+          "description": "A lullaby for lost souls seeking comfort",
+          "file": "music/The Black Book/10_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "Q2xvY2tXaXRob3V0SGFuZHM=",
+          "obfuscatedTitle": "Track 11",
+          "artist": "Akbar Q",
+          "description": "Time without meaning or direction",
+          "file": "music/The Black Book/11_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "U3RvY2tob2xtU3luZHJvbWU=",
+          "obfuscatedTitle": "Track 12",
+          "artist": "Akbar Q",
+          "description": "The psychology of attachment to harmful situations",
+          "file": "music/The Black Book/12_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "RmFjYWRlT2ZGcmVld2lsbA==",
+          "obfuscatedTitle": "Track 13",
+          "artist": "Akbar Q",
+          "description": "Questioning the illusion of choice",
+          "file": "music/The Black Book/13_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "SHVnT2ZEZWF0aA==",
+          "obfuscatedTitle": "Track 14",
+          "artist": "Akbar Q",
+          "description": "Finding warmth in the inevitability of mortality",
+          "file": "music/The Black Book/14_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "TWlkbmlnaHREb29tc2RheQ==",
+          "obfuscatedTitle": "Track 15",
+          "artist": "Akbar Q",
+          "description": "Apocalyptic thoughts in the witching hour",
+          "file": "music/The Black Book/15_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "TGVhdmVNZVRvQmU=",
+          "obfuscatedTitle": "Track 16",
+          "artist": "Akbar Q",
+          "description": "The plea for solitude and peace",
+          "file": "music/The Black Book/16_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "R29vZGJ5ZUZvclRoZUxhc3RUaW1l",
+          "obfuscatedTitle": "Track 17",
+          "artist": "Akbar Q",
+          "description": "The finality of farewell",
+          "file": "music/The Black Book/17_encrypted.wav",
+          "duration": null
+        }
+      ]
+    },
+    {
       "title": "Signal's Path",
       "artist": "Akbar Q",
       "ageRating": "All Ages",
