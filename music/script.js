@@ -24,14 +24,21 @@ function decryptTitle(encryptedTitle, key = BLACK_BOOK_KEY) {
 
 // Get the display title for a song
 function getDisplayTitle(song, album, forceReal = false) {
-  if (forceReal && album.obfuscateTitles && song.encryptedTitle) {
-    return decryptTitle(song.encryptedTitle);
+  // For albums with obfuscated titles
+  if (album.obfuscateTitles) {
+    if (forceReal && song.encryptedTitle) {
+      // Show real title when playing (decrypt it)
+      return decryptTitle(song.encryptedTitle);
+    } else if (song.obfuscatedTitle) {
+      // Show obfuscated title in lists
+      return song.obfuscatedTitle;
+    } else {
+      // Fallback for obfuscated albums
+      return "Redacted";
+    }
   }
   
-  if (album.obfuscateTitles && song.obfuscatedTitle && !forceReal) {
-    return song.obfuscatedTitle;
-  }
-  
+  // For normal albums, use the regular title
   return song.title || 'Unknown Track';
 }
 
