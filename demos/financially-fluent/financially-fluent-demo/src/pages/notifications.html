@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - Financially Fluent</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-left">
+                <span class="time">12:04</span>
+            </div>
+            <div class="status-right">
+                <span class="battery">88%</span>
+                <span class="signal">📶</span>
+                <span class="wifi">📶</span>
+            </div>
+        </div>
+
+        <div class="page">
+            <!-- Header -->
+            <div class="page-header">
+                <button class="back-btn" onclick="history.back()">←</button>
+                <h1 class="page-title">Notifications</h1>
+                <button class="clear-all-btn" onclick="clearAllNotifications()">Clear All</button>
+            </div>
+
+            <!-- Notification Categories -->
+            <div class="notification-filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="alerts">Alerts</button>
+                <button class="filter-btn" data-filter="insights">Insights</button>
+                <button class="filter-btn" data-filter="goals">Goals</button>
+            </div>
+
+            <!-- Notifications List -->
+            <div class="notifications-list">
+                <!-- Today -->
+                <div class="notification-group">
+                    <div class="group-header">
+                        <h3 class="group-title">Today</h3>
+                        <span class="group-count">3 notifications</span>
+                    </div>
+                    
+                    <div class="notification-item unread" data-category="alerts">
+                        <div class="notification-icon alert">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L23 7V9M21 13V11L23 11V13M21 17V15L23 15V17" stroke="currentColor" stroke-width="2"/>
+                                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">Budget Alert: Dining</div>
+                            <div class="notification-message">You've spent AED 1,200 of your AED 1,500 dining budget this month (80%)</div>
+                            <div class="notification-time">2 hours ago</div>
+                        </div>
+                        <div class="notification-badge">!</div>
+                    </div>
+
+                    <div class="notification-item unread" data-category="insights">
+                        <div class="notification-icon insights">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">💡 Smart Insight</div>
+                            <div class="notification-message">You spend 35% less on weekdays. Consider doing grocery shopping on Tuesdays for better deals!</div>
+                            <div class="notification-time">4 hours ago</div>
+                        </div>
+                        <div class="notification-action">
+                            <button class="action-btn" onclick="viewInsight()">View</button>
+                        </div>
+                    </div>
+
+                    <div class="notification-item unread" data-category="goals">
+                        <div class="notification-icon goals">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                <path d="M8 12L10.5 14.5L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">🎯 Goal Progress</div>
+                            <div class="notification-message">Great job! You're 85% towards your Emergency Fund goal. Only AED 1,500 left!</div>
+                            <div class="notification-time">6 hours ago</div>
+                        </div>
+                        <div class="notification-action">
+                            <button class="action-btn" onclick="viewGoal()">View Goal</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Yesterday -->
+                <div class="notification-group">
+                    <div class="group-header">
+                        <h3 class="group-title">Yesterday</h3>
+                        <span class="group-count">2 notifications</span>
+                    </div>
+                    
+                    <div class="notification-item read" data-category="alerts">
+                        <div class="notification-icon success">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                <path d="M8 12L10.5 14.5L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">✅ Transaction Confirmed</div>
+                            <div class="notification-message">Your salary of AED 8,500 has been deposited to Emirates NBD ****2847</div>
+                            <div class="notification-time">Yesterday, 9:15 AM</div>
+                        </div>
+                    </div>
+
+                    <div class="notification-item read" data-category="insights">
+                        <div class="notification-icon insights">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path d="M3 3V18H18" stroke="currentColor" stroke-width="2"/>
+                                <path d="M7 14L12 9L16 13L21 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">📊 Monthly Report Ready</div>
+                            <div class="notification-message">Your October financial summary is ready. You saved 15% more than last month!</div>
+                            <div class="notification-time">Yesterday, 6:00 PM</div>
+                        </div>
+                        <div class="notification-action">
+                            <button class="action-btn" onclick="viewReport()">View Report</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- This Week -->
+                <div class="notification-group">
+                    <div class="group-header">
+                        <h3 class="group-title">This Week</h3>
+                        <span class="group-count">4 notifications</span>
+                    </div>
+                    
+                    <div class="notification-item read" data-category="goals">
+                        <div class="notification-icon goals">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path d="M22 11.08V12C22 17.52 17.52 22 12 22S2 17.52 2 12S6.48 2 12 2C14.23 2 16.25 2.88 17.8 4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M22 4L12 14.01L9 11.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">🏆 Goal Milestone</div>
+                            <div class="notification-message">Congratulations! You've reached 50% of your House Down Payment goal!</div>
+                            <div class="notification-time">3 days ago</div>
+                        </div>
+                    </div>
+
+                    <div class="notification-item read" data-category="alerts">
+                        <div class="notification-icon warning">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 9V13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M12 17H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M21.73 18L13.73 4C13.35 3.4 12.65 3.4 12.27 4L4.27 18C3.89 18.6 4.32 19 5 19H19C19.68 19 20.11 18.6 21.73 18Z" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">⚠️ Unusual Spending</div>
+                            <div class="notification-message">We noticed higher than usual shopping expenses this week (AED 800 vs AED 350 average)</div>
+                            <div class="notification-time">4 days ago</div>
+                        </div>
+                    </div>
+
+                    <div class="notification-item read" data-category="insights">
+                        <div class="notification-icon insights">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 2L2 7V10C2 16 6 20.88 12 22C18 20.88 22 16 22 10V7L12 2Z" stroke="currentColor" stroke-width="2"/>
+                                <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">🔒 Security Update</div>
+                            <div class="notification-message">Your account security has been updated. Biometric login is now enabled.</div>
+                            <div class="notification-time">5 days ago</div>
+                        </div>
+                    </div>
+
+                    <div class="notification-item read" data-category="goals">
+                        <div class="notification-icon reminder">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">⏰ Payment Reminder</div>
+                            <div class="notification-message">Your credit card payment of AED 2,450 is due in 3 days</div>
+                            <div class="notification-time">6 days ago</div>
+                        </div>
+                        <div class="notification-action">
+                            <button class="action-btn" onclick="payNow()">Pay Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State (hidden by default) -->
+            <div class="empty-notifications" style="display: none;">
+                <div class="empty-icon">🔔</div>
+                <h3>All caught up!</h3>
+                <p>You have no new notifications</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function clearAllNotifications() {
+            if (confirm('Are you sure you want to clear all notifications?')) {
+                document.querySelector('.notifications-list').style.display = 'none';
+                document.querySelector('.empty-notifications').style.display = 'block';
+            }
+        }
+        
+        function viewInsight() {
+            alert('Opening AI insights...');
+            window.location.href = 'ai-chat.html';
+        }
+        
+        function viewGoal() {
+            alert('Opening goals page...');
+            window.location.href = 'goals.html';
+        }
+        
+        function viewReport() {
+            alert('Opening analytics report...');
+            window.location.href = 'breakdown.html';
+        }
+        
+        function payNow() {
+            alert('Opening payment interface...');
+        }
+        
+        // Filter functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const notifications = document.querySelectorAll('.notification-item');
+            
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Update active filter
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    const filter = btn.dataset.filter;
+                    
+                    // Filter notifications
+                    notifications.forEach(notification => {
+                        const category = notification.dataset.category;
+                        if (filter === 'all' || category === filter) {
+                            notification.style.display = 'flex';
+                        } else {
+                            notification.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Mark notifications as read when clicked
+            notifications.forEach(notification => {
+                notification.addEventListener('click', () => {
+                    notification.classList.remove('unread');
+                    notification.classList.add('read');
+                });
+            });
+        });
+    </script>
+    <script src="../js/app.js"></script>
+</body>
+</html>

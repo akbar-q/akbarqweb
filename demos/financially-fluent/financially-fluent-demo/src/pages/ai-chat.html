@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant - Financially Fluent</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-left">
+                <span class="time">12:04</span>
+            </div>
+            <div class="status-right">
+                <span class="battery">88%</span>
+                <span class="signal">📶</span>
+                <span class="wifi">📶</span>
+            </div>
+        </div>
+
+        <div class="page">
+            <!-- Header -->
+            <div class="chat-header">
+                <button class="back-btn" onclick="history.back()">←</button>
+                <div class="chat-header-info">
+                    <div class="ai-avatar">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="10" stroke="url(#aiGradient)" stroke-width="2"/>
+                            <path d="M8 14s1.5 2 4 2 4-2 4-2" stroke="url(#aiGradient)" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="9" cy="9" r="1.5" fill="url(#aiGradient)"/>
+                            <circle cx="15" cy="9" r="1.5" fill="url(#aiGradient)"/>
+                            <defs>
+                                <linearGradient id="aiGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#00ff88"/>
+                                    <stop offset="100%" style="stop-color:#00d4ff"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <div class="ai-status-dot"></div>
+                    </div>
+                    <div class="chat-header-text">
+                        <h1 class="chat-title">FinBot AI</h1>
+                        <p class="chat-status">Online • Ready to help</p>
+                    </div>
+                </div>
+                <button class="chat-menu-btn" onclick="showChatMenu()">⋯</button>
+            </div>
+
+            <!-- Chat Messages -->
+            <div class="chat-messages" id="chatMessages">
+                <!-- Welcome Message -->
+                <div class="message ai-message" data-animate>
+                    <div class="message-avatar">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                            <path d="M8 14s1.5 2 4 2 4-2 4-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="9" cy="9" r="1" fill="currentColor"/>
+                            <circle cx="15" cy="9" r="1" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble ai-bubble">
+                            <p>👋 Hi Ahmed! I'm your personal AI financial assistant. I can help you analyze your spending, set budgets, and achieve your financial goals.</p>
+                            <p>What would you like to know about your finances today?</p>
+                        </div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+
+                <!-- User Message -->
+                <div class="message user-message" data-animate data-delay="1">
+                    <div class="message-content">
+                        <div class="message-bubble user-bubble">
+                            <p>Can you analyze my spending this month?</p>
+                        </div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+
+                <!-- AI Response -->
+                <div class="message ai-message" data-animate data-delay="2">
+                    <div class="message-avatar">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                            <path d="M8 14s1.5 2 4 2 4-2 4-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="9" cy="9" r="1" fill="currentColor"/>
+                            <circle cx="15" cy="9" r="1" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble ai-bubble">
+                            <p>📊 <strong>October Spending Analysis</strong></p>
+                            <div class="ai-insight-card">
+                                <div class="insight-stat">
+                                    <span class="stat-label">Total Spent</span>
+                                    <span class="stat-value">AED 5,280</span>
+                                </div>
+                                <div class="insight-stat">
+                                    <span class="stat-label">vs Last Month</span>
+                                    <span class="stat-value positive">+12%</span>
+                                </div>
+                            </div>
+                            <p>Your biggest categories:</p>
+                            <div class="category-breakdown">
+                                <div class="category-item-small">
+                                    <div class="category-dot" style="background: #ff6b6b;"></div>
+                                    <span>Dining: AED 1,850 (35%)</span>
+                                </div>
+                                <div class="category-item-small">
+                                    <div class="category-dot" style="background: #4ecdc4;"></div>
+                                    <span>Shopping: AED 1,320 (25%)</span>
+                                </div>
+                                <div class="category-item-small">
+                                    <div class="category-dot" style="background: #10b981;"></div>
+                                    <span>Transport: AED 950 (18%)</span>
+                                </div>
+                            </div>
+                            <p>💡 <strong>AI Recommendation:</strong> You're spending 35% on dining - consider cooking more at home to save AED 500+ monthly!</p>
+                        </div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+
+                <!-- User Follow-up -->
+                <div class="message user-message" data-animate data-delay="3">
+                    <div class="message-content">
+                        <div class="message-bubble user-bubble">
+                            <p>That's helpful! Can you help me set a budget for dining out?</p>
+                        </div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+
+                <!-- AI Budget Suggestion -->
+                <div class="message ai-message" data-animate data-delay="4">
+                    <div class="message-avatar">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                            <path d="M8 14s1.5 2 4 2 4-2 4-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="9" cy="9" r="1" fill="currentColor"/>
+                            <circle cx="15" cy="9" r="1" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble ai-bubble">
+                            <p>🎯 <strong>Smart Budget Suggestion</strong></p>
+                            <div class="budget-card">
+                                <div class="budget-header">
+                                    <span class="budget-category">🍽️ Dining & Restaurants</span>
+                                    <span class="budget-amount">AED 1,200/month</span>
+                                </div>
+                                <div class="budget-breakdown">
+                                    <div class="budget-item">
+                                        <span>Weekly dining out</span>
+                                        <span>AED 200</span>
+                                    </div>
+                                    <div class="budget-item">
+                                        <span>Special occasions</span>
+                                        <span>AED 400</span>
+                                    </div>
+                                </div>
+                                <div class="budget-savings">
+                                    <strong>💰 Potential savings: AED 650/month</strong>
+                                </div>
+                            </div>
+                            <div class="ai-actions">
+                                <button class="ai-action-btn" onclick="acceptBudget()">✅ Set this budget</button>
+                                <button class="ai-action-btn secondary" onclick="customizeBudget()">✏️ Customize</button>
+                            </div>
+                        </div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+
+                <!-- Quick Suggestions -->
+                <div class="chat-suggestions" data-animate data-delay="5">
+                    <div class="suggestion-chips">
+                        <button class="suggestion-chip" onclick="askQuestion('How can I save more money?')">
+                            💡 Saving tips
+                        </button>
+                        <button class="suggestion-chip" onclick="askQuestion('Show my investment options')">
+                            📈 Investments
+                        </button>
+                        <button class="suggestion-chip" onclick="askQuestion('Track my financial goals')">
+                            🎯 My goals
+                        </button>
+                        <button class="suggestion-chip" onclick="askQuestion('Analyze my spending patterns')">
+                            📊 Spending trends
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="chat-input-container">
+                <div class="chat-input-area">
+                    <button class="chat-attachment-btn" onclick="showAttachmentOptions()">📎</button>
+                    <input type="text" class="chat-input" placeholder="Ask me anything about your finances..." id="chatInput">
+                    <button class="chat-send-btn" onclick="sendMessage()" id="sendBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <span class="typing-text">FinBot is typing...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="home.html" class="nav-item">
+                <span class="nav-icon">🏠</span>
+                <span>Home</span>
+            </a>
+            <a href="breakdown.html" class="nav-item">
+                <span class="nav-icon">📊</span>
+                <span>Analytics</span>
+            </a>
+            <a href="transactions.html" class="nav-item">
+                <span class="nav-icon">💳</span>
+                <span>Transactions</span>
+            </a>
+            <a href="goals.html" class="nav-item">
+                <span class="nav-icon">🎯</span>
+                <span>Goals</span>
+            </a>
+            <a href="ai-chat.html" class="nav-item active">
+                <span class="nav-icon">🤖</span>
+                <span>AI Chat</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        function showChatMenu() {
+            alert('Chat settings would open here');
+        }
+        
+        function acceptBudget() {
+            alert('Budget has been set! You can track it in the Goals section.');
+        }
+        
+        function customizeBudget() {
+            alert('Budget customization would open here');
+        }
+        
+        function askQuestion(question) {
+            document.getElementById('chatInput').value = question;
+            sendMessage();
+        }
+        
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                // Add user message to chat
+                addUserMessage(message);
+                input.value = '';
+                
+                // Show typing indicator
+                showTypingIndicator();
+                
+                // Simulate AI response
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    addAIResponse(message);
+                }, 2000);
+            }
+        }
+        
+        function addUserMessage(message) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user-message';
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    <div class="message-bubble user-bubble">
+                        <p>${message}</p>
+                    </div>
+                    <div class="message-time">Just now</div>
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        function addAIResponse(userMessage) {
+            const responses = {
+                'How can I save more money?': '💡 Here are some personalized saving tips:\n\n1. **Automate savings**: Set up AED 500 auto-transfer monthly\n2. **Cut subscription costs**: Cancel unused apps (potential AED 150/month)\n3. **Use cashback cards**: Earn 2-5% on purchases\n4. **Cook at home**: Save AED 650/month on dining\n\nWould you like me to help you implement any of these strategies?',
+                'Show my investment options': '📈 **Investment Recommendations**\n\nBased on your profile:\n- **Low Risk**: UAE Bonds (4-6% return)\n- **Medium Risk**: Index Funds (8-12% return)\n- **High Risk**: Individual stocks (Variable return)\n\n💼 **Recommended allocation**:\n- 40% Bonds: AED 2,000\n- 50% Index Funds: AED 2,500\n- 10% Stocks: AED 500\n\nShall I help you get started with investing?',
+                'Track my financial goals': '🎯 **Your Active Goals**\n\n✅ Emergency Fund: AED 8,500/10,000 (85%)\n🏠 House Down Payment: AED 35,000/100,000 (35%)\n🚗 New Car: AED 12,000/25,000 (48%)\n\n📊 You\'re on track to complete your emergency fund next month! Need help accelerating any goals?',
+                'Analyze my spending patterns': '📊 **Spending Pattern Analysis**\n\n**Weekly trends:**\n- Highest spending: Fridays (AED 420 avg)\n- Lowest spending: Tuesdays (AED 180 avg)\n\n**Monthly patterns:**\n- Early month: High spending (salary arrival)\n- Mid-month: Moderate spending\n- End month: Conservative spending\n\n💡 **Insight**: You spend 40% more on weekends. Consider setting weekend budgets!'
+            };
+            
+            const response = responses[userMessage] || `I understand you're asking about "${userMessage}". Let me analyze your financial data and provide personalized recommendations.\n\n💡 This is a demo response - in the full app, I'd provide real-time analysis based on your actual financial data!`;
+            
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ai-message';
+            messageDiv.innerHTML = `
+                <div class="message-avatar">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                        <path d="M8 14s1.5 2 4 2 4-2 4-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <circle cx="9" cy="9" r="1" fill="currentColor"/>
+                        <circle cx="15" cy="9" r="1" fill="currentColor"/>
+                    </svg>
+                </div>
+                <div class="message-content">
+                    <div class="message-bubble ai-bubble">
+                        <p style="white-space: pre-line;">${response}</p>
+                    </div>
+                    <div class="message-time">Just now</div>
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        function showTypingIndicator() {
+            document.getElementById('typingIndicator').style.display = 'flex';
+        }
+        
+        function hideTypingIndicator() {
+            document.getElementById('typingIndicator').style.display = 'none';
+        }
+        
+        function showAttachmentOptions() {
+            alert('Attachment options: Photos, Documents, Bank Statements');
+        }
+        
+        // Enter key to send message
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        // Initialize chat animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const messages = document.querySelectorAll('[data-animate]');
+            messages.forEach((message, index) => {
+                const delay = message.dataset.delay || 0;
+                setTimeout(() => {
+                    message.classList.add('animate-in');
+                }, (delay * 1000) + (index * 500));
+            });
+        });
+    </script>
+    <script src="../js/app.js"></script>
+</body>
+</html>

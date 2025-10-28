@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Academy - Financially Fluent</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-left">
+                <span class="time">12:04</span>
+            </div>
+            <div class="status-right">
+                <span class="battery">88%</span>
+                <span class="signal">📶</span>
+                <span class="wifi">📶</span>
+            </div>
+        </div>
+        
+        <div class="page">
+            <!-- Header -->
+            <div class="academy-header">
+                <div class="header-content">
+                    <div class="academy-title">
+                        <div class="title-icon">🎓</div>
+                        <div class="title-text">
+                            <div class="main-title">Financial Academy</div>
+                            <div class="subtitle">Learn by playing</div>
+                        </div>
+                    </div>
+                    <div class="user-level">
+                        <div class="level-badge">
+                            <div class="level-icon">⭐</div>
+                            <div class="level-text">Level 5</div>
+                        </div>
+                        <div class="xp-bar">
+                            <div class="xp-fill" style="width: 65%;"></div>
+                        </div>
+                        <div class="xp-text">650 / 1000 XP</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daily Challenge -->
+            <div class="daily-challenge">
+                <div class="challenge-header">
+                    <div class="challenge-icon">🏆</div>
+                    <div class="challenge-info">
+                        <div class="challenge-title">Daily Challenge</div>
+                        <div class="challenge-subtitle">Complete to earn bonus XP</div>
+                    </div>
+                    <div class="challenge-reward">+50 XP</div>
+                </div>
+                <div class="challenge-content">
+                    <div class="challenge-task">
+                        <div class="task-icon">💰</div>
+                        <div class="task-text">Calculate compound interest for 3 different scenarios</div>
+                    </div>
+                    <div class="challenge-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 33%;"></div>
+                        </div>
+                        <div class="progress-text">1/3 Complete</div>
+                    </div>
+                </div>
+                <button class="challenge-btn" onclick="startDailyChallenge()">Continue Challenge</button>
+            </div>
+
+            <!-- Learning Paths -->
+            <div class="learning-paths">
+                <div class="section-header">
+                    <h2 class="section-title">Learning Paths</h2>
+                    <div class="section-subtitle">Master financial skills step by step</div>
+                </div>
+
+                <div class="path-card beginner">
+                    <div class="path-header">
+                        <div class="path-icon">🌱</div>
+                        <div class="path-info">
+                            <div class="path-title">Beginner's Journey</div>
+                            <div class="path-subtitle">5 lessons • 30 min</div>
+                        </div>
+                        <div class="path-progress">
+                            <div class="progress-circle">
+                                <div class="progress-value">60%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="path-lessons">
+                        <div class="lesson-item completed">
+                            <div class="lesson-icon">✅</div>
+                            <div class="lesson-title">What is Money?</div>
+                            <div class="lesson-xp">+20 XP</div>
+                        </div>
+                        <div class="lesson-item completed">
+                            <div class="lesson-icon">✅</div>
+                            <div class="lesson-title">Income vs Expenses</div>
+                            <div class="lesson-xp">+25 XP</div>
+                        </div>
+                        <div class="lesson-item current" onclick="startLesson('budgeting-basics')">
+                            <div class="lesson-icon">🎮</div>
+                            <div class="lesson-title">Budgeting Basics</div>
+                            <div class="lesson-xp">+30 XP</div>
+                        </div>
+                        <div class="lesson-item locked">
+                            <div class="lesson-icon">🔒</div>
+                            <div class="lesson-title">Emergency Funds</div>
+                            <div class="lesson-xp">+25 XP</div>
+                        </div>
+                        <div class="lesson-item locked">
+                            <div class="lesson-icon">🔒</div>
+                            <div class="lesson-title">Smart Spending</div>
+                            <div class="lesson-xp">+35 XP</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="path-card intermediate">
+                    <div class="path-header">
+                        <div class="path-icon">🚀</div>
+                        <div class="path-info">
+                            <div class="path-title">Investment Explorer</div>
+                            <div class="path-subtitle">7 lessons • 45 min</div>
+                        </div>
+                        <div class="path-progress">
+                            <div class="progress-circle">
+                                <div class="progress-value">15%</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="path-lessons">
+                        <div class="lesson-item completed">
+                            <div class="lesson-icon">✅</div>
+                            <div class="lesson-title">Investment Basics</div>
+                            <div class="lesson-xp">+40 XP</div>
+                        </div>
+                        <div class="lesson-item current" onclick="startLesson('stocks-bonds')">
+                            <div class="lesson-icon">🎮</div>
+                            <div class="lesson-title">Stocks vs Bonds</div>
+                            <div class="lesson-xp">+45 XP</div>
+                        </div>
+                        <div class="lesson-item locked">
+                            <div class="lesson-icon">🔒</div>
+                            <div class="lesson-title">Risk & Return</div>
+                            <div class="lesson-xp">+50 XP</div>
+                        </div>
+                        <div class="lesson-item locked">
+                            <div class="lesson-icon">🔒</div>
+                            <div class="lesson-title">Diversification</div>
+                            <div class="lesson-xp">+45 XP</div>
+                        </div>
+                        <div class="lesson-item locked">
+                            <div class="lesson-icon">🔒</div>
+                            <div class="lesson-title">Compound Interest</div>
+                            <div class="lesson-xp">+55 XP</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="path-card advanced">
+                    <div class="path-header">
+                        <div class="path-icon">💎</div>
+                        <div class="path-info">
+                            <div class="path-title">Wealth Master</div>
+                            <div class="path-subtitle">8 lessons • 60 min</div>
+                        </div>
+                        <div class="path-progress">
+                            <div class="progress-circle locked">
+                                <div class="progress-value">🔒</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="unlock-requirement">
+                        Complete Investment Explorer to unlock
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Modes -->
+            <div class="game-modes">
+                <div class="section-header">
+                    <h2 class="section-title">Quick Games</h2>
+                    <div class="section-subtitle">Practice specific skills</div>
+                </div>
+
+                <div class="games-grid">
+                    <div class="game-card" onclick="startQuickGame('budget-challenge')">
+                        <div class="game-icon">💰</div>
+                        <div class="game-title">Budget Challenge</div>
+                        <div class="game-subtitle">Test your budgeting skills</div>
+                        <div class="game-stats">
+                            <div class="stat">⚡ 5 min</div>
+                            <div class="stat">🏆 Best: 85%</div>
+                        </div>
+                    </div>
+
+                    <div class="game-card" onclick="startQuickGame('expense-sort')">
+                        <div class="game-icon">📊</div>
+                        <div class="game-title">Expense Sorter</div>
+                        <div class="game-subtitle">Categorize expenses quickly</div>
+                        <div class="game-stats">
+                            <div class="stat">⚡ 3 min</div>
+                            <div class="stat">🏆 Best: 92%</div>
+                        </div>
+                    </div>
+
+                    <div class="game-card" onclick="startQuickGame('investment-quiz')">
+                        <div class="game-icon">📈</div>
+                        <div class="game-title">Investment Quiz</div>
+                        <div class="game-subtitle">Quick investment knowledge test</div>
+                        <div class="game-stats">
+                            <div class="stat">⚡ 4 min</div>
+                            <div class="stat">🏆 Best: 78%</div>
+                        </div>
+                    </div>
+
+                    <div class="game-card" onclick="startQuickGame('savings-calculator')">
+                        <div class="game-icon">🎯</div>
+                        <div class="game-title">Savings Goals</div>
+                        <div class="game-subtitle">Calculate savings scenarios</div>
+                        <div class="game-stats">
+                            <div class="stat">⚡ 6 min</div>
+                            <div class="stat">🏆 Best: 90%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Achievements -->
+            <div class="achievements-section">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Achievements</h2>
+                    <span class="view-all" onclick="viewAllAchievements()">View All</span>
+                </div>
+
+                <div class="achievements-list">
+                    <div class="achievement-item unlocked">
+                        <div class="achievement-icon">🎯</div>
+                        <div class="achievement-info">
+                            <div class="achievement-title">Budget Master</div>
+                            <div class="achievement-desc">Complete your first budgeting lesson</div>
+                        </div>
+                        <div class="achievement-date">Today</div>
+                    </div>
+
+                    <div class="achievement-item unlocked">
+                        <div class="achievement-icon">🔥</div>
+                        <div class="achievement-info">
+                            <div class="achievement-title">5-Day Streak</div>
+                            <div class="achievement-desc">Learn something new for 5 days straight</div>
+                        </div>
+                        <div class="achievement-date">Yesterday</div>
+                    </div>
+
+                    <div class="achievement-item locked">
+                        <div class="achievement-icon">🏆</div>
+                        <div class="achievement-info">
+                            <div class="achievement-title">Perfect Score</div>
+                            <div class="achievement-desc">Get 100% on any lesson</div>
+                        </div>
+                        <div class="achievement-requirement">2 more questions</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="navigateToHome()">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">Home</div>
+            </div>
+            <div class="nav-item" onclick="navigateToAnalytics()">
+                <div class="nav-icon">📊</div>
+                <div class="nav-label">Analytics</div>
+            </div>
+            <div class="nav-item" onclick="navigateToTransactions()">
+                <div class="nav-icon">📱</div>
+                <div class="nav-label">Transactions</div>
+            </div>
+            <div class="nav-item" onclick="navigateToGoals()">
+                <div class="nav-icon">🎯</div>
+                <div class="nav-label">Goals</div>
+            </div>
+            <div class="nav-item active">
+                <div class="nav-icon">🎮</div>
+                <div class="nav-label">Learn</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sound effects
+        const playSound = (type) => {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const frequencies = {
+                click: [800],
+                unlock: [220, 277, 330, 440],
+                achievement: [262, 330, 392, 523]
+            };
+            
+            const freqs = frequencies[type] || [400];
+            freqs.forEach((freq, index) => {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.01);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.3);
+                
+                oscillator.start(audioContext.currentTime + index * 0.1);
+                oscillator.stop(audioContext.currentTime + 0.3 + index * 0.1);
+            });
+        };
+
+        // Navigation functions
+        const startLesson = (lessonId) => {
+            playSound('click');
+            if (lessonId === 'budgeting-basics') {
+                window.location.href = 'learn-game.html';
+            } else {
+                alert(`${lessonId} lesson coming soon! Complete previous lessons to unlock.`);
+            }
+        };
+
+        const startDailyChallenge = () => {
+            playSound('unlock');
+            alert('Daily Challenge: Compound Interest Calculator\n\nThis feature will include interactive scenarios where you calculate returns on different investment amounts and time periods.');
+        };
+
+        const startQuickGame = (gameId) => {
+            playSound('click');
+            const games = {
+                'budget-challenge': 'Budget Challenge: Allocate AED 5,000 across needs, wants, and savings!',
+                'expense-sort': 'Expense Sorter: Drag expenses into correct categories as fast as possible!',
+                'investment-quiz': 'Investment Quiz: Answer questions about stocks, bonds, and portfolio management!',
+                'savings-calculator': 'Savings Goals: Calculate how long it takes to reach different savings targets!'
+            };
+            alert(games[gameId] + '\n\nComing Soon!');
+        };
+
+        const viewAllAchievements = () => {
+            playSound('achievement');
+            alert('Achievement Gallery:\n\n🎯 Budget Master - Unlocked\n🔥 5-Day Streak - Unlocked\n🏆 Perfect Score - 2 more questions\n📈 Investment Genius - Complete Investment Explorer\n💎 Wealth Master - Complete all paths\n🌟 Quiz Champion - Win 10 quick games\n\nKeep learning to unlock more!');
+        };
+
+        // Navigation
+        const navigateToHome = () => window.location.href = 'home.html';
+        const navigateToAnalytics = () => window.location.href = 'breakdown.html';
+        const navigateToTransactions = () => window.location.href = 'transactions.html';
+        const navigateToGoals = () => window.location.href = 'goals.html';
+
+        // Initialize page animations
+        document.addEventListener('DOMContentLoaded', () => {
+            // Animate XP bar
+            setTimeout(() => {
+                const xpFill = document.querySelector('.xp-fill');
+                xpFill.style.transition = 'width 2s ease-out';
+            }, 500);
+
+            // Animate achievement unlocks
+            const unlockedAchievements = document.querySelectorAll('.achievement-item.unlocked');
+            unlockedAchievements.forEach((achievement, index) => {
+                setTimeout(() => {
+                    achievement.style.animation = 'achievementUnlock 0.8s ease-out';
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>

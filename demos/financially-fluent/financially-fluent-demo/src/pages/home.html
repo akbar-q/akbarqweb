@@ -29,7 +29,7 @@
                     <div class="user-name">Ahmed</div>
                 </div>
                 <div class="header-actions">
-                    <div class="notification-btn">
+                    <div class="notification-btn" onclick="openNotifications()">
                         <div class="notification-icon">🔔</div>
                         <div class="notification-badge">3</div>
                     </div>
@@ -77,11 +77,11 @@
                     <div class="action-icon">📊</div>
                     <span>Analytics</span>
                 </div>
-                <div class="action-item">
+                <div class="action-item" onclick="navigateToGoals()">
                     <div class="action-icon">🎯</div>
                     <span>Goals</span>
                 </div>
-                <div class="action-item">
+                <div class="action-item" onclick="openCards()">
                     <div class="action-icon">💳</div>
                     <span>Cards</span>
                 </div>
@@ -91,7 +91,7 @@
             <div class="insights-section">
                 <div class="section-header">
                     <h3 class="section-title">AI Insights</h3>
-                    <span class="section-action">View All</span>
+                    <span class="section-action" onclick="openAIChat()">View All</span>
                 </div>
                 
                 <div class="insight-card-modern">
@@ -107,8 +107,8 @@
                         <p>You've spent 35% more on dining this month. Consider setting a budget limit of AED 1,200.</p>
                     </div>
                     <div class="insight-actions">
-                        <button class="insight-btn primary">Set Budget</button>
-                        <button class="insight-btn secondary">Dismiss</button>
+                        <button class="insight-btn primary" onclick="openAIChat()">Set Budget</button>
+                        <button class="insight-btn secondary" onclick="dismissInsight()">Dismiss</button>
                     </div>
                 </div>
             </div>
@@ -152,28 +152,29 @@
         </div>
         
         <!-- Bottom Navigation -->
-        <nav class="bottom-nav">
-            <a href="home.html" class="nav-item active">
-                <span class="nav-icon">🏠</span>
-                <span>Home</span>
-            </a>
-            <a href="breakdown.html" class="nav-item">
-                <span class="nav-icon">📊</span>
-                <span>Analytics</span>
-            </a>
-            <a href="transactions.html" class="nav-item">
-                <span class="nav-icon">💳</span>
-                <span>Transactions</span>
-            </a>
-            <a href="goals.html" class="nav-item">
-                <span class="nav-icon">🎯</span>
-                <span>Goals</span>
-            </a>
-            <a href="profile.html" class="nav-item">
-                <span class="nav-icon">👤</span>
-                <span>Profile</span>
-            </a>
-        </nav>
+                <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">Home</div>
+            </div>
+            <div class="nav-item" onclick="navigateToAnalytics()">
+                <div class="nav-icon">📊</div>
+                <div class="nav-label">Analytics</div>
+            </div>
+            <div class="nav-item" onclick="navigateToTransactions()">
+                <div class="nav-icon">�</div>
+                <div class="nav-label">Transactions</div>
+            </div>
+            <div class="nav-item" onclick="navigateToGoals()">
+                <div class="nav-icon">🎯</div>
+                <div class="nav-label">Goals</div>
+            </div>
+            <div class="nav-item" onclick="navigateToAcademy()">
+                <div class="nav-icon">🎮</div>
+                <div class="nav-label">Learn</div>
+            </div>
+        </div>
     </div>
     
     <script src="../js/app.js"></script>
@@ -197,6 +198,36 @@
         }
         
         // Animate counters on page load
+        // Navigation functions
+        function openNotifications() {
+            window.location.href = 'notifications.html';
+        }
+        
+        function openAIChat() {
+            window.location.href = 'ai-chat.html';
+        }
+        
+        function navigateToGoals() {
+            window.location.href = 'goals.html';
+        }
+        
+        function navigateToAcademy() {
+            window.location.href = 'financial-academy.html';
+        }
+        
+        function openCards() {
+            alert('Cards & Payment management would open here');
+        }
+        
+        function dismissInsight() {
+            const insightCard = document.querySelector('.insight-card-modern');
+            insightCard.style.opacity = '0.5';
+            insightCard.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                insightCard.style.display = 'none';
+            }, 300);
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 animateCounter(document.getElementById('balanceCounter'), 12450.75, 'AED ');

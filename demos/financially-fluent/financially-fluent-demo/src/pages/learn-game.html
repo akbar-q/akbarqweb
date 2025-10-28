@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn & Play - Financially Fluent</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-left">
+                <span class="time">12:04</span>
+            </div>
+            <div class="status-right">
+                <span class="battery">88%</span>
+                <span class="signal">📶</span>
+                <span class="wifi">📶</span>
+            </div>
+        </div>
+        
+        <div class="page">
+            <!-- Game Header -->
+            <div class="game-header">
+                <button class="back-btn" onclick="goBack()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                
+                <div class="game-progress">
+                    <div class="lesson-info">
+                        <div class="lesson-title">Budgeting Basics</div>
+                        <div class="lesson-subtitle">Lesson 1 of 5</div>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-text" id="progressText">0/10</div>
+                    </div>
+                </div>
+                
+                <div class="game-stats">
+                    <div class="streak-counter">
+                        <div class="streak-icon">🔥</div>
+                        <div class="streak-number" id="streakNumber">5</div>
+                    </div>
+                    <div class="hearts-container">
+                        <div class="heart active" id="heart1">❤️</div>
+                        <div class="heart active" id="heart2">❤️</div>
+                        <div class="heart active" id="heart3">❤️</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Content -->
+            <div class="game-content" id="gameContent">
+                <!-- Question Screen -->
+                <div class="question-screen" id="questionScreen">
+                    <div class="question-container">
+                        <div class="question-type" id="questionType">Multiple Choice</div>
+                        <div class="question-text" id="questionText">
+                            What percentage of your income should you ideally save each month?
+                        </div>
+                        
+                        <div class="question-image" id="questionImage" style="display: none;">
+                            <div class="savings-illustration">
+                                <div class="piggy-bank">🐷</div>
+                                <div class="money-flow">💰→🏦</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="answer-options" id="answerOptions">
+                        <button class="answer-btn" onclick="selectAnswer(this, false)" data-answer="5%">
+                            <span class="answer-text">5%</span>
+                        </button>
+                        <button class="answer-btn" onclick="selectAnswer(this, false)" data-answer="10%">
+                            <span class="answer-text">10%</span>
+                        </button>
+                        <button class="answer-btn" onclick="selectAnswer(this, true)" data-answer="20%">
+                            <span class="answer-text">20%</span>
+                        </button>
+                        <button class="answer-btn" onclick="selectAnswer(this, false)" data-answer="30%">
+                            <span class="answer-text">30%</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Feedback Screen -->
+                <div class="feedback-screen" id="feedbackScreen" style="display: none;">
+                    <div class="feedback-content">
+                        <div class="feedback-icon" id="feedbackIcon">✅</div>
+                        <div class="feedback-title" id="feedbackTitle">Excellent!</div>
+                        <div class="feedback-explanation" id="feedbackExplanation">
+                            The 50/30/20 rule suggests saving 20% of your income: 50% for needs, 30% for wants, and 20% for savings and debt repayment.
+                        </div>
+                        <div class="points-earned" id="pointsEarned">
+                            <div class="points-icon">⭐</div>
+                            <div class="points-text">+10 XP</div>
+                        </div>
+                    </div>
+                    <button class="continue-btn" onclick="nextQuestion()">Continue</button>
+                </div>
+
+                <!-- Completion Screen -->
+                <div class="completion-screen" id="completionScreen" style="display: none;">
+                    <div class="completion-content">
+                        <div class="completion-celebration">
+                            <div class="trophy-icon">🏆</div>
+                            <div class="celebration-particles">
+                                <div class="particle">⭐</div>
+                                <div class="particle">✨</div>
+                                <div class="particle">🎉</div>
+                                <div class="particle">💰</div>
+                            </div>
+                        </div>
+                        <div class="completion-title">Lesson Complete!</div>
+                        <div class="completion-subtitle">You mastered Budgeting Basics</div>
+                        
+                        <div class="completion-stats">
+                            <div class="stat-item">
+                                <div class="stat-value" id="finalScore">85%</div>
+                                <div class="stat-label">Accuracy</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="totalXP">+100</div>
+                                <div class="stat-label">XP Earned</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="streakBonus">🔥5</div>
+                                <div class="stat-label">Streak</div>
+                            </div>
+                        </div>
+
+                        <div class="achievement-unlock" id="achievementUnlock">
+                            <div class="achievement-icon">🎯</div>
+                            <div class="achievement-text">
+                                <div class="achievement-title">Budget Master</div>
+                                <div class="achievement-desc">Complete your first budgeting lesson</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="completion-actions">
+                        <button class="action-btn secondary" onclick="reviewMistakes()">Review</button>
+                        <button class="action-btn primary" onclick="nextLesson()">Next Lesson</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sound Toggle -->
+            <div class="sound-toggle" onclick="toggleSound()">
+                <div class="sound-icon" id="soundIcon">🔊</div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="navigateToHome()">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">Home</div>
+            </div>
+            <div class="nav-item" onclick="navigateToAnalytics()">
+                <div class="nav-icon">📊</div>
+                <div class="nav-label">Analytics</div>
+            </div>
+            <div class="nav-item" onclick="navigateToTransactions()">
+                <div class="nav-icon">📱</div>
+                <div class="nav-label">Transactions</div>
+            </div>
+            <div class="nav-item" onclick="navigateToGoals()">
+                <div class="nav-icon">🎯</div>
+                <div class="nav-label">Goals</div>
+            </div>
+            <div class="nav-item active">
+                <div class="nav-icon">🎮</div>
+                <div class="nav-label">Learn</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        let currentQuestion = 0;
+        let score = 0;
+        let hearts = 3;
+        let streak = 5;
+        let soundEnabled = true;
+        
+        // Questions Database
+        const questions = [
+            {
+                type: "Multiple Choice",
+                question: "What percentage of your income should you ideally save each month?",
+                options: ["5%", "10%", "20%", "30%"],
+                correct: 2,
+                explanation: "The 50/30/20 rule suggests saving 20% of your income: 50% for needs, 30% for wants, and 20% for savings and debt repayment.",
+                points: 10
+            },
+            {
+                type: "True or False",
+                question: "An emergency fund should cover 3-6 months of expenses.",
+                options: ["True", "False"],
+                correct: 0,
+                explanation: "Financial experts recommend having 3-6 months of living expenses saved for emergencies like job loss or medical bills.",
+                points: 10
+            },
+            {
+                type: "Fill in the Blank",
+                question: "A _____ is a plan for how you'll spend your money each month.",
+                options: ["Budget", "Receipt", "Investment", "Loan"],
+                correct: 0,
+                explanation: "A budget helps you track income and expenses, ensuring you spend less than you earn and save for your goals.",
+                points: 15
+            },
+            {
+                type: "Scenario",
+                question: "Sarah earns AED 5,000 monthly. Using the 50/30/20 rule, how much should she save?",
+                options: ["AED 500", "AED 750", "AED 1,000", "AED 1,250"],
+                correct: 2,
+                explanation: "20% of AED 5,000 = AED 1,000. This amount should go towards savings and debt repayment.",
+                points: 15
+            },
+            {
+                type: "Multiple Choice",
+                question: "Which expense is considered a 'need' in budgeting?",
+                options: ["Netflix subscription", "Rent payment", "Restaurant dinner", "New shoes"],
+                correct: 1,
+                explanation: "Rent is a necessity for shelter. Wants include entertainment, dining out, and non-essential purchases.",
+                points: 10
+            }
+        ];
+
+        // Sound Effects (Web Audio API simulation)
+        const playSound = (type) => {
+            if (!soundEnabled) return;
+            
+            // Create audio context for better sound control
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            const sounds = {
+                correct: [220, 277, 330], // A4, C#5, E5 (happy chord)
+                incorrect: [147, 131], // D3, C3 (sad notes)
+                complete: [262, 330, 392, 523], // C4, E4, G4, C5 (celebration)
+                click: [800] // High click
+            };
+            
+            const frequencies = sounds[type] || [400];
+            
+            frequencies.forEach((freq, index) => {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
+                oscillator.type = type === 'complete' ? 'sine' : 'square';
+                
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.01);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.3);
+                
+                oscillator.start(audioContext.currentTime + index * 0.1);
+                oscillator.stop(audioContext.currentTime + 0.3 + index * 0.1);
+            });
+        };
+
+        // Animation Functions
+        const animateElement = (element, animation) => {
+            element.style.animation = animation;
+            element.addEventListener('animationend', () => {
+                element.style.animation = '';
+            }, { once: true });
+        };
+
+        const updateProgress = () => {
+            const progress = (currentQuestion / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `${currentQuestion}/${questions.length}`;
+        };
+
+        const loadQuestion = () => {
+            if (currentQuestion >= questions.length) {
+                showCompletion();
+                return;
+            }
+
+            const question = questions[currentQuestion];
+            const questionScreen = document.getElementById('questionScreen');
+            const feedbackScreen = document.getElementById('feedbackScreen');
+            
+            // Reset screens
+            questionScreen.style.display = 'block';
+            feedbackScreen.style.display = 'none';
+            
+            // Load question content
+            document.getElementById('questionType').textContent = question.type;
+            document.getElementById('questionText').textContent = question.question;
+            
+            // Create answer options
+            const optionsContainer = document.getElementById('answerOptions');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'answer-btn';
+                button.onclick = () => selectAnswer(button, index === question.correct);
+                button.innerHTML = `<span class="answer-text">${option}</span>`;
+                optionsContainer.appendChild(button);
+            });
+
+            // Animate question entrance
+            animateElement(questionScreen, 'slideInUp 0.5s ease-out');
+        };
+
+        const selectAnswer = (button, isCorrect) => {
+            playSound('click');
+            
+            // Disable all buttons
+            const allButtons = document.querySelectorAll('.answer-btn');
+            allButtons.forEach(btn => btn.disabled = true);
+            
+            // Visual feedback
+            if (isCorrect) {
+                button.classList.add('correct');
+                score += questions[currentQuestion].points;
+                streak++;
+                playSound('correct');
+                animateElement(button, 'correctPulse 0.6s ease-out');
+            } else {
+                button.classList.add('incorrect');
+                hearts--;
+                updateHearts();
+                playSound('incorrect');
+                animateElement(button, 'incorrectShake 0.6s ease-out');
+                
+                // Show correct answer
+                allButtons[questions[currentQuestion].correct].classList.add('correct');
+            }
+            
+            // Show feedback after delay
+            setTimeout(() => {
+                showFeedback(isCorrect);
+            }, 1500);
+        };
+
+        const showFeedback = (isCorrect) => {
+            const questionScreen = document.getElementById('questionScreen');
+            const feedbackScreen = document.getElementById('feedbackScreen');
+            const question = questions[currentQuestion];
+            
+            questionScreen.style.display = 'none';
+            feedbackScreen.style.display = 'block';
+            
+            // Update feedback content
+            const feedbackIcon = document.getElementById('feedbackIcon');
+            const feedbackTitle = document.getElementById('feedbackTitle');
+            const pointsEarned = document.getElementById('pointsEarned');
+            
+            if (isCorrect) {
+                feedbackIcon.textContent = '✅';
+                feedbackTitle.textContent = 'Excellent!';
+                pointsEarned.innerHTML = `
+                    <div class="points-icon">⭐</div>
+                    <div class="points-text">+${question.points} XP</div>
+                `;
+            } else {
+                feedbackIcon.textContent = '❌';
+                feedbackTitle.textContent = 'Not quite right';
+                pointsEarned.innerHTML = `
+                    <div class="points-icon">📚</div>
+                    <div class="points-text">Keep learning!</div>
+                `;
+            }
+            
+            document.getElementById('feedbackExplanation').textContent = question.explanation;
+            
+            // Animate feedback entrance
+            animateElement(feedbackScreen, 'slideInUp 0.5s ease-out');
+        };
+
+        const nextQuestion = () => {
+            currentQuestion++;
+            updateProgress();
+            loadQuestion();
+        };
+
+        const updateHearts = () => {
+            for (let i = 1; i <= 3; i++) {
+                const heart = document.getElementById(`heart${i}`);
+                if (i <= hearts) {
+                    heart.textContent = '❤️';
+                    heart.classList.add('active');
+                } else {
+                    heart.textContent = '💔';
+                    heart.classList.remove('active');
+                    animateElement(heart, 'heartBreak 0.8s ease-out');
+                }
+            }
+            
+            document.getElementById('streakNumber').textContent = streak;
+        };
+
+        const showCompletion = () => {
+            const gameContent = document.getElementById('gameContent');
+            const completionScreen = document.getElementById('completionScreen');
+            
+            gameContent.innerHTML = '';
+            gameContent.appendChild(completionScreen);
+            completionScreen.style.display = 'block';
+            
+            // Calculate final stats
+            const accuracy = Math.round((score / (questions.length * 15)) * 100);
+            document.getElementById('finalScore').textContent = accuracy + '%';
+            document.getElementById('totalXP').textContent = '+' + score;
+            document.getElementById('streakBonus').textContent = '🔥' + streak;
+            
+            // Play completion sound
+            playSound('complete');
+            
+            // Animate completion
+            animateElement(completionScreen, 'celebrationBounce 1s ease-out');
+            
+            // Animate particles
+            const particles = document.querySelectorAll('.particle');
+            particles.forEach((particle, index) => {
+                setTimeout(() => {
+                    animateElement(particle, 'particleFloat 2s ease-out infinite');
+                }, index * 200);
+            });
+        };
+
+        const toggleSound = () => {
+            soundEnabled = !soundEnabled;
+            const soundIcon = document.getElementById('soundIcon');
+            soundIcon.textContent = soundEnabled ? '🔊' : '🔇';
+            playSound('click');
+        };
+
+        // Navigation Functions
+        const goBack = () => {
+            window.location.href = 'home.html';
+        };
+
+        const nextLesson = () => {
+            alert('Next lesson: Investment Basics - Coming Soon!');
+        };
+
+        const reviewMistakes = () => {
+            alert('Review feature would show questions you got wrong with detailed explanations.');
+        };
+
+        const navigateToHome = () => window.location.href = 'home.html';
+        const navigateToAnalytics = () => window.location.href = 'breakdown.html';
+        const navigateToTransactions = () => window.location.href = 'transactions.html';
+        const navigateToGoals = () => window.location.href = 'goals.html';
+
+        // Initialize Game
+        document.addEventListener('DOMContentLoaded', () => {
+            updateProgress();
+            loadQuestion();
+            updateHearts();
+        });
+    </script>
+</body>
+</html>
