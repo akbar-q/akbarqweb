@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financially Fluent Demo - Instructions</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+        h1 { color: #10b981; }
+        h2 { color: #f59e0b; }
+        .demo-link {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+        }
+        .demo-link:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+        .mobile-frame {
+            max-width: 375px;
+            margin: 20px auto;
+            border: 8px solid #333;
+            border-radius: 25px;
+            overflow: hidden;
+            background: white;
+        }
+        .mobile-frame iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+        }
+        ul li { margin-bottom: 8px; }
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏦 Financially Fluent Demo</h1>
+        <p>A modern financial management app demo built exactly to match the provided mockup designs.</p>
+        
+        <h2>🚀 Quick Start</h2>
+        <a href="src/index.html" class="demo-link">Launch Demo</a>
+        <a href="src/pages/home.html" class="demo-link">View Dashboard</a>
+        
+        <h2>📱 Demo Flow</h2>
+        <ol>
+            <li><strong>Welcome Screen</strong> - Click "Get Started"</li>
+            <li><strong>Bank Connection</strong> - Enter any credentials and click "Connect Securely"</li>
+            <li><strong>Permissions</strong> - Review permissions and click "Confirm & Continue"</li>
+            <li><strong>Dashboard</strong> - View balance, income/expenses, and AI insights</li>
+            <li><strong>Navigation</strong> - Use bottom tabs to explore different sections</li>
+        </ol>
+        
+        <h2>🎯 Key Features Demonstrated</h2>
+        <ul>
+            <li>✅ Modern blue gradient UI matching mockups</li>
+            <li>✅ Mobile-first responsive design (375px optimized)</li>
+            <li>✅ Complete onboarding flow</li>
+            <li>✅ Realistic UAE financial data (AED currency)</li>
+            <li>✅ Interactive spending breakdown with donut chart</li>
+            <li>✅ Transaction history with company icons</li>
+            <li>✅ AI insights and recommendations</li>
+            <li>✅ Bottom navigation system</li>
+            <li>✅ Smooth animations and transitions</li>
+        </ul>
+        
+        <h2>💳 Sample Data</h2>
+        <ul>
+            <li><strong>Current Balance:</strong> AED 12,450.75</li>
+            <li><strong>Income:</strong> +AED 8,500</li>
+            <li><strong>Expenses:</strong> -AED 5,280</li>
+            <li><strong>Top Spending:</strong> Dining (35%), Shopping (25%), Transport (18%)</li>
+            <li><strong>Companies:</strong> Zomato, Carrefour, DEWA, Uber, Amazon, etc.</li>
+        </ul>
+        
+        <h2>🌐 GitHub Pages Setup</h2>
+        <p>To host this demo on GitHub Pages:</p>
+        <ol>
+            <li>Push this code to a GitHub repository</li>
+            <li>Go to Settings → Pages</li>
+            <li>Select source branch (usually <code>main</code> or <code>gh-pages</code>)</li>
+            <li>Set folder to <code>/ (root)</code></li>
+            <li>Your demo will be available at: <code>https://username.github.io/repository-name/src/</code></li>
+        </ol>
+        
+        <h2>📂 File Structure</h2>
+        <pre><code>src/
+├── index.html              # Welcome screen
+├── css/
+│   ├── styles.css         # Main styling
+│   └── components.css     # Additional components
+├── js/
+│   ├── app.js            # Main app logic
+│   ├── navigation.js     # Navigation handling
+│   └── data.js           # Sample data
+├── pages/
+│   ├── connect-bank.html # Bank connection
+│   ├── permissions.html  # Permissions review
+│   ├── home.html        # Main dashboard
+│   ├── breakdown.html   # Spending breakdown
+│   └── transactions.html # Transaction list
+└── assets/
+    └── icons/           # App icons (if needed)</code></pre>
+        
+        <h2>🔧 Technical Notes</h2>
+        <ul>
+            <li>Pure HTML/CSS/JavaScript (no external dependencies)</li>
+            <li>Mobile-responsive design</li>
+            <li>Cross-browser compatible</li>
+            <li>Optimized for demonstration purposes</li>
+            <li>Static implementation suitable for GitHub Pages</li>
+        </ul>
+        
+        <p style="margin-top: 40px; text-align: center; opacity: 0.8;">
+            Built to match the exact mockup designs provided • Ready for GitHub Pages hosting
+        </p>
+    </div>
+</body>
+</html>
