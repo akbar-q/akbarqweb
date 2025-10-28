@@ -9,74 +9,165 @@
 </head>
 <body>
     <div class="mobile-container">
-        <div class="page">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <div>
-                    <div style="color: var(--text-muted); font-size: 14px;">Welcome back</div>
-                    <div style="color: var(--text-light); font-size: 24px; font-weight: 700;">Ahmed</div>
-                </div>
-                <div style="width: 40px; height: 40px; background: rgba(245, 158, 11, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">
-                    🔔
-                </div>
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-left">
+                <span class="time">12:04</span>
             </div>
-            
-            <div class="balance-card">
-                <div class="balance-label">Current Balance</div>
-                <div class="balance-amount">AED 12,450.75</div>
-                
-                <div class="income-expense">
-                    <div class="income">
-                        <div style="font-size: 16px; margin-bottom: 4px;">📈</div>
-                        <div class="label">Income</div>
-                        <div class="amount">+AED 8,500</div>
-                    </div>
-                    <div style="width: 1px; background: rgba(255, 255, 255, 0.2);"></div>
-                    <div class="expense">
-                        <div style="font-size: 16px; margin-bottom: 4px;">📉</div>
-                        <div class="label">Expenses</div>
-                        <div class="amount">-AED 5,280</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="insight-card">
-                <div class="insight-title">
-                    💡 AI Insight
-                </div>
-                <div class="insight-text">
-                    You spent 35% more on dining out this month. Set a mission to save!
-                </div>
-                <button class="btn-secondary">Start Mission</button>
-            </div>
-            
-            <div class="section-title">Spending Breakdown</div>
-            <div class="card" style="text-align: center; padding: 40px 20px;" onclick="navigateToBreakdown()">
-                <div style="font-size: 48px; margin-bottom: 16px;">📊</div>
-                <div style="color: var(--text-light); font-weight: 500;">View detailed breakdown</div>
-                <div style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Tap to see categories</div>
+            <div class="status-right">
+                <span class="battery">88%</span>
+                <span class="signal">📶</span>
+                <span class="wifi">📶</span>
             </div>
         </div>
         
+        <div class="page">
+            <!-- Header -->
+            <div class="page-header-home">
+                <div class="user-greeting">
+                    <div class="greeting-text">Welcome back</div>
+                    <div class="user-name">Ahmed</div>
+                </div>
+                <div class="header-actions">
+                    <div class="notification-btn">
+                        <div class="notification-icon">🔔</div>
+                        <div class="notification-badge">3</div>
+                    </div>
+                    <div class="profile-avatar">A</div>
+                </div>
+            </div>
+            
+            <!-- Balance Card -->
+            <div class="balance-card-modern">
+                <div class="balance-header">
+                    <div class="balance-label">Total Balance</div>
+                    <div class="balance-trend">
+                        <span class="trend-icon">📈</span>
+                        <span class="trend-text">+2.5%</span>
+                    </div>
+                </div>
+                <div class="balance-amount" id="balanceCounter">AED 12,450.75</div>
+                
+                <div class="balance-details">
+                    <div class="balance-item income">
+                        <div class="balance-icon">�</div>
+                        <div class="balance-info">
+                            <div class="balance-category">Income</div>
+                            <div class="balance-value" id="incomeCounter">+AED 8,500.00</div>
+                        </div>
+                    </div>
+                    <div class="balance-divider"></div>
+                    <div class="balance-item expense">
+                        <div class="balance-icon">📊</div>
+                        <div class="balance-info">
+                            <div class="balance-category">Expenses</div>
+                            <div class="balance-value" id="expenseCounter">-AED 5,280.00</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <div class="action-item" onclick="navigateToTransactions()">
+                    <div class="action-icon">💸</div>
+                    <span>Send</span>
+                </div>
+                <div class="action-item" onclick="navigateToBreakdown()">
+                    <div class="action-icon">📊</div>
+                    <span>Analytics</span>
+                </div>
+                <div class="action-item">
+                    <div class="action-icon">🎯</div>
+                    <span>Goals</span>
+                </div>
+                <div class="action-item">
+                    <div class="action-icon">💳</div>
+                    <span>Cards</span>
+                </div>
+            </div>
+            
+            <!-- AI Insights -->
+            <div class="insights-section">
+                <div class="section-header">
+                    <h3 class="section-title">AI Insights</h3>
+                    <span class="section-action">View All</span>
+                </div>
+                
+                <div class="insight-card-modern">
+                    <div class="insight-header">
+                        <div class="insight-icon">🤖</div>
+                        <div class="insight-meta">
+                            <div class="insight-category">Spending Alert</div>
+                            <div class="insight-time">2 min ago</div>
+                        </div>
+                        <div class="insight-priority high"></div>
+                    </div>
+                    <div class="insight-content">
+                        <p>You've spent 35% more on dining this month. Consider setting a budget limit of AED 1,200.</p>
+                    </div>
+                    <div class="insight-actions">
+                        <button class="insight-btn primary">Set Budget</button>
+                        <button class="insight-btn secondary">Dismiss</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Activity -->
+            <div class="activity-section">
+                <div class="section-header">
+                    <h3 class="section-title">Recent Activity</h3>
+                    <span class="section-action" onclick="navigateToTransactions()">View All</span>
+                </div>
+                
+                <div class="activity-list">
+                    <div class="transaction-item-modern">
+                        <div class="transaction-icon-modern food">🍽️</div>
+                        <div class="transaction-details">
+                            <div class="transaction-name">Zomato</div>
+                            <div class="transaction-date">Today, 11:30 AM</div>
+                        </div>
+                        <div class="transaction-amount negative">-AED 85.50</div>
+                    </div>
+                    
+                    <div class="transaction-item-modern">
+                        <div class="transaction-icon-modern shopping">🛍️</div>
+                        <div class="transaction-details">
+                            <div class="transaction-name">Carrefour</div>
+                            <div class="transaction-date">Today, 9:15 AM</div>
+                        </div>
+                        <div class="transaction-amount negative">-AED 245.00</div>
+                    </div>
+                    
+                    <div class="transaction-item-modern">
+                        <div class="transaction-icon-modern income">💰</div>
+                        <div class="transaction-details">
+                            <div class="transaction-name">Salary Deposit</div>
+                            <div class="transaction-date">Yesterday</div>
+                        </div>
+                        <div class="transaction-amount positive">+AED 8,500.00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom Navigation -->
         <nav class="bottom-nav">
             <a href="home.html" class="nav-item active">
                 <span class="nav-icon">🏠</span>
                 <span>Home</span>
             </a>
-            <a href="#" class="nav-item">
-                <span class="nav-icon">📚</span>
-                <span>Learn</span>
+            <a href="breakdown.html" class="nav-item">
+                <span class="nav-icon">📊</span>
+                <span>Analytics</span>
             </a>
-            <a href="#" class="nav-item">
-                <span class="nav-icon">🎯</span>
-                <span>Missions</span>
+            <a href="transactions.html" class="nav-item">
+                <span class="nav-icon">💳</span>
+                <span>Transactions</span>
             </a>
             <a href="#" class="nav-item">
                 <span class="nav-icon">🤖</span>
-                <span>FinBot</span>
-            </a>
-            <a href="#" class="nav-item">
-                <span class="nav-icon">📱</span>
-                <span>Simulator</span>
+                <span>AI Assistant</span>
             </a>
             <a href="#" class="nav-item">
                 <span class="nav-icon">👤</span>
@@ -87,5 +178,32 @@
     
     <script src="../js/app.js"></script>
     <script src="../js/navigation.js"></script>
+    <script>
+        // Counter animation for balance
+        function animateCounter(element, target, prefix = '', suffix = '') {
+            const increment = target / 50;
+            let current = 0;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                element.textContent = prefix + current.toLocaleString('en-AE', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }) + suffix;
+            }, 30);
+        }
+        
+        // Animate counters on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                animateCounter(document.getElementById('balanceCounter'), 12450.75, 'AED ');
+                animateCounter(document.getElementById('incomeCounter'), 8500.00, '+AED ');
+                animateCounter(document.getElementById('expenseCounter'), 5280.00, '-AED ');
+            }, 500);
+        });
+    </script>
 </body>
 </html>

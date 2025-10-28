@@ -9,15 +9,265 @@
 </head>
 <body>
     <div class="mobile-container">
-        <div class="page">
-            <div class="transaction-item">
-                <div class="transaction-icon" style="background: rgba(139, 69, 19, 0.2);">🍽️</div>
-                <div class="transaction-details">
-                    <div class="transaction-name">Zomato</div>
-                    <div class="transaction-date">Today</div>
-                </div>
-                <div class="transaction-amount negative">AED 85.50</div>
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-left">
+                <span class="time">12:04</span>
             </div>
+            <div class="status-right">
+                <span class="battery">88%</span>
+                <span class="signal">📶</span>
+                <span class="wifi">📶</span>
+            </div>
+        </div>
+
+        <div class="page">
+            <!-- Header -->
+            <div class="page-header-transactions">
+                <button class="back-btn" onclick="history.back()">←</button>
+                <h1 class="page-title">Transactions</h1>
+                <button class="search-btn" onclick="toggleSearch()">🔍</button>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="search-container" id="searchContainer">
+                <input type="text" class="search-input" placeholder="Search transactions..." id="searchInput">
+                <button class="filter-btn-inline">⚙️</button>
+            </div>
+
+            <!-- Filter Pills -->
+            <div class="filter-pills">
+                <button class="filter-pill active" data-filter="all">All</button>
+                <button class="filter-pill" data-filter="income">Income</button>
+                <button class="filter-pill" data-filter="expense">Expenses</button>
+                <button class="filter-pill" data-filter="dining">Dining</button>
+                <button class="filter-pill" data-filter="shopping">Shopping</button>
+            </div>
+
+            <!-- Transactions List -->
+            <div class="transactions-list" id="transactionsList">
+                <div class="date-group" data-date="today">
+                    <div class="date-header">
+                        <h3 class="date-title">Today</h3>
+                        <span class="date-total">-AED 330.50</span>
+                    </div>
+                    
+                    <div class="transaction-item-enhanced" data-category="dining" data-type="expense">
+                        <div class="transaction-icon-enhanced dining">🍽️</div>
+                        <div class="transaction-details">
+                            <div class="transaction-name">Zomato</div>
+                            <div class="transaction-description">Food delivery • Card ending 4532</div>
+                            <div class="transaction-time">11:30 AM</div>
+                        </div>
+                        <div class="transaction-amount-enhanced negative">
+                            <div class="amount-value">-AED 85.50</div>
+                            <div class="amount-status pending">Pending</div>
+                        </div>
+                    </div>
+
+                    <div class="transaction-item-enhanced" data-category="shopping" data-type="expense">
+                        <div class="transaction-icon-enhanced shopping">🛍️</div>
+                        <div class="transaction-details">
+                            <div class="transaction-name">Carrefour</div>
+                            <div class="transaction-description">Grocery shopping • Card ending 4532</div>
+                            <div class="transaction-time">9:15 AM</div>
+                        </div>
+                        <div class="transaction-amount-enhanced negative">
+                            <div class="amount-value">-AED 245.00</div>
+                            <div class="amount-status completed">Completed</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="date-group" data-date="yesterday">
+                    <div class="date-header">
+                        <h3 class="date-title">Yesterday</h3>
+                        <span class="date-total">+AED 8,580.00</span>
+                    </div>
+                    
+                    <div class="transaction-item-enhanced" data-category="income" data-type="income">
+                        <div class="transaction-icon-enhanced income">💰</div>
+                        <div class="transaction-details">
+                            <div class="transaction-name">Salary Deposit</div>
+                            <div class="transaction-description">Monthly salary • Direct deposit</div>
+                            <div class="transaction-time">8:00 AM</div>
+                        </div>
+                        <div class="transaction-amount-enhanced positive">
+                            <div class="amount-value">+AED 8,500.00</div>
+                            <div class="amount-status completed">Completed</div>
+                        </div>
+                    </div>
+
+                    <div class="transaction-item-enhanced" data-category="income" data-type="income">
+                        <div class="transaction-icon-enhanced refund">💰</div>
+                        <div class="transaction-details">
+                            <div class="transaction-name">Amazon Refund</div>
+                            <div class="transaction-description">Order refund • Card ending 4532</div>
+                            <div class="transaction-time">2:45 PM</div>
+                        </div>
+                        <div class="transaction-amount-enhanced positive">
+                            <div class="amount-value">+AED 80.00</div>
+                            <div class="amount-status completed">Completed</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="date-group" data-date="2-days-ago">
+                    <div class="date-header">
+                        <h3 class="date-title">2 Days Ago</h3>
+                        <span class="date-total">-AED 42.00</span>
+                    </div>
+                    
+                    <div class="transaction-item-enhanced" data-category="transport" data-type="expense">
+                        <div class="transaction-icon-enhanced transport">🚗</div>
+                        <div class="transaction-details">
+                            <div class="transaction-name">Uber</div>
+                            <div class="transaction-description">Trip to Mall of Emirates</div>
+                            <div class="transaction-time">7:20 PM</div>
+                        </div>
+                        <div class="transaction-amount-enhanced negative">
+                            <div class="amount-value">-AED 42.00</div>
+                            <div class="amount-status completed">Completed</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="date-group" data-date="3-days-ago">
+                    <div class="date-header">
+                        <h3 class="date-title">3 Days Ago</h3>
+                        <span class="date-total">-AED 320.00</span>
+                    </div>
+                    
+                    <div class="transaction-item-enhanced" data-category="bills" data-type="expense">
+                        <div class="transaction-icon-enhanced bills">🏠</div>
+                        <div class="transaction-details">
+                            <div class="transaction-name">DEWA</div>
+                            <div class="transaction-description">Electricity bill • Auto-pay</div>
+                            <div class="transaction-time">12:00 PM</div>
+                        </div>
+                        <div class="transaction-amount-enhanced negative">
+                            <div class="amount-value">-AED 320.00</div>
+                            <div class="amount-status completed">Completed</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="home.html" class="nav-item">
+                <span class="nav-icon">🏠</span>
+                <span>Home</span>
+            </a>
+            <a href="breakdown.html" class="nav-item">
+                <span class="nav-icon">📊</span>
+                <span>Analytics</span>
+            </a>
+            <a href="transactions.html" class="nav-item active">
+                <span class="nav-icon">💳</span>
+                <span>Transactions</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">🤖</span>
+                <span>AI Assistant</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">👤</span>
+                <span>Profile</span>
+            </a>
+        </nav>
+    </div>
+
+    <script src="../js/app.js"></script>
+    <script src="../js/navigation.js"></script>
+    <script>
+        // Search and filter functionality
+        function toggleSearch() {
+            const searchContainer = document.getElementById('searchContainer');
+            const searchInput = document.getElementById('searchInput');
+            
+            if (searchContainer.style.display === 'none' || searchContainer.style.display === '') {
+                searchContainer.style.display = 'flex';
+                searchContainer.style.animation = 'slideInDown 0.3s ease-out';
+                setTimeout(() => searchInput.focus(), 300);
+            } else {
+                searchContainer.style.animation = 'slideOutUp 0.3s ease-in';
+                setTimeout(() => {
+                    searchContainer.style.display = 'none';
+                    searchInput.value = '';
+                    filterTransactions('all');
+                }, 300);
+            }
+        }
+
+        // Filter transactions
+        function filterTransactions(category) {
+            const items = document.querySelectorAll('.transaction-item-enhanced');
+            const dateGroups = document.querySelectorAll('.date-group');
+            
+            items.forEach(item => {
+                if (category === 'all' || item.dataset.category === category || item.dataset.type === category) {
+                    item.style.display = 'flex';
+                    item.style.animation = 'fadeInUp 0.3s ease-out';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // Hide empty date groups
+            dateGroups.forEach(group => {
+                const visibleItems = group.querySelectorAll('.transaction-item-enhanced[style*="flex"]');
+                if (visibleItems.length === 0) {
+                    group.style.display = 'none';
+                } else {
+                    group.style.display = 'block';
+                }
+            });
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const items = document.querySelectorAll('.transaction-item-enhanced');
+            
+            items.forEach(item => {
+                const name = item.querySelector('.transaction-name').textContent.toLowerCase();
+                const description = item.querySelector('.transaction-description').textContent.toLowerCase();
+                
+                if (name.includes(searchTerm) || description.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Filter pill functionality
+        document.querySelectorAll('.filter-pill').forEach(pill => {
+            pill.addEventListener('click', function() {
+                document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+                filterTransactions(this.dataset.filter);
+            });
+        });
+
+        // Add stagger animation to transaction items
+        document.addEventListener('DOMContentLoaded', () => {
+            const items = document.querySelectorAll('.transaction-item-enhanced');
+            items.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    item.style.transition = 'all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1)';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
             
             <div class="transaction-item">
                 <div class="transaction-icon" style="background: rgba(255, 20, 147, 0.2);">🛍️</div>

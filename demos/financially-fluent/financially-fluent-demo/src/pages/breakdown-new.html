@@ -28,6 +28,7 @@
                 <h1 class="page-title">Analytics</h1>
                 <button class="filter-btn">⚙️</button>
             </div>
+
             <!-- Time Period Selector -->
             <div class="period-selector">
                 <button class="period-btn">7D</button>
@@ -81,6 +82,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- Category Breakdown -->
             <div class="category-breakdown">
                 <div class="breakdown-header">
@@ -110,82 +112,80 @@
                             <div class="category-details">
                                 <div class="category-name">Shopping</div>
                                 <div class="category-transactions">18 transactions</div>
+                            </div>
+                        </div>
+                        <div class="category-stats">
+                            <div class="category-amount">AED 1,320</div>
+                            <div class="category-percentage">25%</div>
+                            <div class="category-change">-3%</div>
+                        </div>
                     </div>
-                    <div style="text-align: right;">
-                        <div style="color: var(--text-light); font-weight: 600;">AED 1320</div>
-                        <div style="color: var(--text-muted); font-size: 12px;">25%</div>
+
+                    <div class="category-item" data-category="transport" onclick="selectCategory(this)">
+                        <div class="category-info">
+                            <div class="category-color" style="background: #45b7d1;"></div>
+                            <div class="category-details">
+                                <div class="category-name">Transport</div>
+                                <div class="category-transactions">12 transactions</div>
+                            </div>
+                        </div>
+                        <div class="category-stats">
+                            <div class="category-amount">AED 950</div>
+                            <div class="category-percentage">18%</div>
+                            <div class="category-change">+5%</div>
+                        </div>
+                    </div>
+
+                    <div class="category-item" data-category="bills" onclick="selectCategory(this)">
+                        <div class="category-info">
+                            <div class="category-color" style="background: #f9ca24;"></div>
+                            <div class="category-details">
+                                <div class="category-name">Bills & Utilities</div>
+                                <div class="category-transactions">8 transactions</div>
+                            </div>
+                        </div>
+                        <div class="category-stats">
+                            <div class="category-amount">AED 740</div>
+                            <div class="category-percentage">14%</div>
+                            <div class="category-change">+2%</div>
+                        </div>
+                    </div>
+
+                    <div class="category-item" data-category="other" onclick="selectCategory(this)">
+                        <div class="category-info">
+                            <div class="category-color" style="background: #a55eea;"></div>
+                            <div class="category-details">
+                                <div class="category-name">Other</div>
+                                <div class="category-transactions">6 transactions</div>
+                            </div>
+                        </div>
+                        <div class="category-stats">
+                            <div class="category-amount">AED 420</div>
+                            <div class="category-percentage">8%</div>
+                            <div class="category-change">-1%</div>
+                        </div>
                     </div>
                 </div>
-                
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <div style="width: 16px; height: 16px; background: #10b981; border-radius: 50%;"></div>
-                        <span style="color: var(--text-light); font-weight: 500;">Transport</span>
-                    </div>
-                    <div style="text-align: right;">
-                        <div style="color: var(--text-light); font-weight: 600;">AED 950</div>
-                        <div style="color: var(--text-muted); font-size: 12px;">18%</div>
-                    </div>
-                </div>
-                
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <div style="width: 16px; height: 16px; background: #f59e0b; border-radius: 50%;"></div>
-                        <span style="color: var(--text-light); font-weight: 500;">Bills</span>
-                    </div>
-                    <div style="text-align: right;">
-                        <div style="color: var(--text-light); font-weight: 600;">AED 740</div>
-                        <div style="color: var(--text-muted); font-size: 12px;">14%</div>
-                    </div>
-                </div>
-                
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0;">
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <div style="width: 16px; height: 16px; background: #8b5cf6; border-radius: 50%;"></div>
-                        <span style="color: var(--text-light); font-weight: 500;">Other</span>
-                    </div>
-                    <div style="text-align: right;">
-                        <div style="color: var(--text-light); font-weight: 600;">AED 420</div>
-                        <div style="color: var(--text-muted); font-size: 12px;">8%</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="section-title">Recent Transactions</div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                <span style="color: var(--text-light); font-size: 18px; font-weight: 600;">Recent Transactions</span>
-                <span style="color: var(--green); font-size: 14px; cursor: pointer;" onclick="navigateToTransactions()">See All</span>
-            </div>
-            
-            <div class="transaction-item">
-                <div class="transaction-icon" style="background: rgba(139, 69, 19, 0.2);">🍽️</div>
-                <div class="transaction-details">
-                    <div class="transaction-name">Zomato</div>
-                </div>
-                <div class="transaction-amount negative">AED 85.50</div>
             </div>
         </div>
-        
+
+        <!-- Bottom Navigation -->
         <nav class="bottom-nav">
             <a href="home.html" class="nav-item">
                 <span class="nav-icon">🏠</span>
                 <span>Home</span>
             </a>
-            <a href="#" class="nav-item">
-                <span class="nav-icon">📚</span>
-                <span>Learn</span>
+            <a href="breakdown.html" class="nav-item active">
+                <span class="nav-icon">📊</span>
+                <span>Analytics</span>
             </a>
-            <a href="#" class="nav-item">
-                <span class="nav-icon">🎯</span>
-                <span>Missions</span>
+            <a href="transactions.html" class="nav-item">
+                <span class="nav-icon">💳</span>
+                <span>Transactions</span>
             </a>
             <a href="#" class="nav-item">
                 <span class="nav-icon">🤖</span>
-                <span>FinBot</span>
-            </a>
-            <a href="#" class="nav-item">
-                <span class="nav-icon">📱</span>
-                <span>Simulator</span>
+                <span>AI Assistant</span>
             </a>
             <a href="#" class="nav-item">
                 <span class="nav-icon">👤</span>
@@ -193,32 +193,88 @@
             </a>
         </nav>
     </div>
-    
+
     <script src="../js/app.js"></script>
     <script src="../js/navigation.js"></script>
-        const breakdownChart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: ['Rent', 'Groceries', 'Utilities', 'Transportation', 'Entertainment'],
-                datasets: [{
-                    label: 'Expenses',
-                    data: [1200, 300, 150, 100, 200],
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                    title: {
-                        display: true,
-                        text: 'Expense Breakdown'
-                    }
+    <script>
+        // Chart animation and interaction
+        const chartData = {
+            dining: { value: 1850, percentage: 35, color: '#ff6b6b' },
+            shopping: { value: 1320, percentage: 25, color: '#4ecdc4' },
+            transport: { value: 950, percentage: 18, color: '#45b7d1' },
+            bills: { value: 740, percentage: 14, color: '#f9ca24' },
+            other: { value: 420, percentage: 8, color: '#a55eea' }
+        };
+
+        function animateChart() {
+            let delay = 0;
+            let cumulativePercentage = 0;
+            
+            Object.keys(chartData).forEach(category => {
+                const segment = document.querySelector(`.chart-segment.${category}`);
+                const percentage = chartData[category].percentage;
+                const circumference = 628; // 2 * π * 100
+                const strokeLength = (percentage / 100) * circumference;
+                const strokeOffset = circumference - cumulativePercentage * circumference / 100;
+                
+                setTimeout(() => {
+                    segment.style.strokeDasharray = `${strokeLength} ${circumference}`;
+                    segment.style.strokeDashoffset = -strokeOffset;
+                    segment.style.transition = 'stroke-dasharray 1s ease-out, stroke-dashoffset 1s ease-out';
+                }, delay);
+                
+                cumulativePercentage += percentage;
+                delay += 200;
+            });
+        }
+
+        function selectCategory(element) {
+            // Remove active class from all items
+            document.querySelectorAll('.category-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Add active class to clicked item
+            element.classList.add('active');
+            
+            // Update center display
+            const category = element.dataset.category;
+            const data = chartData[category];
+            document.getElementById('centerAmount').textContent = `AED ${data.value.toLocaleString()}`;
+            
+            // Add highlight effect to corresponding chart segment
+            document.querySelectorAll('.chart-segment').forEach(segment => {
+                segment.style.opacity = '0.3';
+            });
+            document.querySelector(`.chart-segment.${category}`).style.opacity = '1';
+        }
+
+        function resetChart() {
+            document.querySelectorAll('.chart-segment').forEach(segment => {
+                segment.style.opacity = '1';
+            });
+            document.getElementById('centerAmount').textContent = 'AED 5,280';
+        }
+
+        // Initialize chart animation on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(animateChart, 300);
+            
+            // Add click listener to reset chart when clicking outside categories
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.category-item') && !e.target.closest('.chart-container')) {
+                    resetChart();
+                    document.querySelectorAll('.category-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
                 }
-            }
+            });
         });
+
+        function toggleView() {
+            // Toggle between chart and list view (placeholder for future enhancement)
+            console.log('Toggle view');
+        }
     </script>
 </body>
 </html>

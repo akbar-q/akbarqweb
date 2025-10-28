@@ -9,19 +9,77 @@
 </head>
 <body>
     <div class="mobile-container">
-        <div class="page">
-            <div class="logo-container">
-                <div class="logo">
-                    📈
+        <div class="welcome-page">
+            <!-- Animated Background -->
+            <div class="bg-animation">
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+            </div>
+            
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <div class="status-left">
+                    <span class="time">12:04</span>
+                </div>
+                <div class="status-right">
+                    <span class="battery">88%</span>
+                    <span class="signal">📶</span>
+                    <span class="wifi">📶</span>
                 </div>
             </div>
             
-            <div class="welcome-text">
-                <h1 class="app-title">Financially Fluent</h1>
-                <p class="app-tagline">Master Your Money, Build Your Future</p>
+            <!-- Main Content -->
+            <div class="welcome-content">
+                <div class="logo-container">
+                    <div class="logo-wrapper">
+                        <div class="logo-bg"></div>
+                        <div class="logo" id="animatedLogo">
+                            <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                                <path d="M20 60L60 20M20 20L60 60" stroke="url(#gradient)" stroke-width="3" stroke-linecap="round"/>
+                                <circle cx="40" cy="40" r="35" stroke="url(#gradient)" stroke-width="2" fill="none"/>
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#00ff88"/>
+                                        <stop offset="100%" style="stop-color:#00d4ff"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="welcome-text">
+                    <h1 class="app-title">
+                        <span class="word">Financially</span>
+                        <span class="word">Fluent</span>
+                    </h1>
+                    <p class="app-tagline">Master Your Money, Build Your Future</p>
+                    <div class="tagline-accent"></div>
+                </div>
+                
+                <div class="features-preview">
+                    <div class="feature-item">
+                        <div class="feature-icon">💰</div>
+                        <span>Smart Analytics</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🔮</div>
+                        <span>AI Insights</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🎯</div>
+                        <span>Goal Tracking</span>
+                    </div>
+                </div>
+                
+                <button class="btn-primary" onclick="navigateToConnectBank()">
+                    <span class="btn-text">Get Started</span>
+                    <div class="btn-shine"></div>
+                </button>
             </div>
-            
-            <button class="btn-primary" onclick="navigateToConnectBank()">Get Started</button>
         </div>
     </div>
     
