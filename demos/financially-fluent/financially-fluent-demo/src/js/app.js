@@ -112,24 +112,42 @@ class AnimationController {
         });
     }
     
-    countUp(element, target, duration = 2000) {
+    countUp(element, target, duration = 2000, hasDecimals = false, currency = 'AED') {
         const start = 0;
-        const increment = target / (duration / 16);
-        let current = start;
+        const startTime = performance.now();
         
-        const timer = setInterval(() => {
-            current += increment;
-            if (current >= target) {
-                current = target;
-                clearInterval(timer);
+        const animate = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // Use easing function for smoother animation
+            const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+            const current = start + (target - start) * easeOutQuart;
+            
+            // Format the number properly
+            let displayValue;
+            if (hasDecimals) {
+                displayValue = current.toFixed(2);
+            } else {
+                displayValue = Math.floor(current).toString();
             }
             
-            if (element.dataset.currency) {
-                element.textContent = `${element.dataset.currency}${Math.floor(current).toLocaleString()}`;
+            // Add currency formatting
+            if (currency) {
+                const formattedNumber = hasDecimals ? 
+                    parseFloat(displayValue).toLocaleString('en-AE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) :
+                    parseInt(displayValue).toLocaleString('en-AE');
+                element.textContent = `${currency} ${formattedNumber}`;
             } else {
-                element.textContent = Math.floor(current);
+                element.textContent = displayValue;
             }
-        }, 16);
+            
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            }
+        };
+        
+        requestAnimationFrame(animate);
     }
     
     pulseElement(element, intensity = 1.05) {
@@ -154,8 +172,31 @@ document.addEventListener('DOMContentLoaded', function() {
     // Balance counter animation
     const balanceElement = document.querySelector('.balance-amount');
     if (balanceElement) {
-        const target = parseInt(balanceElement.textContent.replace(/[^0-9]/g, ''));
-        animationController.countUp(balanceElement, target, 2500);
+        const originalText = balanceElement.textContent;
+        const target = parseFloat(originalText.replace(/[^0-9.]/g, ''));
+        // Clear the element first
+        balanceElement.textContent = 'AED 0.00';
+        // Start the smooth animation
+        animationController.countUp(balanceElement, target, 2500, true, 'AED');
+    }
+    
+    // Animate other counters too
+    const incomeCounter = document.getElementById('incomeCounter');
+    if (incomeCounter) {
+        const incomeTarget = parseFloat(incomeCounter.textContent.replace(/[^0-9.]/g, ''));
+        incomeCounter.textContent = '+AED 0.00';
+        setTimeout(() => {
+            animationController.countUp(incomeCounter, incomeTarget, 2000, true, '+AED');
+        }, 500);
+    }
+    
+    const expenseCounter = document.getElementById('expenseCounter');
+    if (expenseCounter) {
+        const expenseTarget = parseFloat(expenseCounter.textContent.replace(/[^0-9.]/g, ''));
+        expenseCounter.textContent = '-AED 0.00';
+        setTimeout(() => {
+            animationController.countUp(expenseCounter, expenseTarget, 2000, true, '-AED');
+        }, 1000);
     }
     
     // Enhanced transaction filtering

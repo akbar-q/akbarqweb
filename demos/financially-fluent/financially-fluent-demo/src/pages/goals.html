@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goals - Financially Fluent</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-left">
+                <span class="time">12:04</span>
+            </div>
+            <div class="status-right">
+                <span class="battery">88%</span>
+                <span class="signal">📶</span>
+                <span class="wifi">📶</span>
+            </div>
+        </div>
+
+        <div class="page">
+            <!-- Header -->
+            <div class="page-header">
+                <button class="back-btn" onclick="history.back()">←</button>
+                <h1 class="page-title">Financial Goals</h1>
+                <button class="add-btn" onclick="addNewGoal()">+</button>
+            </div>
+
+            <!-- Goals Summary -->
+            <div class="goals-summary">
+                <div class="summary-card">
+                    <div class="summary-icon">🎯</div>
+                    <div class="summary-content">
+                        <div class="summary-number">3</div>
+                        <div class="summary-label">Active Goals</div>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon">💰</div>
+                    <div class="summary-content">
+                        <div class="summary-number">AED 15,000</div>
+                        <div class="summary-label">Total Target</div>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon">📈</div>
+                    <div class="summary-content">
+                        <div class="summary-number">67%</div>
+                        <div class="summary-label">Average Progress</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Goals -->
+            <div class="goals-section">
+                <div class="section-header">
+                    <h3 class="section-title">Active Goals</h3>
+                    <span class="section-subtitle">Track your financial objectives</span>
+                </div>
+
+                <div class="goals-list">
+                    <div class="goal-card">
+                        <div class="goal-header">
+                            <div class="goal-icon" style="background: linear-gradient(135deg, #00ff88, #00d4ff);">🏠</div>
+                            <div class="goal-info">
+                                <div class="goal-name">House Down Payment</div>
+                                <div class="goal-target">AED 50,000</div>
+                            </div>
+                            <div class="goal-menu">⋯</div>
+                        </div>
+                        <div class="goal-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 75%;"></div>
+                            </div>
+                            <div class="progress-text">
+                                <span class="progress-current">AED 37,500</span>
+                                <span class="progress-percent">75%</span>
+                            </div>
+                        </div>
+                        <div class="goal-timeline">
+                            <span class="timeline-text">8 months remaining</span>
+                            <span class="timeline-date">Target: Dec 2025</span>
+                        </div>
+                    </div>
+
+                    <div class="goal-card">
+                        <div class="goal-header">
+                            <div class="goal-icon" style="background: linear-gradient(135deg, #8b5cf6, #ff0080);">✈️</div>
+                            <div class="goal-info">
+                                <div class="goal-name">Europe Vacation</div>
+                                <div class="goal-target">AED 12,000</div>
+                            </div>
+                            <div class="goal-menu">⋯</div>
+                        </div>
+                        <div class="goal-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 60%;"></div>
+                            </div>
+                            <div class="progress-text">
+                                <span class="progress-current">AED 7,200</span>
+                                <span class="progress-percent">60%</span>
+                            </div>
+                        </div>
+                        <div class="goal-timeline">
+                            <span class="timeline-text">4 months remaining</span>
+                            <span class="timeline-date">Target: Jun 2025</span>
+                        </div>
+                    </div>
+
+                    <div class="goal-card">
+                        <div class="goal-header">
+                            <div class="goal-icon" style="background: linear-gradient(135deg, #f59e0b, #ef4444);">📱</div>
+                            <div class="goal-info">
+                                <div class="goal-name">New MacBook</div>
+                                <div class="goal-target">AED 8,500</div>
+                            </div>
+                            <div class="goal-menu">⋯</div>
+                        </div>
+                        <div class="goal-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 45%;"></div>
+                            </div>
+                            <div class="progress-text">
+                                <span class="progress-current">AED 3,825</span>
+                                <span class="progress-percent">45%</span>
+                            </div>
+                        </div>
+                        <div class="goal-timeline">
+                            <span class="timeline-text">3 months remaining</span>
+                            <span class="timeline-date">Target: May 2025</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completed Goals -->
+            <div class="goals-section">
+                <div class="section-header">
+                    <h3 class="section-title">Recently Completed</h3>
+                    <span class="section-subtitle">Your achievements</span>
+                </div>
+
+                <div class="completed-goal">
+                    <div class="completed-icon">✅</div>
+                    <div class="completed-info">
+                        <div class="completed-name">Emergency Fund</div>
+                        <div class="completed-amount">AED 15,000</div>
+                    </div>
+                    <div class="completed-date">Completed Oct 2025</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="home.html" class="nav-item">
+                <span class="nav-icon">🏠</span>
+                <span>Home</span>
+            </a>
+            <a href="breakdown.html" class="nav-item">
+                <span class="nav-icon">📊</span>
+                <span>Analytics</span>
+            </a>
+            <a href="transactions.html" class="nav-item">
+                <span class="nav-icon">💳</span>
+                <span>Transactions</span>
+            </a>
+            <a href="goals.html" class="nav-item active">
+                <span class="nav-icon">🎯</span>
+                <span>Goals</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <span class="nav-icon">👤</span>
+                <span>Profile</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        function addNewGoal() {
+            alert('Add New Goal functionality would open a goal creation form');
+        }
+        
+        // Animate progress bars on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const progressFills = document.querySelectorAll('.progress-fill');
+            progressFills.forEach((fill, index) => {
+                const width = fill.style.width;
+                fill.style.width = '0%';
+                setTimeout(() => {
+                    fill.style.transition = 'width 1.5s ease-out';
+                    fill.style.width = width;
+                }, index * 200);
+            });
+        });
+    </script>
+    <script src="../js/app.js"></script>
+</body>
+</html>

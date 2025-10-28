@@ -104,49 +104,64 @@
                         </div>
                     </div>
 
-                    <div class="category-item" data-category="shopping" onclick="selectCategory(this)">
+                    <div class="category-item" data-category="shopping">
                         <div class="category-info">
                             <div class="category-color" style="background: #4ecdc4;"></div>
                             <div class="category-details">
                                 <div class="category-name">Shopping</div>
                                 <div class="category-transactions">18 transactions</div>
+                            </div>
+                        </div>
+                        <div class="category-stats">
+                            <div class="category-amount">AED 1,320</div>
+                            <div class="category-percentage">25%</div>
+                            <div class="category-change">+12%</div>
+                        </div>
                     </div>
-                    <div style="text-align: right;">
-                        <div style="color: var(--text-light); font-weight: 600;">AED 1320</div>
-                        <div style="color: var(--text-muted); font-size: 12px;">25%</div>
-                    </div>
-                </div>
                 
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <div style="width: 16px; height: 16px; background: #10b981; border-radius: 50%;"></div>
-                        <span style="color: var(--text-light); font-weight: 500;">Transport</span>
+                    <div class="category-item" data-category="transport">
+                        <div class="category-info">
+                            <div class="category-color" style="background: #10b981;"></div>
+                            <div class="category-details">
+                                <div class="category-name">Transport</div>
+                                <div class="category-transactions">12 transactions</div>
+                            </div>
+                        </div>
+                        <div class="category-stats">
+                            <div class="category-amount">AED 950</div>
+                            <div class="category-percentage">18%</div>
+                            <div class="category-change">-3%</div>
+                        </div>
                     </div>
-                    <div style="text-align: right;">
-                        <div style="color: var(--text-light); font-weight: 600;">AED 950</div>
-                        <div style="color: var(--text-muted); font-size: 12px;">18%</div>
-                    </div>
-                </div>
                 
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <div style="width: 16px; height: 16px; background: #f59e0b; border-radius: 50%;"></div>
-                        <span style="color: var(--text-light); font-weight: 500;">Bills</span>
+                    <div class="category-item" data-category="bills">
+                        <div class="category-info">
+                            <div class="category-color" style="background: #f59e0b;"></div>
+                            <div class="category-details">
+                                <div class="category-name">Bills & Utilities</div>
+                                <div class="category-transactions">8 transactions</div>
+                            </div>
+                        </div>
+                        <div class="category-stats">
+                            <div class="category-amount">AED 740</div>
+                            <div class="category-percentage">14%</div>
+                            <div class="category-change">+2%</div>
+                        </div>
                     </div>
-                    <div style="text-align: right;">
-                        <div style="color: var(--text-light); font-weight: 600;">AED 740</div>
-                        <div style="color: var(--text-muted); font-size: 12px;">14%</div>
-                    </div>
-                </div>
                 
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0;">
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <div style="width: 16px; height: 16px; background: #8b5cf6; border-radius: 50%;"></div>
-                        <span style="color: var(--text-light); font-weight: 500;">Other</span>
-                    </div>
-                    <div style="text-align: right;">
-                        <div style="color: var(--text-light); font-weight: 600;">AED 420</div>
-                        <div style="color: var(--text-muted); font-size: 12px;">8%</div>
+                    <div class="category-item" data-category="other">
+                        <div class="category-info">
+                            <div class="category-color" style="background: #8b5cf6;"></div>
+                            <div class="category-details">
+                                <div class="category-name">Other</div>
+                                <div class="category-transactions">15 transactions</div>
+                            </div>
+                        </div>
+                        <div class="category-stats">
+                            <div class="category-amount">AED 420</div>
+                            <div class="category-percentage">8%</div>
+                            <div class="category-change">+5%</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -175,19 +190,11 @@
                 <span class="nav-icon">📚</span>
                 <span>Learn</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="goals.html" class="nav-item">
                 <span class="nav-icon">🎯</span>
-                <span>Missions</span>
+                <span>Goals</span>
             </a>
-            <a href="#" class="nav-item">
-                <span class="nav-icon">🤖</span>
-                <span>FinBot</span>
-            </a>
-            <a href="#" class="nav-item">
-                <span class="nav-icon">📱</span>
-                <span>Simulator</span>
-            </a>
-            <a href="#" class="nav-item">
+            <a href="profile.html" class="nav-item">
                 <span class="nav-icon">👤</span>
                 <span>Profile</span>
             </a>
@@ -196,28 +203,54 @@
     
     <script src="../js/app.js"></script>
     <script src="../js/navigation.js"></script>
-        const breakdownChart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: ['Rent', 'Groceries', 'Utilities', 'Transportation', 'Entertainment'],
-                datasets: [{
-                    label: 'Expenses',
-                    data: [1200, 300, 150, 100, 200],
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                    title: {
-                        display: true,
-                        text: 'Expense Breakdown'
-                    }
-                }
-            }
+    <script>
+        // Enhanced breakdown page functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate chart on load
+            const chartPaths = document.querySelectorAll('.donut-chart path');
+            chartPaths.forEach((path, index) => {
+                setTimeout(() => {
+                    path.style.opacity = '1';
+                    path.style.strokeDasharray = path.getAttribute('data-dash');
+                }, index * 200);
+            });
+            
+            // Category interaction
+            const categoryItems = document.querySelectorAll('.category-item');
+            categoryItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remove active from all
+                    categoryItems.forEach(cat => cat.classList.remove('active'));
+                    // Add active to clicked
+                    this.classList.add('active');
+                    
+                    // Highlight corresponding chart segment
+                    const category = this.dataset.category;
+                    chartPaths.forEach(path => {
+                        if (path.dataset.category === category) {
+                            path.style.filter = 'brightness(1.3) drop-shadow(0 0 10px currentColor)';
+                        } else {
+                            path.style.filter = 'brightness(0.7)';
+                        }
+                    });
+                });
+            });
+            
+            // Period selector functionality
+            const periodBtns = document.querySelectorAll('.period-btn');
+            periodBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    periodBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Animate data change
+                    const totalSpending = document.getElementById('totalSpending');
+                    totalSpending.style.opacity = '0.5';
+                    setTimeout(() => {
+                        totalSpending.style.opacity = '1';
+                    }, 300);
+                });
+            });
         });
     </script>
 </body>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Financially Fluent</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-left">
+                <span class="time">12:04</span>
+            </div>
+            <div class="status-right">
+                <span class="battery">88%</span>
+                <span class="signal">📶</span>
+                <span class="wifi">📶</span>
+            </div>
+        </div>
+
+        <div class="page">
+            <!-- Header -->
+            <div class="page-header">
+                <button class="back-btn" onclick="history.back()">←</button>
+                <h1 class="page-title">Profile</h1>
+                <button class="settings-btn" onclick="openSettings()">⚙️</button>
+            </div>
+
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face&auto=format" alt="Profile" class="avatar-image">
+                    <div class="avatar-badge">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="profile-info">
+                    <h2 class="profile-name">Ahmed Al-Mansouri</h2>
+                    <p class="profile-email">ahmed.almansouri@gmail.com</p>
+                    <div class="profile-stats">
+                        <div class="stat">
+                            <span class="stat-value">18</span>
+                            <span class="stat-label">Months Active</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">AED 125K</span>
+                            <span class="stat-label">Total Managed</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">92%</span>
+                            <span class="stat-label">Savings Rate</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="profile-actions">
+                <button class="action-btn primary" onclick="editProfile()">
+                    <span class="action-icon">✏️</span>
+                    <span>Edit Profile</span>
+                </button>
+                <button class="action-btn secondary" onclick="exportData()">
+                    <span class="action-icon">📊</span>
+                    <span>Export Data</span>
+                </button>
+            </div>
+
+            <!-- Menu Sections -->
+            <div class="profile-menu">
+                <div class="menu-section">
+                    <h3 class="menu-title">Account</h3>
+                    <div class="menu-items">
+                        <div class="menu-item" onclick="openBankAccounts()">
+                            <div class="menu-icon">🏦</div>
+                            <div class="menu-content">
+                                <div class="menu-label">Bank Accounts</div>
+                                <div class="menu-subtitle">3 accounts connected</div>
+                            </div>
+                            <div class="menu-arrow">→</div>
+                        </div>
+                        
+                        <div class="menu-item" onclick="openCards()">
+                            <div class="menu-icon">💳</div>
+                            <div class="menu-content">
+                                <div class="menu-label">Cards & Payment</div>
+                                <div class="menu-subtitle">Manage payment methods</div>
+                            </div>
+                            <div class="menu-arrow">→</div>
+                        </div>
+                        
+                        <div class="menu-item" onclick="openSubscriptions()">
+                            <div class="menu-icon">🔄</div>
+                            <div class="menu-content">
+                                <div class="menu-label">Subscriptions</div>
+                                <div class="menu-subtitle">8 active subscriptions</div>
+                            </div>
+                            <div class="menu-arrow">→</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <h3 class="menu-title">Preferences</h3>
+                    <div class="menu-items">
+                        <div class="menu-item" onclick="openNotifications()">
+                            <div class="menu-icon">🔔</div>
+                            <div class="menu-content">
+                                <div class="menu-label">Notifications</div>
+                                <div class="menu-subtitle">Push, email & SMS settings</div>
+                            </div>
+                            <div class="menu-arrow">→</div>
+                        </div>
+                        
+                        <div class="menu-item" onclick="openSecurity()">
+                            <div class="menu-icon">🔒</div>
+                            <div class="menu-content">
+                                <div class="menu-label">Security & Privacy</div>
+                                <div class="menu-subtitle">Biometrics, PIN & privacy</div>
+                            </div>
+                            <div class="menu-arrow">→</div>
+                        </div>
+                        
+                        <div class="menu-item" onclick="openTheme()">
+                            <div class="menu-icon">🎨</div>
+                            <div class="menu-content">
+                                <div class="menu-label">Appearance</div>
+                                <div class="menu-subtitle">Dark mode, colors & layout</div>
+                            </div>
+                            <div class="menu-arrow">→</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-section">
+                    <h3 class="menu-title">Support</h3>
+                    <div class="menu-items">
+                        <div class="menu-item" onclick="openHelp()">
+                            <div class="menu-icon">❓</div>
+                            <div class="menu-content">
+                                <div class="menu-label">Help Center</div>
+                                <div class="menu-subtitle">FAQs, guides & tutorials</div>
+                            </div>
+                            <div class="menu-arrow">→</div>
+                        </div>
+                        
+                        <div class="menu-item" onclick="contactSupport()">
+                            <div class="menu-icon">💬</div>
+                            <div class="menu-content">
+                                <div class="menu-label">Contact Support</div>
+                                <div class="menu-subtitle">Chat, call or email us</div>
+                            </div>
+                            <div class="menu-arrow">→</div>
+                        </div>
+                        
+                        <div class="menu-item" onclick="rateApp()">
+                            <div class="menu-icon">⭐</div>
+                            <div class="menu-content">
+                                <div class="menu-label">Rate Financially Fluent</div>
+                                <div class="menu-subtitle">Share your experience</div>
+                            </div>
+                            <div class="menu-arrow">→</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- App Version -->
+            <div class="app-info">
+                <p class="app-version">Financially Fluent v2.1.0</p>
+                <p class="app-build">Build 2024.10.28</p>
+            </div>
+
+            <!-- Logout -->
+            <div class="logout-section">
+                <button class="logout-btn" onclick="handleLogout()">
+                    <span class="logout-icon">🚪</span>
+                    <span>Sign Out</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="home.html" class="nav-item">
+                <span class="nav-icon">🏠</span>
+                <span>Home</span>
+            </a>
+            <a href="breakdown.html" class="nav-item">
+                <span class="nav-icon">📊</span>
+                <span>Analytics</span>
+            </a>
+            <a href="transactions.html" class="nav-item">
+                <span class="nav-icon">💳</span>
+                <span>Transactions</span>
+            </a>
+            <a href="goals.html" class="nav-item">
+                <span class="nav-icon">🎯</span>
+                <span>Goals</span>
+            </a>
+            <a href="profile.html" class="nav-item active">
+                <span class="nav-icon">👤</span>
+                <span>Profile</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        function openSettings() { alert('Settings would open here'); }
+        function editProfile() { alert('Edit Profile form would open'); }
+        function exportData() { alert('Data export options would show'); }
+        function openBankAccounts() { alert('Bank accounts management would open'); }
+        function openCards() { alert('Cards & payment methods would open'); }
+        function openSubscriptions() { alert('Subscriptions management would open'); }
+        function openNotifications() { alert('Notification settings would open'); }
+        function openSecurity() { alert('Security & privacy settings would open'); }
+        function openTheme() { alert('Appearance settings would open'); }
+        function openHelp() { alert('Help center would open'); }
+        function contactSupport() { alert('Support contact options would show'); }
+        function rateApp() { alert('App rating dialog would show'); }
+        
+        function handleLogout() {
+            if (confirm('Are you sure you want to sign out?')) {
+                document.body.style.opacity = '0';
+                setTimeout(() => {
+                    window.location.href = '../landing.html';
+                }, 500);
+            }
+        }
+    </script>
+    <script src="../js/app.js"></script>
+</body>
+</html>
