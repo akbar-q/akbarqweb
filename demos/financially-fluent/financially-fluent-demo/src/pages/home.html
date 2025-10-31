@@ -3,23 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Fin            <a href="breakdown.html" class="nav-item">
-                <span class="nav-icon">📊</span>
-                <span class="nav-label">Analytics</span>
-            </a>
-            <a href="transactions.html" class="nav-item">
-                <span class="nav-icon">💳</span>
-                <span class="nav-label">Transactions</span>
-            </a>
-            <a href="goals.html" class="nav-item">
-                <span class="nav-icon">🎯</span>
-                <span class="nav-label">Goals</span>
-            </a>
-            <a href="financial-academy.html" class="nav-item">
-                <span class="nav-icon">🎮</span>
-                <span class="nav-label">Learn</span>
-            </a>
-        </nav>title>
+    <title>Home - Financially Fluent</title>
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/components.css">
 </head>
@@ -66,7 +50,7 @@
                 
                 <div class="balance-details">
                     <div class="balance-item income">
-                        <div class="balance-icon">�</div>
+                        <div class="balance-icon">💰</div>
                         <div class="balance-info">
                             <div class="balance-category">Income</div>
                             <div class="balance-value" id="incomeCounter">+AED 8,500.00</div>
@@ -103,29 +87,25 @@
                 </div>
             </div>
             
-            <!-- AI Insights -->
-            <div class="insights-section">
-                <div class="section-header">
-                    <h3 class="section-title">AI Insights</h3>
-                    <span class="section-action" onclick="openAIChat()">View All</span>
-                </div>
-                
-                <div class="insight-card-modern">
-                    <div class="insight-header">
-                        <div class="insight-icon">🤖</div>
+            <!-- AI Insights Card -->
+            <div class="insight-card-modern">
+                <div class="insight-header">
+                    <div class="insight-avatar">🤖</div>
+                    <div class="insight-info">
+                        <div class="insight-title">AI Insights</div>
                         <div class="insight-meta">
                             <div class="insight-category">Spending Alert</div>
                             <div class="insight-time">2 min ago</div>
                         </div>
                         <div class="insight-priority high"></div>
                     </div>
-                    <div class="insight-content">
-                        <p>You've spent 35% more on dining this month. Consider setting a budget limit of AED 1,200.</p>
-                    </div>
-                    <div class="insight-actions">
-                        <button class="insight-btn primary" onclick="openAIChat()">Set Budget</button>
-                        <button class="insight-btn secondary" onclick="dismissInsight()">Dismiss</button>
-                    </div>
+                </div>
+                <div class="insight-content">
+                    <p>You've spent 35% more on dining this month. Consider setting a budget limit of AED 1,200.</p>
+                </div>
+                <div class="insight-actions">
+                    <button class="insight-btn primary" onclick="openAIChat()">Set Budget</button>
+                    <button class="insight-btn secondary" onclick="dismissInsight()">Dismiss</button>
                 </div>
             </div>
             
@@ -166,34 +146,30 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Bottom Navigation -->
-                            </div>
-        </div>
-        
+
         <!-- Bottom Navigation -->
         <nav class="bottom-nav">
             <a href="home.html" class="nav-item active">
                 <span class="nav-icon">🏠</span>
                 <span class="nav-label">Home</span>
             </a>
-            <div class="nav-item" onclick="navigateToAnalytics()">
-                <div class="nav-icon">📊</div>
-                <div class="nav-label">Analytics</div>
-            </div>
-            <div class="nav-item" onclick="navigateToTransactions()">
-                <div class="nav-icon">�</div>
-                <div class="nav-label">Transactions</div>
-            </div>
-            <div class="nav-item" onclick="navigateToGoals()">
-                <div class="nav-icon">🎯</div>
-                <div class="nav-label">Goals</div>
-            </div>
-            <div class="nav-item" onclick="navigateToAcademy()">
-                <div class="nav-icon">🎮</div>
-                <div class="nav-label">Learn</div>
-            </div>
-        </div>
+            <a href="breakdown.html" class="nav-item">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">Analytics</span>
+            </a>
+            <a href="transactions.html" class="nav-item">
+                <span class="nav-icon">💳</span>
+                <span class="nav-label">Transactions</span>
+            </a>
+            <a href="goals.html" class="nav-item">
+                <span class="nav-icon">🎯</span>
+                <span class="nav-label">Goals</span>
+            </a>
+            <a href="financial-academy.html" class="nav-item">
+                <span class="nav-icon">🎮</span>
+                <span class="nav-label">Learn</span>
+            </a>
+        </nav>
     </div>
     
     <script src="../js/app.js"></script>
@@ -209,14 +185,10 @@
                     current = target;
                     clearInterval(timer);
                 }
-                element.textContent = prefix + current.toLocaleString('en-AE', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                }) + suffix;
+                element.textContent = prefix + current.toFixed(2) + suffix;
             }, 30);
         }
-        
-        // Animate counters on page load
+
         // Navigation functions
         function openNotifications() {
             window.location.href = 'notifications.html';
@@ -226,7 +198,17 @@
             window.location.href = 'ai-chat.html';
         }
         
-
+        function navigateToTransactions() {
+            window.location.href = 'transactions.html';
+        }
+        
+        function navigateToBreakdown() {
+            window.location.href = 'breakdown.html';
+        }
+        
+        function navigateToGoals() {
+            window.location.href = 'goals.html';
+        }
         
         function openCards() {
             alert('Cards & Payment management would open here');
