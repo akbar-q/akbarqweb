@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Financially Fluent</title>
+    <style>
+        body {
+            background: #0a0a0f;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
+            margin: 0;
+        }
+        .test-container {
+            max-width: 430px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        h1 {
+            color: #00ff88;
+            margin-bottom: 20px;
+        }
+        .test-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 16px;
+            margin: 10px 0;
+            border-radius: 12px;
+        }
+        .nav-test {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            background: rgba(10, 10, 15, 0.95);
+            padding: 16px;
+            display: flex;
+            justify-content: space-around;
+            z-index: 1000;
+        }
+        .nav-item {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🏠 Test Home Page</h1>
+        <div class="test-item">
+            <h2>✅ Basic CSS Loading Test</h2>
+            <p>If you can see this styled content, CSS is working.</p>
+        </div>
+        
+        <div class="test-item">
+            <h2>📱 Mobile Container Test</h2>
+            <p>This should be centered and responsive.</p>
+        </div>
+        
+        <div class="test-item">
+            <h2>🎨 Dark Theme Test</h2>
+            <p>Dark background with neon green accents should be visible.</p>
+        </div>
+        
+        <div class="test-item">
+            <h2>⚡ JavaScript Test</h2>
+            <p id="js-test">JavaScript not loaded</p>
+        </div>
+    </div>
+    
+    <nav class="nav-test">
+        <a href="home.html" class="nav-item">🏠 Home</a>
+        <a href="breakdown.html" class="nav-item">📊 Analytics</a>
+        <a href="financial-academy.html" class="nav-item">🎮 Learn</a>
+    </nav>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Test page loaded');
+            document.getElementById('js-test').textContent = '✅ JavaScript is working!';
+        });
+    </script>
+</body>
+</html>

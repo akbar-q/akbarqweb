@@ -224,11 +224,26 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                animateCounter(document.getElementById('balanceCounter'), 12450.75, 'AED ');
-                animateCounter(document.getElementById('incomeCounter'), 8500.00, '+AED ');
-                animateCounter(document.getElementById('expenseCounter'), 5280.00, '-AED ');
-            }, 500);
+            console.log('Home page loaded successfully');
+            
+            // Test if elements exist
+            const balanceEl = document.getElementById('balanceCounter');
+            const incomeEl = document.getElementById('incomeCounter');
+            const expenseEl = document.getElementById('expenseCounter');
+            
+            console.log('Balance element:', balanceEl);
+            console.log('Income element:', incomeEl);  
+            console.log('Expense element:', expenseEl);
+            
+            if (balanceEl && incomeEl && expenseEl) {
+                setTimeout(() => {
+                    animateCounter(balanceEl, 12450.75, 'AED ');
+                    animateCounter(incomeEl, 8500.00, '+AED ');
+                    animateCounter(expenseEl, 5280.00, '-AED ');
+                }, 500);
+            } else {
+                console.error('Missing counter elements');
+            }
         });
     </script>
 </body>
