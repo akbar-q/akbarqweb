@@ -50,7 +50,297 @@
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* GAMIFIED LEARNING STYLES */
+/* ========================================
+   ANALYTICS PAGE STYLES
+   ======================================== */
+
+.page-header-analytics {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background: linear-gradient(135deg, #1a1a24 0%, #2a2a3a 100%);
+    border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+}
+
+.period-selector {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
+    background: rgba(26, 26, 36, 0.8);
+}
+
+.period-btn {
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.period-btn.active {
+    background: linear-gradient(135deg, #00ff88, #00d4ff);
+    color: #1a1a24;
+    box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+}
+
+.chart-container {
+    padding: 20px;
+    background: rgba(26, 26, 36, 0.9);
+    margin: 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 255, 136, 0.2);
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.chart-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+}
+
+.chart-period {
+    font-size: 14px;
+    color: #00ff88;
+    font-weight: 500;
+}
+
+.donut-chart-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.donut-chart {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chart-center {
+    position: absolute;
+    text-align: center;
+    color: #ffffff;
+}
+
+.total-amount {
+    font-size: 24px;
+    font-weight: 700;
+    color: #00ff88;
+    margin-bottom: 4px;
+}
+
+.total-label {
+    font-size: 12px;
+    color: #888;
+}
+
+.chart-segment {
+    transition: all 0.3s ease;
+    opacity: 0;
+}
+
+.chart-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.legend-info {
+    flex: 1;
+}
+
+.legend-category {
+    font-size: 14px;
+    font-weight: 500;
+    color: #ffffff;
+    margin-bottom: 2px;
+}
+
+.legend-amount {
+    font-size: 12px;
+    color: #888;
+}
+
+.trends-section {
+    padding: 20px;
+    background: rgba(26, 26, 36, 0.9);
+    margin: 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 255, 136, 0.2);
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0 0 20px 0;
+}
+
+.trends-chart {
+    display: flex;
+    justify-content: space-around;
+    align-items: end;
+    height: 120px;
+    gap: 10px;
+}
+
+.trend-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.trend-month {
+    font-size: 12px;
+    color: #888;
+    font-weight: 500;
+}
+
+.trend-visual {
+    width: 40px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    display: flex;
+    align-items: end;
+    overflow: hidden;
+}
+
+.trend-fill {
+    width: 100%;
+    background: linear-gradient(180deg, #00ff88, #00d4ff);
+    border-radius: 0 0 20px 20px;
+    transition: height 0.6s ease;
+}
+
+.trend-amount {
+    font-size: 11px;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.insights-section {
+    padding: 20px;
+    background: rgba(26, 26, 36, 0.9);
+    margin: 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 255, 136, 0.2);
+}
+
+.insight-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    margin-bottom: 12px;
+    border: 1px solid rgba(0, 255, 136, 0.1);
+}
+
+.insight-icon {
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 255, 136, 0.1);
+    border-radius: 50%;
+}
+
+.insight-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 4px;
+}
+
+.insight-description {
+    font-size: 12px;
+    color: #888;
+    line-height: 1.4;
+}
+
+.recent-transactions {
+    padding: 20px;
+    background: rgba(26, 26, 36, 0.9);
+    margin: 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 255, 136, 0.2);
+    margin-bottom: 100px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.view-all-btn {
+    background: none;
+    border: none;
+    color: #00ff88;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.view-all-btn:hover {
+    background: rgba(0, 255, 136, 0.1);
+}
+
+.filter-btn {
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.filter-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* ========================================
+   GAMIFICATION STYLES
+   ======================================== */
 
 /* Game Header */
 .game-header {
