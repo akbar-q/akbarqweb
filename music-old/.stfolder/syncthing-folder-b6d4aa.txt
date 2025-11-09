@@ -1,5 +1,0 @@
-# This directory is a Syncthing folder marker.
-# Do not delete.
-
-folderID: tcdyq-tfj4w
-created: 2025-07-21T19:22:27+04:00

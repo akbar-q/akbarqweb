@@ -100,10 +100,25 @@ class EOLCountdown {
             element.style.transform = 'scale(1.02)';
             element.style.textShadow = '0 0 8px rgba(255, 255, 255, 0.3)';
             
+            // Sync background animation with seconds
+            if (unit === 'seconds') {
+                this.syncBackgroundToSeconds();
+            }
+            
             setTimeout(() => {
                 element.style.transform = 'scale(1)';
                 element.style.textShadow = '0 0 5px rgba(255, 255, 255, 0.2)';
             }, 100);
+        }
+    }
+
+    syncBackgroundToSeconds() {
+        const background = document.querySelector('.void-background');
+        if (background) {
+            // Restart the animation to sync with seconds
+            background.style.animation = 'none';
+            background.offsetHeight; // Trigger reflow
+            background.style.animation = 'background-breathe 2s ease-in-out infinite';
         }
     }
 
