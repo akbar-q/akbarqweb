@@ -1,0 +1,508 @@
+/* =============================================
+   EOL - END OF LINE
+   Death-themed countdown page
+   ============================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'JetBrains Mono', monospace;
+    background: #000000;
+    color: #ffffff;
+    overflow-x: hidden;
+    cursor: crosshair;
+    height: 100vh;
+}
+
+/* =============================================
+   BACKGROUND & ATMOSPHERE
+   ============================================= */
+
+.void-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(139, 0, 0, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(75, 0, 130, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(0, 0, 0, 1) 0%, transparent 50%),
+        linear-gradient(135deg, #000000 0%, #1a0000 50%, #000000 100%);
+    z-index: -2;
+    animation: void-pulse 6s ease-in-out infinite;
+}
+
+@keyframes void-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+.floating-particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.floating-particles::before,
+.floating-particles::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: rgba(255, 0, 0, 0.3);
+    border-radius: 50%;
+    animation: float-particle 15s linear infinite;
+}
+
+.floating-particles::before {
+    top: -5px;
+    left: 10%;
+    animation-delay: -2s;
+}
+
+.floating-particles::after {
+    top: -5px;
+    left: 80%;
+    animation-delay: -8s;
+    background: rgba(128, 0, 128, 0.2);
+}
+
+@keyframes float-particle {
+    0% {
+        transform: translateY(-10px) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* =============================================
+   BREATHING ANIMATIONS
+   ============================================= */
+
+.breathing {
+    animation: breathing 4s ease-in-out infinite;
+}
+
+.breathing-slow {
+    animation: breathing-slow 6s ease-in-out infinite;
+}
+
+@keyframes breathing {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+}
+
+@keyframes breathing-slow {
+    0%, 100% {
+        transform: scale(1) rotate(0deg);
+        filter: brightness(1);
+    }
+    50% {
+        transform: scale(1.03) rotate(0.5deg);
+        filter: brightness(0.8);
+    }
+}
+
+/* =============================================
+   MAIN LAYOUT
+   ============================================= */
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* =============================================
+   HEADER & TITLE
+   ============================================= */
+
+.death-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.title-text {
+    font-family: 'Nosifer', cursive;
+    font-size: clamp(3rem, 8vw, 8rem);
+    font-weight: 400;
+    letter-spacing: 0.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 
+        0 0 10px rgba(255, 0, 0, 0.5),
+        0 0 20px rgba(255, 0, 0, 0.3),
+        0 0 30px rgba(255, 0, 0, 0.2);
+    position: relative;
+}
+
+/* GLITCH EFFECT */
+.glitch {
+    position: relative;
+    color: #ffffff;
+    animation: glitch-text 3s infinite;
+}
+
+.glitch::before,
+.glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.glitch::before {
+    animation: glitch-before 3s infinite;
+    color: #ff0000;
+    z-index: -1;
+}
+
+.glitch::after {
+    animation: glitch-after 3s infinite;
+    color: #00ff00;
+    z-index: -2;
+}
+
+@keyframes glitch-text {
+    0%, 90%, 100% {
+        transform: translate(0);
+    }
+    20% {
+        transform: translate(-2px, 2px);
+    }
+    40% {
+        transform: translate(-2px, -2px);
+    }
+    60% {
+        transform: translate(2px, 2px);
+    }
+    80% {
+        transform: translate(2px, -2px);
+    }
+}
+
+@keyframes glitch-before {
+    0%, 90%, 100% {
+        transform: translate(0);
+    }
+    20% {
+        transform: translate(2px, -2px);
+    }
+    40% {
+        transform: translate(-2px, 2px);
+    }
+    60% {
+        transform: translate(-2px, -2px);
+    }
+    80% {
+        transform: translate(2px, 2px);
+    }
+}
+
+@keyframes glitch-after {
+    0%, 90%, 100% {
+        transform: translate(0);
+    }
+    20% {
+        transform: translate(-1px, 1px);
+    }
+    40% {
+        transform: translate(1px, -1px);
+    }
+    60% {
+        transform: translate(1px, 1px);
+    }
+    80% {
+        transform: translate(-1px, -1px);
+    }
+}
+
+.subtitle {
+    font-family: 'Courier Prime', monospace;
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    color: #cccccc;
+    letter-spacing: 0.2rem;
+    opacity: 0.8;
+}
+
+/* TYPEWRITER EFFECT */
+.typewriter {
+    overflow: hidden;
+    border-right: .15em solid rgba(255,255,255,.75);
+    white-space: nowrap;
+    margin: 0 auto;
+    letter-spacing: .15em;
+    animation: 
+        typing 3.5s steps(30, end),
+        blink-caret .5s step-end infinite;
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: rgba(255,255,255,.75) }
+}
+
+/* =============================================
+   COUNTDOWN DISPLAY
+   ============================================= */
+
+.countdown-container {
+    margin-bottom: 4rem;
+}
+
+.countdown-wrapper {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid rgba(139, 0, 0, 0.5);
+    border-radius: 20px;
+    padding: 3rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 
+        0 0 50px rgba(139, 0, 0, 0.3),
+        inset 0 0 50px rgba(0, 0, 0, 0.5);
+}
+
+.countdown-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.time-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    min-width: 120px;
+}
+
+.time-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 700;
+    color: #ff4444;
+    text-shadow: 
+        0 0 10px rgba(255, 68, 68, 0.8),
+        0 0 20px rgba(255, 68, 68, 0.4);
+    transition: all 0.3s ease;
+}
+
+.time-number:hover {
+    color: #ff0000;
+    text-shadow: 
+        0 0 15px rgba(255, 0, 0, 1),
+        0 0 30px rgba(255, 0, 0, 0.6);
+    transform: scale(1.1);
+}
+
+.time-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 1rem;
+    color: #888888;
+    letter-spacing: 0.2rem;
+    margin-top: 0.5rem;
+    font-weight: 700;
+}
+
+.separator {
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: #666666;
+    margin: 0 0.5rem;
+}
+
+.blink {
+    animation: blink 2s infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+.decay-line {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #ff0000, transparent);
+    animation: decay-pulse 3s ease-in-out infinite;
+}
+
+@keyframes decay-pulse {
+    0%, 100% {
+        opacity: 0.3;
+        width: 80%;
+    }
+    50% {
+        opacity: 1;
+        width: 100%;
+    }
+}
+
+/* =============================================
+   DEATH MESSAGES
+   ============================================= */
+
+.death-messages {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.message-container {
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.death-quote {
+    font-family: 'Courier Prime', monospace;
+    font-size: clamp(1rem, 2.5vw, 1.8rem);
+    color: #cccccc;
+    font-style: italic;
+    letter-spacing: 0.1rem;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    max-width: 800px;
+}
+
+.fade-in-out {
+    animation: fade-in-out 8s ease-in-out infinite;
+}
+
+@keyframes fade-in-out {
+    0%, 20%, 80%, 100% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    30%, 70% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =============================================
+   FOOTER
+   ============================================= */
+
+.ominous-footer {
+    text-align: center;
+    margin-top: 3rem;
+    position: relative;
+}
+
+.heartbeat-line {
+    width: 200px;
+    height: 2px;
+    background: #ff0000;
+    margin: 0 auto 1rem;
+    animation: heartbeat-line 2s ease-in-out infinite;
+}
+
+@keyframes heartbeat-line {
+    0%, 100% {
+        width: 200px;
+        opacity: 0.5;
+    }
+    50% {
+        width: 300px;
+        opacity: 1;
+    }
+}
+
+.final-warning {
+    font-family: 'Courier Prime', monospace;
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    color: #999999;
+    letter-spacing: 0.15rem;
+    margin-bottom: 1rem;
+}
+
+.skull-decoration {
+    font-size: 2rem;
+    animation: skull-sway 4s ease-in-out infinite;
+    filter: grayscale(1) contrast(1.5);
+}
+
+@keyframes skull-sway {
+    0%, 100% {
+        transform: rotate(-5deg);
+    }
+    50% {
+        transform: rotate(5deg);
+    }
+}
+
+/* =============================================
+   RESPONSIVE DESIGN
+   ============================================= */
+
+@media (max-width: 768px) {
+    .countdown-display {
+        gap: 1rem;
+    }
+    
+    .time-unit {
+        min-width: 80px;
+    }
+    
+    .countdown-wrapper {
+        padding: 2rem 1rem;
+    }
+    
+    .main-container {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .countdown-display {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .separator {
+        display: none;
+    }
+    
+    .title-text {
+        letter-spacing: 0.2rem;
+    }
+}
