@@ -92,6 +92,14 @@ class EOLCountdown {
         this.startPhilosophicalQuotes();
         this.addSubtleEffects();
         this.setupMinimalInteraction();
+        
+        // Start the first message with typewriter effect
+        setTimeout(() => {
+            const messageElement = document.getElementById('message');
+            if (messageElement) {
+                this.typewriterEffect(messageElement, this.messages[0]);
+            }
+        }, 1000);
     }
 
     updateCountdown() {
@@ -204,23 +212,22 @@ class EOLCountdown {
     }
 
     typewriterEffect(element, text, speed = 80) {
+        // Clear any existing content and reset styles
         element.textContent = '';
         element.style.borderRight = '2px solid rgba(102, 102, 102, 0.5)';
+        element.style.animation = 'typewriter-blink 1s step-end infinite';
         
         let i = 0;
         const typeInterval = setInterval(() => {
             if (i < text.length) {
                 element.textContent += text.charAt(i);
                 i++;
-                
-                // Add variable delay for more natural typing
-                const nextDelay = speed + Math.random() * 40;
-                setTimeout(() => {}, nextDelay);
             } else {
                 clearInterval(typeInterval);
                 // Hide cursor after typing is complete
                 setTimeout(() => {
                     element.style.borderRight = 'none';
+                    element.style.animation = 'none';
                 }, 2000);
             }
         }, speed + Math.random() * 40);
