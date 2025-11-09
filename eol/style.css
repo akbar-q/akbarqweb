@@ -35,12 +35,29 @@ body {
         radial-gradient(circle at 40% 80%, rgba(5, 5, 15, 0.8) 0%, transparent 50%),
         linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #000000 100%);
     z-index: -2;
-    animation: void-pulse 8s ease-in-out infinite;
+    animation: background-breathe 1s ease-in-out infinite;
 }
 
 @keyframes void-pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.8; }
+}
+
+@keyframes background-breathe {
+    0%, 100% {
+        background: 
+            radial-gradient(circle at 20% 50%, rgba(15, 15, 35, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(25, 25, 45, 0.2) 0%, transparent 50%),
+            radial-gradient(circle at 40% 80%, rgba(5, 5, 15, 0.8) 0%, transparent 50%),
+            linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #000000 100%);
+    }
+    50% {
+        background: 
+            radial-gradient(circle at 20% 50%, rgba(25, 20, 40, 0.4) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(35, 30, 50, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 40% 80%, rgba(15, 10, 25, 0.9) 0%, transparent 50%),
+            linear-gradient(135deg, #0a0000 0%, #150a0a 50%, #0a0000 100%);
+    }
 }
 
 .floating-particles {
@@ -99,11 +116,11 @@ body {
    ============================================= */
 
 .breathing {
-    animation: breathing 4s ease-in-out infinite;
+    animation: text-breathing 4s ease-in-out infinite;
 }
 
 .breathing-slow {
-    animation: breathing-slow 6s ease-in-out infinite;
+    animation: container-breathing 6s ease-in-out infinite;
 }
 
 @keyframes breathing {
@@ -125,6 +142,26 @@ body {
     50% {
         transform: scale(1.03) rotate(0.5deg);
         filter: brightness(0.8);
+    }
+}
+
+@keyframes text-breathing {
+    0%, 100% {
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes container-breathing {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.95;
+    }
+    50% {
+        transform: scale(1.01);
+        opacity: 1;
     }
 }
 
