@@ -35,7 +35,7 @@ body {
         radial-gradient(circle at 40% 80%, rgba(5, 5, 15, 0.8) 0%, transparent 50%),
         linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #000000 100%);
     z-index: -2;
-    animation: background-breathe 2s ease-in-out infinite;
+    animation: background-breathe 4s ease-in-out infinite;
 }
 
 @keyframes void-pulse {
@@ -46,17 +46,17 @@ body {
 @keyframes background-breathe {
     0%, 100% {
         background: 
-            radial-gradient(circle at 20% 50%, rgba(15, 15, 35, 0.3) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(25, 25, 45, 0.2) 0%, transparent 50%),
-            radial-gradient(circle at 40% 80%, rgba(5, 5, 15, 0.8) 0%, transparent 50%),
+            radial-gradient(circle at 20% 50%, rgba(15, 15, 35, 0.2) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(25, 25, 45, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 40% 80%, rgba(5, 5, 15, 0.6) 0%, transparent 50%),
             linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #000000 100%);
     }
     50% {
         background: 
-            radial-gradient(circle at 20% 50%, rgba(25, 20, 40, 0.4) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(35, 30, 50, 0.3) 0%, transparent 50%),
-            radial-gradient(circle at 40% 80%, rgba(15, 10, 25, 0.9) 0%, transparent 50%),
-            linear-gradient(135deg, #0a0000 0%, #150a0a 50%, #0a0000 100%);
+            radial-gradient(circle at 20% 50%, rgba(20, 18, 35, 0.25) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(28, 26, 45, 0.2) 0%, transparent 50%),
+            radial-gradient(circle at 40% 80%, rgba(8, 6, 18, 0.65) 0%, transparent 50%),
+            linear-gradient(135deg, #020000 0%, #0c0808 50%, #020000 100%);
     }
 }
 
@@ -368,6 +368,41 @@ body {
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     max-width: 600px;
     font-weight: 300;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 2px solid rgba(102, 102, 102, 0.5);
+    animation: typewriter-blink 1s step-end infinite;
+}
+
+@keyframes typewriter-blink {
+    0%, 50% { border-color: rgba(102, 102, 102, 0.5); }
+    51%, 100% { border-color: transparent; }
+}
+
+/* =============================================
+   BOTTOM PHILOSOPHICAL QUOTES
+   ============================================= */
+
+.bottom-quotes {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    max-width: 800px;
+    padding: 0 2rem;
+}
+
+.bottom-message {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+    color: #333333;
+    letter-spacing: 0.05rem;
+    line-height: 1.4;
+    font-weight: 300;
+    opacity: 0.6;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .fade-in-out {

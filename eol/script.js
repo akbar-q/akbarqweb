@@ -46,8 +46,42 @@ class EOLCountdown {
             "a wrong note in the symphony, waiting for the song to end",
             "surrendering to the static"
         ];
+
+        this.philosophicalQuotes = [
+            "Death is the final, silent indulgence. The ultimate release from all worldly burdens and responsibilities.",
+            "Why dread the end? It is the one experience that requires no effort, no thought, no pain. It is the universe's great mercy.",
+            "The promise of death makes life sharp and vibrant. It is the spice that gives existence its flavor; without it, life would be a bland, eternal gruel.",
+            "There is a profound sweetness in the certainty of death. It is the only promise this universe has ever kept without fail.",
+            "To fear death is to fear sleep. And what is more sweet than the deep, dreamless sleep after a day fully lived?",
+            "Death is the great equalizer that refuses to equalize. It mocks the powerful and comforts the weary, granting the same oblivion to all.",
+            "In the arms of death, there is no more striving, no more want, no more regret. Only the peaceful silence of non-existence.",
+            "The sweetness of death lies in its honesty. It offers no false heavens, no fiery hells, only the simple, truthful end of sensation.",
+            "Embrace the solace of the grave. It is a private sanctuary where the demands of the world can no longer reach you.",
+            "Life is the struggle; death is the cessation of that struggle. Is there anything sweeter than the end of a long, hard fight?",
+            "Let the thought of death be a comfort, not a terror. It is your guaranteed escape from any cage, your final victory over any oppressor.",
+            "The flesh returns to the earth, the energy returns to the cosmos. This is a sweeter, more natural return than any fabled ascension to a phantom paradise.",
+            "Death is the master key that unlocks every chain. It frees you from debt, from duty, from sorrow, and from time itself.",
+            "There is a dark sweetness in knowing that every mistake, every humiliation, every pain is ultimately temporary. Death is the great eraser.",
+            "Indulge in the thought of death as the ultimate act of letting go. A final, profound surrender to the indifferent universe.",
+            "The grave is a quiet bed where one is never disturbed, never anxious, and never wanting. What sweeter peace can there be?",
+            "Death is not a punishment; it is a release. It is the universe granting you amnesty from the sentence of life.",
+            "The sweetness of death is the sweetness of a story ended at the right time, not dragged on until it becomes tedious and meaningless.",
+            "To crave death is not morbid; it is to crave rest. It is the natural desire for the conclusion of a demanding performance.",
+            "In the face of eternity, our lives are but a spark. Death is the gentle dark that swallows the spark, saving it from the agony of burning out.",
+            "There is no judgment in the void, only stillness. No god to please, no devil to fear. Only the sweet, unadulterated silence of non-being.",
+            "Let the certainty of your end fill you with courage. For what can be truly feared when the final outcome is the same for king and beggar?",
+            "Death is the final, perfect balance. It is the state of zero, from which all life erupted and to which all life must return.",
+            "The thought of death is the salt that preserves the meat of life. Without it, life would rot into meaninglessness.",
+            "There is a decadent sweetness in your own mortality. It is the one possession that cannot be stolen, the one journey you must take alone.",
+            "Do not rage against the dying of the light. Welcome it as a weary laborer welcomes the setting sun, knowing the work is done and rest is earned.",
+            "The Satanist finds sweetness in death because it is real. It is a truth of nature, unadorned by the lies of those who would sell you an afterlife.",
+            "Death is the final affirmation of the self. It is the statement: My existence was my own, and its end is my own as well.",
+            "The body's decay is not a horror; it is a sweet return. A recycling of elements that will go on to form new stars, new worlds, new lives.",
+            "So, smile at the end. For you are returning to a state older than gods, more peaceful than any prayer, and more certain than any faith. That is the ultimate sweetness."
+        ];
         
         this.currentMessageIndex = 0;
+        this.currentPhilosophicalIndex = 0;
         this.init();
     }
 
@@ -55,6 +89,7 @@ class EOLCountdown {
         this.updateCountdown();
         this.startCountdown();
         this.startMessageRotation();
+        this.startPhilosophicalQuotes();
         this.addSubtleEffects();
         this.setupMinimalInteraction();
     }
@@ -118,7 +153,7 @@ class EOLCountdown {
             // Restart the animation to sync with seconds
             background.style.animation = 'none';
             background.offsetHeight; // Trigger reflow
-            background.style.animation = 'background-breathe 2s ease-in-out infinite';
+            background.style.animation = 'background-breathe 4s ease-in-out infinite';
         }
     }
 
@@ -146,15 +181,49 @@ class EOLCountdown {
         this.currentMessageIndex = (this.currentMessageIndex + 1) % this.messages.length;
         const messageElement = document.getElementById('message');
         if (messageElement) {
-            messageElement.style.opacity = '0';
-            messageElement.style.transform = 'translateY(10px)';
-            
-            setTimeout(() => {
-                messageElement.textContent = this.messages[this.currentMessageIndex];
-                messageElement.style.opacity = '1';
-                messageElement.style.transform = 'translateY(0)';
-            }, 800);
+            this.typewriterEffect(messageElement, this.messages[this.currentMessageIndex]);
         }
+    }
+
+    startPhilosophicalQuotes() {
+        // Start after 5 seconds, then rotate every 20 seconds
+        setTimeout(() => {
+            this.rotatePhilosophicalQuote();
+            setInterval(() => {
+                this.rotatePhilosophicalQuote();
+            }, 20000);
+        }, 5000);
+    }
+
+    rotatePhilosophicalQuote() {
+        this.currentPhilosophicalIndex = (this.currentPhilosophicalIndex + 1) % this.philosophicalQuotes.length;
+        const bottomElement = document.getElementById('bottom-message');
+        if (bottomElement) {
+            this.typewriterEffect(bottomElement, this.philosophicalQuotes[this.currentPhilosophicalIndex], 50);
+        }
+    }
+
+    typewriterEffect(element, text, speed = 80) {
+        element.textContent = '';
+        element.style.borderRight = '2px solid rgba(102, 102, 102, 0.5)';
+        
+        let i = 0;
+        const typeInterval = setInterval(() => {
+            if (i < text.length) {
+                element.textContent += text.charAt(i);
+                i++;
+                
+                // Add variable delay for more natural typing
+                const nextDelay = speed + Math.random() * 40;
+                setTimeout(() => {}, nextDelay);
+            } else {
+                clearInterval(typeInterval);
+                // Hide cursor after typing is complete
+                setTimeout(() => {
+                    element.style.borderRight = 'none';
+                }, 2000);
+            }
+        }, speed + Math.random() * 40);
     }
 
     showFinalMessage() {
