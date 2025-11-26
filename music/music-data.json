@@ -1,0 +1,217 @@
+{
+  "albums": [
+    {
+      "title": "Cycle of Design",
+      "artist": "Akbar Q",
+      "ageRating": "All Ages",
+      "description": "An electronic journey through the engineering design process, where each track represents a different phase of bringing ideas to life through technology.",
+      "cover": "music/Cycle of Design/01.png",
+      "songs": [
+        {
+          "title": "Power On",
+          "artist": "Akbar Q",
+          "description": "The beginning of every great design - the moment when circuits come to life and possibilities become reality",
+          "file": "music/Cycle of Design/1. Power On.mp3",
+          "duration": null,
+          "lyrics": "lyrics/power-on.lrc"
+        },
+        {
+          "title": "Ground Loop",
+          "artist": "Akbar Q",
+          "description": "Finding stability in the chaos - establishing the foundation that keeps everything connected and balanced",
+          "file": "music/Cycle of Design/2. Ground Loop.mp3",
+          "duration": null
+        },
+        {
+          "title": "Clock Domain",
+          "artist": "Akbar Q",
+          "description": "Synchronizing the rhythm of innovation - when timing becomes the heartbeat of digital creation",
+          "file": "music/Cycle of Design/3. Clock Domain.mp3",
+          "duration": null
+        },
+        {
+          "title": "Printed Circuit Heart",
+          "artist": "Akbar Q",
+          "description": "The soul of electronic creation - where copper traces carry dreams and components breathe life into ideas",
+          "file": "music/Cycle of Design/4. Printed Circuit Heart.mp3",
+          "duration": null
+        },
+        {
+          "title": "Logic High",
+          "artist": "Akbar Q",
+          "description": "When everything clicks into place - the euphoric moment when code, hardware, and vision unite perfectly",
+          "file": "music/Cycle of Design/5. Logic High.mp3",
+          "duration": null
+        },
+        {
+          "title": "Thermal Runaway",
+          "artist": "Akbar Q",
+          "description": "When things get too hot to handle - the intense challenge of pushing boundaries while managing limits",
+          "file": "music/Cycle of Design/6. Thermal Runaway.mp3",
+          "duration": null
+        },
+        {
+          "title": "Debug Mode",
+          "artist": "Akbar Q",
+          "description": "Finding and fixing the final pieces - the methodical art of perfecting what was once just a dream",
+          "file": "music/Cycle of Design/7. Debug Mode.mp3",
+          "duration": null
+        }
+      ]
+    },
+    {
+      "title": "The Black Book",
+      "artist": "Akbar Q",
+      "ageRating": "Mature",
+      "description": "Experimental Exploration of Dark Themes and the Human Mind presented as Heavy Metal (Obfuscated Version)",
+      "cover": "music/The Black Book/Cover.png",
+      "obfuscateTitles": true,
+      "songs": [
+        {
+          "encryptedTitle": "Qw9PRgdCCAwNBQ5DBwwOGQ==",
+          "obfuscatedTitle": "Track 01",
+          "artist": "Akbar Q",
+          "description": "Conciousness and Dreams often Blur",
+          "file": "music/The Black Book/01_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "QglCBgcaIwZYERA=",
+          "obfuscatedTitle": "Track 02",
+          "artist": "Akbar Q",
+          "description": "People Forget, People Move On",
+          "file": "music/The Black Book/02_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "JgREFgZcEQQHBAkaBhwaCgUY",
+          "obfuscatedTitle": "Track 03",
+          "artist": "Akbar Q",
+          "description": "You can Never be Alone",
+          "file": "music/The Black Book/03_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "BwlaEgUHEwFeEwkaEgUH",
+          "obfuscatedTitle": "Track 04",
+          "artist": "Akbar Q",
+          "description": "The mirror does not Lie, it just shows",
+          "file": "music/The Black Book/04_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "UwBQEgUCDAEaAg8TGwkEGw==",
+          "obfuscatedTitle": "Track 05",
+          "artist": "Akbar Q",
+          "description": "Life is just a cycle of forming patterns",
+          "file": "music/The Black Book/05_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "QwwKGQcLQgcOEw==",
+          "obfuscatedTitle": "Track 06",
+          "artist": "Akbar Q",
+          "description": "The Title Track",
+          "file": "music/The Black Book/06_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "GgwZEBwECAQaEwcKFQ==",
+          "obfuscatedTitle": "Track 07",
+          "artist": "Akbar Q",
+          "description": "Imprisoned without Consent",
+          "file": "music/The Black Book/07_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "BwEaRwtYEQcGEQdJHQQaTgdVDwU=",
+          "obfuscatedTitle": "Track 08",
+          "artist": "Akbar Q",
+          "description": "The Best Disguise is in Plain Sight",
+          "file": "music/The Black Book/08_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "UwxDFQVKEQcPBA==",
+          "obfuscatedTitle": "Track 09",
+          "artist": "Akbar Q",
+          "description": "The Crowd Pretend to Look Away",
+          "file": "music/The Black Book/09_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "QwcKGAcKAQdJEAcOGAReDhASFgdeGQMBDgw=",
+          "obfuscatedTitle": "Track 10",
+          "artist": "Akbar Q",
+          "description": "A Dark Lullaby",
+          "file": "music/The Black Book/10_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "QwtAEgcXChhGEglfFgcAFkgKDhAV",
+          "obfuscatedTitle": "Track 11",
+          "artist": "Akbar Q",
+          "description": "Time Marches on Relentlessly",
+          "file": "music/The Black Book/11_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "JwdAEgcXSQcNBAFLBhQEGgcNDgU=",
+          "obfuscatedTitle": "Track 12",
+          "artist": "Akbar Q",
+          "description": "Freedom is Meaningless without Choice",
+          "file": "music/The Black Book/12_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "RkMBCQkAFAZXRgEHFgwZEQwU",
+          "obfuscatedTitle": "Track 13",
+          "artist": "Akbar Q",
+          "description": "Freewill is Smoke and Mirrors",
+          "file": "music/The Black Book/13_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "SQMGAQZcBgUKFgkI",
+          "obfuscatedTitle": "Track 14",
+          "artist": "Akbar Q",
+          "description": "The Void Embraces All",
+          "file": "music/The Black Book/14_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "BwlaEQAfFgkGTAcPBggAGUk=",
+          "obfuscatedTitle": "Track 15",
+          "artist": "Akbar Q",
+          "description": "The Ocean is Relentless",
+          "file": "music/The Black Book/15_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "TAcKGQVFDwZeCgdOBgU=",
+          "obfuscatedTitle": "Track 16",
+          "artist": "Akbar Q",
+          "description": "You don't need to Pretend in a Void",
+          "file": "music/The Black Book/16_encrypted.wav",
+          "duration": null
+        },
+        {
+          "encryptedTitle": "RwcAGgwEDgVLRgEHFgdIFgdNGQVQCwhCFAkNDgU=",
+          "obfuscatedTitle": "Track 17",
+          "artist": "Akbar Q",
+          "description": "Time Moves On, Let it Go",
+          "file": "music/The Black Book/17_encrypted.wav",
+          "duration": null
+        }
+      ]
+    },
+    {
+      "title": "Signal's Path",
+      "artist": "Akbar Q",
+      "ageRating": "All Ages",
+      "description": "A forthcoming album exploring the journey of electrical signals through complex systems. Coming soon.",
+      "cover": "images/image2.png",
+      "songs": []
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Black Book Title Encryption Tool</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #1a1a1a; color: #fff; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .input-group { margin: 20px 0; }
+        label { display: block; margin-bottom: 5px; color: #FFB800; }
+        input, textarea { width: 100%; padding: 10px; margin-bottom: 10px; background: #2a2a2a; border: 1px solid #444; color: #fff; }
+        button { background: #FFB800; color: #000; padding: 10px 20px; border: none; cursor: pointer; }
+        button:hover { background: #e6a600; }
+        .result { background: #2a2a2a; padding: 15px; border-left: 4px solid #FFB800; margin: 10px 0; }
+        .title { color: #FFB800; font-size: 24px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🖤 Black Book Title Encryption Tool</h1>
+        
+        <div class="input-group">
+            <label>Original Title:</label>
+            <input type="text" id="originalTitle" placeholder="Enter the real song title">
+        </div>
+        
+        <div class="input-group">
+            <label>Encryption Key:</label>
+            <input type="text" id="encryptionKey" value="darkbook2025" placeholder="Enter encryption key">
+        </div>
+        
+        <button onclick="encryptTitle()">Encrypt Title</button>
+        <button onclick="decryptTitle()">Decrypt Title</button>
+        
+        <div class="input-group">
+            <label>Encrypted Title (Base64):</label>
+            <textarea id="encryptedTitle" rows="3" placeholder="Encrypted title will appear here"></textarea>
+        </div>
+        
+        <div class="input-group">
+            <label>Decrypted Title:</label>
+            <input type="text" id="decryptedTitle" placeholder="Decrypted title will appear here" readonly>
+        </div>
+        
+        <div class="result">
+            <strong>How it works:</strong><br>
+            1. Original title is XOR-encrypted with the key<br>
+            2. Result is Base64 encoded for safe storage<br>
+            3. When playing, it's Base64 decoded then XOR-decrypted<br>
+            4. Only someone with the key can reveal the real titles
+        </div>
+    </div>
+
+    <script>
+        function encryptTitle() {
+            const title = document.getElementById('originalTitle').value;
+            const key = document.getElementById('encryptionKey').value;
+            
+            if (!title || !key) {
+                alert('Please enter both title and key');
+                return;
+            }
+            
+            // XOR encrypt
+            let encrypted = '';
+            for (let i = 0; i < title.length; i++) {
+                encrypted += String.fromCharCode(title.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+            }
+            
+            // Base64 encode
+            const base64 = btoa(encrypted);
+            document.getElementById('encryptedTitle').value = base64;
+        }
+        
+        function decryptTitle() {
+            const encrypted = document.getElementById('encryptedTitle').value;
+            const key = document.getElementById('encryptionKey').value;
+            
+            if (!encrypted || !key) {
+                alert('Please enter both encrypted title and key');
+                return;
+            }
+            
+            try {
+                // Base64 decode
+                const decoded = atob(encrypted);
+                
+                // XOR decrypt
+                let result = '';
+                for (let i = 0; i < decoded.length; i++) {
+                    result += String.fromCharCode(decoded.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+                }
+                
+                document.getElementById('decryptedTitle').value = result;
+            } catch (e) {
+                alert('Invalid encrypted data or key');
+            }
+        }
+    </script>
+</body>
+</html>

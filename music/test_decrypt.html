@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head><title>Quick Decrypt Test</title></head>
+<body>
+<script>
+const BLACK_BOOK_KEY = "darkbook2025";
+
+function decryptTitle(encryptedTitle) {
+  try {
+    const decoded = atob(encryptedTitle);
+    let result = '';
+    for (let i = 0; i < decoded.length; i++) {
+      result += String.fromCharCode(decoded.charCodeAt(i) ^ BLACK_BOOK_KEY.charCodeAt(i % BLACK_BOOK_KEY.length));
+    }
+    return result;
+  } catch (e) {
+    return 'Error: ' + e.message;
+  }
+}
+
+// Test the first encrypted title
+const testEncrypted = "X3RoZVN6Zz09";
+const result = decryptTitle(testEncrypted);
+console.log("Encrypted:", testEncrypted);
+console.log("Decrypted:", result);
+document.body.innerHTML = `
+  <h3>Decryption Test</h3>
+  <p><strong>Encrypted:</strong> ${testEncrypted}</p>
+  <p><strong>Decrypted:</strong> ${result}</p>
+`;
+</script>
+</body>
+</html>
