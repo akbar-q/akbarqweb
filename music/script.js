@@ -28,7 +28,9 @@ function getDisplayTitle(song, album, forceReal = false) {
   if (album.obfuscateTitles) {
     if (forceReal && song.encryptedTitle) {
       // Show real title when playing (decrypt it)
-      return decryptTitle(song.encryptedTitle);
+      const decrypted = decryptTitle(song.encryptedTitle);
+      console.log('Decrypting title:', song.encryptedTitle, '→', decrypted);
+      return decrypted;
     } else if (song.obfuscatedTitle) {
       // Show obfuscated title in lists
       return song.obfuscatedTitle;
@@ -440,8 +442,10 @@ function updateNowPlaying() {
   if (currentAlbum !== null && albums[currentAlbum].songs[currentSong]) {
     const song = albums[currentAlbum].songs[currentSong];
     const album = albums[currentAlbum];
+    console.log('updateNowPlaying called for:', song, 'Album obfuscates:', album.obfuscateTitles);
     // Show the real title when playing (forceReal = true)
     const realTitle = getDisplayTitle(song, album, true);
+    console.log('Real title set to:', realTitle);
     nowPlaying.textContent = `${realTitle} - ${song.artist || 'Akbar Q'}`;
   }
 }

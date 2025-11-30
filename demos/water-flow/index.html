@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WaterFlow · Ras Al Khaimah</title>
+  <meta name="description" content="Mock app for tracking household water usage with gamified conservation — set in Ras Al Khaimah, UAE." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Icons -->
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <!-- GSAP for animations -->
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <!-- Chart.js for simple charts -->
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body class="dark">
+  <!-- Splash Screen -->
+  <div id="splash" class="splash">
+    <div class="splash-inner">
+      <img src="assets/logo.svg" alt="WaterFlow logo" class="logo" />
+      <h1>WaterFlow</h1>
+      <p>Ras Al Khaimah · UAE</p>
+      <div class="loading">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      </div>
+    </div>
+    <div class="splash-bg"></div>
+  </div>
+
+  <!-- App Shell -->
+  <div id="app" class="app hidden">
+    <header class="topbar">
+      <div class="brand">
+        <img src="assets/icon.svg" alt="icon" />
+        <span>WaterFlow</span>
+      </div>
+      <div class="actions">
+        <button id="simulateLowSupply" class="btn warn">Simulate Low Supply</button>
+        <button id="openSettings" class="btn">Settings</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <section class="hero">
+        <div class="meter-card glass">
+          <h2>Today's Usage</h2>
+          <div class="meter">
+            <div class="meter-fill" id="meterFill" style="width: 35%"></div>
+            <div class="meter-target" id="meterTarget" style="left: 60%"></div>
+          </div>
+          <div class="meter-stats">
+            <div>
+              <div class="stat-value" id="todayLiters">210 L</div>
+              <div class="stat-label">Used</div>
+            </div>
+            <div>
+              <div class="stat-value" id="goalLiters">600 L</div>
+              <div class="stat-label">Daily goal</div>
+            </div>
+            <div>
+              <div class="stat-value" id="points">+85 pts</div>
+              <div class="stat-label">Today</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="context-card glass">
+          <h3>Ras Al Khaimah Climate</h3>
+          <p>
+            Hot, arid conditions increase water demand. WaterFlow helps you build habits to conserve without sacrificing comfort.
+          </p>
+          <ul class="tips" id="tipsCarousel">
+            <li>Use a bucket for car wash instead of a hose.</li>
+            <li>Fix leaks — a dripping tap can waste 20+ liters/day.</li>
+            <li>Water plants early morning or late evening.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="card glass">
+          <h3>Weekly Breakdown</h3>
+          <canvas id="weeklyChart" height="140"></canvas>
+        </div>
+
+        <div class="card glass">
+          <h3>Gamification</h3>
+          <div class="gamify">
+            <div class="badges" id="badges">
+              <!-- badges injected -->
+            </div>
+            <div class="challenges">
+              <div class="challenge">
+                <div>
+                  <strong>5-minute showers</strong>
+                  <p>Complete 3 times this week</p>
+                </div>
+                <button class="btn small" data-complete="shower">Complete</button>
+              </div>
+              <div class="challenge">
+                <div>
+                  <strong>Full-load laundry</strong>
+                  <p>Log 2 loads</p>
+                </div>
+                <button class="btn small" data-complete="laundry">Complete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card glass">
+          <h3>Household</h3>
+          <div class="household">
+            <ul id="members" class="members"></ul>
+            <div class="add-member">
+              <input id="memberName" placeholder="Add member name" />
+              <button id="addMember" class="btn">Add</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card glass">
+          <h3>Activity Log</h3>
+          <div class="activity">
+            <div class="actions">
+              <button class="btn small" data-log="shower">Log Shower (50L)</button>
+              <button class="btn small" data-log="dishwasher">Log Dishwasher (15L)</button>
+              <button class="btn small" data-log="laundry">Log Laundry (70L)</button>
+            </div>
+            <ul id="activityList" class="activity-list"></ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div>
+        Made for a demo in Ras Al Khaimah · UAE. Mock app — data simulated locally.
+      </div>
+      <div>
+        <a href="https://akbarqweb.github.io/" target="_blank" rel="noopener">GitHub Pages</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="modal hidden">
+    <div class="modal-dialog glass">
+      <h3>Settings</h3>
+      <label class="row">
+        <span>Daily Goal (L)</span>
+        <input id="inputDailyGoal" type="number" min="100" step="10" />
+      </label>
+      <label class="row">
+        <span>City</span>
+        <input id="inputCity" type="text" placeholder="Ras Al Khaimah" />
+      </label>
+      <div class="modal-actions">
+        <button id="saveSettings" class="btn">Save</button>
+        <button id="closeSettings" class="btn ghost">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Playful Alert (non-harmful) -->
+  <div id="alertBar" class="alert hidden">
+    <div class="alert-content">
+      <strong>Heads-up:</strong> Water supply is low. Earn double points by conserving now.
+    </div>
+    <button id="dismissAlert" class="btn small ghost">Dismiss</button>
+  </div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Decryption Debug</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1a1a1a; color: #fff; }
+        .result { background: #2a2a2a; padding: 15px; margin: 10px 0; border-left: 4px solid #FFB800; }
+        .success { border-left-color: #0f0; }
+        .error { border-left-color: #f00; }
+    </style>
+</head>
+<body>
+    <h1>Decryption Test for Black Book Titles</h1>
+    <div id="results"></div>
+
+    <script>
+        const BLACK_BOOK_KEY = "darkbook2025";
+        
+        // Copy the exact function from script.js
+        function decryptTitle(encryptedTitle, key = BLACK_BOOK_KEY) {
+          try {
+            // Base64 decode
+            const decoded = atob(encryptedTitle);
+            
+            // Simple XOR cipher with key
+            let result = '';
+            for (let i = 0; i < decoded.length; i++) {
+              result += String.fromCharCode(decoded.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+            }
+            
+            return result;
+          } catch (e) {
+            return 'Unknown Track (Error: ' + e.message + ')';
+          }
+        }
+
+        // Test cases from music-data.json
+        const testCases = [
+            { encrypted: "Qw9PRgdCCAwNBQ5DBwwOGQ==", expected: "I Don't Want to Wake Up" },
+            { encrypted: "QglCBgcaIwZYERA=", expected: "You Die Twice" },
+            { encrypted: "JgREFgZcEQQHBAkaBhwaCgUY", expected: "The Voices in My Head" },
+            { encrypted: "BwlaEgUHEwFeEwkaEgUH", expected: "Mirror, Mirror" },
+            { encrypted: "UwBQEgUCDAEaAg8TGwkEGw==", expected: "Entropy's Lullaby" },
+            { encrypted: "QwwKGQcLQgcOEw==", expected: "Black Book" },
+            { encrypted: "GgwZEBwECAQaEwcKFQ==", expected: "Rewind Repeat" },
+            { encrypted: "BwEaRwtYEQcGEQdJHQQaTgdVDwU=", expected: "My Favorite Lie Is Me" },
+            { encrypted: "UwxDFQVKEQcPBA==", expected: "Empty Room" }
+        ];
+
+        let output = '';
+        let successCount = 0;
+        
+        testCases.forEach((test, index) => {
+            const decrypted = decryptTitle(test.encrypted);
+            const success = decrypted === test.expected;
+            if (success) successCount++;
+            
+            output += `<div class="result ${success ? 'success' : 'error'}">
+                <strong>Test ${index + 1}:</strong><br>
+                Encrypted: ${test.encrypted}<br>
+                Expected: "${test.expected}"<br>
+                Decrypted: "${decrypted}"<br>
+                Status: ${success ? '✓ SUCCESS' : '✗ FAILED'}
+            </div>`;
+        });
+        
+        output = `<div class="result"><strong>Summary: ${successCount}/${testCases.length} tests passed</strong></div>` + output;
+        
+        document.getElementById('results').innerHTML = output;
+    </script>
+</body>
+</html>
