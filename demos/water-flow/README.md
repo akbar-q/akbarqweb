@@ -37,3 +37,7 @@ Open `index.html` in a browser, or start a simple server.
 - This is a mock app; no real water data or external services.
 - The "low supply" mode uses a playful alert and double points incentive, not harmful content.
 - Hardware telemetry is simulated; do not use for engineering calculations.
+
+## Credits / Branding
+
+Branding and concept collaboration: **Gian-Miguel (Gian / Suyno Gang)** — aided by **Akbar (Nobita)**.
