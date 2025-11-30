@@ -9,6 +9,15 @@
     members: ['You'],
     activities: [],
     lowSupply: false,
+    // Hardware telemetry mock
+    pvIrradiance: 650, // W/m²
+    pvPanelWattsNominal: 40, // W
+    batteryVoltage: 6.0, // V
+    batterySoc: 68, // %
+    loadWatts: 25, // W
+    controllerMode: 'MPPT',
+    inverterEfficiency: 0.88, // fraction
+    systemTemp: 38, // °C
   };
 
   const els = {
@@ -33,6 +42,18 @@
     simulateLowSupply: document.getElementById('simulateLowSupply'),
     alertBar: document.getElementById('alertBar'),
     dismissAlert: document.getElementById('dismissAlert'),
+    // Telemetry elements
+    irradianceSlider: document.getElementById('irradianceSlider'),
+    loadSlider: document.getElementById('loadSlider'),
+    irradianceVal: document.getElementById('irradianceVal'),
+    loadVal: document.getElementById('loadVal'),
+    pvOutput: document.getElementById('pvOutput'),
+    batteryVoltage: document.getElementById('batteryVoltage'),
+    batterySoc: document.getElementById('batterySoc'),
+    controllerMode: document.getElementById('controllerMode'),
+    inverterEff: document.getElementById('inverterEff'),
+    systemTemp: document.getElementById('systemTemp'),
+    socFill: document.getElementById('socFill'),
   };
 
   // Load from localStorage
@@ -104,6 +125,23 @@
 
     // Alert
     els.alertBar.classList.toggle('hidden', !state.lowSupply);
+
+    // Telemetry renders
+    if (els.irradianceVal) {
+      els.irradianceVal.textContent = `${state.pvIrradiance} W/m²`;
+      els.loadVal.textContent = `${state.loadWatts} W`;
+      const pvOut = computePvOutput();
+      els.pvOutput.textContent = `${pvOut.toFixed(1)} W`;
+      els.batteryVoltage.textContent = `${state.batteryVoltage.toFixed(2)} V`;
+      els.batterySoc.textContent = `${Math.round(state.batterySoc)}%`;
+      els.controllerMode.textContent = state.controllerMode;
+      els.inverterEff.textContent = `${Math.round(state.inverterEfficiency*100)}%`;
+      els.systemTemp.textContent = `${Math.round(state.systemTemp)}°C`;
+      if (els.socFill) {
+        els.socFill.style.width = Math.min(100, Math.max(0, state.batterySoc)) + '%';
+        els.socFill.style.background = state.batterySoc < 25 ? 'linear-gradient(90deg,#ef4444,#f59e0b)' : 'linear-gradient(90deg,#10b981,#22d3ee)';
+      }
+    }
   }
 
   // Weekly chart mock
@@ -137,6 +175,66 @@
   function mockWeekly() {
     const base = 550;
     return [base-80, base-60, base+30, base-20, base+10, base-50, base-10].map(n => Math.max(120, n));
+  }
+
+  // Telemetry chart
+  let pvChart;
+  const telemetryHistory = { labels: [], pv: [], load: [], soc: [] };
+  function renderPvChart() {
+    const canvas = document.getElementById('pvChart');
+    if (!canvas) return;
+    if (pvChart) pvChart.destroy();
+    pvChart = new Chart(canvas, {
+      type: 'line',
+      data: {
+        labels: telemetryHistory.labels,
+        datasets: [
+          { label: 'PV W', data: telemetryHistory.pv, borderColor: '#22d3ee', tension: 0.3 },
+          { label: 'Load W', data: telemetryHistory.load, borderColor: '#f59e0b', tension: 0.3 },
+          { label: 'Battery SoC %', data: telemetryHistory.soc, borderColor: '#10b981', tension: 0.3, yAxisID: 'y1' }
+        ]
+      },
+      options: {
+        plugins: { legend: { labels: { color: '#8aa2b6' } } },
+        scales: {
+          x: { ticks: { color: '#8aa2b6' }, grid: { display: false } },
+          y: { position: 'left', ticks: { color: '#8aa2b6' }, grid: { color: 'rgba(255,255,255,0.06)' } },
+          y1: { position: 'right', ticks: { color: '#8aa2b6' }, grid: { drawOnChartArea: false }, min: 0, max: 100 }
+        }
+      }
+    });
+  }
+
+  function computePvOutput() {
+    // Simple model: output = nominal * (irradiance / 1000) * panelEfficiency (0.72)
+    return state.pvPanelWattsNominal * (state.pvIrradiance / 1000) * 0.72;
+  }
+
+  function updateTelemetry() {
+    const pvOut = computePvOutput();
+    const net = pvOut - state.loadWatts; // positive => charging
+    // Battery SoC dynamics
+    state.batterySoc += net * 0.005; // scale factor
+    state.batterySoc = Math.min(100, Math.max(0, state.batterySoc));
+    // Voltage approximation
+    state.batteryVoltage = 5.8 + (state.batterySoc / 100) * 0.6; // 5.8V to 6.4V range
+    // Temp drift
+    state.systemTemp += (net > 0 ? 0.15 : 0.35) * (Math.random() - 0.4);
+    state.systemTemp = Math.min(55, Math.max(30, state.systemTemp));
+    // Controller mode changes
+    state.controllerMode = pvOut < 5 ? 'Idle' : (net > 2 ? 'Bulk' : (net > 0 ? 'Absorb' : 'Discharge'));
+    // History update
+    const tsLabel = new Date().toLocaleTimeString([], { minute: '2-digit', second: '2-digit' });
+    telemetryHistory.labels.push(tsLabel);
+    telemetryHistory.pv.push(Number(pvOut.toFixed(1)));
+    telemetryHistory.load.push(state.loadWatts);
+    telemetryHistory.soc.push(Math.round(state.batterySoc));
+    if (telemetryHistory.labels.length > 20) {
+      Object.keys(telemetryHistory).forEach(k => telemetryHistory[k].shift());
+    }
+    save();
+    render();
+    renderPvChart();
   }
 
   // Interactions
@@ -230,6 +328,36 @@
     render();
   });
 
+  // Telemetry sliders
+  if (els.irradianceSlider) {
+    els.irradianceSlider.addEventListener('input', e => {
+      state.pvIrradiance = parseInt(e.target.value, 10);
+      save();
+      render();
+    });
+  }
+  if (els.loadSlider) {
+    els.loadSlider.addEventListener('input', e => {
+      state.loadWatts = parseInt(e.target.value, 10);
+      save();
+      render();
+    });
+  }
+
+  // Settings usability improvements
+  // Force hide modal on initial load if persisted (defensive)
+  els.settingsModal.classList.add('hidden');
+  // Backdrop click closes
+  els.settingsModal.addEventListener('click', (e) => {
+    if (e.target === els.settingsModal) closeSettings();
+  });
+  // ESC key closes
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !els.settingsModal.classList.contains('hidden')) {
+      closeSettings();
+    }
+  });
+
   // Carousel tips subtle animation
   const tips = document.getElementById('tipsCarousel');
   if (tips) {
@@ -244,4 +372,7 @@
 
   // Initial chart render
   renderChart();
+  renderPvChart();
+  // Periodic telemetry updates
+  setInterval(updateTelemetry, 4000);
 })();

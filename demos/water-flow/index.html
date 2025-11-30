@@ -135,6 +135,33 @@
             <ul id="activityList" class="activity-list"></ul>
           </div>
         </div>
+
+        <div class="card glass telemetry-card">
+          <h3>Solar & Battery Telemetry</h3>
+          <div class="telemetry-grid">
+            <div class="telemetry-block">
+              <label>Irradiance <span id="irradianceVal">650 W/m²</span></label>
+              <input id="irradianceSlider" type="range" min="200" max="1100" value="650" />
+            </div>
+            <div class="telemetry-block">
+              <label>Load <span id="loadVal">25 W</span></label>
+              <input id="loadSlider" type="range" min="5" max="60" value="25" />
+            </div>
+            <div class="telemetry-metrics">
+              <div class="metric"><span class="m-label">PV Output</span><span class="m-value" id="pvOutput">0 W</span></div>
+              <div class="metric"><span class="m-label">Battery V</span><span class="m-value" id="batteryVoltage">6.0 V</span></div>
+              <div class="metric"><span class="m-label">Battery SoC</span><span class="m-value" id="batterySoc">68%</span></div>
+              <div class="metric"><span class="m-label">Controller</span><span class="m-value" id="controllerMode">MPPT</span></div>
+              <div class="metric"><span class="m-label">Inverter Eff.</span><span class="m-value" id="inverterEff">88%</span></div>
+              <div class="metric"><span class="m-label">Temp</span><span class="m-value" id="systemTemp">38°C</span></div>
+            </div>
+            <div class="soc-bar">
+              <div class="soc-fill" id="socFill" style="width:68%"></div>
+            </div>
+            <canvas id="pvChart" height="140"></canvas>
+            <p class="telemetry-note">All values are simulated for a 40W PV panel, 6V battery prototype (demo only).</p>
+          </div>
+        </div>
       </section>
     </main>
 

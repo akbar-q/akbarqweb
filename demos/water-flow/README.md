@@ -7,6 +7,20 @@ A slick dark-mode, animated web app that emulates household water tracking and g
 - Data: simulated and stored in localStorage
 - Tech: vanilla HTML/CSS/JS, GSAP (animations), Chart.js (charts)
 
+## Hardware Telemetry Demo (Prototype Context)
+
+Added a simulated telemetry panel modeling a small off‑grid prototype:
+
+- PV panel nominal: 40 W (slider adjusts irradiance 200–1100 W/m²)
+- Battery: 6 V chemistry mock (voltage derives from SoC 5.8–6.4 V)
+- Load: adjustable 5–60 W consumer demand
+- Charge controller modes: Idle / Bulk / Absorb / Discharge (heuristic based on net watts)
+- Inverter efficiency: static 88% (display only)
+- System temperature: modest drift with charging/discharging behavior
+- Live chart: PV output vs Load vs Battery SoC (last 20 samples, auto-updates every 4s)
+
+All values are algorithmically generated and not from real sensors—intended to visually communicate data flows and complexity for demo/recording purposes.
+
 ## Run locally
 
 Open `index.html` in a browser, or start a simple server.
@@ -22,3 +36,4 @@ Open `index.html` in a browser, or start a simple server.
 
 - This is a mock app; no real water data or external services.
 - The "low supply" mode uses a playful alert and double points incentive, not harmful content.
+- Hardware telemetry is simulated; do not use for engineering calculations.
