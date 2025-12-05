@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Memorial</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="memorial-root">
+    <header class="memorial-header">
+      <h1>Memorial</h1>
+      <div class="controls">
+        <button id="prev">◀</button>
+        <button id="play">Play</button>
+        <button id="next">▶</button>
+        <button id="randomize">Random</button>
+        <label class="opt">
+          <input id="autoplayCheck" type="checkbox"> Autoplay
+        </label>
+      </div>
+    </header>
+
+    <main class="viewer">
+      <div id="slideshow" class="slideshow">
+        <img id="current" alt="Memorial photo" src="" loading="lazy">
+      </div>
+      <div id="caption" class="caption"></div>
+      <div id="thumbs" class="thumbs"></div>
+    </main>
+
+    <footer class="memorial-footer">
+      <p class="note">Place your images inside <code>/memorial/images/</code>. To index them automatically, run the provided <code>generate_images_json.ps1</code> script from the <code>memorial/</code> folder to create <code>memorial/images.json</code>.</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
