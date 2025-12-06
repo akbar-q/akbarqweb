@@ -6,6 +6,10 @@ let autoplayInterval = 5000;
 let timer = null;
 let chronological = true;
 
+// Uptime counter: December 7, 2025, 2 PM +4 GMT (UTC+4)
+// In UTC, that's 2 PM - 4 hours = 10 AM UTC
+const MEMORIAL_START = new Date('2025-12-07T10:00:00Z');
+
 const currentEl = () => document.getElementById('current');
 const captionEl = () => document.getElementById('caption');
 const thumbsEl = () => document.getElementById('thumbs');
@@ -89,6 +93,49 @@ function prev(){ show(index-1); }
 function play(){ if(playing) return; playing=true; document.getElementById('play').textContent='Pause'; timer = setInterval(()=> next(), autoplayInterval); }
 function stop(){ if(!playing) return; playing=false; document.getElementById('play').textContent='Play'; clearInterval(timer); timer=null; }
 
+function updateUptime(){
+  const now = new Date();
+  const elapsed = now - MEMORIAL_START;
+  const isNegative = elapsed < 0;
+  const absElapsed = Math.abs(elapsed);
+  
+  // Calculate years, months, days, hours, minutes
+  let years = 0, months = 0, days = 0;
+  let current = new Date(MEMORIAL_START);
+  const target = isNegative ? now : new Date(MEMORIAL_START);
+  const endpoint = isNegative ? MEMORIAL_START : now;
+  
+  // Count full years
+  while(new Date(current.getFullYear()+1, current.getMonth(), current.getDate()) <= endpoint){
+    years++;
+    current.setFullYear(current.getFullYear() + 1);
+  }
+  
+  // Count full months
+  while(new Date(current.getFullYear(), current.getMonth()+1, current.getDate()) <= endpoint){
+    months++;
+    current.setMonth(current.getMonth() + 1);
+  }
+  
+  // Count full days
+  while(new Date(current.getFullYear(), current.getMonth(), current.getDate()+1) <= endpoint){
+    days++;
+    current.setDate(current.getDate() + 1);
+  }
+  
+  // Remaining time in hours and minutes
+  const remaining = endpoint - current;
+  const hours = Math.floor(remaining / (1000*60*60));
+  const minutes = Math.floor((remaining % (1000*60*60)) / (1000*60));
+  
+  const sign = isNegative ? '-' : '';
+  document.getElementById('years').textContent = sign + years;
+  document.getElementById('months').textContent = sign + months;
+  document.getElementById('days').textContent = sign + days;
+  document.getElementById('hours').textContent = sign + hours;
+  document.getElementById('minutes').textContent = sign + minutes;
+}
+
 async function init(){
   // try json
   let list = await fetchImagesJson();
@@ -121,6 +168,10 @@ async function init(){
 
   renderThumbs();
   show(0);
+  
+  // Initialize uptime counter
+  updateUptime();
+  setInterval(updateUptime, 1000);
 }
 
 document.addEventListener('DOMContentLoaded', init);

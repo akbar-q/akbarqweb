@@ -9,7 +9,7 @@
 <body>
   <div class="memorial-root">
     <header class="memorial-header">
-      <h1>Memorial</h1>
+      <h1>Akbar Qamar Memorial</h1>
       <div class="controls">
         <button id="prev">◀</button>
         <button id="play">Play</button>
@@ -22,6 +22,16 @@
     </header>
 
     <main class="viewer">
+      <div class="elapsed-time">
+        <div class="time-display">
+          <span id="years" class="time-val">0</span><span class="time-label">Y</span>
+          <span id="months" class="time-val">0</span><span class="time-label">M</span>
+          <span id="days" class="time-val">0</span><span class="time-label">D</span>
+          <span id="hours" class="time-val">0</span><span class="time-label">H</span>
+          <span id="minutes" class="time-val">0</span><span class="time-label">m</span>
+        </div>
+      </div>
+
       <div id="slideshow" class="slideshow">
         <img id="current" alt="Memorial photo" src="" loading="lazy">
       </div>
@@ -30,6 +40,7 @@
     </main>
 
     <footer class="memorial-footer">
+      <p class="years">2001 – 2025</p>
       <p class="note">Place your images inside <code>/memorial/images/</code>. To index them automatically, run the provided <code>generate_images_json.ps1</code> script from the <code>memorial/</code> folder to create <code>memorial/images.json</code>.</p>
     </footer>
   </div>
