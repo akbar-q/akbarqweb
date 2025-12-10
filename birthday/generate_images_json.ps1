@@ -1,6 +1,6 @@
 <#
-Generate images.json listing for the memorial page.
-Place this script inside the `memorial` folder and run it in PowerShell.
+Generate images.json listing for the birthday page.
+Place this script inside the `birthday` folder and run it in PowerShell.
 It will scan the ./images folder (non-recursive), sort by LastWriteTime (chronological),
 and write `images.json` (an array of paths like "images/filename.jpg").
 #>
@@ -41,16 +41,15 @@ while(-not $written -and $retryCount -lt $maxRetries){
     try {
         $list | ConvertTo-Json -Depth 1 | Out-File -Encoding UTF8 -FilePath $out -Force
         $written = $true
-        Write-Host "✓ Wrote $($list.Count) entries to $out" -ForegroundColor Green
+            Write-Host ("Wrote {0} entries to {1}" -f $list.Count, $out) -ForegroundColor Green
     } catch {
         $retryCount++
         if($retryCount -lt $maxRetries){
-            Write-Host "Retry $retryCount/$maxRetries: Failed to write (lock?), waiting 500ms..." -ForegroundColor Yellow
+            Write-Host ("Retry {0}/{1}: Failed to write (lock?), waiting 500ms..." -f $retryCount, $maxRetries) -ForegroundColor Yellow
             Start-Sleep -Milliseconds 500
         } else {
-            Write-Host "✗ Failed to write $out after $maxRetries retries: $_" -ForegroundColor Red
+                Write-Host ("Failed to write {0} after {1} retries: {2}" -f $out, $maxRetries, $_) -ForegroundColor Red
             exit 1
         }
     }
 }
-
