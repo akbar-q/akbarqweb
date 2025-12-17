@@ -6,21 +6,25 @@
   <title>Expiry Revealed</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    .code { font-size: 64px; letter-spacing: 12px; text-shadow: 0 0 16px rgba(33, 255, 211, 0.8); }
+    .code { font-size: 84px; letter-spacing: 16px; text-shadow: 0 0 20px rgba(33, 255, 211, 0.9); animation: pulse 1.5s ease-in-out infinite; }
+    .victory { font-size: 28px; font-weight: 900; color: var(--neon); animation: flash 0.6s infinite; }
   </style>
 </head>
-<body class="noise">
+<body class="noise" style="background: radial-gradient(circle, #0f2027, #203a43, #2c5364) !important;">
   <div class="scanlines"></div>
   <div class="grid">
-    <div class="card">
+    <div class="card rainbow-spin" style="animation: rainbow-spin 12s linear infinite, zoom-pulse 4s ease-in-out infinite !important;">
       <h1 class="glitch" data-text="FINALE">FINALE</h1>
-      <p>You made it through the static. The lock demands three digits.</p>
-      <p class="signature">Akbar Qamar left the key in plain sight.</p>
+      <p class="victory">🎉 YOU SURVIVED THE FEVER DREAM 🎉</p>
+      <p style="font-size: 20px;">You made it through the static. The lock demands three digits.</p>
+      <p class="signature" style="font-size: 22px; color: var(--amber);">Akbar Qamar left the key in plain sight.</p>
       <p class="code code-hint">0 1 9</p>
-      <p>Enter <strong>019</strong> to open the inner box.</p>
-      <div class="btn-row">
-        <a class="btn" href="index.html">Restart chaos</a>
-        <a class="btn" href="maze.html">Get lost again</a>
+      <p style="font-size: 24px; font-weight: 700; margin: 20px 0;">Enter <strong style="color: var(--neon); font-size: 32px;">019</strong> to open the inner box.</p>
+      <p class="eerie" style="font-size: 16px;">The perfume awaits. The journey is complete. Or is it?</p>
+      <div style="margin-top: 30px; padding: 20px; background: rgba(0,0,0,0.6); border-radius: 12px;">
+        <p style="font-size: 14px; color: #888;">Secret Santa Expiry: 019</p>
+        <p style="font-size: 14px; color: #888;">Gift Architect: Akbar Qamar</p>
+        <p style="font-size: 14px; color: #888;">Chaos Level: Maximum</p>
       </div>
     </div>
   </div>

@@ -7,32 +7,32 @@
   <link rel="stylesheet" href="style.css" />
   <style>
     .vortex {
-      width: 260px;
-      height: 260px;
+      width: 320px;
+      height: 320px;
       margin: 0 auto 12px;
       border-radius: 50%;
       background: conic-gradient(from 0deg, rgba(255, 58, 247, 0.8), rgba(33, 255, 211, 0.6), rgba(255, 174, 0, 0.7), rgba(255, 58, 247, 0.8));
-      animation: spin 4s linear infinite;
+      animation: spin 2s linear infinite;
       filter: blur(0.6px) drop-shadow(0 0 18px rgba(33, 255, 211, 0.6));
     }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
-<body class="noise">
+<body class="noise" style="background: radial-gradient(circle, #12100e, #2b1055) !important;">
   <div class="scanlines"></div>
   <div class="grid">
-    <div class="card">
+    <div class="card zoom-horror">
       <div class="vortex"></div>
       <h1 class="glitch" data-text="TUNNEL">TUNNEL</h1>
       <p>Keep staring. You are being compressed into three digits.</p>
-      <p class="code-hint">0 &rarr; 1 &rarr; 9</p>
-      <div class="btn-row">
-        <a class="btn" href="glitch.html">Slip through a crack</a>
-        <a class="btn" href="elevator.html">Jump to another floor</a>
-        <a class="btn" href="tunnel.html">Loop</a>
-      </div>
+      <p class="signature">Akbar Qamar pulls you deeper</p>
+      <p class="code-hint" style="font-size: 36px;">? &rarr; ? &rarr; ?</p>
+      <p class="eerie">Do you feel it? The spiral? The numbers calling?</p>
     </div>
   </div>
   <script src="common.js"></script>
+  <script>
+    setTimeout(() => { window.location.href = 'glitch.html'; }, 8000);
+  </script>
 </body>
 </html>

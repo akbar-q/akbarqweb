@@ -3,20 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Frame 06</title>
+  <title>SPIN</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .hypno {
+      width: 400px;
+      height: 400px;
+      margin: 20px auto;
+      background: conic-gradient(from 0deg, #ff0000, #ff7700, #ffff00, #00ff00, #0000ff, #8800ff, #ff0000);
+      border-radius: 50%;
+      animation: spin-wild 3s linear infinite;
+    }
+  </style>
 </head>
-<body class="noise">
+<body class="noise" style="background: #000 !important;">
   <div class="scanlines"></div>
   <div class="grid">
-    <div class="card">
-      <h1 class="glitch" data-text="FRAME 06">FRAME 06</h1>
-      <p>The cat spins, the digits strobe, the lock waits.</p>
-      <img class="weird-img" src="https://tenor.com/view/spinning-cat-ethel-cat-ethel-oiiaio-oiiaioiiiai-gif-11447083680189840632" alt="spinning cat" />
-      <p class="code-hint">0 1 9 becomes a mantra</p>
-      <a class="btn wander-btn" style="--btn-x: 20%; --btn-y: 74%;" href="image-7.html">follow the spin</a>
+    <div class="card" style="background: rgba(0,0,0,0.9) !important;">
+      <h1 class="glitch" data-text="DO NOT LOOK AWAY">DO NOT LOOK AWAY</h1>
+      <div class="hypno"></div>
+      <p style="font-size: 48px; animation: pulse 0.8s infinite;">🐱</p>
+      <p class="code-hint" style="font-size: 32px;">? &nbsp; ? &nbsp; ?</p>
+      <p class="signature">Akbar Qamar hypnotizes you</p>
+      <p class="eerie">You are getting sleepy. The code is hidden. You must continue.</p>
     </div>
   </div>
   <script src="common.js"></script>
+  <script>
+    setTimeout(() => { window.location.href = 'image-7.html'; }, 9000);
+  </script>
 </body>
 </html>

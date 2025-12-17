@@ -5,24 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Neon Maze</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .wall { width: 100%; height: 4px; background: var(--neon); margin: 8px 0; animation: pulse 1s infinite; }
+  </style>
 </head>
-<body class="noise">
+<body class="noise" style="animation: screenshake 4s infinite;">
   <div class="scanlines"></div>
   <div class="grid">
-    <div class="card">
+    <div class="card distorted">
       <h1 class="glitch" data-text="MAZE">MAZE</h1>
       <p>Hallways fold. Walls hum. Every route whispers a number.</p>
+      <p class="signature">Akbar Qamar designed these walls</p>
+      <div class="wall"></div>
+      <div class="wall" style="animation-delay: 0.3s;"></div>
+      <div class="wall" style="animation-delay: 0.6s;"></div>
       <div class="panel flash">
         <p class="eerie">01001000 01100001 01101110 01100100 01110011 00100000 01101100 01100001 01110100 01100011 01101000 00100000 01110100 01101001 01100011 01101011</p>
       </div>
-      <div class="btn-row">
-        <a class="btn" href="million.html">Take the spotlight</a>
-        <a class="btn" href="tunnel.html">Crawl into the tunnel</a>
-        <a class="btn" href="maze.html">Walk in circles</a>
-      </div>
-      <p class="code-hint">the exit expires at 0 1 9</p>
+      <p class="code-hint" style="font-size: 24px;">the exit expires at the hidden number</p>
+      <p class="eerie">Choose carefully. Or don't. It doesn't matter.</p>
     </div>
   </div>
   <script src="common.js"></script>
+  <script>
+    setTimeout(() => {
+      const paths = ['million.html', 'tunnel.html', 'slot.html'];
+      window.location.href = paths[Math.floor(Math.random() * paths.length)];
+    }, 7000);
+  </script>
 </body>
 </html>

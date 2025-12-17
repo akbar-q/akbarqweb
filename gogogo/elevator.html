@@ -5,22 +5,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Elevator Control</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .floor-btn {
+      display: inline-block;
+      width: 80px;
+      height: 80px;
+      margin: 8px;
+      border: 3px solid var(--neon);
+      border-radius: 50%;
+      background: rgba(0,0,0,0.6);
+      color: var(--neon);
+      font-size: 28px;
+      font-weight: 900;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      animation: pulse 2s infinite;
+    }
+    .floor-btn:hover {
+      background: rgba(33,255,211,0.3);
+      transform: scale(1.15);
+    }
+  </style>
 </head>
-<body class="noise">
+<body class="noise" style="background: linear-gradient(0deg, #434343 0%, #000000 100%) !important;">
   <div class="scanlines"></div>
   <div class="grid">
-    <div class="card">
+    <div class="card distorted">
       <h1 class="glitch" data-text="ELEVATOR">ELEVATOR</h1>
-      <p>Select a floor. Some are missing. One is 019.</p>
-      <div class="btn-row">
-        <a class="btn" href="glitch.html">Floor 404</a>
-        <a class="btn" href="slot.html">Floor 777</a>
-        <a class="btn" href="retro.html">Floor 1999</a>
-        <a class="btn" href="finale.html">Floor 019</a>
+      <p>Select a floor. Some are missing. One is special.</p>
+      <p class="signature">Akbar Qamar controls the lift</p>
+      <div style="margin: 20px 0;">
+        <div class="floor-btn" onclick="go('glitch.html')">404</div>
+        <div class="floor-btn" onclick="go('slot.html')">777</div>
+        <div class="floor-btn" onclick="go('retro.html')">99</div>
+        <div class="floor-btn" onclick="go('image-1.html')" style="border-color: var(--acid); color: var(--acid); animation: flash 0.5s infinite;">???</div>
       </div>
-      <p class="code-hint">Remember: expiry is floor 019</p>
+      <p class="code-hint" style="font-size: 24px;">Remember: expiry is the secret floor</p>
+      <p class="eerie">The doors close in 10 seconds...</p>
     </div>
   </div>
   <script src="common.js"></script>
+  <script>
+    function go(url) {
+      document.body.style.transition = 'opacity 0.5s';
+      document.body.style.opacity = '0';
+      setTimeout(() => { window.location.href = url; }, 500);
+    }
+    setTimeout(() => { go('image-1.html'); }, 10000);
+  </script>
 </body>
 </html>

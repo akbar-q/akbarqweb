@@ -5,24 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Whispers</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .whisper-big { font-size: 48px; animation: pulse 1.2s infinite; }
+  </style>
 </head>
-<body class="noise">
+<body class="noise" style="background: radial-gradient(circle, #000000, #1a001a, #2d0033) !important;">
   <div class="scanlines"></div>
+  <div class="eye-follow" style="left: 10%; top: 20%;"></div>
+  <div class="eye-follow" style="right: 15%; bottom: 25%;"></div>
   <div class="grid">
-    <div class="card">
+    <div class="card zoom-horror" style="background: rgba(0,0,0,0.9) !important;">
       <h1 class="glitch" data-text="WHISPER">WHISPER</h1>
-      <p class="whisper eerie">listen...</p>
-      <p class="code-hint">expiry number murmurs: 019</p>
-      <div class="btn-row">
-        <a class="btn" href="elevator.html">Ascend</a>
-        <a class="btn" href="retro.html">Retreat</a>
-        <a class="btn" href="finale.html">Obey the voice</a>
-      </div>
+      <p class="whisper whisper-big eerie">listen...</p>
+      <p class="code-hint" style="font-size: 32px;">expiry number murmurs: ???</p>
+      <p class="signature">Akbar Qamar whispers from the void</p>
+      <p class="eerie">Can you hear them? The voices? They all say the same three numbers...</p>
+      <p style="font-size: 64px; opacity: 0.3; animation: pulse 2s infinite;">???</p>
     </div>
   </div>
   <script src="common.js"></script>
   <script>
-    whisper(['019', 'zero one nine', 'tick tock 019', 'gift expires soon', '019']);
+    whisper(['the code', 'three digits', 'tick tock expiry', 'gift expires soon', 'hidden numbers', 'AKBAR KNOWS', 'the code... soon...']);
+    setTimeout(() => { window.location.href = 'image-1.html'; }, 9000);
   </script>
 </body>
 </html>

@@ -1,22 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="matrix">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Frame 03</title>
+  <title>MATRIX</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .rain { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+    .rain span { position: absolute; top: -50px; font-size: 20px; color: #0f0; animation: fall linear infinite; }
+    @keyframes fall { to { top: 110%; } }
+  </style>
 </head>
 <body class="noise">
+  <div class="rain" id="matrix-rain"></div>
   <div class="scanlines"></div>
-  <div class="grid">
+  <div class="grid" style="z-index: 10; position: relative;">
     <div class="card">
-      <h1 class="glitch" data-text="FRAME 03">FRAME 03</h1>
-      <p>Memes spiral; the clock is stuck on 0-1-9.</p>
-      <img class="weird-img" src="https://www.didongmy.com/40-anh-meme-vui-nho-n-va-ha-i-huo-c-nhat-2024" alt="vietnam meme grid" />
-      <p class="code-hint">expiry number lurking</p>
-      <a class="btn wander-btn" style="--btn-x: 82%; --btn-y: 58%;" href="image-4.html">another corner</a>
+      <h1 class="glitch" data-text="BREACH">BREACH</h1>
+      <p style="color: #0f0;">SYSTEM COMPROMISED. AKBAR QAMAR ACCESSED CORE.</p>
+      <img style="width: 100%; max-width: 400px; filter: brightness(0.7) contrast(1.8) hue-rotate(90deg);" src="https://i.imgflip.com/4/26am.jpg" alt="morpheus" />
+      <p class="code-hint" style="color: #0f0;">THE CODE IS HIDDEN</p>
+      <p style="font-family: 'Courier New'; font-size: 12px; color: #0a0;">01001000 01101001 01100100 01100101</p>
     </div>
   </div>
   <script src="common.js"></script>
+  <script>
+    const rain = document.getElementById('matrix-rain');
+    for (let i = 0; i < 30; i++) {
+      const span = document.createElement('span');
+      span.textContent = String.fromCharCode(0x30A0 + Math.random() * 96);
+      span.style.left = Math.random() * 100 + '%';
+      span.style.animationDuration = (Math.random() * 3 + 2) + 's';
+      span.style.animationDelay = Math.random() * 2 + 's';
+      rain.appendChild(span);
+    }
+    setTimeout(() => { window.location.href = 'wait-1.html'; }, 10000);
+  </script>
 </body>
 </html>

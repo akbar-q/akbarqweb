@@ -3,18 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Frame 05</title>
+  <title>FLIP</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .quiz { background: rgba(0,0,0,0.6); padding: 16px; border-radius: 12px; margin: 12px 0; }
+    .quiz p { margin: 6px 0; cursor: pointer; transition: all 0.2s; }
+    .quiz p:hover { background: rgba(255,0,255,0.3); padding-left: 12px; }
+  </style>
 </head>
-<body class="noise">
+<body class="noise" style="background: radial-gradient(circle, #1a001a, #000000) !important;">
   <div class="scanlines"></div>
   <div class="grid">
-    <div class="card">
-      <h1 class="glitch" data-text="FRAME 05">FRAME 05</h1>
-      <p>Quotes, quizzes, chaos; psychology meets neon static.</p>
-      <img class="weird-img" src="https://www.quotev.com/chichis" alt="quotev chaos" />
-      <p class="code-hint">floor 0-1-9 awaits</p>
-      <a class="btn wander-btn" style="--btn-x: 64%; --btn-y: 90%;" href="image-6.html">spiral on</a>
+    <div class="card upside-down zoom-horror">
+      <h1 class="glitch" data-text="PSYCHOLOGY TEST">PSYCHOLOGY TEST</h1>
+      <p class="signature">Dr. Akbar Qamar asks: what do you see?</p>
+      <div class="quiz">
+        <p onclick="alert('Wrong. Try again.')">A) The gift is a lie</p>
+        <p onclick="alert('Closer. But no.')">B) 019 days until expiry</p>
+        <p onclick="window.location='wait-2.html'">C) Perfume hidden in chaos</p>
+        <p onclick="alert('Reality is optional')">D) None of this is real</p>
+      </div>
+      <img style="width: 100%; max-width: 380px; filter: grayscale(0.7) contrast(1.5);" src="https://i.imgflip.com/4/3lmzyx.jpg" alt="drake" />
+      <p class="code-hint">The answer was always ???</p>
     </div>
   </div>
   <script src="common.js"></script>

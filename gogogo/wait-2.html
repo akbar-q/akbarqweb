@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WAIT...</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .spinner {
+      width: 100px;
+      height: 100px;
+      border: 8px solid rgba(255,255,255,0.2);
+      border-top-color: var(--neon);
+      border-radius: 50%;
+      animation: spin 1.5s linear infinite;
+      margin: 20px auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body class="noise" style="background: radial-gradient(circle, #000428, #004e92) !important;">
+  <div class="scanlines"></div>
+  <div class="grid">
+    <div class="card distorted">
+      <h1 class="glitch" data-text="PROCESSING">PROCESSING</h1>
+      <div class="spinner"></div>
+      <p id="status" class="eerie">Akbar Qamar calculates your fate...</p>
+      <p class="code-hint">???... ???... ???...</p>
+    </div>
+  </div>
+  <script src="common.js"></script>
+  <script>
+    const msgs = ['Analyzing psyche...', 'Corrupting files...', 'CODE detected...', 'Almost there...', 'Loading perfume data...'];
+    let i = 0;
+    const interval = setInterval(() => {
+      document.getElementById('status').textContent = msgs[i % msgs.length];
+      i++;
+    }, 1200);
+    setTimeout(() => {
+      clearInterval(interval);
+      window.location.href = 'image-6.html';
+    }, 6500);
+  </script>
+</body>
+</html>

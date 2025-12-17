@@ -3,20 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Frame 02</title>
+  <title>BLOOD</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .drip { font-size: 48px; color: #a00; animation: drip-fall 3s ease-in infinite; }
+    @keyframes drip-fall { 0% { transform: translateY(-20px); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(200px); opacity: 0; } }
+  </style>
 </head>
-<body class="noise">
+<body class="noise blood-bg">
   <div class="scanlines"></div>
+  <div class="eye-follow" style="left: 20%; top: 15%;"></div>
+  <div class="eye-follow" style="right: 20%; top: 25%;"></div>
   <div class="grid">
-    <div class="card">
-      <h1 class="glitch" data-text="FRAME 02">FRAME 02</h1>
-      <p>Guide on standby. The internet is your glowing host.</p>
-      <img class="weird-img" src="https://www.redbubble.com/people/lilyandsnuggles/works/24207563-welcome-to-the-internet-ill-be-your-guide" alt="welcome to the internet" />
-      <p class="code-hint">floor 019 stays lit</p>
-      <a class="btn wander-btn" style="--btn-x: 28%; --btn-y: 32%;" href="image-3.html">slide forward</a>
+    <div class="card zoom-horror">
+      <h1 class="glitch" data-text="CONTAMINATED">CONTAMINATED</h1>
+      <p class="drip">▼ ▼ ▼</p>
+      <img style="width: 100%; max-width: 450px; filter: saturate(3) contrast(1.4);" src="https://i.imgflip.com/4/1g8my.jpg" alt="distracted boyfriend" />
+      <p class="code-hint" style="color: #f00;">??? written in plasma</p>
+      <p class="signature" style="color: #ff6666;">Akbar Qamar watches from the shadows</p>
     </div>
   </div>
   <script src="common.js"></script>
+  <script>
+    setTimeout(() => { window.location.href = 'image-3.html'; }, 9000);
+  </script>
 </body>
 </html>

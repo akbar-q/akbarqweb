@@ -1,22 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="inverted">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Frame 01</title>
+  <title>???</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    body { overflow: visible !important; }
+    .meme-box { width: 100%; max-width: 500px; margin: 16px auto; border: 3px solid #f0f; animation: flash 0.4s infinite; }
+  </style>
 </head>
 <body class="noise">
   <div class="scanlines"></div>
   <div class="grid">
-    <div class="card">
-      <h1 class="glitch" data-text="FRAME 01">FRAME 01</h1>
-      <p>Akbar Qamar whispers: every gift has a strange doorway.</p>
-      <img class="weird-img" src="https://www.pinterest.com/pin/309270699384861618/" alt="pinterest doorway" />
-      <p class="code-hint">noise repeats 0 1 9</p>
-      <a class="btn wander-btn" style="--btn-x: 72%; --btn-y: 82%;" href="image-2.html">next flicker</a>
+    <div class="card distorted">
+      <h1 class="glitch" data-text="INVERTED REALM">INVERTED REALM</h1>
+      <p class="signature">Akbar Qamar flipped your reality</p>
+      <img class="meme-box" src="https://i.imgflip.com/4/1bij.jpg" alt="success kid" />
+      <p class="code-hint">numbers... hidden... somewhere...</p>
+      <p class="eerie">Everything is backwards now. Colors lie. Numbers hide.</p>
     </div>
   </div>
   <script src="common.js"></script>
+  <script>
+    setTimeout(() => { window.location.href = 'image-2.html'; }, 8000);
+  </script>
 </body>
 </html>

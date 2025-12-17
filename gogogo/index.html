@@ -6,23 +6,22 @@
   <title>QR Portal // Fever Dream</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="noise">
+<body class="noise" style="background: radial-gradient(circle at 30% 40%, #ff00ff, #00ffff, #000000) !important; background-size: 200% 200% !important; animation: bg-shift 10s ease-in-out infinite !important;">
   <div class="scanlines"></div>
   <div class="grid">
-    <div class="card">
+    <div class="card zoom-horror">
       <h1 class="glitch" data-text="ENTER">ENTER</h1>
-      <p>QR accepted. Sanity declined. Step into the labyrinth.</p>
-      <p class="signature">Akbar Qamar curated this fever dream.</p>
-      <div class="marquee"><span>trace the expiry &bull; 0-1-9 echoes in the static &bull; wrong turns are celebrated &bull; hello from Akbar Qamar</span></div>
-      <div class="btn-row">
-        <a class="btn" href="maze.html">Enter the maze</a>
-        <a class="btn" href="retro.html">Tune a broken TV</a>
-        <a class="btn" href="slot.html">Pull the lever</a>
-        <a class="btn" href="image-1.html">Follow the weird gallery</a>
-      </div>
-      <p class="code-hint">expiry code hiding in noise</p>
+      <p style="font-size: 20px;">QR accepted. Sanity declined. Step into the labyrinth.</p>
+      <p class="signature" style="font-size: 18px;">Akbar Qamar curated this fever dream.</p>
+      <div class="marquee"><span>trace the expiry &bull; the code echoes in the static &bull; wrong turns are celebrated &bull; hello from Akbar Qamar &bull; prepare for chaos</span></div>
+      <p class="eerie">Your journey will be strange. Nothing is predictable. The code is hidden in plain sight.</p>
+      <p class="code-hint" style="font-size: 28px;">expiry code hiding in noise: ???</p>
+      <p style="margin-top: 20px; font-size: 16px; color: #888;">Choose your poison. The maze begins now.</p>
     </div>
   </div>
   <script src="common.js"></script>
+  <script>
+    setTimeout(() => { window.location.href = 'maze.html'; }, 6000);
+  </script>
 </body>
 </html>

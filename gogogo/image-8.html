@@ -3,20 +3,45 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Frame 08</title>
+  <title>FINALE LOADING</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      animation: rainbow 2s linear infinite, screenshake 0.5s infinite !important;
+      background: linear-gradient(45deg, #ff0080, #00ff80, #8000ff, #ff8000) !important;
+      background-size: 400% 400% !important;
+    }
+    .meme-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .meme-grid img {
+      width: 100%;
+      border-radius: 8px;
+      animation: hue 3s linear infinite;
+    }
+  </style>
 </head>
-<body class="noise">
+<body class="noise static-overlay">
   <div class="scanlines"></div>
   <div class="grid">
-    <div class="card">
-      <h1 class="glitch" data-text="FRAME 08">FRAME 08</h1>
-      <p>Last detour. The punchline is a lock that loves 019.</p>
-      <img class="weird-img" src="https://www.pinterest.com/pin/programming-jokes--463941199115279635/" alt="pinterest programming joke" />
-      <p class="code-hint">Akbar Qamar left the digits glowing</p>
-      <a class="btn wander-btn" style="--btn-x: 50%; --btn-y: 14%;" href="finale.html">unlock the gift</a>
+    <div class="card zoom-horror" style="animation: zoom-pulse 2s ease-in-out infinite, rainbow-spin 8s linear infinite !important;">
+      <h1 class="glitch" data-text="MEME OVERLOAD">MEME OVERLOAD</h1>
+      <p style="font-size: 28px; font-weight: 900;">AKBAR QAMAR'S FINAL GIFT</p>
+      <div class="meme-grid">
+        <img src="https://i.imgflip.com/4/6ckjcp.jpg" alt="buttons" />
+        <img src="https://i.imgflip.com/4/8p0a.jpg" alt="uno reverse" />
+      </div>
+      <p class="code-hint" style="font-size: 36px; animation: flash 0.3s infinite;">? ? ?</p>
+      <p class="eerie" style="font-size: 20px;">THE LOCK CODE WAS ALWAYS IN FRONT OF YOU</p>
+      <p class="signature" style="font-size: 18px;">Signed, Akbar Qamar (mischief architect)</p>
     </div>
   </div>
   <script src="common.js"></script>
+  <script>
+    setTimeout(() => { window.location.href = 'finale.html'; }, 9500);
+  </script>
 </body>
 </html>

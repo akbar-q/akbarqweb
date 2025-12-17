@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LOADING...</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .progress-bar {
+      width: 80%;
+      height: 30px;
+      background: rgba(255,255,255,0.1);
+      border: 2px solid var(--neon);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 20px auto;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--acid), var(--neon), var(--amber));
+      animation: load 7s linear forwards;
+    }
+    @keyframes load {
+      from { width: 0%; }
+      to { width: 100%; }
+    }
+  </style>
+</head>
+<body class="noise static-overlay">
+  <div class="scanlines"></div>
+  <div class="grid">
+    <div class="card rainbow-spin">
+      <h1 class="glitch" data-text="BUFFERING">BUFFERING</h1>
+      <p>Decrypting Akbar Qamar's next puzzle...</p>
+      <div class="progress-bar"><div class="progress-fill"></div></div>
+      <p class="code-hint">??? fragments loading...</p>
+      <p class="eerie">DO NOT REFRESH. DO NOT LOOK AWAY.</p>
+    </div>
+  </div>
+  <script src="common.js"></script>
+  <script>
+    setTimeout(() => { window.location.href = 'image-4.html'; }, 7500);
+  </script>
+</body>
+</html>

@@ -5,32 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Static</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    body { filter: contrast(1.5) saturate(2); }
+  </style>
 </head>
-<body class="noise">
+<body class="noise static-overlay" style="animation: screenshake 0.5s infinite; background: #0d0d0d !important;">
   <div class="scanlines"></div>
   <div class="grid">
-    <div class="card">
+    <div class="card distorted" style="border-color: #f00 !important;">
       <h1 class="glitch" data-text="ERROR">ERROR</h1>
-      <p id="corrupt">sys/heart: missing. sys/mind: flickering.</p>
-      <p class="eerie">019 keeps corrupting memory.</p>
-      <div class="panel">
-        <p class="code-hint">019 019 019</p>
+      <p id="corrupt" style="font-size: 24px; color: #f00;">sys/heart: missing. sys/mind: flickering.</p>
+      <p class="eerie" style="font-size: 28px; color: #ff3af7;">THE CODE keeps corrupting memory.</p>
+      <p class="signature">Akbar Qamar injected the virus</p>
+      <div class="panel flash">
+        <p class="code-hint" style="font-size: 32px;">??? ??? ???</p>
       </div>
-      <div class="btn-row">
-        <a class="btn" href="retro.html">Detune the signal</a>
-        <a class="btn" href="whisper.html">Listen closer</a>
-        <a class="btn" href="maze.html">Back to maze</a>
-      </div>
+      <p style="font-family: 'Courier New'; font-size: 14px; color: #0f0;">
+        Stack trace:<br/>
+        at Lock.verify(???)<br/>
+        at Box.open(EXPIRY)<br/>
+        at AkbarQamar.deliver(CHAOS)
+      </p>
     </div>
   </div>
   <script src="common.js"></script>
   <script>
-    const words = ['ERR:019', 'SOFT RESET', 'DO YOU HEAR IT', 'EXPIRE/019', 'TRY AGAIN'];
+    const words = ['ERR:CODE', 'SOFT RESET', 'DO YOU HEAR IT', 'EXPIRE/SOON', 'TRY AGAIN', 'AKBAR WAS HERE', 'NUMBERS HIDDEN'];
     const target = document.getElementById('corrupt');
     setInterval(() => {
       const pick = words[Math.floor(Math.random() * words.length)];
       target.textContent = pick;
-    }, 700);
+    }, 600);
+    setTimeout(() => { window.location.href = 'whisper.html'; }, 8500);
   </script>
 </body>
 </html>

@@ -5,25 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Million? Nah.</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .answer { 
+      padding: 16px; 
+      margin: 8px; 
+      background: rgba(255,255,255,0.1); 
+      border: 2px solid var(--neon); 
+      border-radius: 12px; 
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .answer:hover { 
+      background: rgba(255,58,247,0.3); 
+      transform: scale(1.05);
+    }
+  </style>
 </head>
-<body class="noise">
+<body class="noise" style="background: linear-gradient(180deg, #000000, #1a0033, #330066) !important;">
   <div class="scanlines"></div>
   <div class="grid">
-    <div class="card">
+    <div class="card rainbow-spin">
       <h1 class="glitch" data-text="QUESTION">QUESTION</h1>
-      <p>For no dollars: when does the gift expire?</p>
-      <div class="panel">
-        <p>A) Infinite. B) 999. C) 019. D) Yesterday.</p>
+      <p style="font-size: 24px; font-weight: 700;">For ZERO dollars: when does the gift expire?</p>
+      <p class="signature">Host: Akbar Qamar</p>
+      <div class="panel" style="background: rgba(0,0,0,0.7);">
+        <div class="answer" onclick="wrong(this)">A) Infinite.</div>
+        <div class="answer" onclick="wrong(this)">B) 999.</div>
+        <div class="answer" onclick="correct(this)">C) Three secret digits.</div>
+        <div class="answer" onclick="wrong(this)">D) Yesterday.</div>
       </div>
-      <div class="btn-row">
-        <a class="btn" href="slot.html">Lock in A</a>
-        <a class="btn" href="glitch.html">Lock in B</a>
-        <a class="btn" href="whisper.html">Lock in C</a>
-        <a class="btn" href="retro.html">Lock in D</a>
-      </div>
-      <p class="code-hint">C keeps echoing. 0 1 9.</p>
+      <p class="code-hint" style="font-size: 28px;">C keeps echoing. The expiry code.</p>
     </div>
   </div>
   <script src="common.js"></script>
+  <script>
+    function wrong(el) {
+      el.style.background = 'rgba(255,0,0,0.5)';
+      el.innerHTML += ' ❌';
+      setTimeout(() => el.style.background = 'rgba(255,255,255,0.1)', 1000);
+    }
+    function correct(el) {
+      el.style.background = 'rgba(0,255,0,0.5)';
+      el.innerHTML += ' ✅ CORRECT!';
+      setTimeout(() => { window.location.href = 'retro.html'; }, 2000);
+    }
+  </script>
 </body>
 </html>

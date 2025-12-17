@@ -6,26 +6,24 @@
   <title>Slot Spin</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="noise">
+<body class="noise" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;">
   <div class="scanlines"></div>
   <div class="grid">
-    <div class="card">
+    <div class="card rainbow-spin">
       <h1 class="glitch" data-text="SPIN">SPIN</h1>
       <p>Jackpot or static. Spin until the digits line up.</p>
-      <div class="panel">
-        <h2 id="reel" data-roll="019101909019">0</h2>
+      <p class="signature">Akbar Qamar rigged this machine</p>
+      <div class="panel" style="background: #000; padding: 24px;">
+        <h2 id="reel" data-roll="019101909019" style="font-size: 72px; color: var(--neon);">0</h2>
       </div>
-      <p class="code-hint">three glyphs decide: 0-1-9</p>
-      <div class="btn-row">
-        <a class="btn" href="tunnel.html">Spiral down</a>
-        <a class="btn" href="maze.html">Spin again</a>
-        <a class="btn" href="glitch.html">Break the machine</a>
-      </div>
+      <p class="code-hint" style="font-size: 28px;">three glyphs decide your fate</p>
+      <p class="eerie">Keep watching. The answer is spinning.</p>
     </div>
   </div>
   <script src="common.js"></script>
   <script>
     slotDance('#reel');
+    setTimeout(() => { window.location.href = 'tunnel.html'; }, 7500);
   </script>
 </body>
 </html>

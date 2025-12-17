@@ -6,29 +6,30 @@
   <title>1999 Web Shrine</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    body { cursor: crosshair; }
+    body { cursor: crosshair; background: #000080 !important; }
     .blink { animation: flicker 1s step-end infinite; }
     table { width: 100%; border-collapse: collapse; }
     td { border: 1px dashed rgba(255, 255, 255, 0.3); padding: 6px; }
+    marquee { color: #ff0; }
   </style>
 </head>
 <body class="noise">
   <div class="scanlines"></div>
   <div class="grid">
-    <div class="card">
+    <div class="card rainbow-spin" style="background: rgba(0, 0, 139, 0.8) !important;">
       <h1 class="glitch" data-text="WELCOME">WELCOME</h1>
-      <marquee behavior="scroll" direction="left">welcome to my fever page | guest counter: 0019 | refresh for chaos</marquee>
+      <marquee behavior="scroll" direction="left" style="color: #ffff00;">welcome to Akbar Qamar's fever page | guest counter: SECRET | refresh for chaos | EXPIRY CODE = HIDDEN</marquee>
       <table>
-        <tr><td class="blink">Under Construction</td><td>Beware of pop-ups</td></tr>
-        <tr><td>ASCII hearts && rave</td><td class="code-hint">019</td></tr>
+        <tr><td class="blink" style="color: #f0f;">Under Construction 🚧</td><td style="color: #0ff;">Beware of pop-ups</td></tr>
+        <tr><td style="color: #ff0;">ASCII hearts && rave</td><td class="code-hint" style="font-size: 28px;">???</td></tr>
+        <tr><td colspan="2" class="blink" style="color: #0f0;">MADE BY AKBAR QAMAR 1999</td></tr>
       </table>
-      <div class="btn-row">
-        <a class="btn" href="elevator.html">Go to next floor</a>
-        <a class="btn" href="million.html">Win nothing</a>
-        <a class="btn" href="finale.html">Click the suspicious link</a>
-      </div>
+      <p style="font-family: 'Comic Sans MS', cursive; color: #f0f; font-size: 18px;">✨ You are visitor #?????? ✨</p>
     </div>
   </div>
   <script src="common.js"></script>
+  <script>
+    setTimeout(() => { window.location.href = 'elevator.html'; }, 8000);
+  </script>
 </body>
 </html>
