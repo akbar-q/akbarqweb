@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FLASH</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      animation: distort 2s infinite !important;
+      background: conic-gradient(from 0deg, #f00, #0f0, #00f, #ff0, #f0f, #0ff, #f00) !important;
+      background-size: 300% 300% !important;
+    }
+    .flash-img {
+      width: 90%;
+      max-width: 600px;
+      border: 8px solid #f0f;
+      box-shadow: 0 0 60px rgba(255,0,255,0.9);
+      animation: hue 2s linear infinite, wiggle 1.5s infinite;
+      filter: saturate(2);
+    }
+  </style>
+</head>
+<body class="noise blood-bg">
+  <div class="scanlines"></div>
+  <div class="static-overlay"></div>
+  <div class="grid">
+    <div class="card flash">
+      <img class="flash-img" src="https://i.imgflip.com/4/261o3j.jpg" alt="change my mind" />
+    </div>
+  </div>
+  <script>
+    const pages = ['million.html', 'elevator.html', 'wait-1.html', 'quiz-5.html'];
+    setTimeout(() => {
+      window.location.href = pages[Math.floor(Math.random() * pages.length)];
+    }, 2200);
+  </script>
+</body>
+</html>

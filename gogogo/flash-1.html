@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FLASH</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      animation: rainbow 2s linear infinite, screenshake 0.6s infinite !important;
+      background: linear-gradient(45deg, #ff0080, #8000ff, #00ff80, #ff8000) !important;
+      background-size: 400% 400% !important;
+    }
+    .flash-img {
+      width: 90%;
+      max-width: 600px;
+      border: 6px solid #fff;
+      box-shadow: 0 0 40px rgba(255,255,255,0.8);
+      animation: hue 3s linear infinite, pulse 1s infinite;
+    }
+  </style>
+</head>
+<body class="noise static-overlay">
+  <div class="scanlines"></div>
+  <div class="grid">
+    <div class="card" style="background: rgba(0,0,0,0.85) !important;">
+      <img class="flash-img" src="https://i.imgflip.com/4/1ihzfe.jpg" alt="mind blown" />
+    </div>
+  </div>
+  <script>
+    const pages = ['maze.html', 'slot.html', 'tunnel.html', 'glitch.html', 'retro.html', 'whisper.html'];
+    setTimeout(() => {
+      window.location.href = pages[Math.floor(Math.random() * pages.length)];
+    }, 2000);
+  </script>
+</body>
+</html>

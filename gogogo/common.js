@@ -55,6 +55,14 @@ function flashHints(selector) {
   }, 2400);
 }
 
+function randomFlash() {
+  if (Math.random() < 0.15) {
+    const flashes = ['flash-1.html', 'flash-2.html', 'flash-3.html', 'flash-4.html', 'flash-5.html'];
+    window.location.href = flashes[Math.floor(Math.random() * flashes.length)];
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   spawnOrbs(18);
+  setTimeout(randomFlash, Math.random() * 5000 + 3000);
 });
