@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Question Philosophique</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .quiz-opt {
+      padding: 14px;
+      margin: 10px 0;
+      background: rgba(255,255,255,0.08);
+      border: 2px solid var(--neon);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.25s;
+      font-size: 18px;
+    }
+    .quiz-opt:hover {
+      background: rgba(33,255,211,0.25);
+      transform: scale(1.03);
+    }
+  </style>
+</head>
+<body class="noise" style="background: radial-gradient(circle, #1a0000, #000000) !important; filter: hue-rotate(90deg);">
+  <div class="scanlines"></div>
+  <div class="grid">
+    <div class="card rainbow-spin">
+      <h1 class="glitch" data-text="QUESTION">QUESTION</h1>
+      <p style="font-size: 22px; font-weight: 700;">Si un arbre tombe dans une forêt et que personne n'est là pour l'entendre, quelle est la couleur du cadeau?</p>
+      <p class="signature">Akbar Qamar philosophe</p>
+      <div>
+        <div class="quiz-opt" onclick="go()">A) Le silence est violet</div>
+        <div class="quiz-opt" onclick="go()">B) L'arbre est un mensonge</div>
+        <div class="quiz-opt" onclick="go()">C) Le parfum</div>
+        <div class="quiz-opt" onclick="go()">D) Mercredi</div>
+      </div>
+      <p class="code-hint">Toutes les réponses mènent au même endroit</p>
+    </div>
+  </div>
+  <script src="common.js"></script>
+  <script>
+    function go() {
+      window.location.href = 'quiz-3.html';
+    }
+  </script>
+</body>
+</html>

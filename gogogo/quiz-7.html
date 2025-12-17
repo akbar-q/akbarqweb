@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Domanda Strana</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .choice {
+      padding: 18px;
+      margin: 14px 0;
+      background: rgba(0,0,0,0.75);
+      border-left: 6px solid var(--acid);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.3s;
+    }
+    .choice:hover {
+      background: rgba(255,58,247,0.25);
+      border-left-width: 12px;
+      padding-left: 24px;
+    }
+  </style>
+</head>
+<body class="noise" style="background: radial-gradient(circle at 80% 20%, #1a001a, #000000) !important;">
+  <div class="scanlines"></div>
+  <div class="static-overlay"></div>
+  <div class="grid">
+    <div class="card zoom-horror">
+      <h1 class="glitch" data-text="DOMANDA">DOMANDA</h1>
+      <p style="font-size: 23px; font-weight: 700;">Quante emozioni può contenere una scatola chiusa a chiave?</p>
+      <p class="signature">Akbar Qamar chiede in italiano</p>
+      <div>
+        <div class="choice" onclick="forward()">A) Infinito meno tre</div>
+        <div class="choice" onclick="forward()">B) Il lucchetto decide</div>
+        <div class="choice" onclick="forward()">C) Il profumo è l'emozione</div>
+        <div class="choice" onclick="forward()">D) La psicologia mente sempre</div>
+      </div>
+      <p class="code-hint">La risposta è nel caos</p>
+      <p class="eerie">Clicca qualsiasi cosa. Il destino è già scritto.</p>
+    </div>
+  </div>
+  <script src="common.js"></script>
+  <script>
+    function forward() {
+      setTimeout(() => window.location.href = 'image-4.html', 600);
+    }
+  </script>
+</body>
+</html>

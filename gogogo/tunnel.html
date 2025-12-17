@@ -32,7 +32,8 @@
   </div>
   <script src="common.js"></script>
   <script>
-    setTimeout(() => { window.location.href = 'glitch.html'; }, 8000);
+    const destinations = ['glitch.html', 'quiz-2.html'];
+    setTimeout(() => { window.location.href = destinations[Math.floor(Math.random() * destinations.length)]; }, 8000);
   </script>
 </body>
 </html>

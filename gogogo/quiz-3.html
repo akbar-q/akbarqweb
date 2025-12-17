@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pregunta Imposible</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .quiz-opt {
+      padding: 14px;
+      margin: 10px 0;
+      background: rgba(0,0,0,0.7);
+      border: 2px solid var(--amber);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.25s;
+      font-size: 18px;
+      animation: pulse 2s infinite;
+    }
+    .quiz-opt:hover {
+      background: rgba(255,174,0,0.3);
+      transform: rotate(2deg);
+    }
+  </style>
+</head>
+<body class="noise" style="background: linear-gradient(45deg, #000000, #1a1a00, #333300) !important;">
+  <div class="scanlines"></div>
+  <div class="eye-follow" style="left: 30%; top: 10%;"></div>
+  <div class="grid">
+    <div class="card upside-down zoom-horror">
+      <h1 class="glitch" data-text="PREGUNTA">PREGUNTA</h1>
+      <p style="font-size: 22px; font-weight: 700;">¿Cuántos dedos tiene un pensamiento sobre los viernes?</p>
+      <p class="signature">Akbar Qamar pregunta lo imposible</p>
+      <div>
+        <div class="quiz-opt" onclick="redirect(1)">A) El tiempo es cúbico</div>
+        <div class="quiz-opt" onclick="redirect(2)">B) 3.14159 dedos</div>
+        <div class="quiz-opt" onclick="redirect(3)">C) El código está en el aire</div>
+        <div class="quiz-opt" onclick="redirect(4)">D) Los viernes no existen aquí</div>
+      </div>
+      <p class="code-hint">El universo ríe de tus respuestas</p>
+    </div>
+  </div>
+  <script src="common.js"></script>
+  <script>
+    function redirect(choice) {
+      const paths = ['quiz-4.html', 'quiz-4.html', 'quiz-4.html', 'quiz-4.html'];
+      setTimeout(() => window.location.href = paths[choice - 1], 600);
+    }
+  </script>
+</body>
+</html>

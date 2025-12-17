@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THE FINAL QUESTION</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .answer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .ans-box {
+      padding: 20px;
+      background: rgba(0,0,0,0.8);
+      border: 3px solid var(--neon);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 16px;
+    }
+    .ans-box:hover {
+      background: rgba(33,255,211,0.2);
+      transform: scale(1.08) rotate(3deg);
+      border-color: var(--acid);
+    }
+  </style>
+</head>
+<body class="noise" style="background: radial-gradient(circle, #4a0000, #1a0000, #000000) !important; animation: screenshake 2s infinite;">
+  <div class="scanlines"></div>
+  <div class="static-overlay"></div>
+  <div class="eye-follow" style="left: 15%; top: 25%;"></div>
+  <div class="eye-follow" style="right: 20%; bottom: 30%;"></div>
+  <div class="grid">
+    <div class="card distorted" style="border: 4px solid #f00 !important; animation: distort 3s infinite, flash 0.8s infinite;">
+      <h1 class="glitch" data-text="FINAL QUESTION">FINAL QUESTION</h1>
+      <p style="font-size: 26px; font-weight: 900; color: #f00;">WHAT IS THE MEANING OF THE GIFT?</p>
+      <p class="signature" style="font-size: 20px;">Akbar Qamar demands an answer</p>
+      <div class="answer-grid">
+        <div class="ans-box" onclick="proceed()">
+          A psychology major deserves chaos
+        </div>
+        <div class="ans-box" onclick="proceed()">
+          The perfume is a lie
+        </div>
+        <div class="ans-box" onclick="proceed()">
+          To unlock the box, you must suffer
+        </div>
+        <div class="ans-box" onclick="proceed()">
+          All gifts expire. This one soon.
+        </div>
+        <div class="ans-box" onclick="proceed()">
+          Akbar Qamar laughs eternally
+        </div>
+        <div class="ans-box" onclick="proceed()">
+          The code reveals itself in time
+        </div>
+      </div>
+      <p class="code-hint" style="font-size: 24px;">Every answer is correct. Every answer is wrong.</p>
+      <p class="eerie">You cannot escape. Click to continue into the void.</p>
+    </div>
+  </div>
+  <script src="common.js"></script>
+  <script>
+    function proceed() {
+      document.body.style.transition = 'opacity 1s';
+      document.body.style.opacity = '0';
+      setTimeout(() => window.location.href = 'image-1.html', 1000);
+    }
+  </script>
+</body>
+</html>

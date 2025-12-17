@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>質問</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .opt {
+      padding: 16px;
+      margin: 12px 0;
+      background: linear-gradient(135deg, rgba(255,0,150,0.1), rgba(0,150,255,0.1));
+      border: 2px solid var(--neon);
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 19px;
+      transition: all 0.3s;
+    }
+    .opt:hover {
+      background: linear-gradient(135deg, rgba(255,0,150,0.3), rgba(0,150,255,0.3));
+      transform: translateY(-4px);
+    }
+  </style>
+</head>
+<body class="noise" style="background: linear-gradient(180deg, #0a0a1e, #1e0a1e, #1e1e0a) !important;">
+  <div class="scanlines"></div>
+  <div class="grid">
+    <div class="card sideways">
+      <h1 class="glitch" data-text="質問">質問</h1>
+      <p style="font-size: 22px;">もし箱が箱を食べたら、香水はどこに行きますか？</p>
+      <p class="signature">アクバル・カマールは日本語で尋ねます</p>
+      <div>
+        <div class="opt" onclick="next()">A) 箱の中の箱の中の夢</div>
+        <div class="opt" onclick="next()">B) 時間は逆に流れる</div>
+        <div class="opt" onclick="next()">C) コードは３桁です</div>
+        <div class="opt" onclick="next()">D) すべては幻想です</div>
+      </div>
+      <p class="code-hint">答えは存在しません</p>
+    </div>
+  </div>
+  <script src="common.js"></script>
+  <script>
+    function next() {
+      setTimeout(() => window.location.href = 'wait-1.html', 700);
+    }
+  </script>
+</body>
+</html>

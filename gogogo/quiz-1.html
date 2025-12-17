@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quizzeit</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .quiz-opt {
+      padding: 14px;
+      margin: 10px 0;
+      background: rgba(255,255,255,0.08);
+      border: 2px solid var(--acid);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.25s;
+      font-size: 18px;
+    }
+    .quiz-opt:hover {
+      background: rgba(255,58,247,0.25);
+      transform: translateX(8px);
+    }
+  </style>
+</head>
+<body class="noise" style="background: linear-gradient(225deg, #2e1437, #1f0a29, #0d0015) !important;">
+  <div class="scanlines"></div>
+  <div class="grid">
+    <div class="card distorted" style="border-color: #f0f !important;">
+      <h1 class="glitch" data-text="FRAGE">FRAGE</h1>
+      <p style="font-size: 22px; font-weight: 700;">Welche Farbe hat Mittwoch?</p>
+      <p class="signature">Akbar Qamar fragt auf Deutsch</p>
+      <div>
+        <div class="quiz-opt" onclick="wrong()">A) Blau mit einem Hauch von Dienstag</div>
+        <div class="quiz-opt" onclick="wrong()">B) Die Zahl 7</div>
+        <div class="quiz-opt" onclick="correct()">C) Das Parfüm riecht nach Zeit</div>
+        <div class="quiz-opt" onclick="wrong()">D) Mittwoch existiert nicht</div>
+      </div>
+      <p class="code-hint">Die Antwort ist immer C</p>
+    </div>
+  </div>
+  <script src="common.js"></script>
+  <script>
+    function wrong() {
+      alert('FALSCH! Aber weiter geht es trotzdem...');
+      setTimeout(() => window.location.href = 'quiz-2.html', 800);
+    }
+    function correct() {
+      alert('Richtig! Oder... ist es das? 🤔');
+      setTimeout(() => window.location.href = 'quiz-2.html', 800);
+    }
+  </script>
+</body>
+</html>

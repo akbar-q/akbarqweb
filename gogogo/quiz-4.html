@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>سؤال</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .quiz-opt {
+      padding: 14px;
+      margin: 10px 0;
+      background: rgba(255,255,255,0.05);
+      border: 3px dashed var(--acid);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.25s;
+      font-size: 20px;
+    }
+    .quiz-opt:hover {
+      background: rgba(255,0,255,0.2);
+      border-style: solid;
+    }
+  </style>
+</head>
+<body class="noise inverted" style="background: #000 !important;">
+  <div class="scanlines"></div>
+  <div class="grid">
+    <div class="card" style="background: rgba(255,255,255,0.1) !important; border-color: #0ff !important;">
+      <h1 class="glitch" data-text="سؤال">سؤال</h1>
+      <p style="font-size: 22px; font-weight: 700;">إذا كان الصندوق يحتوي على صندوق، وهذا الصندوق يحتوي على عطر، فما هو رقم الانتهاء؟</p>
+      <p class="signature">أكبر قمر يسأل بالعربية</p>
+      <div>
+        <div class="quiz-opt" onclick="ans()">أ) الرقم مخفي في الفوضى</div>
+        <div class="quiz-opt" onclick="ans()">ب) العطر يعرف الإجابة</div>
+        <div class="quiz-opt" onclick="ans()">ج) ثلاثة أرقام سرية</div>
+        <div class="quiz-opt" onclick="ans()">د) لا يوجد انتهاء، فقط بداية</div>
+      </div>
+      <p class="code-hint">الحقيقة في النهاية</p>
+    </div>
+  </div>
+  <script src="common.js"></script>
+  <script>
+    function ans() {
+      setTimeout(() => window.location.href = 'quiz-5.html', 500);
+    }
+  </script>
+</body>
+</html>
