@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Static</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="noise">
+  <div class="scanlines"></div>
+  <div class="grid">
+    <div class="card">
+      <h1 class="glitch" data-text="ERROR">ERROR</h1>
+      <p id="corrupt">sys/heart: missing. sys/mind: flickering.</p>
+      <p class="eerie">019 keeps corrupting memory.</p>
+      <div class="panel">
+        <p class="code-hint">019 019 019</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn" href="retro.html">Detune the signal</a>
+        <a class="btn" href="whisper.html">Listen closer</a>
+        <a class="btn" href="maze.html">Back to maze</a>
+      </div>
+    </div>
+  </div>
+  <script src="common.js"></script>
+  <script>
+    const words = ['ERR:019', 'SOFT RESET', 'DO YOU HEAR IT', 'EXPIRE/019', 'TRY AGAIN'];
+    const target = document.getElementById('corrupt');
+    setInterval(() => {
+      const pick = words[Math.floor(Math.random() * words.length)];
+      target.textContent = pick;
+    }, 700);
+  </script>
+</body>
+</html>

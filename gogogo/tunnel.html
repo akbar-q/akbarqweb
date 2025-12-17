@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vortex</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .vortex {
+      width: 260px;
+      height: 260px;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, rgba(255, 58, 247, 0.8), rgba(33, 255, 211, 0.6), rgba(255, 174, 0, 0.7), rgba(255, 58, 247, 0.8));
+      animation: spin 4s linear infinite;
+      filter: blur(0.6px) drop-shadow(0 0 18px rgba(33, 255, 211, 0.6));
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body class="noise">
+  <div class="scanlines"></div>
+  <div class="grid">
+    <div class="card">
+      <div class="vortex"></div>
+      <h1 class="glitch" data-text="TUNNEL">TUNNEL</h1>
+      <p>Keep staring. You are being compressed into three digits.</p>
+      <p class="code-hint">0 &rarr; 1 &rarr; 9</p>
+      <div class="btn-row">
+        <a class="btn" href="glitch.html">Slip through a crack</a>
+        <a class="btn" href="elevator.html">Jump to another floor</a>
+        <a class="btn" href="tunnel.html">Loop</a>
+      </div>
+    </div>
+  </div>
+  <script src="common.js"></script>
+</body>
+</html>
