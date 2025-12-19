@@ -12,7 +12,8 @@ let chronological = false;
 // Birthday date (start)
 const BIRTHDAY_DATE = new Date('2001-12-08T00:00:00Z');
 // EOL date: stop counting age at this date and start counting since this date
-const EOL_DATE = new Date('2025-12-19T00:00:00Z');
+// 11:30 AM, 20 December 2025 GMT+4 -> UTC 2025-12-20T07:30:00Z
+const EOL_DATE = new Date('2025-12-20T07:30:00Z');
 
 const currentEl = () => document.getElementById('current');
 const captionEl = () => document.getElementById('caption');

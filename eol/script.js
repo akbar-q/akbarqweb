@@ -5,7 +5,8 @@
 
 class EOLCountdown {
     constructor() {
-        this.targetDate = new Date('2025-12-07T14:00:00+04:00');
+        // Target: 11:30 AM, 20 December 2025 GMT+4
+        this.targetDate = new Date('2025-12-20T11:30:00+04:00');
         this.messages = [
             "borrowed time is being returned",
             "atlas can no longer hold up the sky",
@@ -256,8 +257,8 @@ class EOLCountdown {
                     font-size: 1rem;
                     color: #666666;
                     margin-top: 2rem;
-                    letter-spacing: 0.2rem;
-                ">07.12.2025 • 14:00 UTC+4</p>
+                    letter-spacing: 0.05rem;
+                ">20.12.2025 • 11:30 GMT+4</p>
             </div>
         `;
     }
