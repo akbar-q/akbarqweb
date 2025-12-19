@@ -85,9 +85,9 @@ function renderThumbs(){
     img.loading='lazy'; img.alt = item.full.split('/').pop();
     img.dataset.index = i;
     img.addEventListener('click',()=>{ show(i); stop(); });
-    // if thumbnail fails, fall back to full image
+    // if thumbnail fails, fall back to full image immediately
     img.addEventListener('error', ()=>{
-      if(item.full && img.dataset.src !== item.full){ img.dataset.src = item.full; img.classList.add('broken'); }
+      if(item.full && img.src !== item.full){ img.src = item.full; img.classList.add('broken'); }
     });
     if(i===index) img.classList.add('active');
     thumbs.appendChild(img);
@@ -101,7 +101,7 @@ function renderThumbs(){
         obs.unobserve(el);
       }
     });
-  }, {root: thumbs, rootMargin: '200px', threshold: 0.1});
+  }, {root: null, rootMargin: '200px', threshold: 0.1});
   thumbs.querySelectorAll('img[data-src]').forEach(i=> io.observe(i));
 }
 
