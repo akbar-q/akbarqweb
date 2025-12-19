@@ -13,6 +13,8 @@ body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helveti
 .time-label{font-size:.8rem;color:var(--muted);display:block}
 .slideshow{width:100%;max-width:1200px;height:70vh;background:#000;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .slideshow img{width:100%;height:100%;object-fit:contain;background:#000}
+.slideshow img.blurred{filter:blur(12px) saturate(.9) contrast(.95);transform:scale(1.02);transition:filter .6s ease, transform .6s ease, opacity .3s ease}
+.slideshow img.loading{opacity:.85}
 .caption{margin-top:.5rem;color:var(--muted);font-size:.95rem}
 .thumbs{display:flex;gap:.5rem;justify-content:flex-start;padding:.75rem;overflow-x:auto;flex-wrap:nowrap}
 .thumbs img{width:80px;height:60px;object-fit:cover;border-radius:4px;cursor:pointer;opacity:.9;border:2px solid transparent;flex:0 0 auto;display:block}

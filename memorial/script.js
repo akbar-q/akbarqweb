@@ -80,16 +80,29 @@ function renderThumbs(){
   const thumbs = thumbsEl(); if(!thumbs) return;
   thumbs.innerHTML='';
   images.forEach((item,i)=>{
-    const img = document.createElement('img'); img.src = item.thumb || item.full; img.loading='lazy'; img.alt = item.full.split('/').pop();
+    const img = document.createElement('img');
+    img.dataset.src = item.thumb || item.full; // lazy load when visible
+    img.loading='lazy'; img.alt = item.full.split('/').pop();
     img.dataset.index = i;
     img.addEventListener('click',()=>{ show(i); stop(); });
     // if thumbnail fails, fall back to full image
     img.addEventListener('error', ()=>{
-      if(item.full && img.src !== item.full){ img.src = item.full; img.classList.add('broken'); }
+      if(item.full && img.dataset.src !== item.full){ img.dataset.src = item.full; img.classList.add('broken'); }
     });
     if(i===index) img.classList.add('active');
     thumbs.appendChild(img);
   });
+  // lazy-load thumbnails using IntersectionObserver
+  const io = new IntersectionObserver((entries, obs) =>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const el = e.target; const src = el.dataset.src;
+        if(src){ el.src = src; el.removeAttribute('data-src'); }
+        obs.unobserve(el);
+      }
+    });
+  }, {root: thumbs, rootMargin: '200px', threshold: 0.1});
+  thumbs.querySelectorAll('img[data-src]').forEach(i=> io.observe(i));
 }
 
 function loadFullForIndex(i){
@@ -107,13 +120,26 @@ function show(i){
   if(!images.length) return;
   index = ((i%images.length)+images.length)%images.length;
   const item = images[index];
-  // show thumbnail immediately for responsiveness
-  currentEl().src = item.thumb || item.full;
+  // show low-res thumb immediately and apply blur while full loads
+  const main = currentEl();
+  main.classList.add('blurred','loading');
+  main.src = item.thumb || item.full;
   captionEl().textContent = (item.full||item.thumb).split('/').pop();
   const thumbImgs = thumbsEl().querySelectorAll('img');
   thumbImgs.forEach((t,ti)=> t.classList.toggle('active', ti===index));
   // load full image in background and swap when ready
-  loadFullForIndex(index).then((fullSrc)=>{ currentEl().src = fullSrc; });
+  loadFullForIndex(index).then((fullSrc)=>{
+    // smooth transition from blurred thumb to full image
+    // set full src then remove blur once painted
+    const prevSrc = main.src;
+    main.src = fullSrc;
+    // ensure image paints, then remove blur class
+    requestAnimationFrame(()=>{
+      main.classList.remove('blurred');
+      // slight delay to make sure transition visible
+      setTimeout(()=> main.classList.remove('loading'), 350);
+    });
+  });
   // preload next full image
   const nextIndex = (index+1)%images.length;
   loadFullForIndex(nextIndex);
