@@ -6,7 +6,8 @@ let index = 0;
 let playing = false;
 let autoplayInterval = 5000;
 let timer = null;
-let chronological = true;
+// default to random/shuffled playing
+let chronological = false;
 
 // Birthday date (start)
 const BIRTHDAY_DATE = new Date('2001-12-08T00:00:00Z');
@@ -82,6 +83,10 @@ function renderThumbs(){
     const img = document.createElement('img'); img.src = item.thumb || item.full; img.loading='lazy'; img.alt = item.full.split('/').pop();
     img.dataset.index = i;
     img.addEventListener('click',()=>{ show(i); stop(); });
+    // if thumbnail fails, fall back to full image
+    img.addEventListener('error', ()=>{
+      if(item.full && img.src !== item.full){ img.src = item.full; img.classList.add('broken'); }
+    });
     if(i===index) img.classList.add('active');
     thumbs.appendChild(img);
   });
@@ -190,6 +195,8 @@ async function init(){
   // chronologicalList is array of full paths -- convert back to objects preserving thumb
   const mapByFull = new Map(list.map(i=>[i.full,i]));
   images = chronologicalList.map(p=> mapByFull.get(p) || { full:p, thumb:p.replace('/images/','/thumbnails/') });
+  // default to shuffled order if chronological is false
+  if(!chronological){ images = shuffleArray(images); }
   document.getElementById('next').addEventListener('click',()=>{ next(); stop(); });
   document.getElementById('prev').addEventListener('click',()=>{ prev(); stop(); });
   document.getElementById('play').addEventListener('click',()=>{ playing?stop():play(); });
@@ -208,8 +215,13 @@ async function init(){
   });
 
   renderThumbs();
-  show(0);
+  // show a random starting image (already shuffled if random mode)
+  const startIndex = Math.floor(Math.random()*images.length);
+  show(startIndex);
   setupDownload();
+  // start autoplay by default (play mode)
+  document.getElementById('autoplayCheck').checked = true;
+  play();
   updateUptime();
   setInterval(updateUptime, 1000);
 }
