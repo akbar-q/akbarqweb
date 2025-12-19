@@ -66,3 +66,4 @@ document.addEventListener('DOMContentLoaded', () => {
   spawnOrbs(18);
   setTimeout(randomFlash, Math.random() * 5000 + 3000);
 });
+

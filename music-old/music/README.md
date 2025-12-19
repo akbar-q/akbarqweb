@@ -191,3 +191,4 @@ If you're having trouble:
 5. Compare your changes with the existing working examples
 
 Remember: When in doubt, copy the structure of existing albums and songs!
+

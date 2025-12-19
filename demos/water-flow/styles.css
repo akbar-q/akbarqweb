@@ -128,3 +128,4 @@ input::placeholder { color: var(--muted); }
   .hero { grid-template-columns: 1fr; }
   .grid { grid-template-columns: 1fr; }
 }
+

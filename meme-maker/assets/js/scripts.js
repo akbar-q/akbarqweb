@@ -273,3 +273,4 @@ document
     event.preventDefault();
     window.location.href = "viewmemes.html";
   });
+
