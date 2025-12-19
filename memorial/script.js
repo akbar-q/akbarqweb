@@ -1,7 +1,7 @@
 // This script is adapted from the birthday script but stops the age counter at EOL
 // Use the memorial images.json moved into /memorial/
 const IMAGES_JSON = '/memorial/images.json';
-let images = [];
+let images = []; // array of objects: {full, thumb}
 let index = 0;
 let playing = false;
 let autoplayInterval = 5000;
@@ -39,13 +39,25 @@ async function tryDirectoryListing(){
 }
 
 function normalizeEntries(arr){
-  return arr.map(p=>{
-    if(p.startsWith('/memorial/')) return p;
-    if(p.startsWith('http')) return p;
-    if(p.startsWith('images/')) return '/memorial/'+p;
-    if(p.startsWith('/')) return p;
-    return '/memorial/images/'+p;
-  });
+  // normalize to array of objects: {full, thumb}
+  return arr.map(item=>{
+    if(typeof item === 'string'){
+      let p = item;
+      if(!p.startsWith('http') && !p.startsWith('/')){
+        if(p.startsWith('images/')) p = '/memorial/'+p; else p = '/memorial/images/'+p;
+      }
+      // derive thumbnail path (thumbnails/ same base name) but keep absolute if provided
+      const filename = p.split('/').pop();
+      const thumb = p.replace('/images/','/thumbnails/');
+      return { full: p, thumb };
+    } else if(item && typeof item === 'object'){
+      // already {full, thumb}
+      const full = item.full && !item.full.startsWith('http') && !item.full.startsWith('/') ? ('/memorial/'+item.full) : item.full;
+      const thumb = item.thumb && !item.thumb.startsWith('http') && !item.thumb.startsWith('/') ? ('/memorial/'+item.thumb) : item.thumb || full;
+      return { full, thumb };
+    }
+    return null;
+  }).filter(Boolean);
 }
 
 function sortChronological(list){
@@ -66,23 +78,40 @@ function shuffleArray(a){
 function renderThumbs(){
   const thumbs = thumbsEl(); if(!thumbs) return;
   thumbs.innerHTML='';
-  images.forEach((src,i)=>{
-    const img = document.createElement('img'); img.src = src; img.loading='lazy';
+  images.forEach((item,i)=>{
+    const img = document.createElement('img'); img.src = item.thumb || item.full; img.loading='lazy'; img.alt = item.full.split('/').pop();
+    img.dataset.index = i;
     img.addEventListener('click',()=>{ show(i); stop(); });
     if(i===index) img.classList.add('active');
     thumbs.appendChild(img);
   });
 }
 
+function loadFullForIndex(i){
+  const item = images[i];
+  if(!item) return Promise.resolve();
+  return new Promise((resolve)=>{
+    const img = new Image();
+    img.src = item.full;
+    img.onload = ()=> resolve(img.src);
+    img.onerror = ()=> resolve(item.full);
+  });
+}
+
 function show(i){
   if(!images.length) return;
   index = ((i%images.length)+images.length)%images.length;
-  const src = images[index];
-  currentEl().src = src;
-  captionEl().textContent = src.split('/').pop();
+  const item = images[index];
+  // show thumbnail immediately for responsiveness
+  currentEl().src = item.thumb || item.full;
+  captionEl().textContent = (item.full||item.thumb).split('/').pop();
   const thumbImgs = thumbsEl().querySelectorAll('img');
   thumbImgs.forEach((t,ti)=> t.classList.toggle('active', ti===index));
-  const nextIndex = (index+1)%images.length; const pre = new Image(); pre.src = images[nextIndex];
+  // load full image in background and swap when ready
+  loadFullForIndex(index).then((fullSrc)=>{ currentEl().src = fullSrc; });
+  // preload next full image
+  const nextIndex = (index+1)%images.length;
+  loadFullForIndex(nextIndex);
 }
 
 function next(){ show(index+1); }
@@ -157,8 +186,10 @@ async function init(){
     return;
   }
   list = normalizeEntries(list);
-  const chronologicalList = sortChronological(list);
-  images = chronologicalList.slice();
+  const chronologicalList = sortChronological(list.map(i=> (i.full||i)));
+  // chronologicalList is array of full paths -- convert back to objects preserving thumb
+  const mapByFull = new Map(list.map(i=>[i.full,i]));
+  images = chronologicalList.map(p=> mapByFull.get(p) || { full:p, thumb:p.replace('/images/','/thumbnails/') });
   document.getElementById('next').addEventListener('click',()=>{ next(); stop(); });
   document.getElementById('prev').addEventListener('click',()=>{ prev(); stop(); });
   document.getElementById('play').addEventListener('click',()=>{ playing?stop():play(); });
@@ -178,9 +209,56 @@ async function init(){
 
   renderThumbs();
   show(0);
+  setupDownload();
   updateUptime();
   setInterval(updateUptime, 1000);
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+// Download modal and ZIP creation
+function setupDownload(){
+  const modal = document.getElementById('downloadModal');
+  const btn = document.getElementById('downloadAll');
+  const close = document.getElementById('closeModal');
+  const openGithub = document.getElementById('openGithub');
+  const createZip = document.getElementById('createZip');
+  const zipStatus = document.getElementById('zipStatus');
+  const githubLink = document.getElementById('githubLink');
+  if(!btn || !modal) return;
+  btn.addEventListener('click', ()=> { modal.setAttribute('aria-hidden','false'); });
+  close.addEventListener('click', ()=> { modal.setAttribute('aria-hidden','true'); zipStatus.textContent = ''; });
+  openGithub.addEventListener('click', ()=>{ window.open(githubLink.href,'_blank'); });
+
+  createZip.addEventListener('click', async ()=>{
+    if(typeof JSZip === 'undefined'){ zipStatus.textContent = 'ZIP library not loaded.'; return; }
+    zipStatus.textContent = 'Preparing ZIP (this may take a while)...';
+    const zip = new JSZip();
+    // fetch each full image sequentially with limited concurrency
+    const concurrency = 4;
+    let i = 0;
+    async function worker(){
+      while(i < images.length){
+        const idx = i++; const item = images[idx];
+        try{
+          zipStatus.textContent = `Fetching ${idx+1} of ${images.length}: ${item.full.split('/').pop()}`;
+          const r = await fetch(item.full);
+          if(!r.ok) { zipStatus.textContent = `Failed to fetch ${item.full}`; continue; }
+          const b = await r.blob();
+          zip.file(item.full.split('/').pop(), b);
+        }catch(e){ console.error('fetch error',e); }
+      }
+    }
+    const workers = Array.from({length:concurrency}).map(()=>worker());
+    await Promise.all(workers);
+    zipStatus.textContent = 'Compressing...';
+    const blob = await zip.generateAsync({type:'blob'}, (meta)=>{ zipStatus.textContent = `Compressing ${Math.round(meta.percent)}%`; });
+    zipStatus.textContent = 'Preparing download...';
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'memorial-images.zip';
+    document.body.appendChild(a); a.click(); a.remove();
+    zipStatus.textContent = 'Download started.';
+  });
+}
 
