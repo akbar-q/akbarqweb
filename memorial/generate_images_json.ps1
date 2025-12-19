@@ -7,6 +7,7 @@ and write `images.json` (an array of paths like "images/filename.jpg").
 
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $imagesDir = Join-Path $scriptDir 'images'
+$thumbDir = Join-Path $scriptDir 'thumbnails'
 $out = Join-Path $scriptDir 'images.json'
 
 if(-not (Test-Path $imagesDir)){
@@ -23,14 +24,24 @@ if(Test-Path $out){
     }
 }
 
-$extensions = '*.jpg','*.jpeg','*.png','*.webp','*.gif'
-$files = Get-ChildItem -Path $imagesDir -File | Where-Object { $extensions -contains ('*' + $_.Extension) } | Sort-Object LastWriteTime
+$extensions = 'jpg','jpeg','png','webp','gif','heic'
+$files = Get-ChildItem -Path $imagesDir -File | Where-Object { $extensions -contains ($_.Extension.TrimStart('.').ToLower()) } | Sort-Object LastWriteTime
 if(-not $files){ 
     Write-Host "No image files found in $imagesDir" -ForegroundColor Yellow
     exit 1 
 }
 
-$list = @($files | ForEach-Object { "images/$($_.Name)" })
+$list = @()
+foreach($f in $files){
+    $base = $f.BaseName
+    $thumbPath = $null
+    if(Test-Path $thumbDir){
+        $thumb = Get-ChildItem -Path $thumbDir -File -Filter "$($base).*" | Where-Object { $extensions -contains ($_.Extension.TrimStart('.').ToLower()) } | Select-Object -First 1
+        if($thumb){ $thumbPath = "thumbnails/$($thumb.Name)" }
+    }
+    if(-not $thumbPath){ $thumbPath = "images/$($f.Name)" }
+    $list += [PSCustomObject]@{ full = "images/$($f.Name)"; thumb = $thumbPath }
+}
 
 # Write with retry logic in case of lock
 $maxRetries = 5

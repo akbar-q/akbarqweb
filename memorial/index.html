@@ -15,6 +15,7 @@
         <button id="play">Play</button>
         <button id="next">▶</button>
         <button id="randomize">Random</button>
+        <button id="downloadAll" class="download-btn">Download All</button>
         <label class="opt">
           <input id="autoplayCheck" type="checkbox"> Autoplay
         </label>
@@ -57,6 +58,22 @@
   </div>
 
   <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.0/dist/jszip.min.js"></script>
+
+  <!-- Download modal -->
+  <div id="downloadModal" class="download-modal" aria-hidden="true">
+    <div class="download-modal-content">
+      <h3>Download all images</h3>
+      <p>You can download the images folder from GitHub, or create a ZIP directly in your browser (may be slow for many large files).</p>
+      <p><strong>GitHub link:</strong> <a id="githubLink" href="https://github.com/akbar-q/akbarqweb/tree/main/memorial/images" target="_blank">View memorial/images on GitHub</a></p>
+      <div class="download-actions">
+        <button id="openGithub">Open on GitHub</button>
+        <button id="createZip">Create ZIP here (browser)</button>
+        <button id="closeModal">Close</button>
+      </div>
+      <div id="zipStatus" class="zip-status"></div>
+    </div>
+  </div>
 </body>
 </html>
 
