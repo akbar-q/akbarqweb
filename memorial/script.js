@@ -249,6 +249,8 @@ async function init(){
   // start autoplay by default (play mode)
   document.getElementById('autoplayCheck').checked = true;
   play();
+  // start memorial bottom quotes
+  startMemorialQuotes();
   updateUptime();
   setInterval(updateUptime, 1000);
 }
@@ -299,5 +301,35 @@ function setupDownload(){
     document.body.appendChild(a); a.click(); a.remove();
     zipStatus.textContent = 'Download started.';
   });
+}
+
+// Memorial bottom quotes (copied/adapted from eol)
+const memorialQuotes = [
+  "Borrowed time is being returned.",
+  "The promise of death makes life sharp and vibrant.",
+  "There is a profound sweetness in the certainty of death.",
+  "Let the thought of death be a comfort, not a terror.",
+  "Death is the final, silent indulgence.",
+  "To fear death is to fear sleep.",
+  "In the arms of death, there is no more striving, no more want, no more regret.",
+  "Death is the great equalizer that refuses to equalize.",
+  "A candle flickering in the wind—the flame is about to be extinguished.",
+  "The final chapter is being written."
+];
+
+let memorialQuoteIndex = 0;
+function startMemorialQuotes(){
+  const el = document.getElementById('memorial-quote');
+  if(!el) return;
+  // initial
+  el.textContent = memorialQuotes[memorialQuoteIndex]; el.style.opacity = 1;
+  setInterval(()=>{
+    el.style.opacity = 0;
+    setTimeout(()=>{
+      memorialQuoteIndex = (memorialQuoteIndex + 1) % memorialQuotes.length;
+      el.textContent = memorialQuotes[memorialQuoteIndex];
+      el.style.opacity = 1;
+    }, 600);
+  }, 10000);
 }
 
