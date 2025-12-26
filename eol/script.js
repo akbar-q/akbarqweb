@@ -5,8 +5,8 @@
 
 class EOLCountdown {
     constructor() {
-        // Target: 11:30 AM, 20 December 2025 GMT+4
-        this.targetDate = new Date('2025-12-20T11:30:00+04:00');
+        // Target: 8:00 PM, 27 December 2025 GMT+4
+        this.targetDate = new Date('2025-12-27T20:00:00+04:00');
         this.messages = [
             "borrowed time is being returned",
             "atlas can no longer hold up the sky",
@@ -83,6 +83,8 @@ class EOLCountdown {
         
         this.currentMessageIndex = 0;
         this.currentPhilosophicalIndex = 0;
+        this.countdownInterval = null;
+        this.finalShown = false;
         this.init();
     }
 
@@ -106,22 +108,30 @@ class EOLCountdown {
     updateCountdown() {
         const now = new Date();
         const difference = this.targetDate - now;
+        const remaining = Math.max(0, difference);
 
+        const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+
+        // Update display
+        this.updateTimeDisplay('days', days);
+        this.updateTimeDisplay('hours', hours);
+        this.updateTimeDisplay('minutes', minutes);
+        this.updateTimeDisplay('seconds', seconds);
+
+        // Add pulse effect on seconds change when time remains
         if (difference > 0) {
-            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-            // Update display
-            this.updateTimeDisplay('days', days);
-            this.updateTimeDisplay('hours', hours);
-            this.updateTimeDisplay('minutes', minutes);
-            this.updateTimeDisplay('seconds', seconds);
-
-            // Add pulse effect on seconds change
             this.pulseOnChange('seconds', seconds);
-        } else {
+        }
+
+        // If countdown has ended, show the final state and stop ticking
+        if (difference <= 0 && !this.finalShown) {
+            this.finalShown = true;
+            if (this.countdownInterval) {
+                clearInterval(this.countdownInterval);
+            }
             this.showFinalMessage();
         }
     }
@@ -175,7 +185,7 @@ class EOLCountdown {
     }
 
     startCountdown() {
-        setInterval(() => {
+        this.countdownInterval = setInterval(() => {
             this.updateCountdown();
         }, 1000);
     }
@@ -258,7 +268,7 @@ class EOLCountdown {
                     color: #666666;
                     margin-top: 2rem;
                     letter-spacing: 0.05rem;
-                ">20.12.2025 • 11:30 GMT+4</p>
+                ">27.12.2025 • 20:00 GMT+4</p>
             </div>
         `;
     }
