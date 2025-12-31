@@ -5,71 +5,132 @@
   <title>Alone - New Year</title>
   <style>
     body {
-      background: #222f3e;
-      color: #00b894;
-      font-family: 'Space Mono', monospace;
       margin: 0;
       height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      animation: alone-bg 2s infinite alternate;
+      width: 100vw;
+      overflow: hidden;
+      background: #000;
+      animation: alonebgflash 0.11s infinite alternate;
     }
-    @keyframes alone-bg {
-      0% { background: #222f3e; }
-      100% { background: #636e72; }
+    @keyframes alonebgflash {
+      0% { background: #000; }
+      20% { background: #00b894; }
+      40% { background: #fff; }
+      60% { background: #636e72; }
+      80% { background: #222f3e; }
+      100% { background: #000; }
     }
-    h1 {
-      font-size: 2.6em;
-      text-shadow: 0 0 10px #00b894, 0 0 20px #fff;
-      animation: alone-title 1.2s infinite alternate;
+    .alone-piece {
+      position: absolute;
+      font-size: 2.2em;
+      font-family: 'Space Mono', 'Comic Sans MS', cursive, sans-serif;
+      color: #00b894;
+      text-shadow: 0 0 10px #fff, 0 0 20px #00b894;
+      transform: rotate(-10deg);
+      animation: aloneMove 0.17s infinite alternate, aloneColor 0.09s infinite alternate, aloneScale 0.13s infinite alternate;
+      z-index: 2;
+      pointer-events: none;
     }
-    @keyframes alone-title {
+    @keyframes aloneMove {
+      0% { left: 10vw; top: 10vh; }
+      100% { left: 70vw; top: 60vh; }
+    }
+    @keyframes aloneColor {
       0% { color: #00b894; }
       50% { color: #fff; }
-      100% { color: #00b894; }
+      100% { color: #636e72; }
     }
-    .poem {
-      margin-top: 2em;
-      font-size: 1.2em;
-      max-width: 60vw;
-      text-align: center;
-      opacity: 0.9;
-      color: #fff;
-      text-shadow: 0 0 8px #00b894;
+    @keyframes aloneScale {
+      0% { transform: scale(1.1) rotate(-10deg); }
+      100% { transform: scale(0.8) rotate(20deg); }
     }
-    .alone {
-      font-size: 1.5em;
-      color: #00b894;
-      opacity: 0.7;
-      margin-top: 2em;
-      animation: alone-title 1.5s infinite alternate;
+    .alone-img {
+      position: absolute;
+      width: 22vw;
+      height: auto;
+      left: 20vw;
+      top: 60vh;
+      filter: grayscale(1) contrast(2) blur(1px);
+      animation: imgmoveA 0.23s infinite alternate;
+      z-index: 5;
+      pointer-events: none;
+    }
+    @keyframes imgmoveA {
+      0% { left: 20vw; top: 60vh; transform: scale(1) rotate(0deg); }
+      100% { left: 70vw; top: 10vh; transform: scale(1.2) rotate(-15deg); }
     }
   </style>
 </head>
 <body>
-  <h1>Alone</h1>
-  <div class="poem">The crowd is loud, but I am alone.<br>Every cheer is a reminder.<br>Every wish is a wall.<br><br>Did you notice me, or did you walk away?</div>
-  <div class="alone" id="alone"></div>
+  <div class="alone-piece">The crowd is loud, but I am alone.</div>
+  <div class="alone-piece" style="left:30vw;top:60vh;animation-delay:0.1s;">Every cheer is a reminder.</div>
+  <div class="alone-piece" style="left:10vw;top:30vh;animation-delay:0.2s;">Every wish is a wall.</div>
+  <div class="alone-piece" style="left:50vw;top:20vh;animation-delay:0.3s;">Did you notice me, or did you walk away?</div>
+  <img class="alone-img" id="aloneimg" src="../assets/images/404.jpg" alt="alone">
   <script>
-    const aloneLines = [
+    // Add random floating text fragments for extra chaos
+    const floating = [
       "I am invisible.",
       "You never asked.",
       "You never saw me.",
       "You are not here for me.",
       "You could have reached out."
     ];
-    let idx = 0;
-    function showAlone() {
-      document.getElementById('alone').textContent = aloneLines[idx];
-      idx = (idx + 1) % aloneLines.length;
-      setTimeout(showAlone, 2500 + Math.random()*1500);
-    }
-    showAlone();
+    floating.forEach((txt, i) => {
+      const el = document.createElement('div');
+      el.textContent = txt;
+      el.style.position = 'absolute';
+      el.style.left = (Math.random()*80) + 'vw';
+      el.style.top = (Math.random()*80) + 'vh';
+      el.style.fontSize = (1 + Math.random()*2) + 'em';
+      el.style.fontFamily = ['Space Mono','Impact','Comic Sans MS','monospace'][i%4];
+      el.style.color = ['#fff','#00b894','#636e72','#fff200'][i%4];
+      el.style.transform = `rotate(${Math.random()*360-180}deg)`;
+      el.style.zIndex = 10+i;
+      el.style.pointerEvents = 'none';
+      el.style.animation = `floatA${i} ${(0.1+Math.random()*0.3).toFixed(2)}s infinite alternate`;
+      document.body.appendChild(el);
+      const keyframes = `@keyframes floatA${i} {0%{left:${el.style.left};top:${el.style.top};}100%{left:${Math.random()*80}vw;top:${Math.random()*80}vh;}}`;
+      const styleSheet = document.createElement("style");
+      styleSheet.type = "text/css";
+      styleSheet.innerText = keyframes;
+      document.head.appendChild(styleSheet);
+    });
+    // Randomize image src from assets/images
+    const imgs = [
+      '../assets/images/404.jpg',
+      '../assets/images/energy.jpg',
+      '../assets/images/memorial.jpg',
+      '../assets/images/AR.jpg',
+      '../assets/images/meme.jpg',
+      '../assets/images/broken.jpg',
+      '../assets/images/music.jpg',
+      '../assets/images/maze.jpg',
+      '../assets/images/glitch.jpg',
+      '../assets/images/retro.jpg',
+      '../assets/images/snake.jpg',
+      '../assets/images/water-flow.jpg',
+      '../assets/images/slot.jpg',
+      '../assets/images/quiz-1.jpg',
+      '../assets/images/quiz-2.jpg',
+      '../assets/images/quiz-3.jpg',
+      '../assets/images/quiz-4.jpg',
+      '../assets/images/quiz-5.jpg',
+      '../assets/images/quiz-6.jpg',
+      '../assets/images/quiz-7.jpg',
+      '../assets/images/image-1.jpg',
+      '../assets/images/image-2.jpg',
+      '../assets/images/image-3.jpg',
+      '../assets/images/image-4.jpg',
+      '../assets/images/image-5.jpg',
+      '../assets/images/image-6.jpg',
+      '../assets/images/image-7.jpg',
+      '../assets/images/image-8.jpg',
+    ];
+    document.getElementById('aloneimg').src = imgs[Math.floor(Math.random()*imgs.length)];
     setTimeout(()=>{
       window.location.href = 'shuffle.html';
-    }, 6000+Math.random()*3000);
+    }, 4000+Math.random()*2000);
   </script>
 </body>
 </html>

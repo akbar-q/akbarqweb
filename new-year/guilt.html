@@ -5,71 +5,132 @@
   <title>Guilt - New Year</title>
   <style>
     body {
-      background: #1b262c;
-      color: #ffd6e0;
-      font-family: 'Source Code Pro', monospace;
       margin: 0;
       height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      animation: guilt-bg 2s infinite alternate;
+      width: 100vw;
+      overflow: hidden;
+      background: #000;
+      animation: guiltbgflash 0.13s infinite alternate;
     }
-    @keyframes guilt-bg {
-      0% { background: #1b262c; }
-      100% { background: #222831; }
+    @keyframes guiltbgflash {
+      0% { background: #000; }
+      20% { background: #ffd6e0; }
+      40% { background: #fff; }
+      60% { background: #222831; }
+      80% { background: #1b262c; }
+      100% { background: #000; }
     }
-    h1 {
-      font-size: 2.7em;
-      text-shadow: 0 0 10px #ffd6e0, 0 0 20px #fff;
-      animation: guilt-title 1.2s infinite alternate;
+    .guilt-piece {
+      position: absolute;
+      font-size: 2.2em;
+      font-family: 'Source Code Pro', 'Comic Sans MS', cursive, sans-serif;
+      color: #ffd6e0;
+      text-shadow: 0 0 10px #fff, 0 0 20px #ffd6e0;
+      transform: rotate(-10deg);
+      animation: guiltMove 0.19s infinite alternate, guiltColor 0.09s infinite alternate, guiltScale 0.11s infinite alternate;
+      z-index: 2;
+      pointer-events: none;
     }
-    @keyframes guilt-title {
+    @keyframes guiltMove {
+      0% { left: 10vw; top: 10vh; }
+      100% { left: 70vw; top: 60vh; }
+    }
+    @keyframes guiltColor {
       0% { color: #ffd6e0; }
       50% { color: #fff; }
-      100% { color: #ffd6e0; }
+      100% { color: #222831; }
     }
-    .poem {
-      margin-top: 2em;
-      font-size: 1.3em;
-      max-width: 60vw;
-      text-align: center;
-      opacity: 0.95;
-      color: #fff;
-      text-shadow: 0 0 8px #ffd6e0;
+    @keyframes guiltScale {
+      0% { transform: scale(1.1) rotate(-10deg); }
+      100% { transform: scale(0.8) rotate(20deg); }
     }
-    .guilt {
-      font-size: 1.5em;
-      color: #ffd6e0;
-      opacity: 0.7;
-      margin-top: 2em;
-      animation: guilt-title 1.5s infinite alternate;
+    .guilt-img {
+      position: absolute;
+      width: 20vw;
+      height: auto;
+      left: 60vw;
+      top: 10vh;
+      filter: grayscale(1) contrast(2) blur(1px);
+      animation: imgmove 0.3s infinite alternate;
+      z-index: 5;
+      pointer-events: none;
+    }
+    @keyframes imgmove {
+      0% { left: 60vw; top: 10vh; transform: scale(1) rotate(0deg); }
+      100% { left: 20vw; top: 70vh; transform: scale(1.2) rotate(15deg); }
     }
   </style>
 </head>
 <body>
-  <h1>Guilt</h1>
-  <div class="poem">You celebrate, but you forget.<br>There are voices you ignore.<br>Every cheer is a weight.<br>Every wish is a wound.<br><br>Did you reach out, or did you turn away?</div>
-  <div class="guilt" id="guilt"></div>
+  <div class="guilt-piece">You celebrate, but you forget.</div>
+  <div class="guilt-piece" style="left:30vw;top:60vh;animation-delay:0.1s;">There are voices you ignore.</div>
+  <div class="guilt-piece" style="left:10vw;top:30vh;animation-delay:0.2s;">Every cheer is a weight.</div>
+  <div class="guilt-piece" style="left:50vw;top:20vh;animation-delay:0.3s;">Every wish is a wound.</div>
+  <img class="guilt-img" id="guiltimg" src="../assets/images/404.jpg" alt="guilt">
   <script>
-    const guiltLines = [
+    // Add random floating text fragments for extra chaos
+    const floating = [
       "You could have done more.",
       "You looked away.",
       "You are part of the silence.",
       "The wounds are yours too.",
       "You are not blameless."
     ];
-    let idx = 0;
-    function showGuilt() {
-      document.getElementById('guilt').textContent = guiltLines[idx];
-      idx = (idx + 1) % guiltLines.length;
-      setTimeout(showGuilt, 2500 + Math.random()*1500);
-    }
-    showGuilt();
+    floating.forEach((txt, i) => {
+      const el = document.createElement('div');
+      el.textContent = txt;
+      el.style.position = 'absolute';
+      el.style.left = (Math.random()*80) + 'vw';
+      el.style.top = (Math.random()*80) + 'vh';
+      el.style.fontSize = (1 + Math.random()*2) + 'em';
+      el.style.fontFamily = ['Source Code Pro','Impact','Comic Sans MS','monospace'][i%4];
+      el.style.color = ['#fff','#ffd6e0','#222831','#fff200'][i%4];
+      el.style.transform = `rotate(${Math.random()*360-180}deg)`;
+      el.style.zIndex = 10+i;
+      el.style.pointerEvents = 'none';
+      el.style.animation = `floatG${i} ${(0.1+Math.random()*0.3).toFixed(2)}s infinite alternate`;
+      document.body.appendChild(el);
+      const keyframes = `@keyframes floatG${i} {0%{left:${el.style.left};top:${el.style.top};}100%{left:${Math.random()*80}vw;top:${Math.random()*80}vh;}}`;
+      const styleSheet = document.createElement("style");
+      styleSheet.type = "text/css";
+      styleSheet.innerText = keyframes;
+      document.head.appendChild(styleSheet);
+    });
+    // Randomize image src from assets/images
+    const imgs = [
+      '../assets/images/404.jpg',
+      '../assets/images/energy.jpg',
+      '../assets/images/memorial.jpg',
+      '../assets/images/AR.jpg',
+      '../assets/images/meme.jpg',
+      '../assets/images/broken.jpg',
+      '../assets/images/music.jpg',
+      '../assets/images/maze.jpg',
+      '../assets/images/glitch.jpg',
+      '../assets/images/retro.jpg',
+      '../assets/images/snake.jpg',
+      '../assets/images/water-flow.jpg',
+      '../assets/images/slot.jpg',
+      '../assets/images/quiz-1.jpg',
+      '../assets/images/quiz-2.jpg',
+      '../assets/images/quiz-3.jpg',
+      '../assets/images/quiz-4.jpg',
+      '../assets/images/quiz-5.jpg',
+      '../assets/images/quiz-6.jpg',
+      '../assets/images/quiz-7.jpg',
+      '../assets/images/image-1.jpg',
+      '../assets/images/image-2.jpg',
+      '../assets/images/image-3.jpg',
+      '../assets/images/image-4.jpg',
+      '../assets/images/image-5.jpg',
+      '../assets/images/image-6.jpg',
+      '../assets/images/image-7.jpg',
+      '../assets/images/image-8.jpg',
+    ];
+    document.getElementById('guiltimg').src = imgs[Math.floor(Math.random()*imgs.length)];
     setTimeout(()=>{
       window.location.href = 'shuffle.html';
-    }, 6000+Math.random()*3000);
+    }, 4000+Math.random()*2000);
   </script>
 </body>
 </html>

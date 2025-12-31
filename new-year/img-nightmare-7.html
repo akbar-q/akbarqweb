@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Image Nightmare 7</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #000;
+    }
+    body {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bgimg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      object-fit: cover;
+      z-index: 1;
+      pointer-events: none;
+      filter: brightness(0.95) contrast(1.1) saturate(1.2);
+      animation: imgflash 0.18s infinite alternate;
+    }
+    @keyframes imgflash {
+      0% { filter: brightness(0.95) contrast(1.1) saturate(1.2); }
+      100% { filter: brightness(1.1) contrast(1.3) saturate(1.5) hue-rotate(10deg); }
+    }
+  </style>
+</head>
+<body>
+  <img class="bgimg" src="https://cdnb.artstation.com/p/assets/images/images/043/970/033/large/sudhakar-gupta-dark-mind-2.jpg?1638774218" alt="nightmare image 7">
+  <script>
+    setTimeout(()=>{ window.location.href = 'shuffle.html'; }, 3500+Math.random()*2000);
+  </script>
+</body>
+</html>

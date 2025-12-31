@@ -5,71 +5,132 @@
   <title>Unheard - New Year</title>
   <style>
     body {
-      background: #2d3436;
-      color: #fdcb6e;
-      font-family: 'IBM Plex Mono', monospace;
       margin: 0;
       height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      animation: unheard-bg 2s infinite alternate;
+      width: 100vw;
+      overflow: hidden;
+      background: #000;
+      animation: unheardbgflash 0.12s infinite alternate;
     }
-    @keyframes unheard-bg {
-      0% { background: #2d3436; }
-      100% { background: #636e72; }
+    @keyframes unheardbgflash {
+      0% { background: #000; }
+      20% { background: #fdcb6e; }
+      40% { background: #fff; }
+      60% { background: #636e72; }
+      80% { background: #2d3436; }
+      100% { background: #000; }
     }
-    h1 {
-      font-size: 2.7em;
-      text-shadow: 0 0 10px #fdcb6e, 0 0 20px #fff;
-      animation: unheard-title 1.2s infinite alternate;
+    .unheard-piece {
+      position: absolute;
+      font-size: 2.2em;
+      font-family: 'IBM Plex Mono', 'Comic Sans MS', cursive, sans-serif;
+      color: #fdcb6e;
+      text-shadow: 0 0 10px #fff, 0 0 20px #fdcb6e;
+      transform: rotate(-10deg);
+      animation: unheardMove 0.15s infinite alternate, unheardColor 0.09s infinite alternate, unheardScale 0.13s infinite alternate;
+      z-index: 2;
+      pointer-events: none;
     }
-    @keyframes unheard-title {
+    @keyframes unheardMove {
+      0% { left: 10vw; top: 10vh; }
+      100% { left: 70vw; top: 60vh; }
+    }
+    @keyframes unheardColor {
       0% { color: #fdcb6e; }
       50% { color: #fff; }
-      100% { color: #fdcb6e; }
+      100% { color: #636e72; }
     }
-    .poem {
-      margin-top: 2em;
-      font-size: 1.3em;
-      max-width: 60vw;
-      text-align: center;
-      opacity: 0.95;
-      color: #fff;
-      text-shadow: 0 0 8px #fdcb6e;
+    @keyframes unheardScale {
+      0% { transform: scale(1.1) rotate(-10deg); }
+      100% { transform: scale(0.8) rotate(20deg); }
     }
-    .unheard {
-      font-size: 1.5em;
-      color: #fdcb6e;
-      opacity: 0.7;
-      margin-top: 2em;
-      animation: unheard-title 1.5s infinite alternate;
+    .unheard-img {
+      position: absolute;
+      width: 22vw;
+      height: auto;
+      left: 70vw;
+      top: 20vh;
+      filter: grayscale(1) contrast(2) blur(1px);
+      animation: imgmoveU 0.21s infinite alternate;
+      z-index: 5;
+      pointer-events: none;
+    }
+    @keyframes imgmoveU {
+      0% { left: 70vw; top: 20vh; transform: scale(1) rotate(0deg); }
+      100% { left: 10vw; top: 70vh; transform: scale(1.2) rotate(-15deg); }
     }
   </style>
 </head>
 <body>
-  <h1>Unheard</h1>
-  <div class="poem">I spoke, but no one listened.<br>My words faded into the fireworks.<br>My pain is not a celebration.<br><br>Did you hear me, or did you turn away?</div>
-  <div class="unheard" id="unheard"></div>
+  <div class="unheard-piece">I spoke, but no one listened.</div>
+  <div class="unheard-piece" style="left:30vw;top:60vh;animation-delay:0.1s;">My words faded into the fireworks.</div>
+  <div class="unheard-piece" style="left:10vw;top:30vh;animation-delay:0.2s;">My pain is not a celebration.</div>
+  <div class="unheard-piece" style="left:50vw;top:20vh;animation-delay:0.3s;">Did you hear me, or did you turn away?</div>
+  <img class="unheard-img" id="unheardimg" src="../assets/images/404.jpg" alt="unheard">
   <script>
-    const unheardLines = [
+    // Add random floating text fragments for extra chaos
+    const floating = [
       "My voice is lost.",
       "You never listened.",
       "You are not here for me.",
       "You could have heard me.",
       "You are not innocent."
     ];
-    let idx = 0;
-    function showUnheard() {
-      document.getElementById('unheard').textContent = unheardLines[idx];
-      idx = (idx + 1) % unheardLines.length;
-      setTimeout(showUnheard, 2500 + Math.random()*1500);
-    }
-    showUnheard();
+    floating.forEach((txt, i) => {
+      const el = document.createElement('div');
+      el.textContent = txt;
+      el.style.position = 'absolute';
+      el.style.left = (Math.random()*80) + 'vw';
+      el.style.top = (Math.random()*80) + 'vh';
+      el.style.fontSize = (1 + Math.random()*2) + 'em';
+      el.style.fontFamily = ['IBM Plex Mono','Impact','Comic Sans MS','monospace'][i%4];
+      el.style.color = ['#fff','#fdcb6e','#636e72','#fff200'][i%4];
+      el.style.transform = `rotate(${Math.random()*360-180}deg)`;
+      el.style.zIndex = 10+i;
+      el.style.pointerEvents = 'none';
+      el.style.animation = `floatU${i} ${(0.1+Math.random()*0.3).toFixed(2)}s infinite alternate`;
+      document.body.appendChild(el);
+      const keyframes = `@keyframes floatU${i} {0%{left:${el.style.left};top:${el.style.top};}100%{left:${Math.random()*80}vw;top:${Math.random()*80}vh;}}`;
+      const styleSheet = document.createElement("style");
+      styleSheet.type = "text/css";
+      styleSheet.innerText = keyframes;
+      document.head.appendChild(styleSheet);
+    });
+    // Randomize image src from assets/images
+    const imgs = [
+      '../assets/images/404.jpg',
+      '../assets/images/energy.jpg',
+      '../assets/images/memorial.jpg',
+      '../assets/images/AR.jpg',
+      '../assets/images/meme.jpg',
+      '../assets/images/broken.jpg',
+      '../assets/images/music.jpg',
+      '../assets/images/maze.jpg',
+      '../assets/images/glitch.jpg',
+      '../assets/images/retro.jpg',
+      '../assets/images/snake.jpg',
+      '../assets/images/water-flow.jpg',
+      '../assets/images/slot.jpg',
+      '../assets/images/quiz-1.jpg',
+      '../assets/images/quiz-2.jpg',
+      '../assets/images/quiz-3.jpg',
+      '../assets/images/quiz-4.jpg',
+      '../assets/images/quiz-5.jpg',
+      '../assets/images/quiz-6.jpg',
+      '../assets/images/quiz-7.jpg',
+      '../assets/images/image-1.jpg',
+      '../assets/images/image-2.jpg',
+      '../assets/images/image-3.jpg',
+      '../assets/images/image-4.jpg',
+      '../assets/images/image-5.jpg',
+      '../assets/images/image-6.jpg',
+      '../assets/images/image-7.jpg',
+      '../assets/images/image-8.jpg',
+    ];
+    document.getElementById('unheardimg').src = imgs[Math.floor(Math.random()*imgs.length)];
     setTimeout(()=>{
       window.location.href = 'shuffle.html';
-    }, 6000+Math.random()*3000);
+    }, 4000+Math.random()*2000);
   </script>
 </body>
 </html>

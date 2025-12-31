@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Image Nightmare 3</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #000;
+    }
+    body {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bgimg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      object-fit: cover;
+      z-index: 1;
+      pointer-events: none;
+      filter: brightness(0.95) contrast(1.1) saturate(1.2);
+      animation: imgflash 0.18s infinite alternate;
+    }
+    @keyframes imgflash {
+      0% { filter: brightness(0.95) contrast(1.1) saturate(1.2); }
+      100% { filter: brightness(1.1) contrast(1.3) saturate(1.5) hue-rotate(10deg); }
+    }
+  </style>
+</head>
+<body>
+  <img class="bgimg" src="https://preview.redd.it/nahfr9dyidj51.jpg?width=640&crop=smart&auto=webp&s=20440e17a16dc39bf342cc5f34eed5ba1f5711ea" alt="nightmare image 3">
+  <script>
+    setTimeout(()=>{ window.location.href = 'shuffle.html'; }, 3500+Math.random()*2000);
+  </script>
+</body>
+</html>

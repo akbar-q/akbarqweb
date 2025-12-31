@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Image Nightmare 1</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #000;
+    }
+    body {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bgimg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      object-fit: cover;
+      z-index: 1;
+      pointer-events: none;
+      filter: brightness(0.95) contrast(1.1) saturate(1.2);
+      animation: imgflash 0.18s infinite alternate;
+    }
+    @keyframes imgflash {
+      0% { filter: brightness(0.95) contrast(1.1) saturate(1.2); }
+      100% { filter: brightness(1.1) contrast(1.3) saturate(1.5) hue-rotate(10deg); }
+    }
+  </style>
+</head>
+<body>
+  <img class="bgimg" src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/1fb896dd-cba1-4c09-89c7-c7178a830305/dg77f1j-453b0fe9-1715-4a4d-8c67-00ae3161e979.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzFmYjg5NmRkLWNiYTEtNGMwOS04OWM3LWM3MTc4YTgzMDMwNVwvZGc3N2Yxai00NTNiMGZlOS0xNzE1LTRhNGQtOGM2Ny0wMGFlMzE2MWU5NzkucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.sOD9CGbpV6XfWEGYxVsWEHuHOnujd7ATyxYSi7gWExg" alt="nightmare image 1">
+  <script>
+    setTimeout(()=>{ window.location.href = 'shuffle.html'; }, 3500+Math.random()*2000);
+  </script>
+</body>
+</html>

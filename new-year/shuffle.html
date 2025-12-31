@@ -26,25 +26,39 @@
       'right.html',
       'rest.html',
       'inevitable.html',
+      'img-nightmare-1.html',
+      'img-nightmare-2.html',
+      'img-nightmare-3.html',
+      'img-nightmare-4.html',
+      'img-nightmare-5.html',
+      'img-nightmare-6.html',
+      'img-nightmare-7.html',
+      'img-nightmare-8.html',
       'shuffle.html' // allow looping back to itself for infinite loop
     ];
-    // Shuffle with memory: avoid recently shown pages
-    let history = JSON.parse(localStorage.getItem('shuffleHistory') || '[]');
-    const maxHistory = Math.max(3, Math.floor(pages.length/3));
-    function shuffleLoop() {
-      let next, tries = 0;
-      do {
-        next = pages[Math.floor(Math.random() * pages.length)];
-        tries++;
-      } while ((window.location.pathname.endsWith(next) || history.includes(next)) && tries < 20);
-      history.push(next);
-      if (history.length > maxHistory) history = history.slice(-maxHistory);
-      localStorage.setItem('shuffleHistory', JSON.stringify(history));
-      setTimeout(() => {
-        window.location.href = next;
-      }, 500 + Math.random() * 1200);
+    // Cycle through a shuffled list of pages, hitting every page before repeating
+    let cycle = JSON.parse(localStorage.getItem('shuffleCycle') || 'null');
+    let idx = parseInt(localStorage.getItem('shuffleIdx') || '0');
+    function shuffleArray(array) {
+      for (let i = array.length - 2; i > 0; i--) { // exclude shuffle.html itself from shuffle
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
     }
-    shuffleLoop();
+    if (!cycle || !Array.isArray(cycle) || cycle.length !== pages.length) {
+      cycle = shuffleArray([...pages]);
+      idx = 0;
+    }
+    // Always skip shuffle.html itself
+    while (cycle[idx] === 'shuffle.html') {
+      idx = (idx + 1) % cycle.length;
+    }
+    localStorage.setItem('shuffleCycle', JSON.stringify(cycle));
+    localStorage.setItem('shuffleIdx', ((idx+1)%cycle.length).toString());
+    setTimeout(() => {
+      window.location.href = cycle[idx];
+    }, 500 + Math.random() * 1200);
   </script>
   <style>
     body {

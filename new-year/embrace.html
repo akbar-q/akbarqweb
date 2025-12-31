@@ -5,20 +5,20 @@
   <title>Embrace - New Year</title>
   <style>
     body {
-      background: #222f3e;
-      color: #ee5253;
-      font-family: 'Lora', serif;
       margin: 0;
       height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      animation: embrace-bg 2s infinite alternate;
+      width: 100vw;
+      overflow: hidden;
+      background: #000;
+      animation: embracebgflash 0.13s infinite alternate;
     }
     @keyframes embrace-bg {
-      0% { background: #222f3e; }
-      100% { background: #576574; }
+      0% { background: #000; }
+      20% { background: #6c5ce7; }
+      40% { background: #fff; }
+      60% { background: #636e72; }
+      80% { background: #222; }
+      100% { background: #000; }
     }
     h1 {
       font-size: 2.6em;
@@ -50,16 +50,75 @@
 </head>
 <body>
   <h1>Embrace</h1>
-  <div class="poem">To embrace the end is wisdom.<br>Death is not defeat.<br>It is the closing of a story.<br><br>Every right includes the right to rest.</div>
-  <div class="embrace" id="embrace"></div>
+  <div class="embrace-piece">To embrace the end is wisdom.</div>
+  <div class="embrace-piece" style="left:30vw;top:60vh;animation-delay:0.1s;">Death is not defeat.</div>
+  <div class="embrace-piece" style="left:10vw;top:30vh;animation-delay:0.2s;">It is the closing of a story.</div>
+  <div class="embrace-piece" style="left:50vw;top:20vh;animation-delay:0.3s;">Every right includes the right to rest.</div>
+  <img class="embrace-img" id="embraceimg" src="../assets/images/404.jpg" alt="embrace">
   <script>
-    const embraceLines = [
+    // Add random floating text fragments for extra chaos
+    const floating = [
       "Rest is not surrender.",
-      "The story ends with dignity.",
-      "You are allowed to stop.",
-      "The end is gentle.",
-      "It is your right to choose."
+      "The end is a beginning.",
+      "Darkness is gentle.",
+      "You have earned peace.",
+      "Embrace the right to let go."
     ];
+    floating.forEach((txt, i) => {
+      const el = document.createElement('div');
+      el.textContent = txt;
+      el.style.position = 'absolute';
+      el.style.left = (Math.random()*80) + 'vw';
+      el.style.top = (Math.random()*80) + 'vh';
+      el.style.fontSize = (1 + Math.random()*2) + 'em';
+      el.style.fontFamily = ['Share Tech Mono','Impact','Comic Sans MS','monospace'][i%4];
+      el.style.color = ['#fff','#6c5ce7','#636e72','#fff200'][i%4];
+      el.style.transform = `rotate(${Math.random()*360-180}deg)`;
+      el.style.zIndex = 10+i;
+      el.style.pointerEvents = 'none';
+      el.style.animation = `floatE${i} ${(0.1+Math.random()*0.3).toFixed(2)}s infinite alternate`;
+      document.body.appendChild(el);
+      const keyframes = `@keyframes floatE${i} {0%{left:${el.style.left};top:${el.style.top};}100%{left:${Math.random()*80}vw;top:${Math.random()*80}vh;}}`;
+      const styleSheet = document.createElement("style");
+      styleSheet.type = "text/css";
+      styleSheet.innerText = keyframes;
+      document.head.appendChild(styleSheet);
+    });
+    // Randomize image src from assets/images
+    const imgs = [
+      '../assets/images/404.jpg',
+      '../assets/images/energy.jpg',
+      '../assets/images/memorial.jpg',
+      '../assets/images/AR.jpg',
+      '../assets/images/meme.jpg',
+      '../assets/images/broken.jpg',
+      '../assets/images/music.jpg',
+      '../assets/images/maze.jpg',
+      '../assets/images/glitch.jpg',
+      '../assets/images/retro.jpg',
+      '../assets/images/snake.jpg',
+      '../assets/images/water-flow.jpg',
+      '../assets/images/slot.jpg',
+      '../assets/images/quiz-1.jpg',
+      '../assets/images/quiz-2.jpg',
+      '../assets/images/quiz-3.jpg',
+      '../assets/images/quiz-4.jpg',
+      '../assets/images/quiz-5.jpg',
+      '../assets/images/quiz-6.jpg',
+      '../assets/images/quiz-7.jpg',
+      '../assets/images/image-1.jpg',
+      '../assets/images/image-2.jpg',
+      '../assets/images/image-3.jpg',
+      '../assets/images/image-4.jpg',
+      '../assets/images/image-5.jpg',
+      '../assets/images/image-6.jpg',
+      '../assets/images/image-7.jpg',
+      '../assets/images/image-8.jpg',
+    ];
+    document.getElementById('embraceimg').src = imgs[Math.floor(Math.random()*imgs.length)];
+    setTimeout(()=>{
+      window.location.href = 'shuffle.html';
+    }, 4000+Math.random()*2000);
     let idx = 0;
     function showEmbrace() {
       document.getElementById('embrace').textContent = embraceLines[idx];
