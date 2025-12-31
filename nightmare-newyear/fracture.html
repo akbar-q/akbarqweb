@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fracture - New Year</title>
+  <style>
+    body {
+      background: #0d0d0d;
+      color: #00fff5;
+      font-family: 'Bungee', cursive;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: fracturebg 1.5s infinite alternate;
+    }
+    @keyframes fracturebg {
+      0% { background: #0d0d0d; }
+      100% { background: #232931; }
+    }
+    h1 {
+      font-size: 2.8em;
+      letter-spacing: 0.15em;
+      text-shadow: 0 0 15px #00fff5, 0 0 10px #fff;
+      animation: fracture 1.2s infinite alternate;
+    }
+    @keyframes fracture {
+      0% { color: #00fff5; }
+      50% { color: #fff; }
+      100% { color: #00fff5; }
+    }
+    .poem {
+      margin-top: 2em;
+      font-size: 1.3em;
+      max-width: 60vw;
+      text-align: center;
+      font-family: 'Bungee', cursive;
+      opacity: 0.95;
+      color: #fff;
+      text-shadow: 0 0 8px #00fff5;
+    }
+    .fracture {
+      font-size: 1.5em;
+      color: #00fff5;
+      opacity: 0.7;
+      margin-top: 2em;
+      animation: fracture 1.5s infinite alternate;
+    }
+  </style>
+</head>
+<body>
+  <h1>Fracture</h1>
+  <div class="poem">The year fractures at midnight.<br>Promises splinter, dreams shatter.<br>Time is a broken mirror.<br>Look closely. You are in every shard.<br><br>What do you see?</div>
+  <div class="fracture" id="fracture"></div>
+  <script>
+    const fractures = [
+      "Pieces never fit again.",
+      "You are everywhere and nowhere.",
+      "The mirror is cracked.",
+      "Time is sharp.",
+      "You cannot escape the reflection."
+    ];
+    let idx = 0;
+    function showFracture() {
+      document.getElementById('fracture').textContent = fractures[idx];
+      idx = (idx + 1) % fractures.length;
+      setTimeout(showFracture, 2500 + Math.random()*1500);
+    }
+    showFracture();
+    setTimeout(()=>{
+      window.location.href = 'shuffle.html';
+    }, 6000+Math.random()*3000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ask For It - New Year</title>
+  <style>
+    body {
+      background: radial-gradient(circle, #000 0%, #333 100%);
+      color: #f7e018;
+      font-family: 'Permanent Marker', cursive;
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: pulsebg 2s infinite alternate;
+    }
+    @keyframes pulsebg {
+      0% { background: #000; }
+      100% { background: #333; }
+    }
+    h1 {
+      font-size: 3em;
+      letter-spacing: 0.1em;
+      text-shadow: 0 0 10px #f7e018, 0 0 20px #000;
+      animation: askpulse 1.2s infinite alternate;
+    }
+    @keyframes askpulse {
+      0% { color: #f7e018; }
+      50% { color: #fff; }
+      100% { color: #f7e018; }
+    }
+    .poem {
+      margin-top: 2em;
+      font-size: 1.4em;
+      max-width: 60vw;
+      text-align: center;
+      font-family: 'Permanent Marker', cursive;
+      opacity: 0.95;
+      color: #f7e018;
+      text-shadow: 0 0 8px #fff;
+    }
+    .rain {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 5;
+    }
+  </style>
+</head>
+<body>
+  <h1>You Asked For It</h1>
+  <div class="poem">You called for the new year.<br>It answered, but not with joy.<br>It crept in, silent and cold.<br>Now it is yours.<br><br>Be careful what you wish for.<br>Time is listening.<br>And it is cruel.</div>
+  <canvas class="rain" id="rain"></canvas>
+  <script>
+    // Rain of yellow letters
+    const canvas = document.getElementById('rain');
+    const ctx = canvas.getContext('2d');
+    let W = window.innerWidth;
+    let H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+    let letters = 'HAPPYNEWYEAR!?'.split('');
+    let fontSize = 32;
+    let columns = Math.floor(W / fontSize);
+    let drops = Array(columns).fill(1);
+    function drawRain() {
+      ctx.fillStyle = 'rgba(0,0,0,0.18)';
+      ctx.fillRect(0,0,W,H);
+      ctx.font = fontSize + "px 'Permanent Marker', cursive";
+      for(let i=0;i<drops.length;i++){
+        let text = letters[Math.floor(Math.random()*letters.length)];
+        ctx.fillStyle = `rgba(247,224,24,${0.7+0.3*Math.random()})`;
+        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+        if(drops[i]*fontSize > H && Math.random() > 0.975){
+          drops[i]=0;
+        }
+        drops[i]++;
+      }
+    }
+    setInterval(drawRain, 60);
+    window.addEventListener('resize',()=>{
+      W = window.innerWidth; H = window.innerHeight;
+      canvas.width = W; canvas.height = H;
+      columns = Math.floor(W / fontSize);
+      drops = Array(columns).fill(1);
+    });
+    setTimeout(()=>{
+      window.location.href = 'shuffle.html';
+    }, 6000+Math.random()*3000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Release - New Year</title>
+  <style>
+    body {
+      background: #23272a;
+      color: #7289da;
+      font-family: 'Merriweather', serif;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: release-bg 2s infinite alternate;
+    }
+    @keyframes release-bg {
+      0% { background: #23272a; }
+      100% { background: #2c2f33; }
+    }
+    h1 {
+      font-size: 2.5em;
+      text-shadow: 0 0 10px #7289da, 0 0 20px #fff;
+      animation: release-title 1.2s infinite alternate;
+    }
+    @keyframes release-title {
+      0% { color: #7289da; }
+      50% { color: #fff; }
+      100% { color: #7289da; }
+    }
+    .poem {
+      margin-top: 2em;
+      font-size: 1.2em;
+      max-width: 60vw;
+      text-align: center;
+      opacity: 0.9;
+      color: #fff;
+      text-shadow: 0 0 8px #7289da;
+    }
+    .release {
+      font-size: 1.5em;
+      color: #7289da;
+      opacity: 0.7;
+      margin-top: 2em;
+      animation: release-title 1.5s infinite alternate;
+    }
+  </style>
+</head>
+<body>
+  <h1>Release</h1>
+  <div class="poem">Death is not a thief.<br>It is a release from the weight.<br>Time offers freedom in silence.<br><br>To let go is a right, not a crime.</div>
+  <div class="release" id="release"></div>
+  <script>
+    const releaseLines = [
+      "Rest is deserved.",
+      "Freedom is found in letting go.",
+      "The silence is gentle.",
+      "You have earned release.",
+      "It is not wrong to want peace."
+    ];
+    let idx = 0;
+    function showRelease() {
+      document.getElementById('release').textContent = releaseLines[idx];
+      idx = (idx + 1) % releaseLines.length;
+      setTimeout(showRelease, 2500 + Math.random()*1500);
+    }
+    showRelease();
+    setTimeout(()=>{
+      window.location.href = 'shuffle.html';
+    }, 6000+Math.random()*3000);
+  </script>
+</body>
+</html>

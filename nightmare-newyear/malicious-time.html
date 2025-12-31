@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Malicious Time - New Year</title>
+  <style>
+    body {
+      background: linear-gradient(90deg, #222 0%, #ff0055 100%);
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: bgpulse 2.5s infinite alternate;
+    }
+    @keyframes bgpulse {
+      0% { background: #222; }
+      100% { background: #ff0055; }
+    }
+    h1 {
+      font-size: 2.7em;
+      letter-spacing: 0.2em;
+      text-shadow: 0 0 20px #ff0055, 0 0 10px #fff;
+      animation: malicious 1.2s infinite alternate;
+    }
+    @keyframes malicious {
+      0% { color: #fff; }
+      50% { color: #ff0055; }
+      100% { color: #fff; }
+    }
+    .poem {
+      margin-top: 2em;
+      font-size: 1.3em;
+      max-width: 60vw;
+      text-align: center;
+      font-family: 'Orbitron', monospace;
+      opacity: 0.9;
+      color: #fff;
+      text-shadow: 0 0 8px #ff0055;
+    }
+    .clock {
+      font-size: 2em;
+      margin-top: 2em;
+      font-family: 'Share Tech Mono', monospace;
+      color: #ff0055;
+      text-shadow: 0 0 10px #fff;
+      animation: malicious 1.5s infinite alternate;
+    }
+  </style>
+</head>
+<body>
+  <h1>Time Complied</h1>
+  <div class="poem">You begged for a new year.<br>Time listened, but not kindly.<br>It twisted, it turned, it broke.<br>Now you are here, and it is too late.<br><br>Time is not a gift.<br>It is a sentence.<br>And you asked for it.</div>
+  <div class="clock" id="clock"></div>
+  <script>
+    function updateClock() {
+      const d = new Date();
+      let h = d.getHours().toString().padStart(2,'0');
+      let m = d.getMinutes().toString().padStart(2,'0');
+      let s = d.getSeconds().toString().padStart(2,'0');
+      document.getElementById('clock').textContent = `${h}:${m}:${s}`;
+    }
+    setInterval(updateClock, 500);
+    updateClock();
+    setTimeout(()=>{
+      window.location.href = 'shuffle.html';
+    }, 6000+Math.random()*3000);
+  </script>
+</body>
+</html>

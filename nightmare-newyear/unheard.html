@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Unheard - New Year</title>
+  <style>
+    body {
+      background: #2d3436;
+      color: #fdcb6e;
+      font-family: 'IBM Plex Mono', monospace;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: unheard-bg 2s infinite alternate;
+    }
+    @keyframes unheard-bg {
+      0% { background: #2d3436; }
+      100% { background: #636e72; }
+    }
+    h1 {
+      font-size: 2.7em;
+      text-shadow: 0 0 10px #fdcb6e, 0 0 20px #fff;
+      animation: unheard-title 1.2s infinite alternate;
+    }
+    @keyframes unheard-title {
+      0% { color: #fdcb6e; }
+      50% { color: #fff; }
+      100% { color: #fdcb6e; }
+    }
+    .poem {
+      margin-top: 2em;
+      font-size: 1.3em;
+      max-width: 60vw;
+      text-align: center;
+      opacity: 0.95;
+      color: #fff;
+      text-shadow: 0 0 8px #fdcb6e;
+    }
+    .unheard {
+      font-size: 1.5em;
+      color: #fdcb6e;
+      opacity: 0.7;
+      margin-top: 2em;
+      animation: unheard-title 1.5s infinite alternate;
+    }
+  </style>
+</head>
+<body>
+  <h1>Unheard</h1>
+  <div class="poem">I spoke, but no one listened.<br>My words faded into the fireworks.<br>My pain is not a celebration.<br><br>Did you hear me, or did you turn away?</div>
+  <div class="unheard" id="unheard"></div>
+  <script>
+    const unheardLines = [
+      "My voice is lost.",
+      "You never listened.",
+      "You are not here for me.",
+      "You could have heard me.",
+      "You are not innocent."
+    ];
+    let idx = 0;
+    function showUnheard() {
+      document.getElementById('unheard').textContent = unheardLines[idx];
+      idx = (idx + 1) % unheardLines.length;
+      setTimeout(showUnheard, 2500 + Math.random()*1500);
+    }
+    showUnheard();
+    setTimeout(()=>{
+      window.location.href = 'shuffle.html';
+    }, 6000+Math.random()*3000);
+  </script>
+</body>
+</html>

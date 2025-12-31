@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Embrace - New Year</title>
+  <style>
+    body {
+      background: #222f3e;
+      color: #ee5253;
+      font-family: 'Lora', serif;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: embrace-bg 2s infinite alternate;
+    }
+    @keyframes embrace-bg {
+      0% { background: #222f3e; }
+      100% { background: #576574; }
+    }
+    h1 {
+      font-size: 2.6em;
+      text-shadow: 0 0 10px #ee5253, 0 0 20px #fff;
+      animation: embrace-title 1.2s infinite alternate;
+    }
+    @keyframes embrace-title {
+      0% { color: #ee5253; }
+      50% { color: #fff; }
+      100% { color: #ee5253; }
+    }
+    .poem {
+      margin-top: 2em;
+      font-size: 1.2em;
+      max-width: 60vw;
+      text-align: center;
+      opacity: 0.9;
+      color: #fff;
+      text-shadow: 0 0 8px #ee5253;
+    }
+    .embrace {
+      font-size: 1.5em;
+      color: #ee5253;
+      opacity: 0.7;
+      margin-top: 2em;
+      animation: embrace-title 1.5s infinite alternate;
+    }
+  </style>
+</head>
+<body>
+  <h1>Embrace</h1>
+  <div class="poem">To embrace the end is wisdom.<br>Death is not defeat.<br>It is the closing of a story.<br><br>Every right includes the right to rest.</div>
+  <div class="embrace" id="embrace"></div>
+  <script>
+    const embraceLines = [
+      "Rest is not surrender.",
+      "The story ends with dignity.",
+      "You are allowed to stop.",
+      "The end is gentle.",
+      "It is your right to choose."
+    ];
+    let idx = 0;
+    function showEmbrace() {
+      document.getElementById('embrace').textContent = embraceLines[idx];
+      idx = (idx + 1) % embraceLines.length;
+      setTimeout(showEmbrace, 2500 + Math.random()*1500);
+    }
+    showEmbrace();
+    setTimeout(()=>{
+      window.location.href = 'shuffle.html';
+    }, 6000+Math.random()*3000);
+  </script>
+</body>
+</html>

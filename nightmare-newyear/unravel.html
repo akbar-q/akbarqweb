@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Unravel - New Year</title>
+  <style>
+    body {
+      background: #222f3e;
+      color: #ee5253;
+      font-family: 'Caveat', cursive;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: unravelbg 2s infinite alternate;
+    }
+    @keyframes unravelbg {
+      0% { background: #222f3e; }
+      100% { background: #576574; }
+    }
+    h1 {
+      font-size: 2.6em;
+      text-shadow: 0 0 10px #ee5253, 0 0 20px #fff;
+      animation: unravel 1.2s infinite alternate;
+    }
+    @keyframes unravel {
+      0% { color: #ee5253; }
+      50% { color: #fff; }
+      100% { color: #ee5253; }
+    }
+    .poem {
+      margin-top: 2em;
+      font-size: 1.2em;
+      max-width: 60vw;
+      text-align: center;
+      font-family: 'Caveat', cursive;
+      opacity: 0.9;
+      color: #fff;
+      text-shadow: 0 0 8px #ee5253;
+    }
+    .unravel {
+      font-size: 1.5em;
+      color: #ee5253;
+      opacity: 0.7;
+      margin-top: 2em;
+      animation: unravel 1.5s infinite alternate;
+    }
+  </style>
+</head>
+<body>
+  <h1>Unravel</h1>
+  <div class="poem">The new year unravels.<br>Threads of hope come undone.<br>Time is a tapestry of loss.<br>Pull one string. Watch it all fall.<br><br>What will remain?</div>
+  <div class="unravel" id="unravel"></div>
+  <script>
+    const unravels = [
+      "Threads are breaking.",
+      "The tapestry is torn.",
+      "Loss is woven in.",
+      "You hold the string.",
+      "What will you keep?"
+    ];
+    let idx = 0;
+    function showUnravel() {
+      document.getElementById('unravel').textContent = unravels[idx];
+      idx = (idx + 1) % unravels.length;
+      setTimeout(showUnravel, 2500 + Math.random()*1500);
+    }
+    showUnravel();
+    setTimeout(()=>{
+      window.location.href = 'shuffle.html';
+    }, 6000+Math.random()*3000);
+  </script>
+</body>
+</html>

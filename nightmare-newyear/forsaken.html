@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Forsaken - New Year</title>
+  <style>
+    body {
+      background: #2c2c54;
+      color: #f19066;
+      font-family: 'JetBrains Mono', monospace;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: forsaken-bg 2s infinite alternate;
+    }
+    @keyframes forsaken-bg {
+      0% { background: #2c2c54; }
+      100% { background: #474787; }
+    }
+    h1 {
+      font-size: 2.7em;
+      text-shadow: 0 0 10px #f19066, 0 0 20px #fff;
+      animation: forsaken-title 1.2s infinite alternate;
+    }
+    @keyframes forsaken-title {
+      0% { color: #f19066; }
+      50% { color: #fff; }
+      100% { color: #f19066; }
+    }
+    .poem {
+      margin-top: 2em;
+      font-size: 1.3em;
+      max-width: 60vw;
+      text-align: center;
+      opacity: 0.95;
+      color: #fff;
+      text-shadow: 0 0 8px #f19066;
+    }
+    .forsaken {
+      font-size: 1.5em;
+      color: #f19066;
+      opacity: 0.7;
+      margin-top: 2em;
+      animation: forsaken-title 1.5s infinite alternate;
+    }
+  </style>
+</head>
+<body>
+  <h1>Forsaken</h1>
+  <div class="poem">I am forsaken in the crowd.<br>My pain is invisible.<br>Your joy is a knife.<br><br>Did you see me, or did you look away?</div>
+  <div class="forsaken" id="forsaken"></div>
+  <script>
+    const forsakenLines = [
+      "I am forgotten.",
+      "You never cared.",
+      "You are not here for me.",
+      "You could have saved me.",
+      "You are not innocent."
+    ];
+    let idx = 0;
+    function showForsaken() {
+      document.getElementById('forsaken').textContent = forsakenLines[idx];
+      idx = (idx + 1) % forsakenLines.length;
+      setTimeout(showForsaken, 2500 + Math.random()*1500);
+    }
+    showForsaken();
+    setTimeout(()=>{
+      window.location.href = 'shuffle.html';
+    }, 6000+Math.random()*3000);
+  </script>
+</body>
+</html>

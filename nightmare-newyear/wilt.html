@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wilt - New Year</title>
+  <style>
+    body {
+      background: #2d1e2f;
+      color: #f67280;
+      font-family: 'Amatic SC', cursive;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: wiltbg 2s infinite alternate;
+    }
+    @keyframes wiltbg {
+      0% { background: #2d1e2f; }
+      100% { background: #355c7d; }
+    }
+    h1 {
+      font-size: 2.7em;
+      text-shadow: 0 0 10px #f67280, 0 0 20px #fff;
+      animation: wilt 1.2s infinite alternate;
+    }
+    @keyframes wilt {
+      0% { color: #f67280; }
+      50% { color: #fff; }
+      100% { color: #f67280; }
+    }
+    .poem {
+      margin-top: 2em;
+      font-size: 1.3em;
+      max-width: 60vw;
+      text-align: center;
+      font-family: 'Amatic SC', cursive;
+      opacity: 0.95;
+      color: #fff;
+      text-shadow: 0 0 8px #f67280;
+    }
+    .wilt {
+      font-size: 1.5em;
+      color: #f67280;
+      opacity: 0.7;
+      margin-top: 2em;
+      animation: wilt 1.5s infinite alternate;
+    }
+  </style>
+</head>
+<body>
+  <h1>Wilt</h1>
+  <div class="poem">The year wilts before it blooms.<br>Resolutions fade, dreams wither.<br>Time is a garden of ghosts.<br>Look. The petals are falling.<br><br>What will you plant?</div>
+  <div class="wilt" id="wilt"></div>
+  <script>
+    const wilts = [
+      "Dreams fade quickly.",
+      "Ghosts tend the garden.",
+      "Petals fall in silence.",
+      "You are the gardener.",
+      "What will grow next?"
+    ];
+    let idx = 0;
+    function showWilt() {
+      document.getElementById('wilt').textContent = wilts[idx];
+      idx = (idx + 1) % wilts.length;
+      setTimeout(showWilt, 2500 + Math.random()*1500);
+    }
+    showWilt();
+    setTimeout(()=>{
+      window.location.href = 'shuffle.html';
+    }, 6000+Math.random()*3000);
+  </script>
+</body>
+</html>
