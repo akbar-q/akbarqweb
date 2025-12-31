@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nightmare New Year</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #0a0a0a;
+      color: #e60000;
+      font-family: 'Courier New', Courier, monospace;
+      overflow: hidden;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      animation: flicker 2s infinite alternate;
+    }
+    h1 {
+      font-size: 3em;
+      letter-spacing: 0.1em;
+      text-shadow: 0 0 10px #e60000, 0 0 20px #000, 0 0 2px #fff;
+      animation: glitch 1.5s infinite linear alternate-reverse;
+    }
+    @keyframes flicker {
+      0% { opacity: 1; }
+      10% { opacity: 0.8; }
+      20% { opacity: 1; }
+      30% { opacity: 0.7; }
+      40% { opacity: 1; }
+      50% { opacity: 0.9; }
+      60% { opacity: 1; }
+      70% { opacity: 0.6; }
+      80% { opacity: 1; }
+      90% { opacity: 0.8; }
+      100% { opacity: 1; }
+    }
+    @keyframes glitch {
+      0% { text-shadow: 2px 0 red, -2px 0 blue; }
+      20% { text-shadow: -2px 0 red, 2px 0 blue; }
+      40% { text-shadow: 2px 2px #fff, -2px -2px #000; }
+      60% { text-shadow: 0 0 10px #e60000, 0 0 20px #000; }
+      80% { text-shadow: 2px -2px #fff, -2px 2px #000; }
+      100% { text-shadow: 0 0 10px #e60000, 0 0 20px #000; }
+    }
+    .enter-btn {
+      margin-top: 2em;
+      padding: 1em 2em;
+      font-size: 1.5em;
+      background: #111;
+      color: #e60000;
+      border: 2px solid #e60000;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #e60000;
+      transition: background 0.2s, color 0.2s;
+      animation: flicker 1.2s infinite alternate;
+    }
+    .enter-btn:hover {
+      background: #e60000;
+      color: #111;
+    }
+    .static {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none;
+      opacity: 0.15;
+      z-index: 10;
+      background: url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif') repeat;
+      mix-blend-mode: lighten;
+    }
+  </style>
+</head>
+<body>
+  <div class="static"></div>
+  <h1>Happy New Year?</h1>
+  <button class="enter-btn" onclick="startNightmare()">Enter the Nightmare</button>
+  <audio id="creepy-audio" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12b1b1b1b1.mp3" preload="auto"></audio>
+  <script>
+    function startNightmare() {
+      document.getElementById('creepy-audio').play();
+      setTimeout(() => {
+        window.location.href = 'shuffle.html';
+      }, 1500 + Math.random() * 1000);
+    }
+    // Random flicker sound
+    setInterval(() => {
+      if (Math.random() < 0.2) {
+        const audio = new Audio('https://cdn.pixabay.com/audio/2022/10/16/audio_12b1b1b1b1.mp3');
+        audio.volume = 0.2;
+        audio.play();
+      }
+    }, 4000);
+  </script>
+</body>
+</html>

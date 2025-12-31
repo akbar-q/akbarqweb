@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nightmare Shuffle</title>
+  <script>
+    // List of possible pages (mix of new, eol, gogogo, meme, etc.)
+    const pages = [
+      'nightmare1.html',
+      'nightmare2.html',
+      '../eol/index.html',
+      '../gogogo/maze.html',
+      '../gogogo/glitch.html',
+      '../gogogo/retro.html',
+      '../meme/dank.html',
+      '../energy/404.html',
+      '../memorial/index.html',
+      '../music/test_decrypt.html',
+      '../broken/index.html',
+      '../AR/Work-In-Progress-AR.html',
+      '../DE/Work-In-Progress.html',
+      // Add more as needed
+    ];
+    // Shuffle and redirect
+    setTimeout(() => {
+      const next = pages[Math.floor(Math.random() * pages.length)];
+      window.location.href = next;
+    }, 1000 + Math.random() * 2000);
+  </script>
+  <style>
+    body {
+      background: #000;
+      color: #e60000;
+      font-family: monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-size: 2em;
+      animation: flicker 1.5s infinite alternate;
+    }
+    @keyframes flicker {
+      0% { opacity: 1; }
+      50% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div>Shuffling your reality...</div>
+</body>
+</html>

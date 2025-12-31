@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>It Never Ends</title>
+  <style>
+    body {
+      background: #0a0a0a;
+      color: #fff;
+      font-family: 'Creepster', cursive, monospace;
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: bgflicker 2s infinite alternate;
+    }
+    @keyframes bgflicker {
+      0% { background: #0a0a0a; }
+      50% { background: #1a0000; }
+      100% { background: #0a0a0a; }
+    }
+    h1 {
+      font-size: 3em;
+      text-shadow: 0 0 10px #e60000, 0 0 20px #000;
+      animation: textglitch 1.2s infinite alternate;
+    }
+    @keyframes textglitch {
+      0% { color: #fff; }
+      50% { color: #e60000; }
+      100% { color: #fff; }
+    }
+    .nightmare-img {
+      width: 40vw;
+      max-width: 400px;
+      margin: 2em 0;
+      filter: grayscale(1) contrast(2) blur(1px);
+      animation: imgshake 0.2s infinite alternate;
+    }
+    @keyframes imgshake {
+      0% { transform: translate(0,0) rotate(-1deg); }
+      100% { transform: translate(2px,2px) rotate(2deg); }
+    }
+    .next-btn {
+      padding: 1em 2em;
+      font-size: 1.2em;
+      background: #111;
+      color: #e60000;
+      border: 2px solid #e60000;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #e60000;
+      margin-top: 2em;
+      animation: flicker 1.2s infinite alternate;
+    }
+    .next-btn:hover {
+      background: #e60000;
+      color: #111;
+    }
+    .jumpscare {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: #000 url('https://i.imgur.com/1Q9Z1Zm.jpg') center/cover no-repeat;
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.2s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <h1>It Never Ends</h1>
+  <img class="nightmare-img" id="randimg" src="../assets/images/404.jpg" alt="nightmare">
+  <button class="next-btn" onclick="nextNightmare()">Next</button>
+  <div class="jumpscare" id="jumpscare"></div>
+  <audio id="jumpscare-audio" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12b1b1b1b1.mp3" preload="auto"></audio>
+  <script>
+    // Random image from assets/images
+    const images = [
+      '../assets/images/404.jpg',
+      '../assets/images/energy.jpg',
+      '../assets/images/memorial.jpg',
+      '../assets/images/AR.jpg',
+      '../assets/images/meme.jpg',
+      '../assets/images/broken.jpg',
+      '../assets/images/music.jpg',
+      '../assets/images/maze.jpg',
+      '../assets/images/glitch.jpg',
+      '../assets/images/retro.jpg',
+      '../assets/images/snake.jpg',
+      '../assets/images/water-flow.jpg',
+      '../assets/images/slot.jpg',
+      '../assets/images/quiz-1.jpg',
+      '../assets/images/quiz-2.jpg',
+      '../assets/images/quiz-3.jpg',
+      '../assets/images/quiz-4.jpg',
+      '../assets/images/quiz-5.jpg',
+      '../assets/images/quiz-6.jpg',
+      '../assets/images/quiz-7.jpg',
+      '../assets/images/image-1.jpg',
+      '../assets/images/image-2.jpg',
+      '../assets/images/image-3.jpg',
+      '../assets/images/image-4.jpg',
+      '../assets/images/image-5.jpg',
+      '../assets/images/image-6.jpg',
+      '../assets/images/image-7.jpg',
+      '../assets/images/image-8.jpg',
+    ];
+    document.getElementById('randimg').src = images[Math.floor(Math.random() * images.length)];
+    function nextNightmare() {
+      window.location.href = 'shuffle.html';
+    }
+    // Jumpscare logic
+    setTimeout(() => {
+      if (Math.random() < 0.5) {
+        document.getElementById('jumpscare').style.display = 'flex';
+        document.getElementById('jumpscare-audio').play();
+        setTimeout(() => {
+          document.getElementById('jumpscare').style.display = 'none';
+        }, 1200);
+      }
+    }, 2000 + Math.random() * 3000);
+  </script>
+</body>
+</html>

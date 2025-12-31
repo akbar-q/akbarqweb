@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Resolution Lost</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #111 0%, #222 100%);
+      color: #39ff14;
+      font-family: 'Share Tech Mono', monospace;
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: bgpulse 3s infinite alternate;
+    }
+    @keyframes bgpulse {
+      0% { background: #111; }
+      100% { background: #222; }
+    }
+    h1 {
+      font-size: 2.5em;
+      text-shadow: 0 0 10px #39ff14, 0 0 20px #000;
+      animation: textflicker 1.5s infinite alternate;
+    }
+    @keyframes textflicker {
+      0% { color: #39ff14; }
+      50% { color: #fff; }
+      100% { color: #39ff14; }
+    }
+    .nightmare-img {
+      width: 50vw;
+      max-width: 500px;
+      margin: 2em 0;
+      filter: invert(1) blur(2px) contrast(2);
+      animation: imgflicker 0.3s infinite alternate;
+    }
+    @keyframes imgflicker {
+      0% { opacity: 1; }
+      100% { opacity: 0.7; }
+    }
+    .next-btn {
+      padding: 1em 2em;
+      font-size: 1.2em;
+      background: #222;
+      color: #39ff14;
+      border: 2px solid #39ff14;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #39ff14;
+      margin-top: 2em;
+      animation: flicker 1.2s infinite alternate;
+    }
+    .next-btn:hover {
+      background: #39ff14;
+      color: #222;
+    }
+    .jumpscare {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: #000 url('https://i.imgur.com/2QZ1Z1m.jpg') center/cover no-repeat;
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.2s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Resolution Lost</h1>
+  <img class="nightmare-img" id="randimg" src="../assets/images/maze.jpg" alt="nightmare">
+  <button class="next-btn" onclick="nextNightmare()">Next</button>
+  <div class="jumpscare" id="jumpscare"></div>
+  <audio id="jumpscare-audio" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12b1b1b1b1.mp3" preload="auto"></audio>
+  <script>
+    // Random image from assets/images
+    const images = [
+      '../assets/images/maze.jpg',
+      '../assets/images/slot.jpg',
+      '../assets/images/quiz-1.jpg',
+      '../assets/images/quiz-2.jpg',
+      '../assets/images/quiz-3.jpg',
+      '../assets/images/quiz-4.jpg',
+      '../assets/images/quiz-5.jpg',
+      '../assets/images/quiz-6.jpg',
+      '../assets/images/quiz-7.jpg',
+      '../assets/images/image-1.jpg',
+      '../assets/images/image-2.jpg',
+      '../assets/images/image-3.jpg',
+      '../assets/images/image-4.jpg',
+      '../assets/images/image-5.jpg',
+      '../assets/images/image-6.jpg',
+      '../assets/images/image-7.jpg',
+      '../assets/images/image-8.jpg',
+    ];
+    document.getElementById('randimg').src = images[Math.floor(Math.random() * images.length)];
+    function nextNightmare() {
+      window.location.href = 'shuffle.html';
+    }
+    // Jumpscare logic
+    setTimeout(() => {
+      if (Math.random() < 0.4) {
+        document.getElementById('jumpscare').style.display = 'flex';
+        document.getElementById('jumpscare-audio').play();
+        setTimeout(() => {
+          document.getElementById('jumpscare').style.display = 'none';
+        }, 1000);
+      }
+    }, 1500 + Math.random() * 2500);
+  </script>
+</body>
+</html>
