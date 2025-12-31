@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fracture - New Year</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      background: #000;
+      animation: chaosbg 0.18s infinite alternate;
+    }
+    @keyframes chaosbg {
+      0% { background: #000; }
+      20% { background: #00fff5; }
+      40% { background: #fff; }
+      60% { background: #ff00c8; }
+      80% { background: #232931; }
+      100% { background: #000; }
+    }
+    .fracture-piece {
+      position: absolute;
+      font-size: 2.2em;
+      font-family: 'Bungee', 'Comic Sans MS', cursive, sans-serif;
+      color: #fff;
+      text-shadow: 0 0 10px #00fff5, 0 0 20px #ff00c8;
+      transform: rotate(-10deg);
+      animation: pieceMove 0.4s infinite alternate, colorflash 0.13s infinite alternate;
+      z-index: 2;
+      pointer-events: none;
+    }
+    @keyframes pieceMove {
+      0% { transform: translate(0,0) rotate(-10deg) scale(1.1); }
+      100% { transform: translate(30vw, 20vh) rotate(20deg) scale(0.9); }
+    }
+    @keyframes colorflash {
+      0% { color: #fff; }
+      50% { color: #00fff5; }
+      100% { color: #ff00c8; }
+    }
+    .fracture-piece2 {
+      position: absolute;
+      font-size: 2.5em;
+      font-family: 'Impact', fantasy;
+      color: #ff00c8;
+      left: 60vw;
+      top: 10vh;
+      transform: rotate(15deg);
+      animation: pieceMove2 0.3s infinite alternate, colorflash2 0.09s infinite alternate;
+      z-index: 3;
+      pointer-events: none;
+    }
+    @keyframes pieceMove2 {
+      0% { left: 60vw; top: 10vh; }
+      100% { left: 20vw; top: 60vh; }
+    }
+    @keyframes colorflash2 {
+      0% { color: #ff00c8; }
+      50% { color: #fff; }
+      100% { color: #00fff5; }
+    }
+    .fracture-piece3 {
+      position: absolute;
+      font-size: 1.7em;
+      font-family: 'Courier New', Courier, monospace;
+      color: #00fff5;
+      left: 30vw;
+      top: 70vh;
+      transform: rotate(-30deg);
+      animation: pieceMove3 0.22s infinite alternate, colorflash3 0.11s infinite alternate;
+      z-index: 4;
+      pointer-events: none;
+    }
+    @keyframes pieceMove3 {
+      0% { left: 30vw; top: 70vh; }
+      100% { left: 70vw; top: 30vh; }
+    }
+    @keyframes colorflash3 {
+      0% { color: #00fff5; }
+      50% { color: #ff00c8; }
+      100% { color: #fff; }
+    }
+    .fracture-piece4 {
+      position: absolute;
+      font-size: 2.1em;
+      font-family: 'Arial Black', Arial, sans-serif;
+      color: #fff;
+      left: 10vw;
+      top: 50vh;
+      transform: rotate(45deg);
+      animation: pieceMove4 0.19s infinite alternate, colorflash4 0.07s infinite alternate;
+      z-index: 5;
+      pointer-events: none;
+    }
+    @keyframes pieceMove4 {
+      0% { left: 10vw; top: 50vh; }
+      100% { left: 80vw; top: 10vh; }
+    }
+    @keyframes colorflash4 {
+      0% { color: #fff; }
+      50% { color: #00fff5; }
+      100% { color: #ff00c8; }
+    }
+  </style>
+</head>
+<body>
+  <div class="fracture-piece">The year fractures at midnight.</div>
+  <div class="fracture-piece2">Promises splinter, dreams shatter.</div>
+  <div class="fracture-piece3">Time is a broken mirror.</div>
+  <div class="fracture-piece4">You are in every shard.</div>
+  <script>
+    // Add random floating text fragments for extra chaos
+    const floating = [
+      "Pieces never fit again.",
+      "You are everywhere and nowhere.",
+      "The mirror is cracked.",
+      "Time is sharp.",
+      "You cannot escape the reflection."
+    ];
+    floating.forEach((txt, i) => {
+      const el = document.createElement('div');
+      el.textContent = txt;
+      el.style.position = 'absolute';
+      el.style.left = (Math.random()*80) + 'vw';
+      el.style.top = (Math.random()*80) + 'vh';
+      el.style.fontSize = (1 + Math.random()*2) + 'em';
+      el.style.fontFamily = ['Bungee','Impact','Comic Sans MS','monospace'][i%4];
+      el.style.color = ['#fff','#00fff5','#ff00c8','#fff200'][i%4];
+      el.style.transform = `rotate(${Math.random()*360-180}deg)`;
+      el.style.zIndex = 10+i;
+      el.style.pointerEvents = 'none';
+      el.style.animation = `float${i} ${(0.2+Math.random()*0.5).toFixed(2)}s infinite alternate`;
+      document.body.appendChild(el);
+      const keyframes = `@keyframes float${i} {0%{left:${el.style.left};top:${el.style.top};}100%{left:${Math.random()*80}vw;top:${Math.random()*80}vh;}}`;
+      const styleSheet = document.createElement("style");
+      styleSheet.type = "text/css";
+      styleSheet.innerText = keyframes;
+      document.head.appendChild(styleSheet);
+    });
+    setTimeout(()=>{
+      window.location.href = 'shuffle.html';
+    }, 4000+Math.random()*2000);
+  </script>
+</body>
+</html>

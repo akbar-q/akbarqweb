@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Plea - New Year</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      background: #000;
+      animation: flashbg 0.25s infinite alternate;
+    }
+    @keyframes flashbg {
+      0% { background: #000; }
+      20% { background: #ff6f61; }
+      40% { background: #232323; }
+      60% { background: #fff; }
+      80% { background: #3a3a3a; }
+      100% { background: #000; }
+    }
+    h1 {
+      position: absolute;
+      left: 10vw;
+      top: 5vh;
+      font-size: 3.2em;
+      font-family: 'Creepster', cursive, monospace;
+      color: #ff6f61;
+      text-shadow: 0 0 20px #fff, 0 0 10px #ff6f61;
+      animation: moveh1 0.7s infinite alternate, colorflash 0.2s infinite alternate;
+      z-index: 2;
+    }
+    @keyframes moveh1 {
+      0% { left: 10vw; top: 5vh; }
+      100% { left: 60vw; top: 15vh; }
+    }
+    @keyframes colorflash {
+      0% { color: #ff6f61; }
+      50% { color: #fff; }
+      100% { color: #ff6f61; }
+    }
+    .poem {
+      position: absolute;
+      left: 5vw;
+      top: 40vh;
+      font-size: 2em;
+      font-family: 'Indie Flower', cursive;
+      color: #fff;
+      background: rgba(0,0,0,0.7);
+      padding: 1em 2em;
+      border-radius: 20px;
+      box-shadow: 0 0 30px #ff6f61, 0 0 10px #fff;
+      animation: poemshake 0.15s infinite alternate;
+      z-index: 3;
+    }
+    @keyframes poemshake {
+      0% { transform: rotate(-2deg) scale(1.05); }
+      100% { transform: rotate(2deg) scale(0.98); }
+    }
+    .cry {
+      position: absolute;
+      right: 10vw;
+      bottom: 10vh;
+      font-size: 2.2em;
+      font-family: 'Share Tech Mono', monospace;
+      color: #fff200;
+      text-shadow: 0 0 10px #ff6f61, 0 0 20px #fff;
+      animation: crymove 0.3s infinite alternate, colorflash2 0.1s infinite alternate;
+      z-index: 4;
+    }
+    @keyframes crymove {
+      0% { right: 10vw; bottom: 10vh; }
+      100% { right: 30vw; bottom: 30vh; }
+    }
+    @keyframes colorflash2 {
+      0% { color: #fff200; }
+      50% { color: #ff6f61; }
+      100% { color: #fff200; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Silent Plea</h1>
+  <div class="poem">I asked for help, but the clock kept ticking.<br>My voice is lost in the noise of celebration.<br>Does anyone hear me?<br><br>Or am I just another echo in the new year?</div>
+  <div class="cry" id="cry"></div>
+  <script>
+    const cries = [
+      "Can you hear me?",
+      "I am not okay.",
+      "The noise drowns my plea.",
+      "You could have helped.",
+      "You are not innocent.",
+      "Why are you still watching?",
+      "This is not a celebration.",
+      "Help is not coming.",
+      "You could close this tab."
+    ];
+    let idx = 0;
+    function showCry() {
+      document.getElementById('cry').textContent = cries[idx];
+      // Randomize position for extra chaos
+      document.getElementById('cry').style.right = (10 + Math.random()*60) + 'vw';
+      document.getElementById('cry').style.bottom = (10 + Math.random()*60) + 'vh';
+      idx = (idx + 1) % cries.length;
+      setTimeout(showCry, 500 + Math.random()*700);
+    }
+    showCry();
+    // Randomly jitter poem
+    setInterval(()=>{
+      document.querySelector('.poem').style.left = (5 + Math.random()*60) + 'vw';
+      document.querySelector('.poem').style.top = (20 + Math.random()*50) + 'vh';
+    }, 400);
+    setTimeout(()=>{
+      window.location.href = 'shuffle.html';
+    }, 4000+Math.random()*2000);
+  </script>
+</body>
+</html>

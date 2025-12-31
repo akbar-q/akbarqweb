@@ -28,15 +28,21 @@
       'inevitable.html',
       'shuffle.html' // allow looping back to itself for infinite loop
     ];
-    // Never get stuck: always redirect again after a short time
+    // Shuffle with memory: avoid recently shown pages
+    let history = JSON.parse(localStorage.getItem('shuffleHistory') || '[]');
+    const maxHistory = Math.max(3, Math.floor(pages.length/3));
     function shuffleLoop() {
-      let next;
+      let next, tries = 0;
       do {
         next = pages[Math.floor(Math.random() * pages.length)];
-      } while (window.location.pathname.endsWith(next));
+        tries++;
+      } while ((window.location.pathname.endsWith(next) || history.includes(next)) && tries < 20);
+      history.push(next);
+      if (history.length > maxHistory) history = history.slice(-maxHistory);
+      localStorage.setItem('shuffleHistory', JSON.stringify(history));
       setTimeout(() => {
         window.location.href = next;
-      }, 1200 + Math.random() * 2000);
+      }, 500 + Math.random() * 1200);
     }
     shuffleLoop();
   </script>
@@ -44,18 +50,42 @@
     body {
       background: #000;
       color: #e60000;
-      font-family: monospace;
+      font-family: 'Share Tech Mono', 'Comic Sans MS', monospace;
       display: flex;
       align-items: center;
       justify-content: center;
       height: 100vh;
       font-size: 2em;
-      animation: flicker 1.5s infinite alternate;
+      animation: flashbg 0.18s infinite alternate;
+      overflow: hidden;
     }
-    @keyframes flicker {
-      0% { opacity: 1; }
-      50% { opacity: 0.7; }
-      100% { opacity: 1; }
+    @keyframes flashbg {
+      0% { background: #000; }
+      20% { background: #e60000; }
+      40% { background: #fff; }
+      60% { background: #00ffea; }
+      80% { background: #3a3a3a; }
+      100% { background: #000; }
+    }
+    #mystery-shuffle {
+      position: absolute;
+      left: 10vw;
+      top: 10vh;
+      font-size: 2.2em;
+      font-family: 'Creepster', 'Share Tech Mono', cursive;
+      color: #fff200;
+      text-shadow: 0 0 10px #e60000, 0 0 20px #fff;
+      animation: moveText 0.3s infinite alternate, colorflash 0.11s infinite alternate;
+      z-index: 2;
+    }
+    @keyframes moveText {
+      0% { left: 10vw; top: 10vh; }
+      100% { left: 60vw; top: 60vh; }
+    }
+    @keyframes colorflash {
+      0% { color: #fff200; }
+      50% { color: #e60000; }
+      100% { color: #fff; }
     }
   </style>
 </head>

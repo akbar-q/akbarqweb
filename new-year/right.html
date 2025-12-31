@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Right - New Year</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      background: #000;
+      animation: rightbgflash 0.13s infinite alternate;
+    }
+    @keyframes rightbgflash {
+      0% { background: #000; }
+      20% { background: #f5cd79; }
+      40% { background: #fff; }
+      60% { background: #485460; }
+      80% { background: #1e272e; }
+      100% { background: #000; }
+    }
+    .right-piece {
+      position: absolute;
+      font-size: 2.2em;
+      font-family: 'PT Serif', 'Comic Sans MS', cursive, sans-serif;
+      color: #f5cd79;
+      text-shadow: 0 0 10px #fff, 0 0 20px #f5cd79;
+      transform: rotate(-10deg);
+      animation: rightMove 0.19s infinite alternate, rightColor 0.09s infinite alternate, rightScale 0.11s infinite alternate;
+      z-index: 2;
+      pointer-events: none;
+    }
+    @keyframes rightMove {
+      0% { left: 10vw; top: 10vh; }
+      100% { left: 70vw; top: 60vh; }
+    }
+    @keyframes rightColor {
+      0% { color: #f5cd79; }
+      50% { color: #fff; }
+      100% { color: #485460; }
+    }
+    @keyframes rightScale {
+      0% { transform: scale(1.1) rotate(-10deg); }
+      100% { transform: scale(0.8) rotate(20deg); }
+    }
+    .right-piece2 {
+      position: absolute;
+      font-size: 2.7em;
+      font-family: 'Impact', fantasy;
+      color: #fff;
+      left: 60vw;
+      top: 10vh;
+      transform: rotate(15deg);
+      animation: rightMove2 0.13s infinite alternate, rightColor2 0.07s infinite alternate, rightScale2 0.09s infinite alternate;
+      z-index: 3;
+      pointer-events: none;
+    }
+    @keyframes rightMove2 {
+      0% { left: 60vw; top: 10vh; }
+      100% { left: 20vw; top: 70vh; }
+    }
+    @keyframes rightColor2 {
+      0% { color: #fff; }
+      50% { color: #f5cd79; }
+      100% { color: #485460; }
+    }
+    @keyframes rightScale2 {
+      0% { transform: scale(1.2) rotate(15deg); }
+      100% { transform: scale(0.7) rotate(-20deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="right-piece">Death is a right, not a punishment.</div>
+  <div class="right-piece2">To choose the end is to claim freedom.</div>
+  <div class="right-piece" style="left:30vw;top:60vh;animation-delay:0.1s;">Time cannot deny you.</div>
+  <div class="right-piece2" style="left:10vw;top:30vh;animation-delay:0.2s;">Rest is not forbidden. It is yours.</div>
+  <script>
+    // Add random floating text fragments for extra chaos
+    const floating = [
+      "Freedom is in the choice.",
+      "You are not a prisoner.",
+      "Rest is not a crime.",
+      "You are allowed to let go.",
+      "The right to end is sacred."
+    ];
+    floating.forEach((txt, i) => {
+      const el = document.createElement('div');
+      el.textContent = txt;
+      el.style.position = 'absolute';
+      el.style.left = (Math.random()*80) + 'vw';
+      el.style.top = (Math.random()*80) + 'vh';
+      el.style.fontSize = (1 + Math.random()*2) + 'em';
+      el.style.fontFamily = ['PT Serif','Impact','Comic Sans MS','monospace'][i%4];
+      el.style.color = ['#fff','#f5cd79','#485460','#fff200'][i%4];
+      el.style.transform = `rotate(${Math.random()*360-180}deg)`;
+      el.style.zIndex = 10+i;
+      el.style.pointerEvents = 'none';
+      el.style.animation = `floatR${i} ${(0.1+Math.random()*0.3).toFixed(2)}s infinite alternate`;
+      document.body.appendChild(el);
+      const keyframes = `@keyframes floatR${i} {0%{left:${el.style.left};top:${el.style.top};}100%{left:${Math.random()*80}vw;top:${Math.random()*80}vh;}}`;
+      const styleSheet = document.createElement("style");
+      styleSheet.type = "text/css";
+      styleSheet.innerText = keyframes;
+      document.head.appendChild(styleSheet);
+    });
+    setTimeout(()=>{
+      window.location.href = 'shuffle.html';
+    }, 4000+Math.random()*2000);
+  </script>
+</body>
+</html>
