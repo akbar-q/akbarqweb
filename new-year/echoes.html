@@ -32,12 +32,27 @@
     }
     .poem {
       margin-top: 2em;
-      font-size: 1.2em;
+      font-size: 2.1em;
       max-width: 60vw;
       text-align: center;
       opacity: 0.9;
       color: #fff;
       text-shadow: 0 0 8px #e94560;
+      text-shadow: 0 0 8px #636e72, 0 0 20px #fdcb6e;
+      animation: echoesAnim 0.16s infinite alternate, echoesColor 0.11s infinite alternate, echoesScale 0.19s infinite alternate;
+    }
+    @keyframes echoesAnim {
+      0% { letter-spacing: 0.1em; }
+      100% { letter-spacing: 0.3em; }
+    }
+    @keyframes echoesColor {
+      0% { color: #fff; }
+      50% { color: #fdcb6e; }
+      100% { color: #636e72; }
+    }
+    @keyframes echoesScale {
+      0% { transform: scale(1.1) rotate(-7deg); }
+      100% { transform: scale(0.8) rotate(13deg); }
     }
     .echo {
       font-size: 1.5em;
@@ -51,6 +66,7 @@
 <body>
   <h1>Echoes of Regret</h1>
   <div class="poem">The new year echoes with regret.<br>Every wish returns, distorted.<br>Time repeats, but never forgives.<br>Listen. The silence is not empty.<br><br>It is full of what you left behind.</div>
+  <div class="poem" id="echoespoem">The new year echoes with regret.<br>Every wish returns, distorted.<br>Time repeats, but never forgives.<br>Listen. The silence is not empty.<br><br>It is full of what you left behind.</div>
   <div class="echo" id="echo"></div>
   <script>
     const echoes = [
@@ -70,6 +86,13 @@
     setTimeout(()=>{
       window.location.href = 'shuffle.html';
     }, 6000+Math.random()*3000);
+    
+    // Add random font size and color to poem
+    const poemEl = document.getElementById('echoespoem');
+    poemEl.style.fontSize = (1.1 + Math.random()*2.1) + 'em';
+    poemEl.style.color = ['#fff','#fdcb6e','#636e72','#fff200'][Math.floor(Math.random()*4)];
+    poemEl.style.transform = `rotate(${Math.random()*30-15}deg)`;
+    poemEl.style.textShadow = `0 0 8px #636e72, 0 0 20px #fdcb6e, 0 0 30px #fff200`;
   </script>
 </body>
 </html>

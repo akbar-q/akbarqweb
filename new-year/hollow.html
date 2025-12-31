@@ -32,13 +32,27 @@
     }
     .poem {
       margin-top: 2em;
-      font-size: 1.2em;
+      font-size: 2.2em;
       max-width: 60vw;
       text-align: center;
       font-family: 'Indie Flower', cursive;
-      opacity: 0.9;
+      opacity: 0.95;
       color: #fff;
-      text-shadow: 0 0 8px #ffd369;
+      text-shadow: 0 0 8px #ffd369, 0 0 20px #e17055;
+      animation: hollowAnim 0.18s infinite alternate, hollowColor 0.13s infinite alternate, hollowScale 0.21s infinite alternate;
+    }
+    @keyframes hollowAnim {
+      0% { letter-spacing: 0.1em; }
+      100% { letter-spacing: 0.4em; }
+    }
+    @keyframes hollowColor {
+      0% { color: #fff; }
+      50% { color: #e17055; }
+      100% { color: #ffd369; }
+    }
+    @keyframes hollowScale {
+      0% { transform: scale(1.1) rotate(-5deg); }
+      100% { transform: scale(0.8) rotate(10deg); }
     }
     .hollow {
       font-size: 1.5em;
@@ -51,7 +65,7 @@
 </head>
 <body>
   <h1>Hollow</h1>
-  <div class="poem">The new year is hollow.<br>It rings with empty promises.<br>Time is a shell, echoing your hopes.<br>Listen. The emptiness is loud.<br><br>What do you hear?</div>
+  <div class="poem" id="hollowpoem">The new year is hollow.<br>It rings with empty promises.<br>Time is a shell, echoing your hopes.<br>Listen. The emptiness is loud.<br><br>What do you hear?</div>
   <div class="hollow" id="hollow"></div>
   <script>
     const hollows = [
@@ -68,6 +82,12 @@
       setTimeout(showHollow, 2500 + Math.random()*1500);
     }
     showHollow();
+    // Add random font size and color to poem
+    const poemEl = document.getElementById('hollowpoem');
+    poemEl.style.fontSize = (1.2 + Math.random()*2.2) + 'em';
+    poemEl.style.color = ['#fff','#e17055','#ffd369','#fff200'][Math.floor(Math.random()*4)];
+    poemEl.style.transform = `rotate(${Math.random()*30-15}deg)`;
+    poemEl.style.textShadow = `0 0 8px #ffd369, 0 0 20px #e17055, 0 0 30px #fff200`;
     setTimeout(()=>{
       window.location.href = 'shuffle.html';
     }, 6000+Math.random()*3000);
