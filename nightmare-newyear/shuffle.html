@@ -19,13 +19,19 @@
       '../broken/index.html',
       '../AR/Work-In-Progress-AR.html',
       '../DE/Work-In-Progress.html',
-      // Add more as needed
+      'shuffle.html' // allow looping back to itself for infinite loop
     ];
-    // Shuffle and redirect
-    setTimeout(() => {
-      const next = pages[Math.floor(Math.random() * pages.length)];
-      window.location.href = next;
-    }, 1000 + Math.random() * 2000);
+    // Never get stuck: always redirect again after a short time
+    function shuffleLoop() {
+      let next;
+      do {
+        next = pages[Math.floor(Math.random() * pages.length)];
+      } while (window.location.pathname.endsWith(next));
+      setTimeout(() => {
+        window.location.href = next;
+      }, 1200 + Math.random() * 2000);
+    }
+    shuffleLoop();
   </script>
   <style>
     body {
@@ -47,6 +53,55 @@
   </style>
 </head>
 <body>
-  <div>Shuffling your reality...</div>
+  <div id="mystery-shuffle" style="opacity:0.8; font-size:1.3em; max-width:70vw; text-align:center;"></div>
+  <canvas id="rain" style="position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:5;"></canvas>
+  <script>
+    // Mysterious shuffle text
+    const texts = [
+      "You are not where you think you are.",
+      "The path is lost. The path is found.",
+      "Every click is a mistake.",
+      "You are being watched.",
+      "There is no escape.",
+      "The loop continues. The loop continues.",
+      "You are still here. Why?",
+      "The new year is a lie.",
+      "You are not alone in this shuffle."
+    ];
+    let idx = Math.floor(Math.random()*texts.length);
+    document.getElementById('mystery-shuffle').textContent = texts[idx];
+    // Rain of random letters
+    const canvas = document.getElementById('rain');
+    const ctx = canvas.getContext('2d');
+    let W = window.innerWidth;
+    let H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+    let letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=~'.split('');
+    let fontSize = 22;
+    let columns = Math.floor(W / fontSize);
+    let drops = Array(columns).fill(1);
+    function drawRain() {
+      ctx.fillStyle = 'rgba(0,0,0,0.18)';
+      ctx.fillRect(0,0,W,H);
+      ctx.font = fontSize + "px monospace";
+      for(let i=0;i<drops.length;i++){
+        let text = letters[Math.floor(Math.random()*letters.length)];
+        ctx.fillStyle = `rgba(230,0,0,${0.7+0.3*Math.random()})`;
+        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+        if(drops[i]*fontSize > H && Math.random() > 0.975){
+          drops[i]=0;
+        }
+        drops[i]++;
+      }
+    }
+    setInterval(drawRain, 60);
+    window.addEventListener('resize',()=>{
+      W = window.innerWidth; H = window.innerHeight;
+      canvas.width = W; canvas.height = H;
+      columns = Math.floor(W / fontSize);
+      drops = Array(columns).fill(1);
+    });
+  </script>
 </body>
 </html>

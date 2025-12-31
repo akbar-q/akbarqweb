@@ -76,12 +76,28 @@
   </style>
 </head>
 <body>
-  <h1>It Never Ends</h1>
+  <h1 id="glitch-title">It Never Ends</h1>
+  <div id="poem" style="max-width:60vw; margin:2em auto; text-align:center; opacity:0.85; font-size:1.2em;"></div>
   <img class="nightmare-img" id="randimg" src="../assets/images/404.jpg" alt="nightmare">
-  <button class="next-btn" onclick="nextNightmare()">Next</button>
+  <canvas id="rain" style="position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:5;"></canvas>
   <div class="jumpscare" id="jumpscare"></div>
   <audio id="jumpscare-audio" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12b1b1b1b1.mp3" preload="auto"></audio>
   <script>
+    // Dark poem
+    const poem = `Midnight devours the final chime.<br>
+    Resolutions rot in the marrow of time.<br>
+    Hope is a shadow, stretched and thin.<br>
+    The year restarts, but you remain within.<br>
+    <br>
+    The clock is a circle, the circle a snare.<br>
+    You run, but you’re always there.`;
+    document.getElementById('poem').innerHTML = poem;
+    // Glitch title effect
+    setInterval(()=>{
+      let t = document.getElementById('glitch-title');
+      t.style.textShadow = Math.random()>0.5 ? '2px 0 #e60000, -2px 0 #fff' : '0 0 10px #e60000, 0 0 20px #000';
+      t.style.opacity = 0.7 + 0.3*Math.random();
+    }, 200);
     // Random image from assets/images
     const images = [
       '../assets/images/404.jpg',
@@ -114,9 +130,38 @@
       '../assets/images/image-8.jpg',
     ];
     document.getElementById('randimg').src = images[Math.floor(Math.random() * images.length)];
-    function nextNightmare() {
-      window.location.href = 'shuffle.html';
+    // Rain of random letters
+    const canvas = document.getElementById('rain');
+    const ctx = canvas.getContext('2d');
+    let W = window.innerWidth;
+    let H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+    let letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=~'.split('');
+    let fontSize = 22;
+    let columns = Math.floor(W / fontSize);
+    let drops = Array(columns).fill(1);
+    function drawRain() {
+      ctx.fillStyle = 'rgba(10,10,10,0.15)';
+      ctx.fillRect(0,0,W,H);
+      ctx.font = fontSize + "px monospace";
+      for(let i=0;i<drops.length;i++){
+        let text = letters[Math.floor(Math.random()*letters.length)];
+        ctx.fillStyle = `rgba(230,0,0,${0.7+0.3*Math.random()})`;
+        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+        if(drops[i]*fontSize > H && Math.random() > 0.975){
+          drops[i]=0;
+        }
+        drops[i]++;
+      }
     }
+    setInterval(drawRain, 60);
+    window.addEventListener('resize',()=>{
+      W = window.innerWidth; H = window.innerHeight;
+      canvas.width = W; canvas.height = H;
+      columns = Math.floor(W / fontSize);
+      drops = Array(columns).fill(1);
+    });
     // Jumpscare logic
     setTimeout(() => {
       if (Math.random() < 0.5) {
@@ -127,6 +172,10 @@
         }, 1200);
       }
     }, 2000 + Math.random() * 3000);
+    // Auto-redirect to shuffle
+    setTimeout(()=>{
+      window.location.href = 'shuffle.html';
+    }, 6000+Math.random()*3000);
   </script>
 </body>
 </html>
