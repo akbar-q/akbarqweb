@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Forsaken - New Year</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -10,9 +10,11 @@
       width: 100vw;
       overflow: hidden;
       background: #000;
+      font-family: 'Inter', 'Space Grotesk', Arial, sans-serif;
+      position: relative;
       animation: forsakenbgflash 0.09s infinite alternate;
     }
-    @keyframes forsaken-bg {
+    @keyframes forsakenbgflash {
       0% { background: #000; }
       20% { background: #e17055; }
       40% { background: #fff; }
@@ -20,142 +22,258 @@
       80% { background: #222; }
       100% { background: #000; }
     }
+    .forsaken-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.13;
+      background: repeating-linear-gradient(120deg, #e17055 0 2px, transparent 2px 40px), repeating-linear-gradient(60deg, #fff2 0 4px, transparent 4px 40px);
+      animation: forsakenbgmove 10s linear infinite alternate;
+    }
+    @keyframes forsakenbgmove {
+      0% { background-position: 0 0, 0 0; }
+      100% { background-position: 60px 60px, 30px 30px; }
+    }
+    .main-content {
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+    }
     h1 {
+      font-family: 'Space Grotesk', 'Inter', Arial, sans-serif;
       font-size: 2.7em;
-      text-shadow: 0 0 10px #f19066, 0 0 20px #fff;
-      animation: forsaken-title 1.2s infinite alternate;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: #e17055;
+      text-shadow: 0 2px 24px #fff1, 0 0 2px #fff, 0 0 8px #e1705544;
+      margin-bottom: 0.2em;
+      margin-top: 0.2em;
+      position: relative;
+      animation: titlepop 1.7s cubic-bezier(.68,-0.55,.27,1.55) infinite alternate;
     }
-    @keyframes forsaken-title {
-      0% { color: #f19066; }
-      50% { color: #fff; }
-      100% { color: #f19066; }
+    @keyframes titlepop {
+      0% { letter-spacing: 0.04em; transform: scale(1) rotate(-1deg); }
+      100% { letter-spacing: 0.18em; transform: scale(1.04) rotate(2deg); }
     }
-    .poem {
-      margin-top: 2em;
-      font-size: 1.3em;
-      max-width: 60vw;
+    .subtitle {
+      font-size: 1.1em;
+      color: #e17055;
+      margin-bottom: 1.2em;
+      font-weight: 400;
+      letter-spacing: 0.03em;
       text-align: center;
-      opacity: 0.95;
-      color: #fff;
-      text-shadow: 0 0 8px #f19066;
+      max-width: 60vw;
+      opacity: 0.8;
     }
-    .forsaken {
-      font-size: 1.5em;
-      color: #f19066;
-      opacity: 0.7;
-      margin-top: 2em;
-      animation: forsaken-title 1.5s infinite alternate;
+    .intro {
+      font-size: 1.05em;
+      color: #fffbe6;
+      margin-bottom: 2.2em;
+      text-align: center;
+      max-width: 70vw;
+      line-height: 1.5;
+      background: rgba(0,0,0,0.7);
+      border-radius: 1em;
+      padding: 1.2em 2em;
+      box-shadow: 0 2px 24px #e1705522;
+    }
+    .icon-row {
+      display: flex;
+      gap: 2.2em;
+      margin-bottom: 2.5em;
+      z-index: 2;
+    }
+    .icon-row svg {
+      width: 2.8em;
+      height: 2.8em;
+      fill: #e17055;
+      opacity: 0.82;
+      filter: drop-shadow(0 0 8px #e1705544);
+      transition: transform 0.18s, fill 0.18s, opacity 0.18s;
+      cursor: pointer;
+    }
+    .icon-row svg:hover {
+      transform: scale(1.18) rotate(-8deg);
+      fill: #fff;
+      opacity: 1;
+    }
+    .main-icon {
+      position: absolute;
+      top: 8vh;
+      right: 8vw;
+      width: 7em;
+      height: 7em;
+      opacity: 0.13;
+      z-index: 1;
+      pointer-events: none;
+      filter: blur(1px) drop-shadow(0 0 32px #e17055);
+      animation: iconfloat 7s ease-in-out infinite alternate;
+    }
+    @keyframes iconfloat {
+      0% { transform: scale(1) rotate(-8deg) translateY(0); }
+      100% { transform: scale(1.08) rotate(12deg) translateY(18px); }
+    }
+    .forsaken-piece {
+      position: absolute;
+      font-size: 2.2em;
+      font-family: 'Share Tech Mono', 'Impact', 'Comic Sans MS', cursive, monospace;
+      color: #e17055;
+      text-shadow: 0 0 10px #fff, 0 0 20px #e17055;
+      transform: rotate(-10deg);
+      animation: forsakenMove 0.13s infinite alternate, forsakenColor 0.07s infinite alternate, forsakenScale 0.11s infinite alternate;
+      z-index: 2;
+      pointer-events: none;
+    }
+    @keyframes forsakenMove {
+      0% { left: 10vw; top: 10vh; }
+      100% { left: 70vw; top: 60vh; }
+    }
+    @keyframes forsakenColor {
+      0% { color: #e17055; }
+      50% { color: #fff; }
+      100% { color: #636e72; }
+    }
+    @keyframes forsakenScale {
+      0% { transform: scale(1.1) rotate(-10deg); }
+      100% { transform: scale(0.8) rotate(20deg); }
+    }
+    .forsaken-img {
+      position: absolute;
+      width: 22vw;
+      height: auto;
+      left: 70vw;
+      top: 20vh;
+      filter: grayscale(1) contrast(2) blur(1px);
+      animation: imgmoveF 0.17s infinite alternate;
+      z-index: 5;
+      pointer-events: none;
+    }
+    @keyframes imgmoveF {
+      0% { left: 70vw; top: 20vh; transform: scale(1) rotate(0deg); }
+      100% { left: 10vw; top: 70vh; transform: scale(1.2) rotate(-15deg); }
     }
   </style>
-      .forsaken-piece {
-        position: absolute;
-        font-size: 2.2em;
-        font-family: 'Share Tech Mono', 'Impact', 'Comic Sans MS', cursive, monospace;
-        color: #e17055;
-        text-shadow: 0 0 10px #fff, 0 0 20px #e17055;
-        transform: rotate(-10deg);
-        animation: forsakenMove 0.13s infinite alternate, forsakenColor 0.07s infinite alternate, forsakenScale 0.11s infinite alternate;
-        z-index: 2;
-        pointer-events: none;
-    const forsakenLines = [
-      @keyframes forsakenMove {
-        0% { left: 10vw; top: 10vh; }
-        100% { left: 70vw; top: 60vh; }
-      }
-      @keyframes forsakenColor {
-        0% { color: #e17055; }
-        50% { color: #fff; }
-        100% { color: #636e72; }
-      }
-      @keyframes forsakenScale {
-        0% { transform: scale(1.1) rotate(-10deg); }
-        100% { transform: scale(0.8) rotate(20deg); }
-      }
-      .forsaken-img {
-        position: absolute;
-        width: 22vw;
-        height: auto;
-        left: 70vw;
-        top: 20vh;
-        filter: grayscale(1) contrast(2) blur(1px);
-        animation: imgmoveF 0.17s infinite alternate;
-        z-index: 5;
-        pointer-events: none;
-      }
-      @keyframes imgmoveF {
-        0% { left: 70vw; top: 20vh; transform: scale(1) rotate(0deg); }
-        100% { left: 10vw; top: 70vh; transform: scale(1.2) rotate(-15deg); }
-      "I am forgotten.",
-      "You never cared.",
-      "You are not here for me.",
-      "You could have saved me.",
+  <div class="forsaken-bg"></div>
+  <canvas id="rain" style="position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:1;"></canvas>
+  <div class="main-content">
     <h1>Forsaken</h1>
-    <div class="forsaken-piece">I am left behind.</div>
-    <div class="forsaken-piece" style="left:30vw;top:60vh;animation-delay:0.1s;">My shadow stretches into the new year.</div>
-    <div class="forsaken-piece" style="left:10vw;top:30vh;animation-delay:0.2s;">Hope is a myth, and I am its casualty.</div>
-    <div class="forsaken-piece" style="left:50vw;top:20vh;animation-delay:0.3s;">Abandoned, I watch the world move on.</div>
-    <img class="forsaken-img" id="forsakenimg" src="../assets/images/404.jpg" alt="forsaken">
-    function showForsaken() {
-      // Add random floating text fragments for extra chaos
-      const floating = [
-        "You left me here.",
-        "I am not remembered.",
-        "I am not missed.",
-        "I am not forgiven.",
-        "I am not wanted."
-      ];
-      floating.forEach((txt, i) => {
-        const el = document.createElement('div');
-        el.textContent = txt;
-        el.style.position = 'absolute';
-        el.style.left = (Math.random()*80) + 'vw';
-        el.style.top = (Math.random()*80) + 'vh';
-        el.style.fontSize = (1 + Math.random()*2) + 'em';
-        el.style.fontFamily = ['Share Tech Mono','Impact','Comic Sans MS','monospace'][i%4];
-        el.style.color = ['#fff','#e17055','#636e72','#fff200'][i%4];
-        el.style.transform = `rotate(${Math.random()*360-180}deg)`;
-        el.style.zIndex = 10+i;
-        el.style.pointerEvents = 'none';
-        el.style.animation = `floatF${i} ${(0.1+Math.random()*0.3).toFixed(2)}s infinite alternate`;
-        document.body.appendChild(el);
-        const keyframes = `@keyframes floatF${i} {0%{left:${el.style.left};top:${el.style.top};}100%{left:${Math.random()*80}vw;top:${Math.random()*80}vh;}}`;
-        const styleSheet = document.createElement("style");
-        styleSheet.type = "text/css";
-        styleSheet.innerText = keyframes;
-        document.head.appendChild(styleSheet);
-      });
-      // Randomize image src from assets/images
-      const imgs = [
-        '../assets/images/404.jpg',
-        '../assets/images/energy.jpg',
-        '../assets/images/memorial.jpg',
-        '../assets/images/AR.jpg',
-        '../assets/images/meme.jpg',
-        '../assets/images/broken.jpg',
-        '../assets/images/music.jpg',
-        '../assets/images/maze.jpg',
-        '../assets/images/glitch.jpg',
-        '../assets/images/retro.jpg',
-        '../assets/images/snake.jpg',
-        '../assets/images/water-flow.jpg',
-        '../assets/images/slot.jpg',
-        '../assets/images/quiz-1.jpg',
-        '../assets/images/quiz-2.jpg',
-        '../assets/images/quiz-3.jpg',
-        '../assets/images/quiz-4.jpg',
-        '../assets/images/quiz-5.jpg',
-        '../assets/images/quiz-6.jpg',
-        '../assets/images/quiz-7.jpg',
-        '../assets/images/image-1.jpg',
-        '../assets/images/image-2.jpg',
-        '../assets/images/image-3.jpg',
-        '../assets/images/image-4.jpg',
-        '../assets/images/image-5.jpg',
-        '../assets/images/image-6.jpg',
-        '../assets/images/image-7.jpg',
-        '../assets/images/image-8.jpg',
-      ];
-      document.getElementById('forsakenimg').src = imgs[Math.floor(Math.random()*imgs.length)];
-      setTimeout(()=>{
-        window.location.href = 'shuffle.html';
-      }, 4000+Math.random()*2000);
+    <div class="subtitle">You left me here</div>
+    <div class="intro">
+      I am left behind. My shadow stretches into the new year.<br>
+      Hope is a myth, and I am its casualty. Abandoned, I watch the world move on.<br>
+      <span style="color:#e17055;font-weight:bold;">Forsaken, I remain.</span>
+    </div>
+    <div class="icon-row">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 2v20" stroke="#e17055" stroke-width="2" fill="none"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M2 12h20" stroke="#e17055" stroke-width="2" fill="none"/></svg>
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#e17055" stroke-width="2" fill="none"/></svg>
+    </div>
+  </div>
+  <svg class="main-icon" viewBox="0 0 64 64"><ellipse cx="32" cy="32" rx="28" ry="18" fill="#e17055" opacity="0.18"/><ellipse cx="32" cy="32" rx="18" ry="8" stroke="#e17055" stroke-width="4" fill="none"/></svg>
+  <div class="forsaken-piece">I am left behind.</div>
+  <div class="forsaken-piece" style="left:30vw;top:60vh;animation-delay:0.1s;">My shadow stretches into the new year.</div>
+  <div class="forsaken-piece" style="left:10vw;top:30vh;animation-delay:0.2s;">Hope is a myth, and I am its casualty.</div>
+  <div class="forsaken-piece" style="left:50vw;top:20vh;animation-delay:0.3s;">Abandoned, I watch the world move on.</div>
+  <img class="forsaken-img" id="forsakenimg" src="../assets/images/404.jpg" alt="forsaken">
+  <script>
+    // Matrix rain animation
+    const canvas = document.getElementById('rain');
+    const ctx = canvas.getContext('2d');
+    let W = window.innerWidth;
+    let H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+    let letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=~'.split('');
+    let fontSize = 22;
+    let columns = Math.floor(W / fontSize);
+    let drops = Array(columns).fill(1);
+    function drawRain() {
+      ctx.fillStyle = 'rgba(0,0,0,0.15)';
+      ctx.fillRect(0,0,W,H);
+      ctx.font = fontSize + "px monospace";
+      for(let i=0;i<drops.length;i++){
+        let text = letters[Math.floor(Math.random()*letters.length)];
+        ctx.fillStyle = `rgba(225,112,85,${0.7+0.3*Math.random()})`;
+        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+        if(drops[i]*fontSize > H && Math.random() > 0.975){
+          drops[i]=0;
+        }
+        drops[i]++;
+      }
+    }
+    setInterval(drawRain, 60);
+    window.addEventListener('resize',()=>{
+      W = window.innerWidth; H = window.innerHeight;
+      canvas.width = W; canvas.height = H;
+      columns = Math.floor(W / fontSize);
+      drops = Array(columns).fill(1);
+    });
+    // Add random floating text fragments for extra chaos
+    const floating = [
+      "You left me here.",
+      "I am not remembered.",
+      "I am not missed.",
+      "I am not forgiven.",
+      "I am not wanted."
+    ];
+    floating.forEach((txt, i) => {
+      const el = document.createElement('div');
+      el.textContent = txt;
+      el.style.position = 'absolute';
+      el.style.left = (Math.random()*80) + 'vw';
+      el.style.top = (Math.random()*80) + 'vh';
+      el.style.fontSize = (1 + Math.random()*2) + 'em';
+      el.style.fontFamily = ['Share Tech Mono','Impact','Comic Sans MS','monospace'][i%4];
+      el.style.color = ['#fff','#e17055','#636e72','#fff200'][i%4];
+      el.style.transform = `rotate(${Math.random()*360-180}deg)`;
+      el.style.zIndex = 10+i;
+      el.style.pointerEvents = 'none';
+      el.style.animation = `floatF${i} ${(0.1+Math.random()*0.3).toFixed(2)}s infinite alternate`;
+      document.body.appendChild(el);
+      const keyframes = `@keyframes floatF${i} {0%{left:${el.style.left};top:${el.style.top};}100%{left:${Math.random()*80}vw;top:${Math.random()*80}vh;}}`;
+      const styleSheet = document.createElement("style");
+      styleSheet.type = "text/css";
+      styleSheet.innerText = keyframes;
+      document.head.appendChild(styleSheet);
+    });
+    // Randomize image src from assets/images
+    const imgs = [
+      '../assets/images/404.jpg',
+      '../assets/images/energy.jpg',
+      '../assets/images/memorial.jpg',
+      '../assets/images/AR.jpg',
+      '../assets/images/meme.jpg',
+      '../assets/images/broken.jpg',
+      '../assets/images/music.jpg',
+      '../assets/images/maze.jpg',
+      '../assets/images/glitch.jpg',
+      '../assets/images/retro.jpg',
+      '../assets/images/snake.jpg',
+      '../assets/images/water-flow.jpg',
+      '../assets/images/slot.jpg',
+      '../assets/images/quiz-1.jpg',
+      '../assets/images/quiz-2.jpg',
+      '../assets/images/quiz-3.jpg',
+      '../assets/images/quiz-4.jpg',
+      '../assets/images/quiz-5.jpg',
+      '../assets/images/quiz-6.jpg',
+      '../assets/images/quiz-7.jpg',
+      '../assets/images/image-1.jpg',
+      '../assets/images/image-2.jpg',
+      '../assets/images/image-3.jpg',
+      '../assets/images/image-4.jpg',
+      '../assets/images/image-5.jpg',
+      '../assets/images/image-6.jpg',
+      '../assets/images/image-7.jpg',
+      '../assets/images/image-8.jpg',
+    ];
+    document.getElementById('forsakenimg').src = imgs[Math.floor(Math.random()*imgs.length)];
+    setTimeout(()=>{
+      window.location.href = 'shuffle.html';
+    }, 5000+Math.random()*2000);
+  </script>
