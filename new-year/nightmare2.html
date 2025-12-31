@@ -2,76 +2,138 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Resolution Lost - New Year</title>
+  <title>Nightmare II - New Year</title>
+  <style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
   <style>
     body {
-      background: linear-gradient(135deg, #111 0%, #222 100%);
-      color: #39ff14;
-      font-family: 'Share Tech Mono', monospace;
       margin: 0;
       height: 100vh;
+      width: 100vw;
       overflow: hidden;
+      background: #232946;
+      color: #e94560;
+      font-family: 'Inter', 'Space Grotesk', Arial, sans-serif;
+      position: relative;
+    }
+    .nightmare-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.16;
+      background: repeating-linear-gradient(120deg, #e94560 0 2px, transparent 2px 40px), repeating-linear-gradient(60deg, #fff2 0 4px, transparent 4px 40px);
+      animation: nightmarebgmove 10s linear infinite alternate;
+    }
+    @keyframes nightmarebgmove {
+      0% { background-position: 0 0, 0 0; }
+      100% { background-position: 60px 60px, 30px 30px; }
+    }
+    .main-content {
+      z-index: 2;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      animation: bgpulse 3s infinite alternate;
-    }
-    @keyframes bgpulse {
-      0% { background: #111; }
-      100% { background: #222; }
+      min-height: 80vh;
     }
     h1 {
-      font-size: 2.5em;
-      text-shadow: 0 0 10px #39ff14, 0 0 20px #000;
-      animation: textflicker 1.5s infinite alternate;
+      font-family: 'Space Grotesk', 'Inter', Arial, sans-serif;
+      font-size: 2.7em;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: #e94560;
+      text-shadow: 0 2px 24px #fff1, 0 0 2px #fff, 0 0 8px #e9456044;
+      margin-bottom: 0.2em;
+      margin-top: 0.2em;
+      position: relative;
+      animation: titlepop 1.7s cubic-bezier(.68,-0.55,.27,1.55) infinite alternate;
     }
-    @keyframes textflicker {
-      0% { color: #39ff14; }
-      50% { color: #fff; }
-      100% { color: #39ff14; }
+    @keyframes titlepop {
+      0% { letter-spacing: 0.04em; transform: scale(1) rotate(-1deg); }
+      100% { letter-spacing: 0.18em; transform: scale(1.04) rotate(2deg); }
     }
-    .nightmare-img {
-      width: 50vw;
-      max-width: 500px;
-      margin: 2em 0;
-      filter: invert(1) blur(2px) contrast(2);
-      animation: imgflicker 0.3s infinite alternate;
+    .subtitle {
+      font-size: 1.1em;
+      color: #e94560;
+      margin-bottom: 1.2em;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      text-align: center;
+      max-width: 60vw;
+      opacity: 0.8;
     }
-    @keyframes imgflicker {
-      0% { opacity: 1; }
-      100% { opacity: 0.7; }
+    .intro {
+      font-size: 1.05em;
+      color: #fffbe6;
+      margin-bottom: 2.2em;
+      text-align: center;
+      max-width: 70vw;
+      line-height: 1.5;
+      background: rgba(35,41,70,0.7);
+      border-radius: 1em;
+      padding: 1.2em 2em;
+      box-shadow: 0 2px 24px #e9456022;
     }
-    .next-btn {
-      padding: 1em 2em;
-      font-size: 1.2em;
-      background: #222;
-      color: #39ff14;
-      border: 2px solid #39ff14;
-      border-radius: 8px;
+    .icon-row {
+      display: flex;
+      gap: 2.2em;
+      margin-bottom: 2.5em;
+      z-index: 2;
+    }
+    .icon-row svg {
+      width: 2.8em;
+      height: 2.8em;
+      fill: #e94560;
+      opacity: 0.82;
+      filter: drop-shadow(0 0 8px #e9456044);
+      transition: transform 0.18s, fill 0.18s, opacity 0.18s;
       cursor: pointer;
-      box-shadow: 0 0 10px #39ff14;
-      margin-top: 2em;
-      animation: flicker 1.2s infinite alternate;
     }
-    .next-btn:hover {
-      background: #39ff14;
-      color: #222;
+    .icon-row svg:hover {
+      transform: scale(1.18) rotate(-8deg);
+      fill: #fff;
+      opacity: 1;
     }
-    .jumpscare {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: #000 url('https://i.imgur.com/2QZ1Z1m.jpg') center/cover no-repeat;
-      z-index: 9999;
-      justify-content: center;
-      align-items: center;
-      animation: fadeIn 0.2s;
+    .main-icon {
+      position: absolute;
+      top: 8vh;
+      right: 8vw;
+      width: 7em;
+      height: 7em;
+      opacity: 0.13;
+      z-index: 1;
+      pointer-events: none;
+      filter: blur(1px) drop-shadow(0 0 32px #e94560);
+      animation: iconfloat 7s ease-in-out infinite alternate;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    @keyframes iconfloat {
+      0% { transform: scale(1) rotate(-8deg) translateY(0); }
+      100% { transform: scale(1.08) rotate(12deg) translateY(18px); }
     }
+  </style>
+  <div class="nightmare-bg"></div>
+  <div class="main-content">
+    <h1>Nightmare II</h1>
+    <div class="subtitle">The nightmare returns</div>
+    <div class="intro">
+      Shadows crawl across the clock. Time is a monster.<br>
+      Sleep is a trap.<br>
+      <span style="color:#e94560;font-weight:bold;">There is no waking up.</span>
+    </div>
+    <div class="icon-row">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 3.59 8 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 2v20" stroke="#e94560" stroke-width="2" fill="none"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M2 12h20" stroke="#e94560" stroke-width="2" fill="none"/></svg>
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#e94560" stroke-width="2" fill="none"/></svg>
+    </div>
+  </div>
+  <svg class="main-icon" viewBox="0 0 64 64"><ellipse cx="32" cy="32" rx="28" ry="18" fill="#e94560" opacity="0.18"/><ellipse cx="32" cy="32" rx="18" ry="8" stroke="#e94560" stroke-width="4" fill="none"/></svg>
+  <script>
+    setTimeout(()=>{
+      window.location.href = 'shuffle.html';
+    }, 5000+Math.random()*2000);
+  </script>
   </style>
 </head>
 <body>

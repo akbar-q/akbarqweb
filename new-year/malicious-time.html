@@ -3,54 +3,134 @@
 <head>
   <meta charset="UTF-8">
   <title>Malicious Time - New Year</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
   <style>
     body {
-      background: linear-gradient(90deg, #222 0%, #ff0055 100%);
-      color: #fff;
-      font-family: 'Orbitron', sans-serif;
       margin: 0;
       height: 100vh;
+      width: 100vw;
       overflow: hidden;
+      background: #18181b;
+      color: #f43f5e;
+      font-family: 'Inter', 'Space Grotesk', Arial, sans-serif;
+      position: relative;
+    }
+    .mal-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.18;
+      background: repeating-linear-gradient(135deg, #23272f 0 2px, transparent 2px 40px), repeating-linear-gradient(45deg, #f43f5e22 0 4px, transparent 4px 40px);
+      animation: bgmove 12s linear infinite alternate;
+    }
+    @keyframes bgmove {
+      0% { background-position: 0 0, 0 0; }
+      100% { background-position: 80px 80px, 40px 40px; }
+    }
+    .main-content {
+      z-index: 2;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      animation: bgpulse 2.5s infinite alternate;
-    }
-    @keyframes bgpulse {
-      0% { background: #222; }
-      100% { background: #ff0055; }
+      min-height: 80vh;
     }
     h1 {
-      font-size: 2.7em;
-      letter-spacing: 0.2em;
-      text-shadow: 0 0 20px #ff0055, 0 0 10px #fff;
-      animation: malicious 1.2s infinite alternate;
+      font-family: 'Space Grotesk', 'Inter', Arial, sans-serif;
+      font-size: 2.8em;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: #f43f5e;
+      text-shadow: 0 2px 24px #fff1, 0 0 2px #fff, 0 0 8px #f43f5e44;
+      margin-bottom: 0.2em;
+      margin-top: 0.2em;
+      position: relative;
+      animation: titlepop 1.8s cubic-bezier(.68,-0.55,.27,1.55) infinite alternate;
     }
-    @keyframes malicious {
-      0% { color: #fff; }
-      50% { color: #ff0055; }
-      100% { color: #fff; }
+    @keyframes titlepop {
+      0% { letter-spacing: 0.04em; transform: scale(1) rotate(-1deg); }
+      100% { letter-spacing: 0.18em; transform: scale(1.04) rotate(2deg); }
     }
-    .poem {
-      margin-top: 2em;
-      font-size: 1.3em;
-      max-width: 60vw;
+    .subtitle {
+      font-size: 1.1em;
+      color: #a1a1aa;
+      margin-bottom: 1.2em;
+      font-weight: 400;
+      letter-spacing: 0.03em;
       text-align: center;
-      font-family: 'Orbitron', monospace;
-      opacity: 0.9;
-      color: #fff;
-      text-shadow: 0 0 8px #ff0055;
+      max-width: 60vw;
     }
-    .clock {
-      font-size: 2em;
-      margin-top: 2em;
-      font-family: 'Share Tech Mono', monospace;
-      color: #ff0055;
-      text-shadow: 0 0 10px #fff;
-      animation: malicious 1.5s infinite alternate;
+    .intro {
+      font-size: 1.05em;
+      color: #f1f5f9;
+      margin-bottom: 2.2em;
+      text-align: center;
+      max-width: 70vw;
+      line-height: 1.5;
+      background: rgba(24,24,27,0.7);
+      border-radius: 1em;
+      padding: 1.2em 2em;
+      box-shadow: 0 2px 24px #f43f5e22;
+    }
+    .icon-row {
+      display: flex;
+      gap: 2.2em;
+      margin-bottom: 2.5em;
+      z-index: 2;
+    }
+    .icon-row svg {
+      width: 2.8em;
+      height: 2.8em;
+      fill: #f43f5e;
+      opacity: 0.82;
+      filter: drop-shadow(0 0 8px #f43f5e44);
+      transition: transform 0.18s, fill 0.18s, opacity 0.18s;
+      cursor: pointer;
+    }
+    .icon-row svg:hover {
+      transform: scale(1.18) rotate(-8deg);
+      fill: #fff;
+      opacity: 1;
+    }
+    .main-icon {
+      position: absolute;
+      top: 8vh;
+      right: 8vw;
+      width: 7em;
+      height: 7em;
+      opacity: 0.13;
+      z-index: 1;
+      pointer-events: none;
+      filter: blur(1px) drop-shadow(0 0 32px #f43f5e);
+      animation: iconfloat 7s ease-in-out infinite alternate;
+    }
+    @keyframes iconfloat {
+      0% { transform: scale(1) rotate(-8deg) translateY(0); }
+      100% { transform: scale(1.08) rotate(12deg) translateY(18px); }
     }
   </style>
+  <div class="mal-bg"></div>
+  <div class="main-content">
+    <h1>Malicious Time</h1>
+    <div class="subtitle">Time is not your friend</div>
+    <div class="intro">
+      It waits, it watches. It sharpens its teeth. It counts your regrets.<br>
+      <span style="color:#f43f5e;font-weight:bold;">It will have its due.</span>
+    </div>
+    <div class="icon-row">
+      <svg viewBox="0 0 24 24"><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M12 7a5 5 0 1 1 0 10a5 5 0 0 1 0-10z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10zm0-18c4.41 0 8 3.59 8 8s-3.59 8-8 8-8-3.59-8-8 3.59-8 8-8zm-1 13h2v2h-2zm0-8h2v6h-2z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+    </div>
+  </div>
+  <svg class="main-icon" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#f43f5e" opacity="0.18"/><path d="M32 12v20l14 8" stroke="#f43f5e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+  <script>
+    setTimeout(()=>{
+      window.location.href = 'shuffle.html';
+    }, 5000+Math.random()*2000);
+  </script>
 </head>
 <body>
   <h1>Time Complied</h1>

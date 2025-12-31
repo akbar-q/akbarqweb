@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Alone - New Year</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -10,6 +11,8 @@
       width: 100vw;
       overflow: hidden;
       background: #000;
+      font-family: 'Inter', 'Space Grotesk', Arial, sans-serif;
+      position: relative;
       animation: alonebgflash 0.11s infinite alternate;
     }
     @keyframes alonebgflash {
@@ -19,6 +22,101 @@
       60% { background: #636e72; }
       80% { background: #222f3e; }
       100% { background: #000; }
+    }
+    .alone-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.13;
+      background: repeating-linear-gradient(120deg, #00b894 0 2px, transparent 2px 40px), repeating-linear-gradient(60deg, #fff2 0 4px, transparent 4px 40px);
+      animation: alonebgmove 10s linear infinite alternate;
+    }
+    @keyframes alonebgmove {
+      0% { background-position: 0 0, 0 0; }
+      100% { background-position: 60px 60px, 30px 30px; }
+    }
+    .main-content {
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+    }
+    h1 {
+      font-family: 'Space Grotesk', 'Inter', Arial, sans-serif;
+      font-size: 2.7em;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: #00b894;
+      text-shadow: 0 2px 24px #fff1, 0 0 2px #fff, 0 0 8px #00b89444;
+      margin-bottom: 0.2em;
+      margin-top: 0.2em;
+      position: relative;
+      animation: titlepop 1.7s cubic-bezier(.68,-0.55,.27,1.55) infinite alternate;
+    }
+    @keyframes titlepop {
+      0% { letter-spacing: 0.04em; transform: scale(1) rotate(-1deg); }
+      100% { letter-spacing: 0.18em; transform: scale(1.04) rotate(2deg); }
+    }
+    .subtitle {
+      font-size: 1.1em;
+      color: #a3a3a3;
+      margin-bottom: 1.2em;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      text-align: center;
+      max-width: 60vw;
+      opacity: 0.8;
+    }
+    .intro {
+      font-size: 1.05em;
+      color: #fffbe6;
+      margin-bottom: 2.2em;
+      text-align: center;
+      max-width: 70vw;
+      line-height: 1.5;
+      background: rgba(0,0,0,0.7);
+      border-radius: 1em;
+      padding: 1.2em 2em;
+      box-shadow: 0 2px 24px #00b89422;
+    }
+    .icon-row {
+      display: flex;
+      gap: 2.2em;
+      margin-bottom: 2.5em;
+      z-index: 2;
+    }
+    .icon-row svg {
+      width: 2.8em;
+      height: 2.8em;
+      fill: #00b894;
+      opacity: 0.82;
+      filter: drop-shadow(0 0 8px #00b89444);
+      transition: transform 0.18s, fill 0.18s, opacity 0.18s;
+      cursor: pointer;
+    }
+    .icon-row svg:hover {
+      transform: scale(1.18) rotate(-8deg);
+      fill: #fff;
+      opacity: 1;
+    }
+    .main-icon {
+      position: absolute;
+      top: 8vh;
+      right: 8vw;
+      width: 7em;
+      height: 7em;
+      opacity: 0.13;
+      z-index: 1;
+      pointer-events: none;
+      filter: blur(1px) drop-shadow(0 0 32px #00b894);
+      animation: iconfloat 7s ease-in-out infinite alternate;
+    }
+    @keyframes iconfloat {
+      0% { transform: scale(1) rotate(-8deg) translateY(0); }
+      100% { transform: scale(1.08) rotate(12deg) translateY(18px); }
     }
     .alone-piece {
       position: absolute;
@@ -62,6 +160,23 @@
   </style>
 </head>
 <body>
+  <div class="alone-bg"></div>
+  <div class="main-content">
+    <h1>Alone</h1>
+    <div class="subtitle">The new year is alone</div>
+    <div class="intro">
+      Empty rooms, empty arms. Every echo is your own.<br>
+      Every shadow, a friend.<br>
+      <span style="color:#00b894;font-weight:bold;">Will you ever be found?</span>
+    </div>
+    <div class="icon-row">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 3.59 8 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 2v20" stroke="#00b894" stroke-width="2" fill="none"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M2 12h20" stroke="#00b894" stroke-width="2" fill="none"/></svg>
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#00b894" stroke-width="2" fill="none"/></svg>
+    </div>
+  </div>
+  <svg class="main-icon" viewBox="0 0 64 64"><ellipse cx="32" cy="32" rx="28" ry="18" fill="#00b894" opacity="0.18"/><ellipse cx="32" cy="32" rx="18" ry="8" stroke="#00b894" stroke-width="4" fill="none"/></svg>
   <div class="alone-piece">The crowd is loud, but I am alone.</div>
   <div class="alone-piece" style="left:30vw;top:60vh;animation-delay:0.1s;">Every cheer is a reminder.</div>
   <div class="alone-piece" style="left:10vw;top:30vh;animation-delay:0.2s;">Every wish is a wall.</div>
