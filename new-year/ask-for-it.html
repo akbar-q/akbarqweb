@@ -41,6 +41,24 @@
       opacity: 0.95;
       color: #f7e018;
       text-shadow: 0 0 8px #fff;
+        animation: askAnim 0.11s infinite alternate, askColor 0.09s infinite alternate, askScale 0.13s infinite alternate, askDisturb 0.11s infinite alternate;
+      }
+      @keyframes askAnim {
+        0% { letter-spacing: 0.1em; }
+        100% { letter-spacing: 0.6em; }
+      }
+      @keyframes askColor {
+        0% { color: #f7e018; }
+        50% { color: #e17055; }
+        100% { color: #636e72; }
+      }
+      @keyframes askScale {
+        0% { transform: scale(1.2) rotate(-20deg); }
+        100% { transform: scale(0.8) rotate(30deg); }
+      }
+      @keyframes askDisturb {
+        0% { filter: blur(0px) brightness(1); }
+        100% { filter: blur(2px) brightness(1.2); }
     }
     .rain {
       position: fixed;
@@ -53,6 +71,7 @@
 <body>
   <h1>You Asked For It</h1>
   <div class="poem">You called for the new year.<br>It answered, but not with joy.<br>It crept in, silent and cold.<br>Now it is yours.<br><br>Be careful what you wish for.<br>Time is listening.<br>And it is cruel.</div>
+  <div id="ask-icons"></div>
   <canvas class="rain" id="rain"></canvas>
   <script>
     // Rain of yellow letters
@@ -87,9 +106,65 @@
       columns = Math.floor(W / fontSize);
       drops = Array(columns).fill(1);
     });
+    // Add random font size and color to poem
+    const poemEl = document.getElementById('askpoem');
+    poemEl.style.fontSize = (1.4 + Math.random()*2.4) + 'em';
+    poemEl.style.color = ['#fff','#e17055','#636e72','#fff200','#ff00c8'][Math.floor(Math.random()*5)];
+    poemEl.style.transform = `rotate(${Math.random()*70-35}deg)`;
+    poemEl.style.textShadow = `0 0 8px #636e72, 0 0 20px #e17055, 0 0 30px #fff200, 0 0 40px #ff00c8`;
+    // Add random icons/images
+    const icons = [
+      '../assets/images/404.jpg',
+      '../assets/images/energy.jpg',
+      '../assets/images/memorial.jpg',
+      '../assets/images/AR.jpg',
+      '../assets/images/meme.jpg',
+      '../assets/images/broken.jpg',
+      '../assets/images/music.jpg',
+      '../assets/images/maze.jpg',
+      '../assets/images/glitch.jpg',
+      '../assets/images/retro.jpg',
+      '../assets/images/snake.jpg',
+      '../assets/images/water-flow.jpg',
+      '../assets/images/slot.jpg',
+      '../assets/images/quiz-1.jpg',
+      '../assets/images/quiz-2.jpg',
+      '../assets/images/quiz-3.jpg',
+      '../assets/images/quiz-4.jpg',
+      '../assets/images/quiz-5.jpg',
+      '../assets/images/quiz-6.jpg',
+      '../assets/images/quiz-7.jpg',
+      '../assets/images/image-1.jpg',
+      '../assets/images/image-2.jpg',
+      '../assets/images/image-3.jpg',
+      '../assets/images/image-4.jpg',
+      '../assets/images/image-5.jpg',
+      '../assets/images/image-6.jpg',
+      '../assets/images/image-7.jpg',
+      '../assets/images/image-8.jpg',
+    ];
+    for(let i=0;i<5;i++){
+      const img = document.createElement('img');
+      img.src = icons[Math.floor(Math.random()*icons.length)];
+      img.style.position = 'absolute';
+      img.style.left = (Math.random()*80)+'vw';
+      img.style.top = (Math.random()*80)+'vh';
+      img.style.width = (8+Math.random()*22)+'vw';
+      img.style.height = 'auto';
+      img.style.zIndex = 10+i;
+      img.style.filter = 'grayscale(1) contrast(2) blur(2px)';
+      img.style.pointerEvents = 'none';
+      img.style.animation = `askIcon${i} ${(0.09+Math.random()*0.2).toFixed(2)}s infinite alternate`;
+      document.getElementById('ask-icons').appendChild(img);
+      const keyframes = `@keyframes askIcon${i} {0%{left:${img.style.left};top:${img.style.top};}100%{left:${Math.random()*80}vw;top:${Math.random()*80}vh;}}`;
+      const styleSheet = document.createElement("style");
+      styleSheet.type = "text/css";
+      styleSheet.innerText = keyframes;
+      document.head.appendChild(styleSheet);
+    }
     setTimeout(()=>{
       window.location.href = 'shuffle.html';
-    }, 6000+Math.random()*3000);
+    }, 4000+Math.random()*2000);
   </script>
 </body>
 </html>
