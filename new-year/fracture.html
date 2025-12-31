@@ -127,12 +127,58 @@
       <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
       <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
     </div>
+    <div id="code-leak" style="font-family:'Fira Mono',monospace;font-size:1.1em;color:#00fff5;background:#18181b;box-shadow:0 0 12px #00fff544;max-width:80vw;margin:2em auto 0 auto;padding:1em 2em;border-radius:10px;opacity:0.92;position:relative;z-index:3;white-space:pre;display:none;"></div>
+    <div id="fake-error" style="display:none;position:fixed;top:10vh;left:50vw;transform:translateX(-50%);background:#1a1a1a;color:#fff;border:2px solid #00fff5;padding:1.2em 2em;border-radius:12px;box-shadow:0 0 24px #00fff588;z-index:1000;font-family:'Fira Mono',monospace;font-size:1.2em;max-width:80vw;pointer-events:auto;cursor:pointer;">Error: SHARD_OVERFLOW at fracture.js:13<br>TypeError: Cannot read property 'mirror' of undefined<br><span style="font-size:0.8em;opacity:0.7;">Click to dismiss</span></div>
   </div>
   <svg class="main-icon" viewBox="0 0 64 64"><polygon points="32,2 62,32 32,62 2,32" fill="#00fff5" opacity="0.18"/><polyline points="32,2 32,62" stroke="#00fff5" stroke-width="4"/><polyline points="2,32 62,32" stroke="#00fff5" stroke-width="4"/></svg>
   <script>
     setTimeout(()=>{
       window.location.href = 'shuffle.html';
     }, 5000+Math.random()*2000);
+    // --- Broken code and error effects ---
+    const codeSnippets = [
+      `function fracture() {\n  throw new Error('MirrorShatteredException');\n}\nfracture();`,
+      `let pieces = 2025;\nif (pieces < 2026) {\n  throw 'FractureError';\n}`,
+      `// TODO: fix the reflection\nwhile(true) {\n  // ...\n}`,
+      `const mirror = undefined;\nconsole.log(mirror.reflection);`,
+      `try {\n  process.shard();\n} catch(e) {\n  console.error('shard not found');\n}`,
+      `throw new Error('Uncaught fracture exception');`,
+      `// SYSTEM FAILURE\n// 0xBADC0DE\n`,
+      `class Fracture {\n  constructor() {\n    throw 'NoReflectionError';\n  }\n}`
+    ];
+    function showCodeLeak() {
+      const el = document.getElementById('code-leak');
+      el.textContent = codeSnippets[Math.floor(Math.random()*codeSnippets.length)];
+      el.style.display = 'block';
+      setTimeout(()=>{ el.style.display = 'none'; }, 2200+Math.random()*1200);
+    }
+    function showFakeError() {
+      const el = document.getElementById('fake-error');
+      el.style.display = 'block';
+      setTimeout(()=>{ el.style.display = 'none'; }, 2600+Math.random()*1200);
+    }
+    // Randomly show code leak or error popup
+    setTimeout(()=>{
+      if(Math.random()<0.5) showCodeLeak();
+      else showFakeError();
+    }, 1200+Math.random()*2000);
+    // Allow dismissing error popup
+    document.getElementById('fake-error').onclick = function(){ this.style.display='none'; };
+    // Occasionally throw nonsense errors in console
+    setInterval(()=>{
+      if(Math.random()<0.3) {
+        const err = [
+          'Uncaught FractureError: null is not a mirror',
+          'TypeError: undefined is not a shard',
+          'ReferenceError: reflection is not defined',
+          'SyntaxError: Unexpected fracture',
+          'Error: The mirror cannot be fixed',
+          'Fatal: 0xBADC0DE',
+          'Exception: ShardOverflowException',
+        ];
+        console.error(err[Math.floor(Math.random()*err.length)]);
+      }
+    }, 1800);
   </script>
 </body>
 </html>

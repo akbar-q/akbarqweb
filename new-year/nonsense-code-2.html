@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>nonsense-code-2.py</title>
+  <style>
+    body {
+      background: #18181b;
+      color: #ff3af7;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .code {
+      background: #111;
+      color: #ff3af7;
+      font-size: 1.2em;
+      padding: 2em 3em;
+      border-radius: 16px;
+      box-shadow: 0 0 32px #ff3af744;
+      white-space: pre;
+      max-width: 90vw;
+      max-height: 80vh;
+      overflow: auto;
+      border: 2px solid #ff3af7;
+      animation: flicker 0.18s infinite alternate;
+    }
+    @keyframes flicker {
+      0% { box-shadow: 0 0 32px #ff3af744; }
+      100% { box-shadow: 0 0 48px #ff3af7cc; }
+    }
+  </style>
+</head>
+<body>
+  <div class="code" id="nonsense-code"></div>
+  <script>
+    const nonsense = [
+      `def midnight_ritual():\n    hope = None\n    if hope is None:\n        raise Exception('HopeNotFoundException')\n    while True:\n        pass\n\nmidnight_ritual()`,
+      `class NewYear:\n    def __init__(self):\n        raise Exception('NoFutureError')\n\nyear = NewYear()`,
+      `# SYSTEM FAILURE\n# 0xDEADDEAD\nsoul = None\nsoul.process()`,
+      `try:\n    process_midnight()\nexcept Exception as e:\n    print('midnight not found')` ,
+      `time = 2025\nif time != 2025:\n    raise Exception('TemporalDisplacementError')`,
+      `raise Exception('Uncaught midnight exception')`,
+      `# TODO: fix the loop\nwhile True:\n    pass`,
+      `voided = None\nprint(voided.hope)`,
+      `def glitch():\n    raise Exception('RealityCorruptedException')\nglitch()`,
+      `# END OF LINE\n# END OF YEAR\n# END OF HOPE\n`,
+    ];
+    document.getElementById('nonsense-code').textContent = nonsense[Math.floor(Math.random()*nonsense.length)];
+    setTimeout(()=>{
+      window.location.href = 'shuffle.html';
+    }, 4000+Math.random()*2000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>nonsense-code-3.json</title>
+  <style>
+    body {
+      background: #18181b;
+      color: #f43f5e;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .code {
+      background: #111;
+      color: #f43f5e;
+      font-size: 1.2em;
+      padding: 2em 3em;
+      border-radius: 16px;
+      box-shadow: 0 0 32px #f43f5e44;
+      white-space: pre;
+      max-width: 90vw;
+      max-height: 80vh;
+      overflow: auto;
+      border: 2px solid #f43f5e;
+      animation: flicker 0.18s infinite alternate;
+    }
+    @keyframes flicker {
+      0% { box-shadow: 0 0 32px #f43f5e44; }
+      100% { box-shadow: 0 0 48px #f43f5ecc; }
+    }
+  </style>
+</head>
+<body>
+  <div class="code" id="nonsense-code"></div>
+  <script>
+    const nonsense = [
+      `{
+  "ritual": "midnight",
+  "hope": null,
+  "error": "HopeNotFoundException",
+  "loop": true,
+  "year": 2025,
+  "future": false,
+  "system": "FAILURE",
+  "code": "0xDEADDEAD"
+}`,
+      `{
+  "newYear": {
+    "status": "broken",
+    "exception": "NoFutureError",
+    "reflection": null,
+    "shards": [null, null, null]
+  }
+}`,
+      `{
+  "soul": null,
+  "process": false,
+  "error": "soul.process is not a function"
+}`,
+      `{
+  "time": 2025,
+  "temporalDisplacement": true,
+  "error": "TemporalDisplacementError"
+}`,
+      `{
+  "glitch": true,
+  "exception": "RealityCorruptedException"
+}`,
+      `{
+  "end": ["line", "year", "hope"],
+  "status": "terminated"
+}`
+    ];
+    document.getElementById('nonsense-code').textContent = nonsense[Math.floor(Math.random()*nonsense.length)];
+    setTimeout(()=>{
+      window.location.href = 'shuffle.html';
+    }, 4000+Math.random()*2000);
+  </script>
+</body>
+</html>

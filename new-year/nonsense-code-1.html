@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>nonsense-code-1.js</title>
+  <style>
+    body {
+      background: #18181b;
+      color: #39ff14;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .code {
+      background: #111;
+      color: #39ff14;
+      font-size: 1.2em;
+      padding: 2em 3em;
+      border-radius: 16px;
+      box-shadow: 0 0 32px #39ff1444;
+      white-space: pre;
+      max-width: 90vw;
+      max-height: 80vh;
+      overflow: auto;
+      border: 2px solid #39ff14;
+      animation: flicker 0.18s infinite alternate;
+    }
+    @keyframes flicker {
+      0% { box-shadow: 0 0 32px #39ff1444; }
+      100% { box-shadow: 0 0 48px #39ff14cc; }
+    }
+  </style>
+</head>
+<body>
+  <div class="code" id="nonsense-code"></div>
+  <script>
+    const nonsense = [
+      `function midnightRitual() {\n  let hope = undefined;\n  if (hope === void 0) {\n    throw new Error('HopeNotFoundException');\n  }\n  while(true) {\n    // loop forever\n  }\n}\nmidnightRitual();`,
+      `class NewYear {\n  constructor() {\n    throw 'NoFutureError';\n  }\n}\nconst year = new NewYear();`,
+      `// SYSTEM FAILURE\n// 0xDEADDEAD\nlet soul = null;\nsoul.process();`,
+      `try {\n  process.midnight();\n} catch(e) {\n  console.error('midnight not found');\n}`,
+      `let time = 2025;\nif (time !== 2025) {\n  throw 'TemporalDisplacementError';\n}`,
+      `throw new Error('Uncaught midnight exception');`,
+      `// TODO: fix the loop\nwhile(true) {\n  // ...\n}`,
+      `const voided = undefined;\nconsole.log(voided.hope);`,
+      `function glitch() {\n  throw new Error('RealityCorruptedException');\n}\nglitch();`,
+      `// END OF LINE\n// END OF YEAR\n// END OF HOPE\n`,
+    ];
+    document.getElementById('nonsense-code').textContent = nonsense[Math.floor(Math.random()*nonsense.length)];
+    setTimeout(()=>{
+      window.location.href = 'shuffle.html';
+    }, 4000+Math.random()*2000);
+  </script>
+</body>
+</html>

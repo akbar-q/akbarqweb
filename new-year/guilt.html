@@ -127,12 +127,58 @@
       <svg viewBox="0 0 24 24"><path d="M21 3L3 21" stroke="#ffd6e0" stroke-width="2"/></svg>
       <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
     </div>
+    <div id="code-leak" style="font-family:'Fira Mono',monospace;font-size:1.1em;color:#ffd6e0;background:#18181b;box-shadow:0 0 12px #ffd6e044;max-width:80vw;margin:2em auto 0 auto;padding:1em 2em;border-radius:10px;opacity:0.92;position:relative;z-index:3;white-space:pre;display:none;"></div>
+    <div id="fake-error" style="display:none;position:fixed;top:10vh;left:50vw;transform:translateX(-50%);background:#1a1a1a;color:#fff;border:2px solid #ffd6e0;padding:1.2em 2em;border-radius:12px;box-shadow:0 0 24px #ffd6e088;z-index:1000;font-family:'Fira Mono',monospace;font-size:1.2em;max-width:80vw;pointer-events:auto;cursor:pointer;">Error: GUILT_OVERFLOW at guilt.js:27<br>TypeError: Cannot read property 'forgive' of undefined<br><span style="font-size:0.8em;opacity:0.7;">Click to dismiss</span></div>
   </div>
   <svg class="main-icon" viewBox="0 0 64 64"><ellipse cx="32" cy="32" rx="28" ry="20" fill="#ffd6e0" opacity="0.18"/><ellipse cx="32" cy="32" rx="18" ry="8" fill="#ffd6e0" opacity="0.18"/><path d="M20 44 Q32 54 44 44" stroke="#ffd6e0" stroke-width="4" fill="none"/></svg>
   <script>
     setTimeout(()=>{
       window.location.href = 'shuffle.html';
     }, 5000+Math.random()*2000);
+    // --- Broken code and error effects ---
+    const codeSnippets = [
+      `function guilt() {\n  throw new Error('ForgivenessNotFoundException');\n}\nguilt();`,
+      `let blame = 2025;\nif (blame > 0) {\n  throw 'GuiltError';\n}`,
+      `// TODO: fix the silence\nwhile(true) {\n  // ...\n}`,
+      `const forgive = undefined;\nconsole.log(forgive.now);`,
+      `try {\n  process.guilt();\n} catch(e) {\n  console.error('guilt not found');\n}`,
+      `throw new Error('Uncaught guilt exception');`,
+      `// SYSTEM FAILURE\n// 0xBADF00D\n`,
+      `class Guilt {\n  constructor() {\n    throw 'NoForgivenessError';\n  }\n}`
+    ];
+    function showCodeLeak() {
+      const el = document.getElementById('code-leak');
+      el.textContent = codeSnippets[Math.floor(Math.random()*codeSnippets.length)];
+      el.style.display = 'block';
+      setTimeout(()=>{ el.style.display = 'none'; }, 2200+Math.random()*1200);
+    }
+    function showFakeError() {
+      const el = document.getElementById('fake-error');
+      el.style.display = 'block';
+      setTimeout(()=>{ el.style.display = 'none'; }, 2600+Math.random()*1200);
+    }
+    // Randomly show code leak or error popup
+    setTimeout(()=>{
+      if(Math.random()<0.5) showCodeLeak();
+      else showFakeError();
+    }, 1200+Math.random()*2000);
+    // Allow dismissing error popup
+    document.getElementById('fake-error').onclick = function(){ this.style.display='none'; };
+    // Occasionally throw nonsense errors in console
+    setInterval(()=>{
+      if(Math.random()<0.3) {
+        const err = [
+          'Uncaught GuiltError: null is not forgiven',
+          'TypeError: undefined is not a guilt',
+          'ReferenceError: forgive is not defined',
+          'SyntaxError: Unexpected guilt',
+          'Error: The silence cannot be broken',
+          'Fatal: 0xBADF00D',
+          'Exception: GuiltOverflowException',
+        ];
+        console.error(err[Math.floor(Math.random()*err.length)]);
+      }
+    }, 1800);
   </script>
 </body>
 </html>

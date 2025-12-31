@@ -127,12 +127,58 @@
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#00a8ff" stroke-width="2" fill="none"/><path d="M12 6v6l4 2" stroke="#00a8ff" stroke-width="2" fill="none"/></svg>
       <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 1 0 20a10 10 0 0 1 0-20zm0 0v10l6 3" stroke="#00a8ff" stroke-width="2" fill="none"/></svg>
     </div>
+    <div id="code-leak" style="font-family:'Fira Mono',monospace;font-size:1.1em;color:#00a8ff;background:#222f3e;box-shadow:0 0 12px #00a8ff44;max-width:80vw;margin:2em auto 0 auto;padding:1em 2em;border-radius:10px;opacity:0.92;position:relative;z-index:3;white-space:pre;display:none;"></div>
+    <div id="fake-error" style="display:none;position:fixed;top:10vh;left:50vw;transform:translateX(-50%);background:#1a1a1a;color:#fff;border:2px solid #00a8ff;padding:1.2em 2em;border-radius:12px;box-shadow:0 0 24px #00a8ff88;z-index:1000;font-family:'Fira Mono',monospace;font-size:1.2em;max-width:80vw;pointer-events:auto;cursor:pointer;">Error: REST_OVERFLOW at rest.js:9<br>TypeError: Cannot read property 'peace' of undefined<br><span style="font-size:0.8em;opacity:0.7;">Click to dismiss</span></div>
   </div>
   <svg class="main-icon" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="#00a8ff" opacity="0.18"/><path d="M32 16v24l16 8" stroke="#00a8ff" stroke-width="4" fill="none"/></svg>
   <script>
     setTimeout(()=>{
       window.location.href = 'shuffle.html';
     }, 5000+Math.random()*2000);
+    // --- Broken code and error effects ---
+    const codeSnippets = [
+      `function rest() {\n  throw new Error('PeaceNotFoundException');\n}\nrest();`,
+      `let peace = 2025;\nif (peace < 2026) {\n  throw 'RestError';\n}`,
+      `// TODO: fix the rest\nwhile(true) {\n  // ...\n}`,
+      `const peace = undefined;\nconsole.log(peace.now);`,
+      `try {\n  process.rest();\n} catch(e) {\n  console.error('rest not found');\n}`,
+      `throw new Error('Uncaught rest exception');`,
+      `// SYSTEM FAILURE\n// 0xDEADC0DE\n`,
+      `class Rest {\n  constructor() {\n    throw 'NoPeaceError';\n  }\n}`
+    ];
+    function showCodeLeak() {
+      const el = document.getElementById('code-leak');
+      el.textContent = codeSnippets[Math.floor(Math.random()*codeSnippets.length)];
+      el.style.display = 'block';
+      setTimeout(()=>{ el.style.display = 'none'; }, 2200+Math.random()*1200);
+    }
+    function showFakeError() {
+      const el = document.getElementById('fake-error');
+      el.style.display = 'block';
+      setTimeout(()=>{ el.style.display = 'none'; }, 2600+Math.random()*1200);
+    }
+    // Randomly show code leak or error popup
+    setTimeout(()=>{
+      if(Math.random()<0.5) showCodeLeak();
+      else showFakeError();
+    }, 1200+Math.random()*2000);
+    // Allow dismissing error popup
+    document.getElementById('fake-error').onclick = function(){ this.style.display='none'; };
+    // Occasionally throw nonsense errors in console
+    setInterval(()=>{
+      if(Math.random()<0.3) {
+        const err = [
+          'Uncaught RestError: null is not peace',
+          'TypeError: undefined is not a rest',
+          'ReferenceError: peace is not defined',
+          'SyntaxError: Unexpected rest',
+          'Error: The rest cannot be found',
+          'Fatal: 0xDEADC0DE',
+          'Exception: RestOverflowException',
+        ];
+        console.error(err[Math.floor(Math.random()*err.length)]);
+      }
+    }, 1800);
   </script>
 </body>
 </html>

@@ -136,6 +136,8 @@
       <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
       <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
     </div>
+    <div id="code-leak" style="font-family:'Fira Mono',monospace;font-size:1.1em;color:#f43f5e;background:#18181b;box-shadow:0 0 12px #f43f5e44;max-width:80vw;margin:2em auto 0 auto;padding:1em 2em;border-radius:10px;opacity:0.92;position:relative;z-index:3;white-space:pre;display:none;"></div>
+    <div id="fake-error" style="display:none;position:fixed;top:10vh;left:50vw;transform:translateX(-50%);background:#1a1a1a;color:#fff;border:2px solid #f43f5e;padding:1.2em 2em;border-radius:12px;box-shadow:0 0 24px #f43f5e88;z-index:1000;font-family:'Fira Mono',monospace;font-size:1.2em;max-width:80vw;pointer-events:auto;cursor:pointer;">Error: UNCAUGHT EXCEPTION at midnight.js:42<br>TypeError: Cannot read property 'hope' of undefined<br><span style="font-size:0.8em;opacity:0.7;">Click to dismiss</span></div>
   </div>
   <svg class="main-icon" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#f43f5e" opacity="0.18"/><path d="M32 12v20l14 8" stroke="#f43f5e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
   <audio id="creepy-audio" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12b1b1b1b1.mp3" preload="auto"></audio>
@@ -157,6 +159,51 @@
     setTimeout(()=>{
       window.location.href = 'shuffle.html';
     }, 6000+Math.random()*3000);
+
+    // --- Broken code and error effects ---
+    const codeSnippets = [
+      `function midnight() {\n  throw new Error('HopeNotDefinedException');\n}\nmidnight();`,
+      `let year = 2026;\nif (year !== 2025) {\n  throw 'TemporalDisplacementError';\n}`,
+      `// TODO: fix the loop\nwhile(true) {\n  // ...\n}`,
+      `const voided = undefined;\nconsole.log(voided.hope);`,
+      `try {\n  process.soul();\n} catch(e) {\n  console.error('soul not found');\n}`,
+      `throw new Error('Uncaught midnight exception');`,
+      `// SYSTEM FAILURE\n// 0xDEADDEAD\n`,
+      `class NewYear {\n  constructor() {\n    throw 'NoFutureError';\n  }\n}`
+    ];
+    function showCodeLeak() {
+      const el = document.getElementById('code-leak');
+      el.textContent = codeSnippets[Math.floor(Math.random()*codeSnippets.length)];
+      el.style.display = 'block';
+      setTimeout(()=>{ el.style.display = 'none'; }, 2200+Math.random()*1200);
+    }
+    function showFakeError() {
+      const el = document.getElementById('fake-error');
+      el.style.display = 'block';
+      setTimeout(()=>{ el.style.display = 'none'; }, 2600+Math.random()*1200);
+    }
+    // Randomly show code leak or error popup
+    setTimeout(()=>{
+      if(Math.random()<0.5) showCodeLeak();
+      else showFakeError();
+    }, 1200+Math.random()*2000);
+    // Allow dismissing error popup
+    document.getElementById('fake-error').onclick = function(){ this.style.display='none'; };
+    // Occasionally throw nonsense errors in console
+    setInterval(()=>{
+      if(Math.random()<0.3) {
+        const err = [
+          'Uncaught MidnightError: null is not a function',
+          'TypeError: undefined is not a year',
+          'ReferenceError: hope is not defined',
+          'SyntaxError: Unexpected midnight',
+          'Error: The loop cannot be broken',
+          'Fatal: 0xDEADDEAD',
+          'Exception: RitualFailedException',
+        ];
+        console.error(err[Math.floor(Math.random()*err.length)]);
+      }
+    }, 1800);
   </script>
 </body>
 </html>
