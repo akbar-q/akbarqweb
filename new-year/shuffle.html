@@ -56,16 +56,8 @@
       justify-content: center;
       height: 100vh;
       font-size: 2em;
-      animation: flashbg 0.18s infinite alternate;
       overflow: hidden;
-    }
-    @keyframes flashbg {
-      0% { background: #000; }
-      20% { background: #e60000; }
-      40% { background: #fff; }
-      60% { background: #00ffea; }
-      80% { background: #3a3a3a; }
-      100% { background: #000; }
+      /* Animation will be set randomly by JS */
     }
     #mystery-shuffle {
       position: absolute;
@@ -75,17 +67,8 @@
       font-family: 'Creepster', 'Share Tech Mono', cursive;
       color: #fff200;
       text-shadow: 0 0 10px #e60000, 0 0 20px #fff;
-      animation: moveText 0.3s infinite alternate, colorflash 0.11s infinite alternate;
       z-index: 2;
-    }
-    @keyframes moveText {
-      0% { left: 10vw; top: 10vh; }
-      100% { left: 60vw; top: 60vh; }
-    }
-    @keyframes colorflash {
-      0% { color: #fff200; }
-      50% { color: #e60000; }
-      100% { color: #fff; }
+      /* Animation will be set randomly by JS */
     }
   </style>
 </head>
