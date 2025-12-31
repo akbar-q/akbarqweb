@@ -4,14 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>New Year</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
   <style>
     html, body {
       height: 100%;
       margin: 0;
       padding: 0;
-      background: #0a0a0a;
-      color: #e60000;
-      font-family: 'Courier New', Courier, monospace;
+      background: #18181b;
+      color: #f43f5e;
+      font-family: 'Inter', 'Space Grotesk', Arial, sans-serif;
       overflow: hidden;
     }
     body {
@@ -19,72 +20,127 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      animation: flicker 2s infinite alternate;
+      min-height: 100vh;
+      position: relative;
     }
-    h1 {
-      font-size: 3em;
-      letter-spacing: 0.1em;
-      text-shadow: 0 0 10px #e60000, 0 0 20px #000, 0 0 2px #fff;
-      animation: glitch 1.5s infinite linear alternate-reverse;
-    }
-    @keyframes flicker {
-      0% { opacity: 1; }
-      10% { opacity: 0.8; }
-      20% { opacity: 1; }
-      30% { opacity: 0.7; }
-      40% { opacity: 1; }
-      50% { opacity: 0.9; }
-      60% { opacity: 1; }
-      70% { opacity: 0.6; }
-      80% { opacity: 1; }
-      90% { opacity: 0.8; }
-      100% { opacity: 1; }
-    }
-    @keyframes glitch {
-      0% { text-shadow: 2px 0 red, -2px 0 blue; }
-      20% { text-shadow: -2px 0 red, 2px 0 blue; }
-      40% { text-shadow: 2px 2px #fff, -2px -2px #000; }
-      60% { text-shadow: 0 0 10px #e60000, 0 0 20px #000; }
-      80% { text-shadow: 2px -2px #fff, -2px 2px #000; }
-      100% { text-shadow: 0 0 10px #e60000, 0 0 20px #000; }
-    }
-    .enter-btn {
-      margin-top: 2em;
-      padding: 1em 2em;
-      font-size: 1.5em;
-      background: #111;
-      color: #e60000;
-      border: 2px solid #e60000;
-      border-radius: 8px;
-      cursor: pointer;
-      box-shadow: 0 0 10px #e60000;
-      transition: background 0.2s, color 0.2s;
-      animation: flicker 1.2s infinite alternate;
-    }
-    .enter-btn:hover {
-      background: #e60000;
-      color: #111;
-    }
-    .static {
+    .texture-bg {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 0;
       pointer-events: none;
-      opacity: 0.15;
-      z-index: 10;
-      background: url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif') repeat;
-      mix-blend-mode: lighten;
+      opacity: 0.18;
+      background: repeating-linear-gradient(135deg, #23272f 0 2px, transparent 2px 40px), repeating-linear-gradient(45deg, #f43f5e22 0 4px, transparent 4px 40px);
+      animation: bgmove 12s linear infinite alternate;
+    }
+    @keyframes bgmove {
+      0% { background-position: 0 0, 0 0; }
+      100% { background-position: 80px 80px, 40px 40px; }
+    }
+    .main-content {
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+    }
+    h1 {
+      font-family: 'Space Grotesk', 'Inter', Arial, sans-serif;
+      font-size: 3.2em;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: #f43f5e;
+      text-shadow: 0 2px 24px #fff1, 0 0 2px #fff, 0 0 8px #f43f5e44;
+      margin-bottom: 0.2em;
+      margin-top: 0.2em;
+      position: relative;
+      animation: titlepop 1.8s cubic-bezier(.68,-0.55,.27,1.55) infinite alternate;
+    }
+    @keyframes titlepop {
+      0% { letter-spacing: 0.04em; transform: scale(1) rotate(-1deg); }
+      100% { letter-spacing: 0.18em; transform: scale(1.04) rotate(2deg); }
+    }
+    .subtitle {
+      font-size: 1.3em;
+      color: #a1a1aa;
+      margin-bottom: 1.2em;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      text-align: center;
+      max-width: 60vw;
+    }
+    .intro {
+      font-size: 1.1em;
+      color: #f1f5f9;
+      margin-bottom: 2.2em;
+      text-align: center;
+      max-width: 70vw;
+      line-height: 1.5;
+      background: rgba(24,24,27,0.7);
+      border-radius: 1em;
+      padding: 1.2em 2em;
+      box-shadow: 0 2px 24px #f43f5e22;
+    }
+    .icon-row {
+      display: flex;
+      gap: 2.2em;
+      margin-bottom: 2.5em;
+      z-index: 2;
+    }
+    .icon-row svg {
+      width: 3.2em;
+      height: 3.2em;
+      fill: #f43f5e;
+      opacity: 0.82;
+      filter: drop-shadow(0 0 8px #f43f5e44);
+      transition: transform 0.18s, fill 0.18s, opacity 0.18s;
+      cursor: pointer;
+    }
+    .icon-row svg:hover {
+      transform: scale(1.18) rotate(-8deg);
+      fill: #fff;
+      opacity: 1;
+    }
+    .main-icon {
+      position: absolute;
+      top: 8vh;
+      right: 8vw;
+      width: 8em;
+      height: 8em;
+      opacity: 0.13;
+      z-index: 1;
+      pointer-events: none;
+      filter: blur(1px) drop-shadow(0 0 32px #f43f5e);
+      animation: iconfloat 7s ease-in-out infinite alternate;
+    }
+    @keyframes iconfloat {
+      0% { transform: scale(1) rotate(-8deg) translateY(0); }
+      100% { transform: scale(1.08) rotate(12deg) translateY(18px); }
     }
   </style>
 </head>
 <body>
-  <div class="static"></div>
-  <h1 id="mystery-title">00:00</h1>
-  <div id="mystery-text" style="opacity:0.7; font-size:1.2em; max-width:70vw; text-align:center; margin-top:2em;"></div>
-  <canvas id="rain" style="position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:5;"></canvas>
+  <div class="texture-bg"></div>
+  <div class="main-content">
+    <h1 id="mystery-title">00:00</h1>
+    <div class="subtitle">A Modern Cursed New Year</div>
+    <div class="intro">
+      Welcome to the loop. This is not a celebration, but a ritual.<br>
+      Every second is borrowed, every hope is hollow.<br>
+      <span style="color:#f43f5e;font-weight:bold;">You are not alone in this midnight.</span>
+    </div>
+    <div class="icon-row">
+      <svg viewBox="0 0 24 24"><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M12 7a5 5 0 1 1 0 10a5 5 0 0 1 0-10z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10zm0-18c4.41 0 8 3.59 8 8s-3.59 8-8 8-8-3.59-8-8 3.59-8 8-8zm-1 13h2v2h-2zm0-8h2v6h-2z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+    </div>
+  </div>
+  <svg class="main-icon" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#f43f5e" opacity="0.18"/><path d="M32 12v20l14 8" stroke="#f43f5e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
   <audio id="creepy-audio" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12b1b1b1b1.mp3" preload="auto"></audio>
   <script>
-    // Subtle time flicker
+    // Modern time flicker
     setInterval(() => {
       const d = new Date();
       let h = d.getHours().toString().padStart(2,'0');
@@ -93,66 +149,10 @@
       document.getElementById('mystery-title').textContent = `${h}:${m}`;
       if (Math.random() < 0.1) document.getElementById('mystery-title').textContent = `${h}:${s}`;
     }, 900);
-
-    // Mysterious text
-    const texts = [
-      "The clock strikes, but time is lost.",
-      "Shadows gather where wishes rot.",
-      "A year reborn, but nothing's new.",
-      "You are not alone in this midnight.",
-      "Every second is borrowed, every hope is hollow.",
-      "The cycle never ends. The cycle never ends. The cycle never ends.",
-      "Did you think you could escape?",
-      "The bells ring, but no one listens.",
-      "You are still here. Why?",
-      "The new year devours the old, and you with it."
-    ];
-    let idx = 0;
-    function showText() {
-      document.getElementById('mystery-text').textContent = texts[idx];
-      idx = (idx + 1) % texts.length;
-      setTimeout(showText, 3500 + Math.random()*2000);
-    }
-    showText();
-
-    // Rain of random letters
-    const canvas = document.getElementById('rain');
-    const ctx = canvas.getContext('2d');
-    let W = window.innerWidth;
-    let H = window.innerHeight;
-    canvas.width = W;
-    canvas.height = H;
-    let letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=~'.split('');
-    let fontSize = 22;
-    let columns = Math.floor(W / fontSize);
-    let drops = Array(columns).fill(1);
-    function drawRain() {
-      ctx.fillStyle = 'rgba(10,10,10,0.15)';
-      ctx.fillRect(0,0,W,H);
-      ctx.font = fontSize + "px monospace";
-      for(let i=0;i<drops.length;i++){
-        let text = letters[Math.floor(Math.random()*letters.length)];
-        ctx.fillStyle = `rgba(230,0,0,${0.7+0.3*Math.random()})`;
-        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
-        if(drops[i]*fontSize > H && Math.random() > 0.975){
-          drops[i]=0;
-        }
-        drops[i]++;
-      }
-    }
-    setInterval(drawRain, 60);
-    window.addEventListener('resize',()=>{
-      W = window.innerWidth; H = window.innerHeight;
-      canvas.width = W; canvas.height = H;
-      columns = Math.floor(W / fontSize);
-      drops = Array(columns).fill(1);
-    });
-
     // Subtle audio
     setTimeout(()=>{
       document.getElementById('creepy-audio').play();
     }, 1200+Math.random()*1200);
-
     // Subtle auto-redirect to shuffle
     setTimeout(()=>{
       window.location.href = 'shuffle.html';
