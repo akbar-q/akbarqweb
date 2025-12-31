@@ -3,70 +3,136 @@
 <head>
   <meta charset="UTF-8">
   <title>Ask For It - New Year</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
   <style>
     body {
-      background: radial-gradient(circle, #000 0%, #333 100%);
-      color: #f7e018;
-      font-family: 'Permanent Marker', cursive;
       margin: 0;
       height: 100vh;
+      width: 100vw;
       overflow: hidden;
+      background: #1a1a2e;
+      color: #f6e58d;
+      font-family: 'Inter', 'Space Grotesk', Arial, sans-serif;
+      position: relative;
+    }
+    .ask-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.16;
+      background: repeating-linear-gradient(120deg, #f6e58d 0 2px, transparent 2px 40px), repeating-linear-gradient(60deg, #fff2 0 4px, transparent 4px 40px);
+      animation: askbgmove 10s linear infinite alternate;
+    }
+    @keyframes askbgmove {
+      0% { background-position: 0 0, 0 0; }
+      100% { background-position: 60px 60px, 30px 30px; }
+    }
+    .main-content {
+      z-index: 2;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      animation: pulsebg 2s infinite alternate;
-    }
-    @keyframes pulsebg {
-      0% { background: #000; }
-      100% { background: #333; }
+      min-height: 80vh;
     }
     h1 {
-      font-size: 3em;
-      letter-spacing: 0.1em;
-      text-shadow: 0 0 10px #f7e018, 0 0 20px #000;
-      animation: askpulse 1.2s infinite alternate;
+      font-family: 'Space Grotesk', 'Inter', Arial, sans-serif;
+      font-size: 2.7em;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: #f6e58d;
+      text-shadow: 0 2px 24px #fff1, 0 0 2px #fff, 0 0 8px #f6e58d44;
+      margin-bottom: 0.2em;
+      margin-top: 0.2em;
+      position: relative;
+      animation: titlepop 1.7s cubic-bezier(.68,-0.55,.27,1.55) infinite alternate;
     }
-    @keyframes askpulse {
-      0% { color: #f7e018; }
-      50% { color: #fff; }
-      100% { color: #f7e018; }
+    @keyframes titlepop {
+      0% { letter-spacing: 0.04em; transform: scale(1) rotate(-1deg); }
+      100% { letter-spacing: 0.18em; transform: scale(1.04) rotate(2deg); }
     }
-    .poem {
-      margin-top: 2em;
-      font-size: 1.4em;
-      max-width: 60vw;
+    .subtitle {
+      font-size: 1.1em;
+      color: #f6e58d;
+      margin-bottom: 1.2em;
+      font-weight: 400;
+      letter-spacing: 0.03em;
       text-align: center;
-      font-family: 'Permanent Marker', cursive;
-      opacity: 0.95;
-      color: #f7e018;
-      text-shadow: 0 0 8px #fff;
-        animation: askAnim 0.11s infinite alternate, askColor 0.09s infinite alternate, askScale 0.13s infinite alternate, askDisturb 0.11s infinite alternate;
-      }
-      @keyframes askAnim {
-        0% { letter-spacing: 0.1em; }
-        100% { letter-spacing: 0.6em; }
-      }
-      @keyframes askColor {
-        0% { color: #f7e018; }
-        50% { color: #e17055; }
-        100% { color: #636e72; }
-      }
-      @keyframes askScale {
-        0% { transform: scale(1.2) rotate(-20deg); }
-        100% { transform: scale(0.8) rotate(30deg); }
-      }
-      @keyframes askDisturb {
-        0% { filter: blur(0px) brightness(1); }
-        100% { filter: blur(2px) brightness(1.2); }
+      max-width: 60vw;
+      opacity: 0.8;
     }
-    .rain {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
+    .intro {
+      font-size: 1.05em;
+      color: #fffbe6;
+      margin-bottom: 2.2em;
+      text-align: center;
+      max-width: 70vw;
+      line-height: 1.5;
+      background: rgba(26,26,46,0.7);
+      border-radius: 1em;
+      padding: 1.2em 2em;
+      box-shadow: 0 2px 24px #f6e58d22;
+    }
+    .icon-row {
+      display: flex;
+      gap: 2.2em;
+      margin-bottom: 2.5em;
+      z-index: 2;
+    }
+    .icon-row svg {
+      width: 2.8em;
+      height: 2.8em;
+      fill: #f6e58d;
+      opacity: 0.82;
+      filter: drop-shadow(0 0 8px #f6e58d44);
+      transition: transform 0.18s, fill 0.18s, opacity 0.18s;
+      cursor: pointer;
+    }
+    .icon-row svg:hover {
+      transform: scale(1.18) rotate(-8deg);
+      fill: #fff;
+      opacity: 1;
+    }
+    .main-icon {
+      position: absolute;
+      top: 8vh;
+      right: 8vw;
+      width: 7em;
+      height: 7em;
+      opacity: 0.13;
+      z-index: 1;
       pointer-events: none;
-      z-index: 5;
+      filter: blur(1px) drop-shadow(0 0 32px #f6e58d);
+      animation: iconfloat 7s ease-in-out infinite alternate;
+    }
+    @keyframes iconfloat {
+      0% { transform: scale(1) rotate(-8deg) translateY(0); }
+      100% { transform: scale(1.08) rotate(12deg) translateY(18px); }
     }
   </style>
+  <div class="ask-bg"></div>
+  <div class="main-content">
+    <h1>Ask For It</h1>
+    <div class="subtitle">Be careful what you wish for</div>
+    <div class="intro">
+      You asked for a new year.<br>
+      Did you ask for this? Did you ask for the weight? Did you ask for the pain?<br>
+      <span style="color:#f6e58d;font-weight:bold;">You got what you asked for.</span>
+    </div>
+    <div class="icon-row">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 2v20" stroke="#f6e58d" stroke-width="2" fill="none"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M2 12h20" stroke="#f6e58d" stroke-width="2" fill="none"/></svg>
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#f6e58d" stroke-width="2" fill="none"/></svg>
+    </div>
+  </div>
+  <svg class="main-icon" viewBox="0 0 64 64"><path d="M32 8 Q40 32 32 56 Q24 32 32 8 Z" stroke="#f6e58d" stroke-width="4" fill="none"/><circle cx="32" cy="32" r="24" fill="#f6e58d" opacity="0.18"/></svg>
+  <script>
+    setTimeout(()=>{
+      window.location.href = 'shuffle.html';
+    }, 5000+Math.random()*2000);
+  </script>
 </head>
 <body>
   <h1>You Asked For It</h1>
