@@ -12,11 +12,11 @@
   <link href="assets/styles.css" rel="stylesheet" />
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg border-bottom bg-body" data-bs-theme="dark">
+  <nav class="navbar border-bottom bg-body" data-bs-theme="dark">
     <div class="container-fluid">
       <div class="d-flex flex-column">
-        <a class="navbar-brand fw-semibold lh-1" href="#">Greater Manchester RAK EEE Department of Electrocution</a>
-        <div class="small text-secondary lh-1">ASIW Control Center • Solar Integrated Watering System</div>
+        <a class="navbar-brand fw-semibold lh-1 brand-title" href="#">Greater Manchester RAK EEE Department of Electrocution</a>
+        <div class="small text-secondary lh-1 brand-subtitle">ASIW Control Center • Solar Integrated Watering System</div>
       </div>
       <div class="d-flex align-items-center gap-2">
         <span class="badge text-bg-secondary" id="connBadge">Connecting…</span>
@@ -134,13 +134,13 @@
                 <div class="row g-3">
                   <div class="col-12 col-lg-8">
                     <div class="chart-wrap">
-                      <canvas id="telemetryChart" height="120"></canvas>
+                      <canvas id="telemetryChart" height="160"></canvas>
                     </div>
                   </div>
                   <div class="col-12 col-lg-4">
                     <div class="diagram">
                       <div class="diagram-title small text-secondary">Water & Power Flow (animated)</div>
-                      <svg viewBox="0 0 520 260" width="100%" height="220" role="img" aria-label="Animated system diagram">
+                      <svg viewBox="0 0 520 260" width="100%" height="220" class="diagram-svg" role="img" aria-label="Animated system diagram">
                         <defs>
                           <linearGradient id="gWater" x1="0" x2="1">
                             <stop offset="0" stop-color="currentColor" stop-opacity="0.12" />
