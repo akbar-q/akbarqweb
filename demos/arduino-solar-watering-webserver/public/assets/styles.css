@@ -3,7 +3,7 @@
   --ui-card: #111a2d;
   --ui-border: rgba(255, 255, 255, 0.08);
   --ui-text: rgba(255, 255, 255, 0.92);
-  --ui-muted: rgba(255, 255, 255, 0.78);
+  --ui-muted: rgba(255, 255, 255, 0.92);
 }
 
 body {
@@ -30,7 +30,7 @@ body {
 
 .text-secondary,
 .small.text-secondary {
-  color: var(--ui-muted) !important;
+  color: rgba(255, 255, 255, 0.92) !important;
 }
 
 .navbar .navbar-brand {

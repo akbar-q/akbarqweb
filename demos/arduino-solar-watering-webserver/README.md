@@ -31,6 +31,12 @@ After publishing the repo with GitHub Pages enabled, open:
 
 - `https://<username>.github.io/<repo>/demos/arduino-solar-watering-webserver/`
 
+### UI interactions
+
+- Click sensor cards to pin “SCADA/HMI Focus”
+- Click the Pump card to toggle pump (simulated)
+- Click alarm pills to log operator selection; use **Acknowledge** / **Inject Fault** for demo actions
+
 ## API (mock)
 
 - `GET /api/health`
