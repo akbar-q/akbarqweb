@@ -1,0 +1,25 @@
+{
+  "name": "arduino-solar-watering-webserver-mock",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mock web server + real-time dashboard for an Arduino solar integrated watering system (simulated live data).",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js"
+  },
+  "keywords": [
+    "arduino",
+    "iot",
+    "dashboard",
+    "socket.io",
+    "express",
+    "mock"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "helmet": "^7.1.0",
+    "socket.io": "^4.7.5"
+  }
+}
