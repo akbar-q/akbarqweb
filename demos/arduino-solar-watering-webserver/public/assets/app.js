@@ -298,6 +298,7 @@
     setGauge(gauges.tank, s.tankLevelPct, `${Math.round(s.tankLevelPct)}%`, s.tankLevelPct < 12 ? "rgba(239,68,68,0.9)" : (s.tankLevelPct < 25 ? "rgba(245,158,11,0.9)" : "rgba(56,189,248,0.88)"));
     // battery gauge uses a 9.6..12.2V range
     const battPct = ((s.batteryV - 9.6) / (12.2 - 9.6)) * 100;
+    setGauge(gauges.battery, battPct, `${s.batteryV.toFixed(1)}V`, s.batteryV < 10.1 ? "rgba(239,68,68,0.9)" : "rgba(56,189,248,0.88)");
 
     // Animate water flow only when pump is on
     els.waterFlow.style.opacity = a.pump.isOn ? "1" : "0";
