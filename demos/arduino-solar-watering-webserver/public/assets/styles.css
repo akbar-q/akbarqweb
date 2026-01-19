@@ -2,8 +2,8 @@
   --ui-bg: #0b1220;
   --ui-card: #111a2d;
   --ui-border: rgba(255, 255, 255, 0.08);
-  --ui-text: rgba(255, 255, 255, 0.92);
-  --ui-muted: rgba(255, 255, 255, 0.92);
+  --ui-text: #ffffff;
+  --ui-muted: #ffffff;
 }
 
 body {
@@ -30,7 +30,26 @@ body {
 
 .text-secondary,
 .small.text-secondary {
-  color: rgba(255, 255, 255, 0.92) !important;
+  color: #ffffff !important;
+}
+
+.text-muted,
+.text-body-secondary,
+.text-body {
+  color: #ffffff !important;
+}
+
+.footer-subtle {
+  opacity: 0.72;
+}
+
+.nav-shell {
+  gap: 12px;
+}
+
+.nav-status {
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .navbar .navbar-brand {
@@ -39,11 +58,11 @@ body {
 
 .brand-title {
   white-space: normal;
-  max-width: 66vw;
+  max-width: 62vw;
 }
 
 .brand-subtitle {
-  max-width: 66vw;
+  max-width: 62vw;
 }
 
 .card-clickable {
@@ -257,16 +276,33 @@ body {
     padding-right: 12px;
   }
 
+  .navbar {
+    padding-top: 0.9rem;
+    padding-bottom: 0.9rem;
+  }
+
+  .nav-shell {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .nav-status {
+    justify-content: flex-start;
+    width: 100%;
+    gap: 10px;
+  }
+
   .brand-title {
-    max-width: 58vw;
-    font-size: 0.95rem;
-    line-height: 1.1;
+    max-width: 100%;
+    font-size: 1.05rem;
+    line-height: 1.12;
   }
 
   .brand-subtitle {
-    max-width: 58vw;
-    font-size: 0.8rem;
-    line-height: 1.1;
+    max-width: 100%;
+    font-size: 0.88rem;
+    line-height: 1.2;
+    margin-top: 6px;
   }
 
   .card-body {

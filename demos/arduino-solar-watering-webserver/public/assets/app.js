@@ -212,7 +212,7 @@
       maintainAspectRatio: false,
       plugins: {
         legend: {
-          labels: { color: "rgba(255,255,255,0.78)" }
+          labels: { color: "rgba(255,255,255,0.95)" }
         },
         tooltip: {
           mode: "index",
@@ -222,12 +222,12 @@
       interaction: { mode: "index", intersect: false },
       scales: {
         x: {
-          ticks: { color: "rgba(255,255,255,0.55)" },
-          grid: { color: "rgba(255,255,255,0.07)" }
+          ticks: { color: "rgba(255,255,255,0.90)" },
+          grid: { color: "rgba(255,255,255,0.10)" }
         },
         y: {
-          ticks: { color: "rgba(255,255,255,0.55)" },
-          grid: { color: "rgba(255,255,255,0.07)" }
+          ticks: { color: "rgba(255,255,255,0.90)" },
+          grid: { color: "rgba(255,255,255,0.10)" }
         }
       }
     }

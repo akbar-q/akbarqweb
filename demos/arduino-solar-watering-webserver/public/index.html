@@ -13,12 +13,18 @@
 </head>
 <body>
   <nav class="navbar border-bottom bg-body" data-bs-theme="dark">
-    <div class="container-fluid">
-      <div class="d-flex flex-column">
-        <a class="navbar-brand fw-semibold lh-1 brand-title" href="#">Greater Manchester RAK EEE Department of Electrocution</a>
-        <div class="small text-secondary lh-1 brand-subtitle">ASIW Control Center • Solar Integrated Watering System</div>
+    <div class="container-fluid nav-shell">
+      <div class="d-flex flex-column nav-brand">
+        <a class="navbar-brand fw-semibold lh-1 brand-title" href="#">
+          <span class="d-block">Greater Manchester</span>
+          <span class="d-block">RAK EEE Department of Electrocution</span>
+        </a>
+        <div class="small text-secondary lh-1 brand-subtitle">
+          <span class="d-block">ASIW Control Center</span>
+          <span class="d-block">Solar Integrated Watering System</span>
+        </div>
       </div>
-      <div class="d-flex align-items-center gap-2">
+      <div class="d-flex align-items-center gap-2 nav-status">
         <span class="badge text-bg-secondary" id="connBadge">Connecting…</span>
         <span class="badge text-bg-info" id="clockBadge">--:--:--</span>
       </div>
@@ -269,7 +275,7 @@
   </main>
 
   <footer class="container-fluid py-3">
-    <div class="d-flex justify-content-between align-items-center small text-secondary border-top pt-3">
+    <div class="d-flex justify-content-between align-items-center small text-secondary border-top pt-3 footer-subtle">
       <span>© <span id="yearNow">2026</span> Greater Manchester RAK EEE Department of Electrocution</span>
       <span>Akbar Qamar Private Cloud Hosting Suite</span>
     </div>
