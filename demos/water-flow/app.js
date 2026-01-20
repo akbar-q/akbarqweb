@@ -49,9 +49,10 @@
     simulateLowSupply: document.getElementById('simulateLowSupply'),
     alertBar: document.getElementById('alertBar'),
     dismissAlert: document.getElementById('dismissAlert'),
-    demoOverlay: document.getElementById('demoOverlay'),
-    demoText: document.getElementById('demoText'),
-    skipDemo: document.getElementById('skipDemo'),
+    assistantBar: document.getElementById('assistantBar'),
+    assistantText: document.getElementById('assistantText'),
+    assistantNext: document.getElementById('assistantNext'),
+    assistantHide: document.getElementById('assistantHide'),
     // Telemetry elements
     irradianceSlider: document.getElementById('irradianceSlider'),
     loadSlider: document.getElementById('loadSlider'),
@@ -78,6 +79,15 @@
     aiDecision: document.getElementById('aiDecision'),
     aiBoost: document.getElementById('aiBoost'),
     aiReset: document.getElementById('aiReset'),
+
+    // Mini game
+    gameCard: document.getElementById('gameCard'),
+    pipeGrid: document.getElementById('pipeGrid'),
+    gameLevel: document.getElementById('gameLevel'),
+    gameHint: document.getElementById('gameHint'),
+    gameStatus: document.getElementById('gameStatus'),
+    gameReset: document.getElementById('gameReset'),
+    gameNext: document.getElementById('gameNext'),
   };
 
   // Load from localStorage
@@ -506,7 +516,7 @@
   });
 
   // Low supply simulation — playful alert
-  els.simulateLowSupply.addEventListener('click', () => {
+  if (els.simulateLowSupply) els.simulateLowSupply.addEventListener('click', () => {
     state.lowSupply = true;
     // Bonus credits to make the demo feel rewarding
     state.waterCredits = clamp((state.waterCredits || 0) + 12, 0, 160);
@@ -514,7 +524,7 @@
     render();
     gsap.from('#alertBar', { y: 12, opacity: 0, duration: 0.25 });
   });
-  els.dismissAlert.addEventListener('click', () => {
+  if (els.dismissAlert) els.dismissAlert.addEventListener('click', () => {
     state.lowSupply = false;
     save();
     render();
@@ -603,110 +613,438 @@
   }
 
   // ---------------------------------------------------------------------------
-  // Demo Mode (self-presenting tour)
+  // AquaGuide (AI assistant text bar)
   // ---------------------------------------------------------------------------
-  let demoRunning = false;
-  let demoCanceled = false;
+  let guideStepIdx = 0;
+  let guideAuto = false;
+  let guideTimer = null;
 
-  function clearDemoFocus() {
+  const guideSteps = [
+    {
+      text: 'Hi, I\'m AquaGuide (AI). Quick tour: your habits earn Water Credits that power smart watering.',
+      focus: '#usageCard'
+    },
+    {
+      text: 'Logging high-usage actions spends Water Credits. Try: “Log Shower (50L)”.',
+      focus: '#activityCard',
+      action() {
+        const btn = document.querySelector('[data-log="shower"]');
+        if (btn) btn.click();
+      }
+    },
+    {
+      text: 'Completing challenges earns points + Water Credits. Try completing “5-minute showers”.',
+      focus: '#gamificationCard',
+      action() {
+        const btn = document.querySelector('[data-complete="shower"]');
+        if (btn) btn.click();
+      }
+    },
+    {
+      text: 'These credits unlock the AI watering loop. Watch soil moisture, tank, and pump decisions.',
+      focus: '#aiCard'
+    },
+    {
+      text: 'Mini-game break: solve the pipe puzzle to earn bonus Water Credits.',
+      focus: '#gameCard'
+    },
+    {
+      text: 'That\'s the loop: tiny actions → tiny rewards → better habits → healthier plants.',
+      focus: '#aiCard'
+    }
+  ];
+
+  function clearGuideFocus() {
     document.querySelectorAll('.demo-focus').forEach(el => el.classList.remove('demo-focus'));
   }
 
-  function focusEl(selector) {
-    clearDemoFocus();
-    const el = document.querySelector(selector);
-    if (!el) return null;
+  function focusGuide(selector) {
+    clearGuideFocus();
+    const el = selector ? document.querySelector(selector) : null;
+    if (!el) return;
     el.classList.add('demo-focus');
     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    return el;
   }
 
-  function setDemoText(text) {
-    if (!els.demoText) return;
-    els.demoText.textContent = text;
+  function setAssistantText(text) {
+    if (!els.assistantText) return;
+    els.assistantText.textContent = text;
   }
 
-  function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+  function showGuideStep(idx, { runAction } = { runAction: true }) {
+    const s = guideSteps[idx];
+    if (!s) return;
+    guideStepIdx = idx;
+    setAssistantText(s.text);
+    if (s.focus) focusGuide(s.focus);
+    if (runAction && typeof s.action === 'function') s.action();
   }
 
-  async function runDemo() {
-    if (demoRunning) return;
-    demoRunning = true;
-    demoCanceled = false;
-    if (els.demoOverlay) els.demoOverlay.classList.remove('hidden');
-
-    setDemoText('Two systems, one habit loop: save water → earn credits → power smart watering.');
-    focusEl('#usageCard');
-    await sleep(9000);
-    if (demoCanceled) return stopDemo();
-
-    setDemoText('This is your daily score. Logging high-usage habits spends credits.');
-    focusEl('#activityCard');
-    // simulate a quick log
-    const logBtn = document.querySelector('[data-log="shower"]');
-    if (logBtn) logBtn.click();
-    await sleep(11000);
-    if (demoCanceled) return stopDemo();
-
-    setDemoText('Now flip it: completing a challenge earns points AND Water Credits.');
-    focusEl('#gamificationCard');
-    const completeBtn = document.querySelector('[data-complete="shower"]');
-    if (completeBtn) completeBtn.click();
-    await sleep(11000);
-    if (demoCanceled) return stopDemo();
-
-    setDemoText('Credits unlock the AI watering system. Watch the plant’s soil + tank + pump.');
-    focusEl('#aiCard');
-    await sleep(8000);
-    if (demoCanceled) return stopDemo();
-
-    setDemoText('Boost demo: spend credits to water now (you can do this manually too).');
-    const boostBtn = els.aiBoost;
-    if (boostBtn) boostBtn.click();
-    await sleep(12000);
-    if (demoCanceled) return stopDemo();
-
-    setDemoText('Solar/battery constraints still apply: the AI is conservative when resources are low.');
-    focusEl('#telemetryCard');
-    await sleep(12000);
-    if (demoCanceled) return stopDemo();
-
-    setDemoText('Repeatable habit loop: tiny actions, tiny rewards, better routines. Demo will keep running.');
-    focusEl('#aiCard');
-    await sleep(16000);
-
-    // Keep it lightly alive (no infinite looping)
-    stopDemo();
+  function stopGuideAuto() {
+    guideAuto = false;
+    if (guideTimer) {
+      clearTimeout(guideTimer);
+      guideTimer = null;
+    }
   }
 
-  function stopDemo() {
-    demoCanceled = true;
-    demoRunning = false;
-    clearDemoFocus();
-    if (els.demoOverlay) els.demoOverlay.classList.add('hidden');
-    setDemoText('—');
+  function runGuideAuto() {
+    stopGuideAuto();
+    guideAuto = true;
+    const scheduleNext = () => {
+      if (!guideAuto) return;
+      guideTimer = setTimeout(() => {
+        const next = Math.min(guideSteps.length - 1, guideStepIdx + 1);
+        showGuideStep(next);
+        if (next < guideSteps.length - 1) scheduleNext();
+        else stopGuideAuto();
+      }, 9500);
+    };
+    scheduleNext();
   }
 
-  if (els.skipDemo) {
-    els.skipDemo.addEventListener('click', stopDemo);
+  if (els.assistantNext) {
+    els.assistantNext.addEventListener('click', () => {
+      stopGuideAuto();
+      const next = Math.min(guideSteps.length - 1, guideStepIdx + 1);
+      showGuideStep(next);
+    });
   }
+  if (els.assistantHide) {
+    els.assistantHide.addEventListener('click', () => {
+      stopGuideAuto();
+      clearGuideFocus();
+      if (els.assistantBar) els.assistantBar.classList.toggle('hidden');
+    });
+  }
+
   if (els.startDemo) {
-    els.startDemo.addEventListener('click', runDemo);
+    els.startDemo.addEventListener('click', () => {
+      if (els.assistantBar && els.assistantBar.classList.contains('hidden')) {
+        els.assistantBar.classList.remove('hidden');
+      }
+      showGuideStep(0, { runAction: false });
+      runGuideAuto();
+    });
   }
 
-  // Autostart demo if not interacted (short-attention-span friendly)
+  // Autostart the guide unless the user already interacted
   let userInteracted = false;
   ['click', 'keydown', 'pointerdown', 'touchstart'].forEach(ev => {
     window.addEventListener(ev, () => { userInteracted = true; }, { once: true, passive: true });
   });
-
   window.addEventListener('load', () => {
     const url = new URL(window.location.href);
     const wantsDemo = url.searchParams.get('demo') === '1';
     setTimeout(() => {
-      if (wantsDemo || !userInteracted) runDemo();
+      if (wantsDemo || !userInteracted) {
+        if (els.assistantBar) els.assistantBar.classList.remove('hidden');
+        showGuideStep(0, { runAction: false });
+        runGuideAuto();
+      }
     }, 1400);
   });
+
+  // Contextual “AI-ish” nudges (when not in auto tour)
+  setInterval(() => {
+    if (!els.assistantBar || els.assistantBar.classList.contains('hidden')) return;
+    if (guideAuto) return;
+    const credits = clamp(state.waterCredits || 0, 0, 160);
+    if (state.lowSupply) {
+      setAssistantText('Low supply mode: points + credits are boosted. Complete a challenge for a quick win.');
+      return;
+    }
+    if (credits < 18) {
+      setAssistantText('Tip: Water Credits are low — complete a habit challenge to re-enable stronger AI watering.');
+      return;
+    }
+  }, 8000);
+
+  // ---------------------------------------------------------------------------
+  // Mini game: Pipe Puzzle (Where\'s-my-water inspired)
+  // ---------------------------------------------------------------------------
+  const DIRS = ['N', 'E', 'S', 'W'];
+  const OPP = { N: 'S', S: 'N', E: 'W', W: 'E' };
+  const VEC = { N: [0, -1], E: [1, 0], S: [0, 1], W: [-1, 0] };
+
+  function tileEdges(tile) {
+    if (!tile) return [];
+    const r = ((tile.rot || 0) % 4 + 4) % 4;
+    if (tile.type === 'S') {
+      return r % 2 === 0 ? ['N', 'S'] : ['E', 'W'];
+    }
+    if (tile.type === 'L') {
+      // base: N + E
+      const map = [
+        ['N', 'E'],
+        ['E', 'S'],
+        ['S', 'W'],
+        ['W', 'N']
+      ];
+      return map[r];
+    }
+    return [];
+  }
+
+  const levels = [
+    {
+      w: 5,
+      h: 5,
+      source: [0, 2],
+      target: [4, 2],
+      hint: 'Warm-up. Short path, few turns.',
+      tiles: [
+        null, null, null, null, null,
+        null, { type: 'L', rot: 1 }, { type: 'S', rot: 1 }, { type: 'L', rot: 2 }, null,
+        'SRC', { type: 'S', rot: 1 }, null, { type: 'S', rot: 1 }, 'TGT',
+        null, { type: 'L', rot: 0 }, { type: 'S', rot: 1 }, { type: 'L', rot: 3 }, null,
+        null, null, null, null, null,
+      ]
+    },
+    {
+      w: 5,
+      h: 5,
+      source: [0, 1],
+      target: [4, 3],
+      hint: 'Two bends. Keep the flow connected.',
+      tiles: [
+        null, null, null, null, null,
+        'SRC', { type: 'L', rot: 2 }, { type: 'S', rot: 0 }, { type: 'L', rot: 1 }, null,
+        null, { type: 'S', rot: 1 }, null, { type: 'S', rot: 1 }, null,
+        null, { type: 'L', rot: 0 }, { type: 'S', rot: 1 }, { type: 'L', rot: 3 }, 'TGT',
+        null, null, null, null, null,
+      ]
+    },
+    {
+      w: 5,
+      h: 5,
+      source: [0, 2],
+      target: [4, 2],
+      hint: 'A bit longer. Rotate until the path clicks.',
+      tiles: [
+        null, { type: 'L', rot: 0 }, { type: 'S', rot: 1 }, { type: 'L', rot: 3 }, null,
+        null, { type: 'S', rot: 0 }, null, { type: 'S', rot: 0 }, null,
+        'SRC', { type: 'L', rot: 1 }, { type: 'S', rot: 1 }, { type: 'L', rot: 2 }, 'TGT',
+        null, { type: 'S', rot: 0 }, null, { type: 'S', rot: 0 }, null,
+        null, { type: 'L', rot: 2 }, { type: 'S', rot: 1 }, { type: 'L', rot: 1 }, null,
+      ]
+    }
+  ];
+
+  let gameLevelIdx = 0;
+  let gameTiles = [];
+  let gameSolved = false;
+
+  function idxOf(x, y, w) {
+    return y * w + x;
+  }
+
+  function cloneLevelTiles(level) {
+    return level.tiles.map((t) => {
+      if (!t || t === 'SRC' || t === 'TGT') return t;
+      return { type: t.type, rot: t.rot };
+    });
+  }
+
+  function svgForTile(tile, highlightEdges) {
+    const size = 44;
+    const c = 22;
+    const edges = tileEdges(tile);
+    const active = new Set(highlightEdges || []);
+
+    function edgePoint(d) {
+      if (d === 'N') return [c, 6];
+      if (d === 'E') return [38, c];
+      if (d === 'S') return [c, 38];
+      return [6, c];
+    }
+
+    const lines = edges.map((d) => {
+      const [x2, y2] = edgePoint(d);
+      const dim = active.size ? (!active.has(d)) : false;
+      return `<line class="pipe-line${dim ? ' dim' : ''}" x1="${c}" y1="${c}" x2="${x2}" y2="${y2}" />`;
+    }).join('');
+
+    return `
+      <svg class="pipe-svg" viewBox="0 0 ${size} ${size}" aria-hidden="true">
+        ${lines}
+        <circle class="pipe-node" cx="${c}" cy="${c}" r="6" />
+      </svg>
+    `;
+  }
+
+  function computeFlowPath(level, tiles) {
+    const w = level.w;
+    const h = level.h;
+    const src = level.source;
+    const tgt = level.target;
+
+    const srcKey = src[1] + ',' + src[0];
+    const seen = new Set();
+    const q = [{ x: src[0], y: src[1] }];
+    seen.add(srcKey);
+
+    // source provides flow to the east
+    function tileAt(x, y) {
+      if (x < 0 || y < 0 || x >= w || y >= h) return null;
+      return tiles[idxOf(x, y, w)];
+    }
+
+    const flowEdges = new Map(); // key "x,y" -> Set(edges with flow)
+    function addFlow(x, y, dir) {
+      const k = `${x},${y}`;
+      if (!flowEdges.has(k)) flowEdges.set(k, new Set());
+      flowEdges.get(k).add(dir);
+    }
+
+    while (q.length) {
+      const cur = q.shift();
+      const x = cur.x;
+      const y = cur.y;
+
+      if (x === tgt[0] && y === tgt[1]) {
+        // Reached target cell; connectivity validated by edge checks below
+      }
+
+      const here = tileAt(x, y);
+      let edges = [];
+      if (here === 'SRC') edges = ['E'];
+      else if (here === 'TGT') edges = ['W'];
+      else edges = tileEdges(here);
+
+      for (const d of edges) {
+        const [dx, dy] = VEC[d];
+        const nx = x + dx;
+        const ny = y + dy;
+        const next = tileAt(nx, ny);
+        if (!next) continue;
+
+        let nextEdges = [];
+        if (next === 'SRC') nextEdges = ['E'];
+        else if (next === 'TGT') nextEdges = ['W'];
+        else nextEdges = tileEdges(next);
+
+        if (!nextEdges.includes(OPP[d])) continue;
+
+        addFlow(x, y, d);
+        addFlow(nx, ny, OPP[d]);
+
+        const nk = `${nx},${ny}`;
+        if (!seen.has(nk)) {
+          seen.add(nk);
+          q.push({ x: nx, y: ny });
+        }
+      }
+    }
+
+    return {
+      flowEdges,
+      reachedTarget: seen.has(`${tgt[0]},${tgt[1]}`)
+    };
+  }
+
+  function renderGame() {
+    if (!els.pipeGrid || !els.gameCard) return;
+    const level = levels[gameLevelIdx];
+    if (!level) return;
+
+    if (els.gameLevel) els.gameLevel.textContent = `Level ${gameLevelIdx + 1} / ${levels.length}`;
+    if (els.gameHint) els.gameHint.textContent = level.hint;
+
+    const { flowEdges, reachedTarget } = computeFlowPath(level, gameTiles);
+    gameSolved = !!reachedTarget;
+
+    els.pipeGrid.style.gridTemplateColumns = `repeat(${level.w}, minmax(44px, 56px))`;
+    els.pipeGrid.innerHTML = '';
+
+    for (let y = 0; y < level.h; y++) {
+      for (let x = 0; x < level.w; x++) {
+        const t = gameTiles[idxOf(x, y, level.w)];
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'pipe-tile';
+        btn.setAttribute('aria-label', `Tile ${x + 1}, ${y + 1}`);
+
+        const key = `${x},${y}`;
+        const edgesWithFlow = flowEdges.get(key) ? Array.from(flowEdges.get(key)) : [];
+
+        if (t === 'SRC') {
+          btn.classList.add('source');
+          btn.innerHTML = svgForTile({ type: 'S', rot: 1 }, edgesWithFlow.length ? ['E'] : []);
+          btn.setAttribute('aria-disabled', 'true');
+          btn.disabled = true;
+          btn.setAttribute('aria-label', 'Tap (water source)');
+        } else if (t === 'TGT') {
+          btn.classList.add('target');
+          btn.innerHTML = svgForTile({ type: 'S', rot: 1 }, edgesWithFlow.length ? ['W'] : []);
+          btn.setAttribute('aria-disabled', 'true');
+          btn.disabled = true;
+          btn.setAttribute('aria-label', 'Plant (target)');
+        } else if (!t) {
+          btn.setAttribute('aria-disabled', 'true');
+          btn.disabled = true;
+          btn.innerHTML = '<div style="opacity:0.25">•</div>';
+        } else {
+          btn.innerHTML = svgForTile(t, edgesWithFlow);
+          btn.addEventListener('click', () => {
+            if (gameSolved) return;
+            t.rot = ((t.rot || 0) + 1) % 4;
+            renderGame();
+          });
+        }
+
+        if (gameSolved) btn.classList.add('solved');
+        els.pipeGrid.appendChild(btn);
+      }
+    }
+
+    if (els.gameNext) {
+      els.gameNext.disabled = !gameSolved || gameLevelIdx >= levels.length - 1;
+    }
+    if (els.gameStatus) {
+      els.gameStatus.textContent = gameSolved
+        ? `Solved! +15 Water Credits unlocked.`
+        : 'Click tiles to rotate.';
+    }
+
+    if (gameSolved) {
+      // award once per level solve
+      const key = `waterflow_game_solved_${gameLevelIdx}`;
+      if (!sessionStorage.getItem(key)) {
+        sessionStorage.setItem(key, '1');
+        state.waterCredits = clamp((state.waterCredits || 0) + 15, 0, 160);
+        state.pointsToday += 8;
+        if (gameLevelIdx === levels.length - 1) {
+          if (!state.badges.includes('Pipe Puzzle Pro')) state.badges.push('Pipe Puzzle Pro');
+        }
+        save();
+        render();
+      }
+    }
+  }
+
+  function loadLevel(idx) {
+    gameLevelIdx = clamp(idx, 0, levels.length - 1);
+    gameTiles = cloneLevelTiles(levels[gameLevelIdx]);
+    gameSolved = false;
+    renderGame();
+  }
+
+  if (els.gameReset) {
+    els.gameReset.addEventListener('click', () => {
+      loadLevel(gameLevelIdx);
+      if (els.gameStatus) els.gameStatus.textContent = 'Reset. Click tiles to rotate.';
+    });
+  }
+  if (els.gameNext) {
+    els.gameNext.addEventListener('click', () => {
+      if (!gameSolved) return;
+      loadLevel(gameLevelIdx + 1);
+      if (els.gameStatus) els.gameStatus.textContent = 'New level. Click tiles to rotate.';
+    });
+  }
+
+  // init game
+  if (els.gameCard) loadLevel(0);
 })();
 
