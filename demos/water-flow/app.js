@@ -314,6 +314,9 @@
 
     // Alert
     els.alertBar.classList.toggle('hidden', !state.lowSupply);
+    if (els.assistantBar) {
+      els.assistantBar.classList.toggle('with-alert', !!state.lowSupply);
+    }
 
     // Telemetry renders
     if (els.irradianceVal) {
