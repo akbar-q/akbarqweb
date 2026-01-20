@@ -236,6 +236,7 @@
     setTimeout(() => {
       const finish = () => {
         if (els.splash) els.splash.classList.add('hidden');
+        if (els.splash) els.splash.style.pointerEvents = 'none';
         if (els.app) els.app.classList.remove('hidden');
         enterAnimations();
         render();
@@ -250,6 +251,21 @@
         finish();
       }
     }, 900);
+
+    // Failsafe: if anything went wrong, force-unblock clicks.
+    setTimeout(() => {
+      try {
+        if (els.app) els.app.classList.remove('hidden');
+        if (els.splash) {
+          els.splash.classList.add('hidden');
+          els.splash.style.pointerEvents = 'none';
+          els.splash.style.display = 'none';
+        }
+        document.body.style.pointerEvents = 'auto';
+      } catch (e) {
+        // ignore
+      }
+    }, 2500);
   });
 
   function enterAnimations() {
