@@ -4,6 +4,9 @@
     return Math.max(min, Math.min(max, n));
   }
 
+  const hasGsap = () => typeof window.gsap !== 'undefined' && window.gsap && typeof window.gsap.to === 'function';
+  const hasChart = () => typeof window.Chart !== 'undefined' && window.Chart;
+
   const state = {
     city: 'Ras Al Khaimah',
     dailyGoal: 600,
@@ -231,23 +234,31 @@
   // Splash animation and app reveal
   window.addEventListener('load', () => {
     setTimeout(() => {
-      // Animate splash out
-      gsap.to('#splash .splash-inner', { y: -20, opacity: 0, duration: 0.4, ease: 'power2.out' });
-      gsap.to('#splash', { opacity: 0, duration: 0.5, onComplete: () => {
-        els.splash.classList.add('hidden');
-        els.app.classList.remove('hidden');
+      const finish = () => {
+        if (els.splash) els.splash.classList.add('hidden');
+        if (els.app) els.app.classList.remove('hidden');
         enterAnimations();
         render();
-      } });
+      };
+
+      // Animate splash out (fallback to instant if GSAP not available)
+      if (hasGsap()) {
+        window.gsap.to('#splash .splash-inner', { y: -20, opacity: 0, duration: 0.4, ease: 'power2.out' });
+        window.gsap.to('#splash', { opacity: 0, duration: 0.5, onComplete: finish });
+      } else {
+        // Avoid an invisible full-screen overlay blocking clicks
+        finish();
+      }
     }, 900);
   });
 
   function enterAnimations() {
-    gsap.from('.topbar .brand', { y: -12, opacity: 0, duration: 0.4 });
-    gsap.from('.meter-card', { y: 10, opacity: 0, duration: 0.5, delay: 0.1 });
-    gsap.from('.context-card', { y: 10, opacity: 0, duration: 0.5, delay: 0.2 });
-    gsap.utils.toArray('.card').forEach((c, i) => {
-      gsap.from(c, { y: 14, opacity: 0, duration: 0.5, delay: 0.3 + i * 0.08 });
+    if (!hasGsap()) return;
+    window.gsap.from('.topbar .brand', { y: -12, opacity: 0, duration: 0.4 });
+    window.gsap.from('.meter-card', { y: 10, opacity: 0, duration: 0.5, delay: 0.1 });
+    window.gsap.from('.context-card', { y: 10, opacity: 0, duration: 0.5, delay: 0.2 });
+    window.gsap.utils.toArray('.card').forEach((c, i) => {
+      window.gsap.from(c, { y: 14, opacity: 0, duration: 0.5, delay: 0.3 + i * 0.08 });
     });
   }
 
@@ -266,7 +277,7 @@
       el.className = 'badge';
       el.innerHTML = `<img src="assets/badge.svg" alt=""> ${b}`;
       els.badges.appendChild(el);
-      gsap.from(el, { scale: 0.9, opacity: 0, duration: 0.3 });
+      if (hasGsap()) window.gsap.from(el, { scale: 0.9, opacity: 0, duration: 0.3 });
     });
 
     // members
@@ -342,9 +353,10 @@
   function renderChart() {
     const ctx = document.getElementById('weeklyChart');
     if (!ctx) return;
+    if (!hasChart()) return;
     const data = mockWeekly();
     if (weeklyChart) weeklyChart.destroy();
-    weeklyChart = new Chart(ctx, {
+    weeklyChart = new window.Chart(ctx, {
       type: 'bar',
       data: {
         labels: ['Sat','Sun','Mon','Tue','Wed','Thu','Fri'],
@@ -376,8 +388,9 @@
   function renderPvChart() {
     const canvas = document.getElementById('pvChart');
     if (!canvas) return;
+    if (!hasChart()) return;
     if (pvChart) pvChart.destroy();
-    pvChart = new Chart(canvas, {
+    pvChart = new window.Chart(canvas, {
       type: 'line',
       data: {
         labels: telemetryHistory.labels,
@@ -468,7 +481,7 @@
       if (type === 'laundry') {
         if (!state.badges.includes('Load Master')) state.badges.push('Load Master');
       }
-      gsap.to(btn, { scale: 0.95, yoyo: true, repeat: 1, duration: 0.1 });
+      if (hasGsap()) window.gsap.to(btn, { scale: 0.95, yoyo: true, repeat: 1, duration: 0.1 });
       save();
       render();
     });
@@ -497,7 +510,7 @@
     els.inputDailyGoal.value = String(state.dailyGoal);
     els.inputCity.value = state.city;
     els.settingsModal.classList.remove('hidden');
-    gsap.from('.modal-dialog', { y: 16, opacity: 0, duration: 0.25 });
+    if (hasGsap()) window.gsap.from('.modal-dialog', { y: 16, opacity: 0, duration: 0.25 });
   }
   function closeSettings() {
     els.settingsModal.classList.add('hidden');
@@ -522,7 +535,7 @@
     state.waterCredits = clamp((state.waterCredits || 0) + 12, 0, 160);
     save();
     render();
-    gsap.from('#alertBar', { y: 12, opacity: 0, duration: 0.25 });
+    if (hasGsap()) window.gsap.from('#alertBar', { y: 12, opacity: 0, duration: 0.25 });
   });
   if (els.dismissAlert) els.dismissAlert.addEventListener('click', () => {
     state.lowSupply = false;
