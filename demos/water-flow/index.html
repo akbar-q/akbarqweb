@@ -16,6 +16,7 @@
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <!-- Chart.js for simple charts -->
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script defer src="asiw-mock-engine.js"></script>
   <script defer src="app.js"></script>
 </head>
 <body class="dark">
@@ -41,6 +42,7 @@
         <span>WaterFlow</span>
       </div>
       <div class="actions">
+        <button id="startDemo" class="btn">Start Demo</button>
         <button id="simulateLowSupply" class="btn warn">Simulate Low Supply</button>
         <button id="openSettings" class="btn">Settings</button>
       </div>
@@ -48,7 +50,7 @@
 
     <main class="content">
       <section class="hero">
-        <div class="meter-card glass">
+        <div class="meter-card glass" id="usageCard">
           <h2>Today's Usage</h2>
           <div class="meter">
             <div class="meter-fill" id="meterFill" style="width: 35%"></div>
@@ -89,7 +91,7 @@
           <canvas id="weeklyChart" height="140"></canvas>
         </div>
 
-        <div class="card glass">
+        <div class="card glass" id="gamificationCard">
           <h3>Gamification</h3>
           <div class="gamify">
             <div class="badges" id="badges">
@@ -125,7 +127,7 @@
           </div>
         </div>
 
-        <div class="card glass">
+        <div class="card glass" id="activityCard">
           <h3>Activity Log</h3>
           <div class="activity">
             <div class="actions">
@@ -137,7 +139,7 @@
           </div>
         </div>
 
-        <div class="card glass telemetry-card">
+        <div class="card glass telemetry-card" id="telemetryCard">
           <h3>Solar & Battery Telemetry</h3>
           <div class="telemetry-grid">
             <div class="telemetry-block">
@@ -161,6 +163,68 @@
             </div>
             <canvas id="pvChart" height="140"></canvas>
             <p class="telemetry-note">All values are simulated for a 40W PV panel, 6V battery prototype (demo only).</p>
+          </div>
+        </div>
+
+        <div class="card glass ai-card" id="aiCard">
+          <h3>AI Watering (Powered by Your Habits)</h3>
+          <p class="ai-subtitle">Earn Water Credits by conserving at home. The AI uses those credits to keep your plant healthy without draining solar + battery.</p>
+
+          <div class="ai-grid">
+            <div class="ai-block">
+              <div class="ai-k">Water Credits</div>
+              <div class="ai-v" id="waterCredits">--</div>
+              <div class="ai-s" id="waterCreditsHint">—</div>
+            </div>
+
+            <div class="ai-block">
+              <div class="ai-k">Soil Moisture</div>
+              <div class="ai-v"><span id="soilMoisture">--</span>%</div>
+              <div class="ai-bar"><div class="ai-fill" id="soilFill" style="width:0%"></div></div>
+            </div>
+
+            <div class="ai-block">
+              <div class="ai-k">Pump</div>
+              <div class="ai-v" id="pumpState">--</div>
+              <div class="ai-s">Flow <span id="pumpFlow">--</span> L/min</div>
+            </div>
+
+            <div class="ai-block">
+              <div class="ai-k">Tank</div>
+              <div class="ai-v"><span id="tankLevel">--</span>%</div>
+              <div class="ai-bar"><div class="ai-fill" id="tankFill" style="width:0%"></div></div>
+            </div>
+
+            <div class="ai-block ai-wide">
+              <div class="ai-k">AI Decision</div>
+              <div class="ai-s" id="aiDecision">—</div>
+              <div class="ai-actions">
+                <button class="btn small" id="aiBoost">Boost Plant (spend credits)</button>
+                <button class="btn small ghost" id="aiReset">Reset Plant</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card glass game-card" id="gameCard">
+          <h3>Mini Game: Pipe Puzzle</h3>
+          <p class="game-subtitle">Rotate pipes to route water from the tap to the plant. Win Water Credits.</p>
+
+          <div class="game-top">
+            <div class="game-meta">
+              <span class="game-pill" id="gameLevel">Level —</span>
+              <span class="game-pill ghost" id="gameHint">—</span>
+            </div>
+            <div class="game-actions">
+              <button class="btn small" id="gameReset">Reset</button>
+              <button class="btn small ghost" id="gameNext" disabled>Next</button>
+            </div>
+          </div>
+
+          <div class="pipe-grid" id="pipeGrid" aria-label="Pipe puzzle grid"></div>
+
+          <div class="game-footer">
+            <span class="game-status" id="gameStatus">Click tiles to rotate.</span>
           </div>
         </div>
       </section>
@@ -202,6 +266,16 @@
       <strong>Heads-up:</strong> Water supply is low. Earn double points by conserving now.
     </div>
     <button id="dismissAlert" class="btn small ghost">Dismiss</button>
+  </div>
+
+  <!-- AI Guide Bar (self-presenting, short-attention-span friendly) -->
+  <div id="assistantBar" class="assistant-bar glass" aria-live="polite">
+    <div class="assistant-title">AquaGuide</div>
+    <div class="assistant-text" id="assistantText">—</div>
+    <div class="assistant-actions">
+      <button id="assistantNext" class="btn small">Next</button>
+      <button id="assistantHide" class="btn small ghost">Hide</button>
+    </div>
   </div>
 </body>
 </html>
