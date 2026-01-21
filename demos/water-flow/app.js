@@ -1520,6 +1520,62 @@
         null, { type: 'S', rot: 0 }, null, { type: 'S', rot: 0 }, null,
         null, { type: 'L', rot: 2 }, { type: 'S', rot: 1 }, { type: 'L', rot: 1 }, null,
       ]
+    },
+    {
+      w: 5,
+      h: 5,
+      source: [0, 2],
+      target: [4, 4],
+      hint: 'Snake it down. Watch the corner pieces.',
+      tiles: [
+        null, null, { type: 'S', rot: 0 }, null, null,
+        null, { type: 'L', rot: 3 }, { type: 'S', rot: 1 }, { type: 'L', rot: 1 }, null,
+        'SRC', { type: 'S', rot: 0 }, { type: 'L', rot: 1 }, null, null,
+        null, null, { type: 'S', rot: 1 }, { type: 'L', rot: 0 }, null,
+        null, { type: 'L', rot: 2 }, { type: 'L', rot: 2 }, { type: 'S', rot: 0 }, 'TGT',
+      ]
+    },
+    {
+      w: 5,
+      h: 5,
+      source: [0, 1],
+      target: [4, 1],
+      hint: 'Detour time. Direct routes are overrated.',
+      tiles: [
+        null, { type: 'L', rot: 0 }, { type: 'S', rot: 0 }, { type: 'L', rot: 1 }, null,
+        'SRC', { type: 'L', rot: 0 }, null, { type: 'L', rot: 2 }, 'TGT',
+        null, { type: 'S', rot: 1 }, { type: 'L', rot: 3 }, { type: 'S', rot: 0 }, null,
+        null, { type: 'L', rot: 1 }, { type: 'S', rot: 1 }, { type: 'L', rot: 0 }, null,
+        null, null, null, null, null,
+      ]
+    },
+    {
+      w: 5,
+      h: 5,
+      source: [0, 0],
+      target: [4, 2],
+      hint: 'Top-down twist. Keep the middle connected.',
+      tiles: [
+        'SRC', { type: 'S', rot: 0 }, { type: 'L', rot: 1 }, null, null,
+        null, { type: 'L', rot: 2 }, { type: 'S', rot: 1 }, { type: 'L', rot: 3 }, null,
+        null, null, { type: 'L', rot: 0 }, { type: 'S', rot: 1 }, 'TGT',
+        null, { type: 'L', rot: 1 }, { type: 'S', rot: 0 }, { type: 'L', rot: 2 }, null,
+        null, null, null, null, null,
+      ]
+    },
+    {
+      w: 5,
+      h: 5,
+      source: [0, 3],
+      target: [4, 3],
+      hint: 'Final boss: more pieces, more misdirection.',
+      tiles: [
+        null, { type: 'L', rot: 2 }, { type: 'S', rot: 1 }, { type: 'L', rot: 1 }, null,
+        null, { type: 'S', rot: 0 }, null, { type: 'S', rot: 0 }, null,
+        null, { type: 'L', rot: 1 }, { type: 'S', rot: 1 }, { type: 'L', rot: 2 }, null,
+        'SRC', { type: 'S', rot: 1 }, { type: 'L', rot: 0 }, { type: 'S', rot: 0 }, 'TGT',
+        null, { type: 'L', rot: 3 }, { type: 'S', rot: 1 }, { type: 'L', rot: 0 }, null,
+      ]
     }
   ];
 
