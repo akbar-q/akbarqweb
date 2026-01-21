@@ -1488,7 +1488,7 @@
       tiles: [
         null, null, null, null, null,
         null, { type: 'L', rot: 1 }, { type: 'S', rot: 1 }, { type: 'L', rot: 2 }, null,
-        'SRC', { type: 'S', rot: 1 }, null, { type: 'S', rot: 1 }, 'TGT',
+        'SRC', { type: 'L', rot: 3 }, null, { type: 'L', rot: 0 }, 'TGT',
         null, { type: 'L', rot: 0 }, { type: 'S', rot: 1 }, { type: 'L', rot: 3 }, null,
         null, null, null, null, null,
       ]
