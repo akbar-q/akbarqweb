@@ -119,6 +119,21 @@
     return d.toLocaleTimeString([], { hour12: false });
   }
 
+  function asDate(value) {
+    // Server mode uses ISO timestamps; embedded devices may send uptime numbers.
+    if (typeof value === "number") {
+      // If it's much smaller than epoch-ms, assume it's uptime and just show local time.
+      if (value < 1_000_000_000_000) return new Date();
+      const d = new Date(value);
+      if (!Number.isNaN(d.getTime())) return d;
+    }
+    if (typeof value === "string") {
+      const d = new Date(value);
+      if (!Number.isNaN(d.getTime())) return d;
+    }
+    return new Date();
+  }
+
   function setConn(state) {
     if (state === "connected") {
       els.connBadge.className = "badge text-bg-success";
@@ -138,7 +153,7 @@
     const div = document.createElement("div");
     div.className = "event-item";
 
-    const time = item.time ? new Date(item.time) : new Date();
+    const time = item.time ? asDate(item.time) : new Date();
     const lvl = (item.level || "info").toUpperCase();
     const msg = item.message || JSON.stringify(item);
 
@@ -234,7 +249,7 @@
   });
 
   function pushChartPoint(sample) {
-    const t = fmtTime(new Date(sample.time));
+    const t = fmtTime(asDate(sample.time));
     const labels = chart.data.labels;
     labels.push(t);
 
@@ -275,6 +290,11 @@
     els.batteryA.textContent = `${s.batteryA.toFixed(2)} A`;
     els.batteryMode.textContent = p.charging ? "Charging" : "Discharging";
 
+    // Global UI "alive" states (CSS-driven animations)
+    document.body.dataset.pump = a.pump.isOn ? "on" : "off";
+    document.body.dataset.charging = p.charging ? "yes" : "no";
+    document.body.dataset.sun = s.solarV >= 6.3 ? "high" : (s.solarV >= 5.9 ? "mid" : "low");
+
     els.tankPct.textContent = `${Math.round(s.tankLevelPct)}%`;
     els.env.textContent = `${s.tempC.toFixed(1)}°C / ${Math.round(s.humidityPct)}%`;
 
@@ -296,9 +316,9 @@
     // Dials
     setGauge(gauges.moisture, s.moisturePct, `${Math.round(s.moisturePct)}%`, s.moisturePct < 35 ? "rgba(239,68,68,0.9)" : (s.moisturePct < 50 ? "rgba(245,158,11,0.9)" : "rgba(34,197,94,0.9)"));
     setGauge(gauges.tank, s.tankLevelPct, `${Math.round(s.tankLevelPct)}%`, s.tankLevelPct < 12 ? "rgba(239,68,68,0.9)" : (s.tankLevelPct < 25 ? "rgba(245,158,11,0.9)" : "rgba(56,189,248,0.88)"));
-    // battery gauge uses a 9.6..12.2V range
-    const battPct = ((s.batteryV - 9.6) / (12.2 - 9.6)) * 100;
-    setGauge(gauges.battery, battPct, `${s.batteryV.toFixed(1)}V`, s.batteryV < 10.1 ? "rgba(239,68,68,0.9)" : "rgba(56,189,248,0.88)");
+    // battery gauge uses a 4.6..5.2V range (5V pack output)
+    const battPct = ((s.batteryV - 4.6) / (5.2 - 4.6)) * 100;
+    setGauge(gauges.battery, battPct, `${s.batteryV.toFixed(2)}V`, s.batteryV < 4.75 ? "rgba(239,68,68,0.9)" : "rgba(56,189,248,0.88)");
 
     // Animate water flow only when pump is on
     els.waterFlow.style.opacity = a.pump.isOn ? "1" : "0";
@@ -470,10 +490,11 @@
       }
     }
 
-    // Detect whether we're running behind the Node server (API available).
+    // Detect whether we're running behind a server/device (API available).
     let serverMode = false;
+    let health = null;
     try {
-      await fetchJson(`${apiBase}health`, 800);
+      health = await fetchJson(`${apiBase}health`, 800);
       serverMode = true;
     } catch {
       serverMode = false;
@@ -501,7 +522,7 @@
         // ignore
       }
 
-      // Prefer Socket.IO, but fall back to polling if it can't connect.
+      // Prefer SSE (ESP32-friendly) if the server advertises it; otherwise use Socket.IO.
       let pollingId = null;
 
       function startPolling() {
@@ -516,7 +537,70 @@
         }, 1000);
       }
 
-      if (typeof window.io === "function") {
+      const caps = (health && health.capabilities) ? health.capabilities : {};
+
+      function startSse() {
+        try {
+          const es = new EventSource(`${apiBase}stream`);
+          setConn("connected");
+
+          es.addEventListener("open", () => {
+            setConn("connected");
+          });
+
+          es.addEventListener("error", () => {
+            setConn("disconnected");
+            try { es.close(); } catch { /* ignore */ }
+            startPolling();
+          });
+
+          es.addEventListener("hello", (e) => {
+            try {
+              const data = JSON.parse(e.data);
+              if (data && data.snapshot) applySnapshot(data.snapshot);
+            } catch {
+              // ignore
+            }
+          });
+
+          es.addEventListener("telemetry", (e) => {
+            try {
+              const data = JSON.parse(e.data);
+              if (data && data.sample) pushChartPoint(data.sample);
+              if (data && data.snapshot) applySnapshot(data.snapshot);
+            } catch {
+              // ignore
+            }
+          });
+
+          es.addEventListener("state", (e) => {
+            try {
+              const snap = JSON.parse(e.data);
+              applySnapshot(snap);
+            } catch {
+              // ignore
+            }
+          });
+
+          es.addEventListener("event", (e) => {
+            try {
+              const ev = JSON.parse(e.data);
+              logEvent(ev);
+            } catch {
+              // ignore
+            }
+          });
+
+          return true;
+        } catch {
+          return false;
+        }
+      }
+
+      if (caps && caps.sse === true) {
+        const ok = startSse();
+        if (!ok) startPolling();
+      } else if (caps && caps.socketIo === true && typeof window.io === "function") {
         const socket = window.io({
           path: socketPath,
           transports: ["websocket", "polling"],
@@ -560,7 +644,7 @@
           logEvent(ev);
         });
       } else {
-        // no socket.io client loaded
+        // no real-time channel available
         startPolling();
       }
     } else {

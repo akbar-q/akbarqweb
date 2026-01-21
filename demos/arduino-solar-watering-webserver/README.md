@@ -47,3 +47,9 @@ After publishing the repo with GitHub Pages enabled, open:
 ## Notes
 
 This is intentionally **not connected** to real hardware yet; it’s a presentation-grade mock-up.
+
+## ESP32 (self-hosted)
+
+There is now an ESP32 firmware option that self-hosts this same dashboard from flash (LittleFS) and serves a compatible `/api/*` + live updates via SSE:
+
+- See `esp32/README.md`

@@ -57,9 +57,9 @@
         humidityPct: 48,
         tankLevelPct: 72,
         flowLpm: 0,
-        solarV: 11.2,
-        batteryV: 10.8,
-        batteryA: 0.4
+        solarV: 5.6,
+        batteryV: 5.06,
+        batteryA: 0.18
       },
       power: {
         charging: true,
@@ -109,7 +109,7 @@
       } else if (state.sensors.tankLevelPct < 25) {
         alarms.push({ code: "TANK_WARN", severity: "warning", message: "Water tank is getting low" });
       }
-      if (state.sensors.batteryV < 10.1) {
+      if (state.sensors.batteryV < 4.75) {
         alarms.push({ code: "BATTERY_LOW", severity: "critical", message: "Battery voltage is low" });
       }
       state.alarms = alarms;
@@ -135,20 +135,20 @@
       const df = dayFactor(now - startedAt);
 
       // Solar / battery behavior
-      const solarVTarget = lerp(7.6, 12.2, df) + rand(-0.08, 0.08);
-      state.sensors.solarV = round(clamp(solarVTarget, 6.8, 12.6), 2);
+      const solarVTarget = lerp(0.6, 6.3, df) + rand(-0.06, 0.06);
+      state.sensors.solarV = round(clamp(solarVTarget, 0, 6.6), 2);
 
-      const loadW = state.actuators.pump.isOn ? rand(5.5, 9.5) : rand(1.2, 2.8);
-      const solarW = clamp((state.sensors.solarV - 7.2) * 1.2, 0, 7.5);
+      const loadW = state.actuators.pump.isOn ? rand(3.5, 6.5) : rand(0.4, 1.3);
+      const solarW = clamp((state.sensors.solarV - 4.4) * 1.1, 0, 6.0);
       state.power.estLoadW = round(loadW, 2);
       state.power.estSolarW = round(solarW, 2);
 
       const netW = solarW - loadW;
       state.power.charging = netW > -0.2;
 
-      const batteryVTarget = clamp(state.sensors.batteryV + netW * 0.0007 * (dt / 1000), 9.6, 12.2);
-      state.sensors.batteryV = round(batteryVTarget + rand(-0.01, 0.01), 2);
-      state.sensors.batteryA = round(clamp(netW / 12, -1.2, 1.2), 2);
+      const batteryVTarget = clamp(state.sensors.batteryV + netW * 0.0011 * (dt / 1000), 4.6, 5.25);
+      state.sensors.batteryV = round(batteryVTarget + rand(-0.004, 0.004), 3);
+      state.sensors.batteryA = round(clamp(netW / 5, -2.0, 2.0), 2);
 
       // Environment
       state.sensors.tempC = round(lerp(20.5, 27.2, df) + rand(-0.15, 0.15), 2);
@@ -182,7 +182,7 @@
         if (state.sensors.moisturePct < thresholdOn) {
           if (state.sensors.tankLevelPct < 8) {
             pushEvent("error", "Automation blocked: tank empty", { code: "TANK_EMPTY" });
-          } else if (state.sensors.batteryV < 10.0) {
+          } else if (state.sensors.batteryV < 4.72) {
             pushEvent("warning", "Automation blocked: low battery", { code: "BATTERY_LOW" });
           } else {
             const runSec = Math.max(3, Math.min(state.mode.pumpMaxOnSec, Math.round(rand(8, state.mode.pumpMaxOnSec))));

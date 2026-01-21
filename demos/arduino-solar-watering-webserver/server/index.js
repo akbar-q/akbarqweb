@@ -36,6 +36,10 @@ app.get("/api/health", (req, res) => {
   res.json({
     ok: true,
     service: "arduino-solar-watering-webserver-mock",
+    capabilities: {
+      socketIo: true,
+      sse: false
+    },
     time: nowIso(),
     uptimeSec: Math.floor(process.uptime())
   });

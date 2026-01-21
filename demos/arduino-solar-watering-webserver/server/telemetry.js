@@ -64,9 +64,11 @@ function createTelemetryEngine() {
       humidityPct: 48,
       tankLevelPct: 72,
       flowLpm: 0,
-      solarV: 11.2,
-      batteryV: 10.8,
-      batteryA: 0.4
+      // 6V-class panel measured via divider; used as a sunlight proxy
+      solarV: 5.6,
+      // 5V battery pack output (note: real packs often regulate to ~5V)
+      batteryV: 5.06,
+      batteryA: 0.18
     },
     power: {
       charging: true,
@@ -140,7 +142,7 @@ function createTelemetryEngine() {
       });
     }
 
-    if (state.sensors.batteryV < 10.1) {
+    if (state.sensors.batteryV < 4.75) {
       alarms.push({
         code: "BATTERY_LOW",
         severity: "critical",
@@ -148,7 +150,7 @@ function createTelemetryEngine() {
       });
     }
 
-    if (state.sensors.solarV < 8.5 && state.power.charging) {
+    if (state.sensors.solarV < 4.4 && state.power.charging) {
       alarms.push({
         code: "SOLAR_DROP",
         severity: "warning",
@@ -177,12 +179,12 @@ function createTelemetryEngine() {
     const df = dayFactor(now - startedAt);
 
     // Solar & battery behavior
-    const solarVTarget = lerp(7.6, 12.2, df) + rand(-0.08, 0.08);
-    state.sensors.solarV = round(clamp(solarVTarget, 6.8, 12.6), 2);
+    const solarVTarget = lerp(0.6, 6.3, df) + rand(-0.06, 0.06);
+    state.sensors.solarV = round(clamp(solarVTarget, 0, 6.6), 2);
 
     // charging current depends on solar and pump load
-    const loadW = state.actuators.pump.isOn ? rand(5.5, 9.5) : rand(1.2, 2.8);
-    const solarW = clamp((state.sensors.solarV - 7.2) * 1.2, 0, 7.5);
+    const loadW = state.actuators.pump.isOn ? rand(3.5, 6.5) : rand(0.4, 1.3);
+    const solarW = clamp((state.sensors.solarV - 4.4) * 1.1, 0, 6.0);
 
     state.power.estLoadW = round(loadW, 2);
     state.power.estSolarW = round(solarW, 2);
@@ -191,9 +193,9 @@ function createTelemetryEngine() {
     state.power.charging = netW > -0.2;
 
     const batteryV = state.sensors.batteryV;
-    const batteryVTarget = clamp(batteryV + netW * 0.0007 * (dt / 1000), 9.6, 12.2);
-    state.sensors.batteryV = round(batteryVTarget + rand(-0.01, 0.01), 2);
-    state.sensors.batteryA = round(clamp(netW / 12, -1.2, 1.2), 2);
+    const batteryVTarget = clamp(batteryV + netW * 0.0011 * (dt / 1000), 4.6, 5.25);
+    state.sensors.batteryV = round(batteryVTarget + rand(-0.004, 0.004), 3);
+    state.sensors.batteryA = round(clamp(netW / 5, -2.0, 2.0), 2);
 
     // Environment drift
     state.sensors.tempC = round(lerp(20.5, 27.2, df) + rand(-0.15, 0.15), 2);
@@ -233,7 +235,7 @@ function createTelemetryEngine() {
         // skip if tank too low or battery too low
         if (state.sensors.tankLevelPct < 8) {
           pushEvent("error", "Automation blocked: tank empty", { code: "TANK_EMPTY" });
-        } else if (state.sensors.batteryV < 10.0) {
+        } else if (state.sensors.batteryV < 4.72) {
           pushEvent("warning", "Automation blocked: low battery", { code: "BATTERY_LOW" });
         } else {
           const runSec = Math.max(3, Math.min(state.mode.pumpMaxOnSec, Math.round(rand(8, state.mode.pumpMaxOnSec))));
