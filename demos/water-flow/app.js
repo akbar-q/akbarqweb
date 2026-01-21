@@ -4,6 +4,39 @@
     return Math.max(min, Math.min(max, n));
   }
 
+  function parseCssColorToRgb(input, fallbackHex) {
+    const s = String(input || '').trim() || String(fallbackHex || '').trim();
+    if (!s) return { r: 230, g: 238, b: 247 };
+    if (s.startsWith('#')) {
+      const hex = s.slice(1);
+      if (hex.length === 3) {
+        const r = parseInt(hex[0] + hex[0], 16);
+        const g = parseInt(hex[1] + hex[1], 16);
+        const b = parseInt(hex[2] + hex[2], 16);
+        return { r, g, b };
+      }
+      if (hex.length === 6) {
+        const r = parseInt(hex.slice(0, 2), 16);
+        const g = parseInt(hex.slice(2, 4), 16);
+        const b = parseInt(hex.slice(4, 6), 16);
+        return { r, g, b };
+      }
+    }
+    const m = s.match(/rgba?\(([^)]+)\)/i);
+    if (m) {
+      const parts = m[1].split(',').map(p => p.trim());
+      const r = Math.round(Number(parts[0]));
+      const g = Math.round(Number(parts[1]));
+      const b = Math.round(Number(parts[2]));
+      if ([r, g, b].every(v => Number.isFinite(v))) return { r, g, b };
+    }
+    return parseCssColorToRgb(fallbackHex || '#e6eef7');
+  }
+
+  function rgba(rgb, a) {
+    return `rgba(${rgb.r},${rgb.g},${rgb.b},${clamp(a, 0, 1)})`;
+  }
+
   const hasGsap = () => typeof window.gsap !== 'undefined' && window.gsap && typeof window.gsap.to === 'function';
   const hasChart = () => typeof window.Chart !== 'undefined' && window.Chart;
 
@@ -15,7 +48,6 @@
     badges: ['Drop Saver','Leak Hunter'],
     members: ['You'],
     activities: [],
-    lowSupply: false,
     // Habit-to-hardware bridge: Water Credits power the AI watering
     waterCredits: 65,
     // Hardware telemetry mock
@@ -49,9 +81,6 @@
     startDemo: document.getElementById('startDemo'),
     saveSettings: document.getElementById('saveSettings'),
     closeSettings: document.getElementById('closeSettings'),
-    simulateLowSupply: document.getElementById('simulateLowSupply'),
-    alertBar: document.getElementById('alertBar'),
-    dismissAlert: document.getElementById('dismissAlert'),
     assistantBar: document.getElementById('assistantBar'),
     assistantText: document.getElementById('assistantText'),
     assistantNext: document.getElementById('assistantNext'),
@@ -91,7 +120,32 @@
     gameStatus: document.getElementById('gameStatus'),
     gameReset: document.getElementById('gameReset'),
     gameNext: document.getElementById('gameNext'),
+
+    // Weather
+    weatherCard: document.getElementById('weatherCard'),
+    weatherSky: document.getElementById('weatherSky'),
+    weatherTemp: document.getElementById('weatherTemp'),
+    weatherSummary: document.getElementById('weatherSummary'),
+    weatherLocation: document.getElementById('weatherLocation'),
+    weatherMeta: document.getElementById('weatherMeta'),
   };
+
+  const theme = (() => {
+    try {
+      const css = getComputedStyle(document.documentElement);
+      return {
+        accent: parseCssColorToRgb(css.getPropertyValue('--accent'), '#22d3ee'),
+        primary: parseCssColorToRgb(css.getPropertyValue('--primary'), '#38bdf8'),
+        muted: parseCssColorToRgb(css.getPropertyValue('--muted'), '#94a3b8'),
+      };
+    } catch (e) {
+      return {
+        accent: parseCssColorToRgb('#22d3ee', '#22d3ee'),
+        primary: parseCssColorToRgb('#38bdf8', '#38bdf8'),
+        muted: parseCssColorToRgb('#94a3b8', '#94a3b8'),
+      };
+    }
+  })();
 
   // Load from localStorage
   const saved = localStorage.getItem('waterflow');
@@ -104,8 +158,318 @@
     }
   }
 
+  // Removed feature: low-supply alert mode. Ensure persisted values don't re-enable it.
+  delete state.lowSupply;
+
   function save() {
     localStorage.setItem('waterflow', JSON.stringify(state));
+  }
+
+  // ---------------------------------------------------------------------------
+  // Weather (animated cloudy sky)
+  // ---------------------------------------------------------------------------
+  const weatherState = {
+    locationName: 'Ras Al Khaimah',
+    // Ras Al Khaimah, UAE
+    lat: 25.7895,
+    lon: 55.9432,
+    tempC: null,
+    humidityPct: null,
+    windKph: null,
+    cloudCoverPct: 65,
+    summary: 'Cloudy',
+  };
+
+  const prefersReducedMotion = (() => {
+    try { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch { return false; }
+  })();
+
+  function setWeatherUI() {
+    if (!els.weatherCard) return;
+    if (els.weatherLocation) els.weatherLocation.textContent = weatherState.locationName;
+    if (els.weatherTemp) {
+      els.weatherTemp.textContent = typeof weatherState.tempC === 'number'
+        ? `${Math.round(weatherState.tempC)}°C`
+        : '--°C';
+    }
+    if (els.weatherSummary) {
+      els.weatherSummary.textContent = weatherState.summary || '—';
+    }
+    if (els.weatherMeta) {
+      const wind = typeof weatherState.windKph === 'number' ? `${Math.round(weatherState.windKph)} km/h` : '-- km/h';
+      const hum = typeof weatherState.humidityPct === 'number' ? `${Math.round(weatherState.humidityPct)}%` : '--%';
+      els.weatherMeta.textContent = `Wind ${wind} • Humidity ${hum}`;
+    }
+  }
+
+  async function fetchWeatherOpenMeteo(lat, lon) {
+    const url = new URL('https://api.open-meteo.com/v1/forecast');
+    url.searchParams.set('latitude', String(lat));
+    url.searchParams.set('longitude', String(lon));
+    url.searchParams.set('current', 'temperature_2m,relative_humidity_2m,cloud_cover,wind_speed_10m');
+    url.searchParams.set('wind_speed_unit', 'kmh');
+    url.searchParams.set('timezone', 'auto');
+
+    const res = await fetch(url.toString(), { cache: 'no-store' });
+    if (!res.ok) throw new Error(`weather fetch failed: ${res.status}`);
+    const json = await res.json();
+    if (!json || !json.current) throw new Error('weather response missing current');
+    return {
+      tempC: json.current.temperature_2m,
+      humidityPct: json.current.relative_humidity_2m,
+      cloudCoverPct: json.current.cloud_cover,
+      windKph: json.current.wind_speed_10m,
+    };
+  }
+
+  function summarizeClouds(cloudPct) {
+    if (cloudPct == null) return 'Cloudy';
+    if (cloudPct < 20) return 'Clear';
+    if (cloudPct < 45) return 'Partly cloudy';
+    if (cloudPct < 70) return 'Cloudy';
+    return 'Overcast';
+  }
+
+  function simulateWeather() {
+    // Smooth, believable local demo values
+    const t = Date.now() / 1000;
+    const heat = (Math.sin(t / 75) + 1) / 2;
+    // Ras Al Khaimah baseline (user requested ~22°C and ~60% humidity)
+    weatherState.tempC = 21.5 + heat * 1.8;
+    weatherState.humidityPct = 58 + (1 - heat) * 6;
+    weatherState.windKph = 11 + Math.sin(t / 18) * 3.5;
+    weatherState.cloudCoverPct = clamp(25 + Math.sin(t / 42) * 18, 5, 75);
+    weatherState.summary = summarizeClouds(weatherState.cloudCoverPct);
+  }
+
+  function tickWeatherDisplayNoise() {
+    // Keep numbers subtly moving so it looks alive.
+    if (!els.weatherCard) return;
+    if (typeof weatherState.tempC !== 'number') return;
+    const t = Date.now() / 1000;
+    const wobble = Math.sin(t / 3.2) * 0.25;
+    const wobble2 = Math.sin(t / 4.6) * 0.18;
+    const temp = weatherState.tempC + wobble;
+    const hum = (weatherState.humidityPct ?? 60) + wobble2 * 3;
+    const wind = (weatherState.windKph ?? 10) + Math.sin(t / 2.8) * 0.6;
+
+    if (els.weatherTemp) els.weatherTemp.textContent = `${Math.round(temp)}°C`;
+    if (els.weatherMeta) {
+      els.weatherMeta.textContent = `Wind ${Math.max(0, Math.round(wind))} km/h • Humidity ${clamp(Math.round(hum), 30, 95)}%`;
+    }
+  }
+
+  function startWeatherLoop() {
+    if (!els.weatherCard) return;
+
+    // Initial render quickly
+    setWeatherUI();
+
+    // Fetch live weather (fallback to simulated if blocked)
+    (async () => {
+      try {
+        const w = await fetchWeatherOpenMeteo(weatherState.lat, weatherState.lon);
+        weatherState.tempC = w.tempC;
+        weatherState.humidityPct = w.humidityPct;
+        weatherState.windKph = w.windKph;
+        weatherState.cloudCoverPct = clamp(w.cloudCoverPct, 0, 100);
+        weatherState.summary = summarizeClouds(weatherState.cloudCoverPct);
+        setWeatherUI();
+      } catch (e) {
+        simulateWeather();
+        setWeatherUI();
+      }
+    })();
+
+    // Keep the UI feeling alive even if live fetch is blocked
+    setInterval(() => {
+      if (typeof weatherState.tempC !== 'number') {
+        simulateWeather();
+        setWeatherUI();
+      }
+    }, 4000);
+
+    // Always keep displayed numbers gently moving
+    setInterval(() => {
+      if (prefersReducedMotion) return;
+      tickWeatherDisplayNoise();
+    }, 900);
+
+    // Refresh live weather occasionally
+    setInterval(async () => {
+      try {
+        const w = await fetchWeatherOpenMeteo(weatherState.lat, weatherState.lon);
+        weatherState.tempC = w.tempC;
+        weatherState.humidityPct = w.humidityPct;
+        weatherState.windKph = w.windKph;
+        weatherState.cloudCoverPct = clamp(w.cloudCoverPct, 0, 100);
+        weatherState.summary = summarizeClouds(weatherState.cloudCoverPct);
+        setWeatherUI();
+      } catch (e) {
+        // ignore
+      }
+    }, 120000);
+  }
+
+  function startCloudySky() {
+    const canvas = els.weatherSky;
+    if (!canvas || !canvas.getContext) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    function parseCssColorToRgb(input, fallbackHex) {
+      const s = String(input || '').trim() || String(fallbackHex || '').trim();
+      if (!s) return { r: 230, g: 238, b: 247 };
+      if (s.startsWith('#')) {
+        const hex = s.slice(1);
+        if (hex.length === 3) {
+          const r = parseInt(hex[0] + hex[0], 16);
+          const g = parseInt(hex[1] + hex[1], 16);
+          const b = parseInt(hex[2] + hex[2], 16);
+          return { r, g, b };
+        }
+        if (hex.length === 6) {
+          const r = parseInt(hex.slice(0, 2), 16);
+          const g = parseInt(hex.slice(2, 4), 16);
+          const b = parseInt(hex.slice(4, 6), 16);
+          return { r, g, b };
+        }
+      }
+      const m = s.match(/rgba?\(([^)]+)\)/i);
+      if (m) {
+        const parts = m[1].split(',').map(p => p.trim());
+        const r = Math.round(Number(parts[0]));
+        const g = Math.round(Number(parts[1]));
+        const b = Math.round(Number(parts[2]));
+        if ([r, g, b].every(v => Number.isFinite(v))) return { r, g, b };
+      }
+      return parseCssColorToRgb(fallbackHex || '#e6eef7');
+    }
+
+    function rgba(rgb, a) {
+      const alpha = clamp(a, 0, 1);
+      return `rgba(${rgb.r},${rgb.g},${rgb.b},${alpha})`;
+    }
+
+    const css = getComputedStyle(document.documentElement);
+    const theme = {
+      bg: parseCssColorToRgb(css.getPropertyValue('--bg'), '#0b0f13'),
+      bgAlt: parseCssColorToRgb(css.getPropertyValue('--bg-alt'), '#0e141a'),
+      text: parseCssColorToRgb(css.getPropertyValue('--text'), '#e6eef7'),
+      primary: parseCssColorToRgb(css.getPropertyValue('--primary'), '#38bdf8'),
+      accent: parseCssColorToRgb(css.getPropertyValue('--accent'), '#22d3ee'),
+    };
+
+    const clouds = [];
+    function resetCloud(c) {
+      const w = canvas.width;
+      const h = canvas.height;
+      c.x = Math.random() * w;
+      c.y = (h * 0.20) + Math.random() * (h * 0.45);
+      c.scale = 0.55 + Math.random() * 1.1;
+      c.speed = 8 + Math.random() * 18;
+      c.alpha = 0.12 + Math.random() * 0.18;
+      c.depth = 0.6 + Math.random() * 0.8;
+    }
+
+    for (let i = 0; i < 16; i++) {
+      const c = {};
+      resetCloud(c);
+      c.x = Math.random() * canvas.width;
+      clouds.push(c);
+    }
+
+    let last = performance.now();
+
+    function resizeToDisplay() {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      const targetW = Math.max(420, Math.floor(rect.width * dpr));
+      const targetH = Math.max(160, Math.floor(rect.height * dpr));
+      if (canvas.width !== targetW || canvas.height !== targetH) {
+        canvas.width = targetW;
+        canvas.height = targetH;
+        // Re-seed cloud positions within new bounds
+        clouds.forEach(resetCloud);
+      }
+    }
+
+    function drawCloud(x, y, s, a) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(s, s);
+      ctx.globalAlpha = a;
+
+      const grad = ctx.createRadialGradient(0, 0, 10, 0, 0, 70);
+      grad.addColorStop(0, rgba(theme.text, 0.75));
+      grad.addColorStop(1, rgba(theme.text, 0));
+      ctx.fillStyle = grad;
+
+      // soft puffs
+      const puffs = [
+        [-35, 0, 42],
+        [-10, -18, 55],
+        [22, -8, 48],
+        [48, 6, 38],
+        [8, 16, 60]
+      ];
+      for (const [px, py, r] of puffs) {
+        ctx.beginPath();
+        ctx.arc(px, py, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    function frame(now) {
+      resizeToDisplay();
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+
+      const w = canvas.width;
+      const h = canvas.height;
+      const cloudiness = clamp(weatherState.cloudCoverPct ?? 65, 0, 100) / 100;
+
+      // sky gradient (uses theme base colors)
+      ctx.clearRect(0, 0, w, h);
+      const sky = ctx.createLinearGradient(0, 0, 0, h);
+      sky.addColorStop(0, rgba(theme.bgAlt, 0.92));
+      sky.addColorStop(1, rgba(theme.bg, 0.84));
+      ctx.fillStyle = sky;
+      ctx.fillRect(0, 0, w, h);
+
+      // haze
+      ctx.fillStyle = rgba(theme.accent, 0.06 + cloudiness * 0.07);
+      ctx.fillRect(0, 0, w, h);
+
+      // clouds
+      const targetCount = Math.round(8 + cloudiness * 10);
+      for (let i = 0; i < clouds.length; i++) {
+        const c = clouds[i];
+        const active = i < targetCount;
+        c.x += (c.speed * (0.35 + cloudiness)) * dt * c.depth;
+        if (c.x > w + 160) {
+          c.x = -160;
+          c.y = (h * 0.18) + Math.random() * (h * 0.5);
+        }
+        if (active) {
+          const alpha = c.alpha * (0.55 + cloudiness);
+          drawCloud(c.x, c.y, c.scale * (w / 920), alpha);
+        }
+      }
+
+      // subtle shimmer
+      ctx.fillStyle = rgba(theme.primary, 0.03);
+      ctx.fillRect(0, h * 0.62, w, h * 0.38);
+
+      requestAnimationFrame(frame);
+    }
+
+    window.addEventListener('resize', () => {
+      // next frame will handle resize
+    });
+
+    requestAnimationFrame(frame);
   }
 
   // ---------------------------------------------------------------------------
@@ -279,9 +643,30 @@
   }
 
   function render() {
+    const prev = render._prev || (render._prev = { waterCredits: null, soil: null, tank: null, pointsToday: null, todayLiters: null, batterySoc: null });
+    let lastSoil = null;
+    let lastTank = null;
+
     els.todayLiters.textContent = `${state.todayLiters} L`;
     els.goalLiters.textContent = `${state.dailyGoal} L`;
     els.points.textContent = `+${state.pointsToday} pts`;
+
+    if (!prefersReducedMotion) {
+      // subtle "alive" motion on the main stats
+      els.todayLiters.classList.add('live-wiggle');
+      els.points.classList.add('value-pulse');
+    }
+
+    if (prev.todayLiters !== null && prev.todayLiters !== state.todayLiters && !prefersReducedMotion) {
+      els.todayLiters.classList.remove('value-pop');
+      void els.todayLiters.offsetWidth;
+      els.todayLiters.classList.add('value-pop');
+    }
+    if (prev.pointsToday !== null && prev.pointsToday !== state.pointsToday && !prefersReducedMotion) {
+      els.points.classList.remove('value-pop');
+      void els.points.offsetWidth;
+      els.points.classList.add('value-pop');
+    }
     const pct = Math.min(100, Math.round(state.todayLiters / state.dailyGoal * 100));
     els.meterFill.style.width = pct + '%';
     els.meterTarget.style.left = Math.min(100, 100) + '%';
@@ -306,17 +691,17 @@
 
     // activity
     els.activityList.innerHTML = '';
-    state.activities.slice().reverse().forEach(a => {
+    const activityFlash = render._activityFlash || (render._activityFlash = new Set());
+    const list = state.activities.slice().reverse();
+    list.forEach(a => {
       const li = document.createElement('li');
-      li.innerHTML = `<span>${a.label}</span><span>${a.liters} L</span>`;
+      const ts = a.ts ? new Date(a.ts) : new Date();
+      const time = ts.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const key = `${a.ts || ''}|${a.label}|${a.liters}`;
+      li.innerHTML = `<span>${time} • ${a.label}</span><span>${a.liters} L</span>`;
+      if (activityFlash.has(key)) li.classList.add('flash');
       els.activityList.appendChild(li);
     });
-
-    // Alert
-    els.alertBar.classList.toggle('hidden', !state.lowSupply);
-    if (els.assistantBar) {
-      els.assistantBar.classList.toggle('with-alert', !!state.lowSupply);
-    }
 
     // Telemetry renders
     if (els.irradianceVal) {
@@ -331,7 +716,13 @@
       els.systemTemp.textContent = `${Math.round(state.systemTemp)}°C`;
       if (els.socFill) {
         els.socFill.style.width = Math.min(100, Math.max(0, state.batterySoc)) + '%';
-        els.socFill.style.background = state.batterySoc < 25 ? 'linear-gradient(90deg,#ef4444,#f59e0b)' : 'linear-gradient(90deg,#10b981,#22d3ee)';
+        els.socFill.style.background = state.batterySoc < 25 ? 'linear-gradient(90deg,var(--danger),var(--warn))' : 'linear-gradient(90deg,var(--success),var(--accent))';
+
+        if (!prefersReducedMotion && prev.batterySoc !== null && Math.round(prev.batterySoc) !== Math.round(state.batterySoc)) {
+          els.batterySoc.classList.remove('value-pop');
+          void els.batterySoc.offsetWidth;
+          els.batterySoc.classList.add('value-pop');
+        }
       }
     }
 
@@ -342,6 +733,13 @@
 
       const credits = clamp(state.waterCredits || 0, 0, 160);
       els.waterCredits.textContent = `${Math.round(credits)} cr`;
+      if (!prefersReducedMotion) els.waterCredits.classList.add('value-pulse');
+
+      if (prev.waterCredits !== null && Math.round(prev.waterCredits) !== Math.round(credits) && !prefersReducedMotion) {
+        els.waterCredits.classList.remove('value-pop');
+        void els.waterCredits.offsetWidth;
+        els.waterCredits.classList.add('value-pop');
+      }
       const goalBand = credits < 18 ? 'Low — complete a habit challenge' : (credits < 55 ? 'OK — conserve a bit more' : 'Good — AI can water comfortably');
       els.waterCreditsHint.textContent = goalBand;
 
@@ -351,13 +749,34 @@
         const pumpOn = !!(snap.actuators.pump && snap.actuators.pump.isOn);
         const flow = snap.sensors.flowLpm || 0;
 
+        lastSoil = m;
+        lastTank = tank;
+
         els.soilMoisture.textContent = String(Math.round(m));
         els.soilFill.style.width = `${m}%`;
-        els.soilFill.style.background = m < 35 ? 'linear-gradient(90deg,#ef4444,#f59e0b)' : 'linear-gradient(90deg,var(--primary),var(--accent))';
+        els.soilFill.style.background = m < 35 ? 'linear-gradient(90deg,var(--danger),var(--warn))' : 'linear-gradient(90deg,var(--primary),var(--accent))';
+
+        if (!prefersReducedMotion) {
+          els.soilMoisture.classList.add('live-wiggle');
+          if (prev.soil !== null && Math.round(prev.soil) !== Math.round(m)) {
+            els.soilMoisture.classList.remove('value-pop');
+            void els.soilMoisture.offsetWidth;
+            els.soilMoisture.classList.add('value-pop');
+          }
+        }
 
         els.tankLevel.textContent = String(Math.round(tank));
         els.tankFill.style.width = `${tank}%`;
-        els.tankFill.style.background = tank < 15 ? 'linear-gradient(90deg,#ef4444,#f59e0b)' : 'linear-gradient(90deg,var(--primary),var(--accent))';
+        els.tankFill.style.background = tank < 15 ? 'linear-gradient(90deg,var(--danger),var(--warn))' : 'linear-gradient(90deg,var(--primary),var(--accent))';
+
+        if (!prefersReducedMotion) {
+          els.tankLevel.classList.add('live-wiggle');
+          if (prev.tank !== null && Math.round(prev.tank) !== Math.round(tank)) {
+            els.tankLevel.classList.remove('value-pop');
+            void els.tankLevel.offsetWidth;
+            els.tankLevel.classList.add('value-pop');
+          }
+        }
 
         els.pumpState.textContent = pumpOn ? 'ON' : 'OFF';
         els.pumpFlow.textContent = flow.toFixed(2);
@@ -365,10 +784,18 @@
 
       if (els.aiDecision) els.aiDecision.textContent = asiwUi.decision || '—';
     }
+
+    prev.waterCredits = state.waterCredits;
+    if (typeof lastSoil === 'number') prev.soil = lastSoil;
+    if (typeof lastTank === 'number') prev.tank = lastTank;
+    prev.pointsToday = state.pointsToday;
+    prev.todayLiters = state.todayLiters;
+    prev.batterySoc = state.batterySoc;
   }
 
   // Weekly chart mock
   let weeklyChart;
+  let weeklyHighlightIdx = 0;
   function renderChart() {
     const ctx = document.getElementById('weeklyChart');
     if (!ctx) return;
@@ -382,18 +809,33 @@
         datasets: [{
           label: 'Liters',
           data,
-          backgroundColor: 'rgba(34, 211, 238, 0.35)',
+          backgroundColor: rgba(theme.accent, 0.30),
           borderRadius: 8,
         }]
       },
       options: {
         plugins: { legend: { display: false } },
+        animation: prefersReducedMotion ? false : { duration: 700, easing: 'easeOutQuart' },
         scales: {
-          x: { grid: { display: false }, ticks: { color: '#8aa2b6' } },
-          y: { grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: '#8aa2b6' } }
+          x: { grid: { display: false }, ticks: { color: rgba(theme.muted, 0.9) } },
+          y: { grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: rgba(theme.muted, 0.9) } }
         },
       }
     });
+  }
+
+  function tickWeeklyBreakdown() {
+    if (!weeklyChart || !weeklyChart.data || !weeklyChart.data.datasets || !weeklyChart.data.datasets[0]) return;
+    weeklyHighlightIdx = (weeklyHighlightIdx + 1) % (weeklyChart.data.labels?.length || 7);
+    // tiny value drift + rotating highlight
+    const base = mockWeekly();
+    weeklyChart.data.datasets[0].data = base.map((n, i) => {
+      const t = Date.now() / 1000;
+      const drift = (Math.sin((t * 1.05) + i * 0.9) * 14) + (Math.sin((t * 0.6) + i) * 6);
+      return Math.max(120, Math.round(n + drift));
+    });
+    weeklyChart.data.datasets[0].backgroundColor = base.map((_, i) => i === weeklyHighlightIdx ? rgba(theme.primary, 0.55) : rgba(theme.accent, 0.26));
+    weeklyChart.update();
   }
 
   function mockWeekly() {
@@ -462,49 +904,127 @@
     renderPvChart();
   }
 
+  // Idle telemetry motion (subtle slider/values drift)
+  let lastTelemetryUserInput = Date.now();
+  const telemetryDrift = {
+    irr: state.pvIrradiance,
+    load: state.loadWatts,
+    irrVel: 0,
+    loadVel: 0,
+    spikeUntil: 0,
+    spikeBoost: 0,
+  };
+  function tickTelemetryIdle() {
+    if (prefersReducedMotion) return;
+    const idleMs = Date.now() - lastTelemetryUserInput;
+    if (idleMs < 2500) return;
+
+    const now = Date.now();
+    const t = now / 1000;
+
+    // Occasional "weather event" spike so the plot isn't straight
+    if (now > telemetryDrift.spikeUntil && Math.random() < 0.035) {
+      telemetryDrift.spikeUntil = now + (4000 + Math.random() * 6000);
+      telemetryDrift.spikeBoost = 160 + Math.random() * 260;
+    }
+    const spike = now < telemetryDrift.spikeUntil ? telemetryDrift.spikeBoost : 0;
+
+    // Random-walk around a daylight-ish curve
+    const baselineIrr = 650 + Math.sin(t / 7.5) * 160 + Math.sin(t / 2.7) * 30;
+    const baselineLoad = 24 + Math.sin(t / 5.4) * 7 + Math.sin(t / 2.1) * 2.5;
+
+    const irrAcc = (Math.random() - 0.5) * 22;
+    const loadAcc = (Math.random() - 0.5) * 1.8;
+    telemetryDrift.irrVel = (telemetryDrift.irrVel + irrAcc) * 0.84;
+    telemetryDrift.loadVel = (telemetryDrift.loadVel + loadAcc) * 0.86;
+
+    telemetryDrift.irr += telemetryDrift.irrVel + (baselineIrr - telemetryDrift.irr) * 0.06;
+    telemetryDrift.load += telemetryDrift.loadVel + (baselineLoad - telemetryDrift.load) * 0.08;
+
+    const irr = telemetryDrift.irr + spike;
+    // when PV spikes, load usually creeps a bit too (controller activity)
+    const load = telemetryDrift.load + (spike > 0 ? 2.5 + Math.sin(t * 1.6) * 1.4 : 0);
+
+    state.pvIrradiance = Math.round(clamp(irr, 250, 1100));
+    state.loadWatts = Math.round(clamp(load, 6, 60));
+    if (els.irradianceSlider) els.irradianceSlider.value = String(state.pvIrradiance);
+    if (els.loadSlider) els.loadSlider.value = String(state.loadWatts);
+    render();
+  }
+
   // Interactions
   document.querySelectorAll('[data-log]').forEach(btn => {
     btn.addEventListener('click', () => {
-      const type = btn.getAttribute('data-log');
-      const map = { shower: 50, dishwasher: 15, laundry: 70 };
-      const liters = map[type] || 20;
-      const labelMap = { shower: 'Shower', dishwasher: 'Dishwasher', laundry: 'Laundry' };
-      state.activities.push({ label: `${labelMap[type] || 'Activity'}`, liters, ts: Date.now() });
-      state.todayLiters += liters;
-      // points
-      const pts = state.lowSupply ? 10 : 5;
-      state.pointsToday += pts;
-
-      // Credits: conserve to earn, waste to spend
-      state.waterCredits = clamp((state.waterCredits || 0) - liters / 8, 0, 160);
-      // badge rewards
-      if (type === 'shower' && state.activities.filter(a=>a.label==='Shower').length === 3) {
-        if (!state.badges.includes('Quick Shower Champ')) state.badges.push('Quick Shower Champ');
-      }
-      save();
-      render();
-      renderChart();
+      logActivity(btn.getAttribute('data-log'));
     });
   });
 
-  document.querySelectorAll('[data-complete]').forEach(btn => {
-    btn.addEventListener('click', () => {
+  function flashActivityOnce(entry) {
+    const s = render._activityFlash || (render._activityFlash = new Set());
+    const key = `${entry.ts || ''}|${entry.label}|${entry.liters}`;
+    s.add(key);
+    // allow one render pass to display it, then clear
+    setTimeout(() => s.delete(key), 900);
+  }
+
+  function logActivity(type, opts = {}) {
+    const map = { shower: 50, dishwasher: 15, laundry: 70, garden: 35, carwash: 80 };
+    const liters = map[type] || 20;
+    const labelMap = { shower: 'Shower', dishwasher: 'Dishwasher', laundry: 'Laundry', garden: 'Garden watering', carwash: 'Car wash' };
+    const entry = { label: `${labelMap[type] || 'Activity'}`, liters, ts: Date.now() };
+    state.activities.push(entry);
+    // cap list
+    if (state.activities.length > 14) state.activities.shift();
+    flashActivityOnce(entry);
+
+    // usage + points
+    state.todayLiters += liters;
+    state.pointsToday += 5;
+
+    // Credits: conserve to earn, usage spends
+    state.waterCredits = clamp((state.waterCredits || 0) - liters / 8, 0, 160);
+
+    if (type === 'shower' && state.activities.filter(a => a.label === 'Shower').length === 3) {
+      if (!state.badges.includes('Quick Shower Champ')) state.badges.push('Quick Shower Champ');
+    }
+    if (opts.note) {
+      const noteEntry = { label: opts.note, liters: 0, ts: Date.now() };
+      state.activities.push(noteEntry);
+      if (state.activities.length > 14) state.activities.shift();
+      flashActivityOnce(noteEntry);
+    }
+
+    save();
+    render();
+    renderChart();
+  }
+
+  // Delegate dynamic habit completion buttons
+  const gamificationCard = document.getElementById('gamificationCard');
+  if (gamificationCard) {
+    gamificationCard.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-complete]');
+      if (!btn) return;
       const type = btn.getAttribute('data-complete');
       let reward = 20;
       if (type === 'shower') reward = 30;
+      if (type === 'leak') reward = 25;
+      if (type === 'timed') reward = 18;
       state.pointsToday += reward;
 
       // Habits earn credits too (stronger effect than logging usage)
-      const creditReward = (state.lowSupply ? 1.4 : 1) * (reward * 0.9);
+      const creditReward = reward * 0.9;
       state.waterCredits = clamp((state.waterCredits || 0) + creditReward, 0, 160);
+
       if (type === 'laundry') {
         if (!state.badges.includes('Load Master')) state.badges.push('Load Master');
       }
       if (hasGsap()) window.gsap.to(btn, { scale: 0.95, yoyo: true, repeat: 1, duration: 0.1 });
+      flashActivityOnce({ label: `Habit completed: ${btn.dataset.title || type}`, liters: 0, ts: Date.now() });
       save();
       render();
     });
-  });
+  }
 
   els.addMember.addEventListener('click', () => {
     const name = (els.memberName.value || '').trim();
@@ -541,31 +1061,37 @@
     if (!isNaN(goal) && goal >= 100) state.dailyGoal = goal;
     const city = (els.inputCity.value || '').trim();
     if (city) state.city = city;
+
+    // Keep Weather card aligned with the selected city (demo mapping)
+    if (state.city) {
+      const c = state.city.toLowerCase();
+      if (c.includes('ras') || c.includes('khaimah') || c === 'rak') {
+        weatherState.locationName = 'Ras Al Khaimah';
+        weatherState.lat = 25.7895;
+        weatherState.lon = 55.9432;
+      } else if (c.includes('manchester')) {
+        weatherState.locationName = 'Greater Manchester';
+        weatherState.lat = 53.4808;
+        weatherState.lon = -2.2426;
+      } else {
+        weatherState.locationName = state.city;
+      }
+      setWeatherUI();
+    }
+
     save();
     closeSettings();
     render();
     renderChart();
   });
 
-  // Low supply simulation — playful alert
-  if (els.simulateLowSupply) els.simulateLowSupply.addEventListener('click', () => {
-    state.lowSupply = true;
-    // Bonus credits to make the demo feel rewarding
-    state.waterCredits = clamp((state.waterCredits || 0) + 12, 0, 160);
-    save();
-    render();
-    if (hasGsap()) window.gsap.from('#alertBar', { y: 12, opacity: 0, duration: 0.25 });
-  });
-  if (els.dismissAlert) els.dismissAlert.addEventListener('click', () => {
-    state.lowSupply = false;
-    save();
-    render();
-  });
+  // Removed: low-supply alert mode
 
   // Telemetry sliders
   if (els.irradianceSlider) {
     els.irradianceSlider.addEventListener('input', e => {
       state.pvIrradiance = parseInt(e.target.value, 10);
+      lastTelemetryUserInput = Date.now();
       save();
       render();
     });
@@ -573,6 +1099,7 @@
   if (els.loadSlider) {
     els.loadSlider.addEventListener('input', e => {
       state.loadWatts = parseInt(e.target.value, 10);
+      lastTelemetryUserInput = Date.now();
       save();
       render();
     });
@@ -608,7 +1135,84 @@
   renderChart();
   renderPvChart();
   // Periodic telemetry updates
-  setInterval(updateTelemetry, 4000);
+  setInterval(updateTelemetry, 2000);
+  setInterval(tickTelemetryIdle, 900);
+
+  // WOW mode: keep key cards visually alive
+  (function applyWowClasses() {
+    if (prefersReducedMotion) return;
+    const map = [
+      { sel: '#usageCard', classes: ['wow-card', 'floaty', 'floaty-fast', 'floaty-delay-1'] },
+      { sel: '#weatherCard', classes: ['wow-card', 'floaty', 'floaty-slow', 'floaty-delay-2'] },
+      { sel: '#telemetryCard', classes: ['wow-card', 'floaty', 'floaty-delay-3'] },
+      { sel: '#aiCard', classes: ['wow-card', 'floaty', 'floaty-slow', 'floaty-delay-1'] },
+    ];
+    map.forEach(({ sel, classes }) => {
+      const el = document.querySelector(sel);
+      if (!el) return;
+      classes.forEach(c => el.classList.add(c));
+    });
+  })();
+
+  // Rotate weekly breakdown highlight
+  setInterval(() => {
+    if (prefersReducedMotion) return;
+    tickWeeklyBreakdown();
+  }, 2200);
+
+  // Ambient activity trickle (demo feels alive)
+  setInterval(() => {
+    if (prefersReducedMotion) return;
+    const roll = Math.random();
+    if (roll < 0.55) {
+      // habit earns credits
+      const earn = clamp(1 + Math.random() * 3.5, 1, 4);
+      state.waterCredits = clamp((state.waterCredits || 0) + earn, 0, 160);
+      const entry = { label: 'AI tip followed (credits earned)', liters: 0, ts: Date.now() };
+      state.activities.push(entry);
+      if (state.activities.length > 14) state.activities.shift();
+      flashActivityOnce(entry);
+    } else {
+      // small usage event
+      logActivity(Math.random() < 0.5 ? 'garden' : 'dishwasher');
+      return;
+    }
+    save();
+    render();
+  }, 12000);
+
+  // Dynamic gamification tasks (appear/disappear)
+  const challengesEl = document.querySelector('#gamificationCard .challenges');
+  const taskPool = [
+    { type: 'shower', title: '5-minute showers', desc: 'Complete 3 times this week', rewardLabel: 'Complete' },
+    { type: 'laundry', title: 'Full-load laundry', desc: 'Log 2 loads', rewardLabel: 'Complete' },
+    { type: 'leak', title: 'Leak sweep', desc: 'Check taps and toilets today', rewardLabel: 'Done' },
+    { type: 'timed', title: 'Smart rinse', desc: 'Turn tap off while scrubbing', rewardLabel: 'Done' },
+  ];
+  function renderRandomTasks() {
+    if (!challengesEl) return;
+    const howMany = Math.random() < 0.65 ? 2 : 1;
+    const shuffled = taskPool.slice().sort(() => Math.random() - 0.5).slice(0, howMany);
+    challengesEl.innerHTML = '';
+    shuffled.forEach(t => {
+      const row = document.createElement('div');
+      row.className = 'challenge';
+      row.innerHTML = `
+        <div>
+          <strong>${t.title}</strong>
+          <p>${t.desc}</p>
+        </div>
+        <button class="btn small" data-complete="${t.type}" data-title="${t.title}">${t.rewardLabel}</button>
+      `;
+      challengesEl.appendChild(row);
+      if (hasGsap() && !prefersReducedMotion) window.gsap.from(row, { y: 6, opacity: 0, duration: 0.25 });
+    });
+  }
+  renderRandomTasks();
+  setInterval(() => {
+    if (prefersReducedMotion) return;
+    renderRandomTasks();
+  }, 8500);
 
   // AI loop (fast enough to feel alive)
   ensureAsiwEngine();
@@ -700,7 +1304,50 @@
 
   function setAssistantText(text) {
     if (!els.assistantText) return;
-    els.assistantText.textContent = text;
+    const useHtml = typeof text === 'object' && text && typeof text.html === 'string';
+    if (useHtml) {
+      els.assistantText.innerHTML = text.html;
+    } else {
+      els.assistantText.textContent = String(text);
+    }
+  }
+
+  const aquaFacts = [
+    {
+      html: `“Water and sanitation flow through every aspect of sustainable development.” <a href="https://www.unwater.org/water-facts" target="_blank" rel="noopener">UN‑Water</a>`
+    },
+    {
+      html: `Global water withdrawals are ~69% agriculture, 12% municipal, 19% industrial. <a href="https://www.fao.org/aquastat/en/overview/methodology/water-use" target="_blank" rel="noopener">FAO AQUASTAT</a>`
+    },
+    {
+      html: `In 2022, 6B people used safely managed drinking-water; 2.2B did not. <a href="https://www.who.int/news-room/fact-sheets/detail/drinking-water" target="_blank" rel="noopener">WHO</a>`
+    },
+    {
+      html: `Unsafe drinking-water is linked to diseases and ~505,000 diarrhoeal deaths/year. <a href="https://www.who.int/news-room/fact-sheets/detail/drinking-water" target="_blank" rel="noopener">WHO</a>`
+    },
+  ];
+
+  let factIdx = 0;
+  function showNextFact() {
+    if (!els.assistantBar || els.assistantBar.classList.contains('hidden')) return;
+    if (guideAuto) return;
+    // Don't override important contextual nudge
+    const credits = clamp(state.waterCredits || 0, 0, 160);
+    if (credits < 18) return;
+    factIdx = (factIdx + 1) % aquaFacts.length;
+    setAssistantText(aquaFacts[factIdx]);
+  }
+
+  function refreshTipsFromFacts() {
+    const tips = document.getElementById('tipsCarousel');
+    if (!tips) return;
+    const items = Array.from(tips.children);
+    if (!items.length) return;
+    // Fill the existing 3 list items with rotating fact snippets
+    for (let i = 0; i < items.length; i++) {
+      const fact = aquaFacts[(factIdx + i) % aquaFacts.length];
+      items[i].innerHTML = fact.html;
+    }
   }
 
   function showGuideStep(idx, { runAction } = { runAction: true }) {
@@ -782,15 +1429,28 @@
     if (!els.assistantBar || els.assistantBar.classList.contains('hidden')) return;
     if (guideAuto) return;
     const credits = clamp(state.waterCredits || 0, 0, 160);
-    if (state.lowSupply) {
-      setAssistantText('Low supply mode: points + credits are boosted. Complete a challenge for a quick win.');
-      return;
-    }
     if (credits < 18) {
       setAssistantText('Tip: Water Credits are low — complete a habit challenge to re-enable stronger AI watering.');
       return;
     }
   }, 8000);
+
+  // Keep AquaGuide noticeable + keep facts rotating when idle
+  if (els.assistantBar) {
+    setInterval(() => {
+      if (els.assistantBar.classList.contains('hidden')) return;
+      els.assistantBar.classList.add('attention');
+      setTimeout(() => els.assistantBar && els.assistantBar.classList.remove('attention'), 1600);
+    }, 12000);
+  }
+
+  // Facts rotation (assistant + tips)
+  refreshTipsFromFacts();
+  setInterval(() => {
+    if (prefersReducedMotion) return;
+    showNextFact();
+    refreshTipsFromFacts();
+  }, 10000);
 
   // ---------------------------------------------------------------------------
   // Mini game: Pipe Puzzle (Where\'s-my-water inspired)
@@ -1078,5 +1738,9 @@
 
   // init game
   if (els.gameCard) loadLevel(0);
+
+  // Weather card (animated sky + data)
+  startWeatherLoop();
+  startCloudySky();
 })();
 

@@ -39,11 +39,13 @@
     <header class="topbar">
       <div class="brand">
         <img src="assets/icon.svg" alt="icon" />
-        <span>WaterFlow</span>
+        <div class="brand-text">
+          <span class="brand-title">WaterFlow</span>
+          <span class="brand-subtitle">Ras Al Khaimah · RAK • 2026</span>
+        </div>
       </div>
       <div class="actions">
         <button id="startDemo" class="btn">Start Demo</button>
-        <button id="simulateLowSupply" class="btn warn">Simulate Low Supply</button>
         <button id="openSettings" class="btn">Settings</button>
       </div>
     </header>
@@ -87,12 +89,47 @@
 
       <section class="grid">
         <div class="card glass">
-          <h3>Weekly Breakdown</h3>
+          <h3><span class="h3-row">
+            <svg class="h3-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 19V5"></path><path d="M4 19h16"></path><path d="M8 17V9"></path><path d="M12 17V7"></path><path d="M16 17v-5"></path>
+            </svg>
+            <span>Weekly Breakdown</span>
+          </span></h3>
           <canvas id="weeklyChart" height="140"></canvas>
         </div>
 
+        <div class="card glass weather-card" id="weatherCard">
+          <h3><span class="h3-row">
+            <svg class="h3-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M7 18h10a4 4 0 0 0 0-8 6 6 0 0 0-11 2A4 4 0 0 0 7 18z"></path>
+            </svg>
+            <span>Weather</span>
+          </span></h3>
+          <div class="weather-sky" aria-label="Animated cloudy sky">
+            <canvas id="weatherSky" class="weather-canvas" width="920" height="220"></canvas>
+            <div class="weather-overlay">
+              <div class="weather-row">
+                <div>
+                  <div class="weather-temp" id="weatherTemp">--°C</div>
+                  <div class="weather-summary" id="weatherSummary">Loading…</div>
+                </div>
+                <div class="weather-side">
+                  <div class="weather-loc" id="weatherLocation">Ras Al Khaimah</div>
+                  <div class="weather-meta" id="weatherMeta">Wind -- km/h • Humidity --%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="weather-note">Live data when available (fallback to simulated).</p>
+        </div>
+
         <div class="card glass" id="gamificationCard">
-          <h3>Gamification</h3>
+          <h3><span class="h3-row">
+            <svg class="h3-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M8 21h8"></path><path d="M12 17v4"></path><path d="M7 4h10"></path><path d="M17 4v6a5 5 0 0 1-10 0V4"></path>
+            </svg>
+            <span>Gamification</span>
+          </span></h3>
           <div class="gamify">
             <div class="badges" id="badges">
               <!-- badges injected -->
@@ -128,7 +165,12 @@
         </div>
 
         <div class="card glass" id="activityCard">
-          <h3>Activity Log</h3>
+          <h3><span class="h3-row">
+            <svg class="h3-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M8 6h13"></path><path d="M8 12h13"></path><path d="M8 18h13"></path><path d="M3 6h.01"></path><path d="M3 12h.01"></path><path d="M3 18h.01"></path>
+            </svg>
+            <span>Activity Log</span>
+          </span></h3>
           <div class="activity">
             <div class="actions">
               <button class="btn small" data-log="shower">Log Shower (50L)</button>
@@ -140,7 +182,12 @@
         </div>
 
         <div class="card glass telemetry-card" id="telemetryCard">
-          <h3>Solar & Battery Telemetry</h3>
+          <h3><span class="h3-row">
+            <svg class="h3-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"></path>
+            </svg>
+            <span>Solar &amp; Battery Telemetry</span>
+          </span></h3>
           <div class="telemetry-grid">
             <div class="telemetry-block">
               <label>Irradiance <span id="irradianceVal">650 W/m²</span></label>
@@ -167,7 +214,13 @@
         </div>
 
         <div class="card glass ai-card" id="aiCard">
-          <h3>AI Watering (Powered by Your Habits)</h3>
+          <h3><span class="h3-row">
+            <svg class="h3-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 2s4 4.5 4 8.5A4 4 0 1 1 8 10.5C8 6.5 12 2 12 2z"></path>
+              <path d="M7 22c1.5-2 3.5-3 5-3s3.5 1 5 3"></path>
+            </svg>
+            <span>AI Watering (Powered by Your Habits)</span>
+          </span></h3>
           <p class="ai-subtitle">Earn Water Credits by conserving at home. The AI uses those credits to keep your plant healthy without draining solar + battery.</p>
 
           <div class="ai-grid">
@@ -207,7 +260,12 @@
         </div>
 
         <div class="card glass game-card" id="gameCard">
-          <h3>Mini Game: Pipe Puzzle</h3>
+          <h3><span class="h3-row">
+            <svg class="h3-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M7 3h10v6H7z"></path><path d="M12 9v6"></path><path d="M7 15h10v6H7z"></path>
+            </svg>
+            <span>Mini Game: Pipe Puzzle</span>
+          </span></h3>
           <p class="game-subtitle">Rotate pipes to route water from the tap to the plant. Win Water Credits.</p>
 
           <div class="game-top">
@@ -258,14 +316,6 @@
         <button id="closeSettings" class="btn ghost">Close</button>
       </div>
     </div>
-  </div>
-
-  <!-- Playful Alert (non-harmful) -->
-  <div id="alertBar" class="alert hidden">
-    <div class="alert-content">
-      <strong>Heads-up:</strong> Water supply is low. Earn double points by conserving now.
-    </div>
-    <button id="dismissAlert" class="btn small ghost">Dismiss</button>
   </div>
 
   <!-- AI Guide Bar (self-presenting, short-attention-span friendly) -->

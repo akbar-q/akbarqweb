@@ -2,7 +2,7 @@
 :root {
   --bg: #0b0f13;
   --bg-alt: #0e141a;
-  --glass: rgba(255,255,255,0.06);
+  --glass: rgba(255,255,255,0.10);
   --text: #e6eef7;
   --muted: #94a3b8;
   --primary: #38bdf8;
@@ -21,9 +21,133 @@ body.dark {
   background:
     radial-gradient(1200px 600px at 80% -20%, #0f1a24 0%, #0b0f13 60%),
     radial-gradient(600px 400px at -10% 120%, #081016 0%, #0b0f13 60%);
+  position: relative;
+  isolation: isolate;
+}
+
+/* Subtle animated background shift (dark blue ↔ teal) */
+body.dark::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(1100px 700px at 20% 10%, rgba(34,211,238,0.08) 0%, rgba(11,15,19,0) 60%),
+    radial-gradient(900px 600px at 90% 90%, rgba(56,189,248,0.08) 0%, rgba(11,15,19,0) 55%),
+    linear-gradient(180deg, rgba(9,18,36,0.35), rgba(4,48,60,0.14));
+  opacity: 0.9;
+  animation: bgShift 18s ease-in-out infinite alternate;
+  filter: saturate(1.05);
+}
+
+/* Extra subtle ambient layer (keeps background from feeling static) */
+body.dark::after {
+  content: "";
+  position: fixed;
+  inset: -15%;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(800px 520px at 15% 80%, color-mix(in srgb, var(--primary) 10%, transparent) 0%, transparent 60%),
+    radial-gradient(900px 560px at 85% 20%, color-mix(in srgb, var(--accent) 10%, transparent) 0%, transparent 58%),
+    radial-gradient(700px 520px at 55% 55%, color-mix(in srgb, var(--warn) 7%, transparent) 0%, transparent 62%);
+  opacity: 0.7;
+  filter: saturate(1.05);
+  animation: bgDrift 26s ease-in-out infinite alternate;
+}
+
+@keyframes bgDrift {
+  0% { transform: translate3d(0,0,0) scale(1); opacity: 0.55; }
+  100% { transform: translate3d(0,-14px,0) scale(1.02); opacity: 0.8; }
+}
+
+@keyframes bgShift {
+  0% { opacity: 0.65; transform: translate3d(0,0,0); }
+  100% { opacity: 0.95; transform: translate3d(0,-10px,0); }
 }
 
 .hidden { display: none; }
+
+/* Micro-animations (keep UI feeling live) */
+.value-pop { animation: valuePop 520ms ease-out; }
+@keyframes valuePop {
+  0% { transform: translate3d(0,0,0) scale(1); }
+  35% { transform: translate3d(0,-1px,0) scale(1.05); }
+  100% { transform: translate3d(0,0,0) scale(1); }
+}
+
+.value-pulse { animation: valuePulse 1.3s ease-in-out infinite; }
+@keyframes valuePulse {
+  0%, 100% { opacity: 0.92; }
+  50% { opacity: 1; }
+}
+
+.live-wiggle { animation: liveWiggle 1.8s ease-in-out infinite; }
+@keyframes liveWiggle {
+  0%, 100% { transform: translate3d(0,0,0); }
+  50% { transform: translate3d(0,-1px,0); }
+}
+
+/* Flash on new activity */
+.activity-list li { position: relative; }
+.activity-list li.flash::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  opacity: 0;
+  pointer-events: none;
+  animation: logFlash 700ms ease-out;
+}
+@keyframes logFlash {
+  0% { opacity: 0.14; }
+  100% { opacity: 0; }
+}
+
+/* Telemetry SoC scan (orange bar) */
+.soc-fill { position: relative; overflow: hidden; }
+.soc-fill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -35%;
+  width: 35%;
+  background: linear-gradient(90deg, transparent, var(--warn), transparent);
+  opacity: 0.35;
+  animation: socScan 2.2s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes socScan {
+  0% { transform: translate3d(0,0,0); opacity: 0.25; }
+  100% { transform: translate3d(220%,0,0); opacity: 0.45; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .value-pop,
+  .value-pulse,
+  .live-wiggle,
+  .activity-list li.flash::before,
+  .soc-fill::after,
+  body.dark::before,
+  body.dark::after,
+  .meter-fill,
+  .meter-fill::after,
+  .meter-target {
+    animation: none !important;
+  }
+
+  .assistant-bar.attention {
+    animation: none !important;
+  }
+
+  .wow-card::before,
+  .wow-card::after,
+  .floaty {
+    animation: none !important;
+  }
+}
 
 /* Splash screen */
 .splash { position: fixed; inset: 0; display: grid; place-items: center; z-index: 50; overflow: hidden; pointer-events: none; }
@@ -48,7 +172,14 @@ body.dark {
 .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; backdrop-filter: blur(10px); background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); border-bottom: 1px solid rgba(255,255,255,0.06); position: sticky; top: 0; z-index: 10; }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: 0.02em; }
 .brand img { width: 24px; height: 24px; }
+.brand-text { display: flex; flex-direction: column; line-height: 1.05; }
+.brand-title { font-weight: 800; letter-spacing: 0.02em; }
+.brand-subtitle { font-weight: 600; font-size: 0.75rem; color: var(--muted); letter-spacing: 0.08em; }
 .actions { display: flex; gap: 8px; }
+
+/* Header icon row */
+.h3-row { display: inline-flex; align-items: center; gap: 8px; }
+.h3-icon { width: 18px; height: 18px; opacity: 0.92; flex: 0 0 auto; }
 
 .content { max-width: 1100px; margin: 24px auto; padding: 0 20px; }
 .hero { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 16px; }
@@ -57,10 +188,90 @@ body.dark {
 .glass { background: var(--glass); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.35); }
 .card { padding: 16px; }
 
+/* WOW layer: animated glint border + subtle float (opt-in via .wow-card) */
+.wow-card { position: relative; }
+.wow-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 18px;
+  background:
+    conic-gradient(from 180deg at 50% 50%,
+      color-mix(in srgb, var(--accent) 50%, transparent),
+      color-mix(in srgb, var(--primary) 45%, transparent),
+      color-mix(in srgb, var(--warn) 30%, transparent),
+      color-mix(in srgb, var(--primary) 45%, transparent),
+      color-mix(in srgb, var(--accent) 50%, transparent));
+  opacity: 0.22;
+  filter: blur(10px);
+  animation: wowSpin 10s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+.wow-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background:
+    linear-gradient(120deg,
+      rgba(255,255,255,0.00),
+      color-mix(in srgb, var(--text) 10%, transparent),
+      rgba(255,255,255,0.00));
+  opacity: 0.55;
+  animation: wowSweep 4.6s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+.wow-card > * { position: relative; z-index: 1; }
+
+@keyframes wowSpin { to { transform: rotate(1turn); } }
+@keyframes wowSweep {
+  0% { transform: translate3d(-22%,0,0); opacity: 0.12; }
+  45% { opacity: 0.45; }
+  100% { transform: translate3d(22%,0,0); opacity: 0.12; }
+}
+
+.floaty { animation: floaty 5.8s ease-in-out infinite; will-change: transform; }
+@keyframes floaty {
+  0%, 100% { transform: translate3d(0,0,0); }
+  50% { transform: translate3d(0,-6px,0); }
+}
+
+.floaty-slow { animation-duration: 7.4s; }
+.floaty-fast { animation-duration: 4.9s; }
+.floaty-delay-1 { animation-delay: -1.2s; }
+.floaty-delay-2 { animation-delay: -2.4s; }
+.floaty-delay-3 { animation-delay: -3.6s; }
+
 .meter-card { padding: 16px; }
 .meter { position: relative; height: 18px; border-radius: 12px; background: rgba(255,255,255,0.08); overflow: hidden; }
-.meter-fill { position: absolute; inset: 0; height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); width: 0; }
+.meter-fill {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--primary), var(--accent), var(--warn), var(--accent), var(--primary));
+  background-size: 240% 100%;
+  animation: meterFlow 5.5s linear infinite;
+  overflow: hidden;
+}
+.meter-fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--text) 18%, transparent), transparent);
+  transform: translate3d(-60%,0,0);
+  animation: meterScan 2.4s ease-in-out infinite;
+  opacity: 0.7;
+  pointer-events: none;
+}
+@keyframes meterFlow { to { background-position: 240% 50%; } }
+@keyframes meterScan { 0% { transform: translate3d(-60%,0,0); } 100% { transform: translate3d(60%,0,0); } }
 .meter-target { position: absolute; top: -4px; width: 2px; height: 26px; background: rgba(255,255,255,0.7); }
+.meter-target { animation: targetPulse 1.9s ease-in-out infinite; }
+@keyframes targetPulse { 0%,100% { opacity: 0.45; } 50% { opacity: 0.95; } }
 .meter-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px; }
 .stat-value { font-size: 1.4rem; font-weight: 700; }
 .stat-label { color: var(--muted); font-size: 0.9rem; }
@@ -68,6 +279,8 @@ body.dark {
 .context-card { padding: 16px; }
 .tips { list-style: none; padding-left: 16px; color: var(--muted); }
 .tips li { margin: 6px 0; }
+.tips a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(34,211,238,0.35); }
+.tips a:hover { border-bottom-color: rgba(34,211,238,0.75); }
 
 .gamify { display: grid; grid-template-columns: 1fr; gap: 12px; }
 .badges { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -82,6 +295,39 @@ body.dark {
 .activity .actions { display: flex; gap: 8px; margin-bottom: 8px; }
 .activity-list { list-style: none; padding: 0; margin: 0; max-height: 180px; overflow: auto; }
 .activity-list li { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+
+/* Weather card */
+.weather-card .weather-note { margin: 10px 0 0; color: var(--muted); font-size: 0.8rem; }
+.weather-sky {
+  margin-top: 10px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.03);
+  position: relative;
+  height: 180px;
+}
+.weather-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.weather-overlay {
+  position: absolute;
+  inset: 0;
+  padding: 14px;
+  display: flex;
+  align-items: flex-end;
+  background: linear-gradient(180deg, rgba(0,0,0,0.10), rgba(0,0,0,0.38));
+}
+.weather-row { width: 100%; display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; }
+.weather-temp { font-size: 2.0rem; font-weight: 800; letter-spacing: 0.01em; }
+.weather-summary { color: #d6e8f7; font-weight: 600; }
+.weather-side { text-align: right; }
+.weather-loc { font-weight: 700; }
+.weather-meta { color: var(--muted); font-size: 0.9rem; }
 
 .footer { display: flex; justify-content: space-between; padding: 16px 20px; color: var(--muted); }
 
@@ -126,11 +372,32 @@ body.dark {
   gap: 12px;
   align-items: center;
 }
-.assistant-bar.glass { background: rgba(255,255,255,0.10); }
+.assistant-bar.glass {
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(14px);
+}
 .assistant-bar.with-alert { bottom: 84px; }
 .assistant-title { font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
 .assistant-text { color: #d6e8f7; }
+.assistant-text a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(34,211,238,0.35); }
+.assistant-text a:hover { border-bottom-color: rgba(34,211,238,0.75); }
 .assistant-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+/* Make AquaGuide more apparent */
+.assistant-bar.attention {
+  animation: assistantPop 520ms ease-out;
+}
+@keyframes assistantPop {
+  0% { transform: translateX(-50%) translate3d(0,0,0) scale(1); }
+  40% { transform: translateX(-50%) translate3d(0,-2px,0) scale(1.01); }
+  100% { transform: translateX(-50%) translate3d(0,0,0) scale(1); }
+}
+.assistant-bar.glass {
+  box-shadow:
+    0 18px 60px rgba(0,0,0,0.55),
+    0 0 0 1px rgba(255,255,255,0.12),
+    0 0 34px rgba(34,211,238,0.16);
+}
 
 /* Mini game: pipe puzzle */
 .game-card .game-subtitle { margin-top: 6px; color: var(--muted); font-size: 0.92rem; }
@@ -210,9 +477,9 @@ input::placeholder { color: var(--muted); }
 .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 8px 0; }
 
 /* Modal */
-.modal { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,0.4); z-index: 20; }
+.modal { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,0.55); z-index: 20; }
 .modal-dialog { width: min(520px, 92vw); padding: 16px; }
-.modal-dialog.glass { background: rgba(255,255,255,0.10); }
+.modal-dialog.glass { background: rgba(255,255,255,0.14); }
 .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; }
 .modal.hidden { display: none; }
 
