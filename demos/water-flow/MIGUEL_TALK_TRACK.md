@@ -49,6 +49,24 @@ That contrast is what hit me hardest.
 I came from a place where water was everywhere.
 To a place where clean water can feel like a luxury.
 
+## Quick prop moment: “Murky Water” (optional, ~20 seconds)
+
+> Goal: a visual that lands instantly.
+>
+> Safety: do **not** drink any mixture with “sediment”. If you do a sip, keep it to plain, clean water only.
+
+*(Hold up two clear cups/bottles: one labeled “Clean”, one labeled “Murky”.)*
+
+Sometimes the difference between “water” and “safe water” is invisible… until it isn’t.
+
+*(Lift the “Murky” cup so the audience can see it.)*
+
+I used to see water everywhere. But not all water is something you can trust.
+
+*(Stage beat: mime a small sip, then cough **as acting**, not because you actually swallowed anything unpleasant.)*
+
+And that’s the part people forget: water can be everywhere… and still not be usable.
+
 ## Why this project exists (1:30–2:40)
 
 So this project starts with a simple thought:
@@ -151,3 +169,30 @@ Thank you.
 - **Show Telemetry** when you say “invisible becomes visible.”
 - **Show AI watering** when you say “tradeoffs.”
 - **Show the Pipe Puzzle** when you say “the path must be connected.”
+
+---
+
+## Prop recipe (backstage notes)
+
+### “Murky Water” (most common)
+
+**Ingredients**
+
+- Clear water
+- A tiny pinch of instant coffee **or** black tea
+- Optional: a drop of milk or almond milk
+
+**How**
+
+1. Start with clear water.
+2. Add very small amounts of tea or coffee until it’s light brown.
+3. Add 1–2 drops of milk to make it cloudy.
+4. Stir gently—don’t fully mix for uneven murkiness.
+
+### Sediment effect (visual only)
+
+- Crush a small amount of biscuits into fine crumbs.
+- Add a *pinch* to the bottom of a **sealed** clear bottle (or a cup you will **not** drink from).
+- Swirl lightly so it looks like settling sediment.
+
+**Important:** Keep a separate cup of plain, clean water if you want to actually sip on stage.
