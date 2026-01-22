@@ -119,6 +119,7 @@
     gameHint: document.getElementById('gameHint'),
     gameStatus: document.getElementById('gameStatus'),
     gameReset: document.getElementById('gameReset'),
+    gameSolve: document.getElementById('gameSolve'),
     gameNext: document.getElementById('gameNext'),
 
     // Weather
@@ -1407,23 +1408,6 @@
     });
   }
 
-  // Autostart the guide unless the user already interacted
-  let userInteracted = false;
-  ['click', 'keydown', 'pointerdown', 'touchstart'].forEach(ev => {
-    window.addEventListener(ev, () => { userInteracted = true; }, { once: true, passive: true });
-  });
-  window.addEventListener('load', () => {
-    const url = new URL(window.location.href);
-    const wantsDemo = url.searchParams.get('demo') === '1';
-    setTimeout(() => {
-      if (wantsDemo || !userInteracted) {
-        if (els.assistantBar) els.assistantBar.classList.remove('hidden');
-        showGuideStep(0, { runAction: false });
-        runGuideAuto();
-      }
-    }, 1400);
-  });
-
   // Contextual “AI-ish” nudges (when not in auto tour)
   setInterval(() => {
     if (!els.assistantBar || els.assistantBar.classList.contains('hidden')) return;
@@ -1478,105 +1462,107 @@
     return [];
   }
 
-  const levels = [
-    {
-      w: 5,
-      h: 5,
-      source: [0, 2],
-      target: [4, 2],
-      hint: 'Warm-up. Short path, few turns.',
-      tiles: [
-        null, null, null, null, null,
-        null, { type: 'L', rot: 1 }, { type: 'S', rot: 1 }, { type: 'L', rot: 2 }, null,
-        'SRC', { type: 'L', rot: 3 }, null, { type: 'L', rot: 0 }, 'TGT',
-        null, { type: 'L', rot: 0 }, { type: 'S', rot: 1 }, { type: 'L', rot: 3 }, null,
-        null, null, null, null, null,
-      ]
-    },
-    {
-      w: 5,
-      h: 5,
-      source: [0, 1],
-      target: [4, 3],
-      hint: 'Two bends. Keep the flow connected.',
-      tiles: [
-        null, null, null, null, null,
-        'SRC', { type: 'L', rot: 2 }, { type: 'S', rot: 0 }, { type: 'L', rot: 1 }, null,
-        null, { type: 'S', rot: 1 }, null, { type: 'S', rot: 1 }, null,
-        null, { type: 'L', rot: 0 }, { type: 'S', rot: 1 }, { type: 'L', rot: 3 }, 'TGT',
-        null, null, null, null, null,
-      ]
-    },
-    {
-      w: 5,
-      h: 5,
-      source: [0, 2],
-      target: [4, 2],
-      hint: 'A bit longer. Rotate until the path clicks.',
-      tiles: [
-        null, { type: 'L', rot: 0 }, { type: 'S', rot: 1 }, { type: 'L', rot: 3 }, null,
-        null, { type: 'S', rot: 0 }, null, { type: 'S', rot: 0 }, null,
-        'SRC', { type: 'L', rot: 1 }, { type: 'S', rot: 1 }, { type: 'L', rot: 2 }, 'TGT',
-        null, { type: 'S', rot: 0 }, null, { type: 'S', rot: 0 }, null,
-        null, { type: 'L', rot: 2 }, { type: 'S', rot: 1 }, { type: 'L', rot: 1 }, null,
-      ]
-    },
-    {
-      w: 5,
-      h: 5,
-      source: [0, 2],
-      target: [4, 4],
-      hint: 'Snake it down. Watch the corner pieces.',
-      tiles: [
-        null, null, { type: 'S', rot: 0 }, null, null,
-        null, { type: 'L', rot: 3 }, { type: 'S', rot: 1 }, { type: 'L', rot: 1 }, null,
-        'SRC', { type: 'S', rot: 0 }, { type: 'L', rot: 1 }, null, null,
-        null, null, { type: 'S', rot: 1 }, { type: 'L', rot: 0 }, null,
-        null, { type: 'L', rot: 2 }, { type: 'L', rot: 2 }, { type: 'S', rot: 0 }, 'TGT',
-      ]
-    },
-    {
-      w: 5,
-      h: 5,
-      source: [0, 1],
-      target: [4, 1],
-      hint: 'Detour time. Direct routes are overrated.',
-      tiles: [
-        null, { type: 'L', rot: 0 }, { type: 'S', rot: 0 }, { type: 'L', rot: 1 }, null,
-        'SRC', { type: 'L', rot: 0 }, null, { type: 'L', rot: 2 }, 'TGT',
-        null, { type: 'S', rot: 1 }, { type: 'L', rot: 3 }, { type: 'S', rot: 0 }, null,
-        null, { type: 'L', rot: 1 }, { type: 'S', rot: 1 }, { type: 'L', rot: 0 }, null,
-        null, null, null, null, null,
-      ]
-    },
-    {
-      w: 5,
-      h: 5,
-      source: [0, 0],
-      target: [4, 2],
-      hint: 'Top-down twist. Keep the middle connected.',
-      tiles: [
-        'SRC', { type: 'S', rot: 0 }, { type: 'L', rot: 1 }, null, null,
-        null, { type: 'L', rot: 2 }, { type: 'S', rot: 1 }, { type: 'L', rot: 3 }, null,
-        null, null, { type: 'L', rot: 0 }, { type: 'S', rot: 1 }, 'TGT',
-        null, { type: 'L', rot: 1 }, { type: 'S', rot: 0 }, { type: 'L', rot: 2 }, null,
-        null, null, null, null, null,
-      ]
-    },
-    {
-      w: 5,
-      h: 5,
-      source: [0, 3],
-      target: [4, 3],
-      hint: 'Final boss: more pieces, more misdirection.',
-      tiles: [
-        null, { type: 'L', rot: 2 }, { type: 'S', rot: 1 }, { type: 'L', rot: 1 }, null,
-        null, { type: 'S', rot: 0 }, null, { type: 'S', rot: 0 }, null,
-        null, { type: 'L', rot: 1 }, { type: 'S', rot: 1 }, { type: 'L', rot: 2 }, null,
-        'SRC', { type: 'S', rot: 1 }, { type: 'L', rot: 0 }, { type: 'S', rot: 0 }, 'TGT',
-        null, { type: 'L', rot: 3 }, { type: 'S', rot: 1 }, { type: 'L', rot: 0 }, null,
-      ]
+  function normalizeSolution(level) {
+    if (!level || !Array.isArray(level.tiles) || !Array.isArray(level.solution)) return level;
+    if (level.solution.length !== level.tiles.length) {
+      throw new Error('Pipe puzzle level solution length mismatch.');
     }
+    return level;
+  }
+
+  // Notes:
+  // - Source always outputs to the East.
+  // - Target always accepts from the West.
+  // Levels include a `solution` array (same shape as `tiles`) to support Auto Solve.
+  const levels = [
+    normalizeSolution({
+      w: 5,
+      h: 5,
+      source: [0, 2],
+      target: [4, 2],
+      hint: 'Level 1: rotate until the middle row connects.',
+      tiles: [
+        null, null, null, null, null,
+        null, null, null, null, null,
+        'SRC', { type: 'S', rot: 0 }, { type: 'S', rot: 1 }, { type: 'S', rot: 1 }, 'TGT',
+        null, null, null, null, null,
+        null, null, null, null, null,
+      ],
+      solution: [
+        null, null, null, null, null,
+        null, null, null, null, null,
+        'SRC', 1, 1, 1, 'TGT',
+        null, null, null, null, null,
+        null, null, null, null, null,
+      ]
+    }),
+    normalizeSolution({
+      w: 5,
+      h: 5,
+      source: [0, 1],
+      target: [4, 3],
+      hint: 'Level 2: two corners. Follow the L-shape.',
+      tiles: [
+        null, null, null, null, null,
+        'SRC', { type: 'L', rot: 0 }, null, null, null,
+        null, { type: 'S', rot: 1 }, null, null, null,
+        null, { type: 'L', rot: 1 }, { type: 'S', rot: 0 }, { type: 'S', rot: 1 }, 'TGT',
+        null, null, null, null, null,
+      ],
+      solution: [
+        null, null, null, null, null,
+        'SRC', 2, null, null, null,
+        null, 0, null, null, null,
+        null, 0, 1, 1, 'TGT',
+        null, null, null, null, null,
+      ]
+    }),
+    normalizeSolution({
+      w: 6,
+      h: 6,
+      source: [0, 2],
+      target: [5, 4],
+      hint: 'Level 3: bigger grid. Turn down, then run to the plant.',
+      tiles: [
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        'SRC', { type: 'S', rot: 0 }, { type: 'L', rot: 0 }, null, null, null,
+        null, null, { type: 'S', rot: 1 }, null, null, null,
+        null, null, { type: 'L', rot: 2 }, { type: 'S', rot: 0 }, { type: 'S', rot: 0 }, 'TGT',
+        null, null, null, null, null, null,
+      ],
+      solution: [
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        'SRC', 1, 2, null, null, null,
+        null, null, 0, null, null, null,
+        null, null, 0, 1, 1, 'TGT',
+        null, null, null, null, null, null,
+      ]
+    }),
+    normalizeSolution({
+      w: 6,
+      h: 6,
+      source: [0, 3],
+      target: [5, 3],
+      hint: 'Level 4: a simple detour. Down one, across, then up.',
+      tiles: [
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, { type: 'L', rot: 0 }, { type: 'S', rot: 0 }, { type: 'S', rot: 0 }, { type: 'L', rot: 0 }, null,
+        'SRC', { type: 'L', rot: 0 }, null, null, { type: 'S', rot: 0 }, 'TGT',
+        null, { type: 'S', rot: 1 }, { type: 'S', rot: 1 }, { type: 'S', rot: 1 }, { type: 'L', rot: 0 }, null,
+        null, null, null, null, null, null,
+      ],
+      solution: [
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, 1, 0, 0, 2, null,
+        'SRC', 2, null, null, 0, 'TGT',
+        null, 0, 1, 1, 3, null,
+        null, null, null, null, null, null,
+      ]
+    }),
   ];
 
   let gameLevelIdx = 0;
@@ -1592,6 +1578,18 @@
       if (!t || t === 'SRC' || t === 'TGT') return t;
       return { type: t.type, rot: t.rot };
     });
+  }
+
+  function applySolution(level, tiles) {
+    if (!level || !Array.isArray(level.solution) || !Array.isArray(tiles)) return;
+    for (let i = 0; i < tiles.length; i++) {
+      const t = tiles[i];
+      const sol = level.solution[i];
+      if (!t || t === 'SRC' || t === 'TGT') continue;
+      if (typeof sol === 'number') {
+        t.rot = ((sol % 4) + 4) % 4;
+      }
+    }
   }
 
   function svgForTile(tile, highlightEdges) {
@@ -1782,6 +1780,15 @@
     els.gameReset.addEventListener('click', () => {
       loadLevel(gameLevelIdx);
       if (els.gameStatus) els.gameStatus.textContent = 'Reset. Click tiles to rotate.';
+    });
+  }
+  if (els.gameSolve) {
+    els.gameSolve.addEventListener('click', () => {
+      const level = levels[gameLevelIdx];
+      if (!level) return;
+      applySolution(level, gameTiles);
+      renderGame();
+      if (els.gameStatus) els.gameStatus.textContent = 'Auto-solved. You can move to the next level.';
     });
   }
   if (els.gameNext) {
