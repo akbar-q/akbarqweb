@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Akbar Q</title>
+  <meta name="description" content="Index of interactive showcase pages in this repo." />
+
+  <link rel="shortcut icon" href="../assets/images/logospin.gif" type="image/x-icon">
+
+  <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap-grid.min.css">
+  <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap-reboot.min.css">
+  <link rel="stylesheet" href="../assets/theme/css/style.css">
+  <link rel="preload" href="https://fonts.googleapis.com/css?family=Oxanium:200,300,400,500,600,700,800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oxanium:200,300,400,500,600,700,800&display=swap"></noscript>
+  <link rel="preload" href="https://fonts.googleapis.com/css?family=Inter+Tight:100,200,300,400,500,600,700,800,900,100i,200i,300i,400i,500i,600i,700i,800i,900i&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter+Tight:100,200,300,400,500,600,700,800,900,100i,200i,300i,400i,500i,600i,700i,800i,900i&display=swap"></noscript>
+  <link rel="preload" href="https://fonts.googleapis.com/css?family=Montserrat+Alternates:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat+Alternates:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap"></noscript>
+  <link rel="stylesheet" href="../assets/mobirise/css/mbr-additional.css" type="text/css">
+
+  <style>
+    body {
+      font-family: 'Montserrat Alternates', sans-serif;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Oxanium', display;
+    }
+
+    body {
+      background-color: #002724;
+    }
+
+    .matrix-bg {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.55;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .matrix-bg {
+        display: none;
+      }
+    }
+
+    .page-shell { max-width: 1100px; }
+
+    .brandmark {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+    .brandmark .brand-logo {
+      width: 84px;
+      height: 84px;
+      border-radius: 999px;
+      object-fit: cover;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+    .brandmark .brand-name {
+      line-height: 1;
+      letter-spacing: 0.02em;
+    }
+    .brandmark .brand-sub {
+      font-family: 'Montserrat Alternates', sans-serif;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 0.92rem;
+    }
+
+    .hero {
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      background: rgba(0, 0, 0, 0.18);
+      backdrop-filter: blur(10px);
+      border-radius: 1.6rem !important;
+    }
+
+    .card.demo-card {
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 1.25rem !important;
+    }
+
+    .card.demo-card .card-body {
+      border-radius: 1.25rem !important;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .caption {
+      text-align: center;
+      margin-top: 0.85rem;
+    }
+
+    .demo-meta { color: rgba(255, 255, 255, 0.70); }
+
+    .tag {
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 0.78rem;
+    }
+
+    .btn-soft {
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.10);
+      color: rgba(255, 255, 255, 0.95);
+    }
+    .btn-soft:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: rgba(255, 255, 255, 0.98);
+    }
+
+    a { text-decoration: none; }
+  </style>
+</head>
+<body class="text-light">
+  <canvas class="matrix-bg" id="matrixBg" aria-hidden="true"></canvas>
+  <div class="container page-shell py-4 py-md-5">
+    <header class="hero p-3 mb-2">
+      <div class="topbar">
+        <div class="brandmark">
+          <img class="brand-logo" src="../assets/images/logospin.gif" alt="Akbar Q" />
+          <div>
+            <div class="brand-name h4 mb-0">Akbar Q</div>
+            <div class="brand-sub">Showcase</div>
+          </div>
+        </div>
+        <div class="d-flex gap-2">
+          <a class="btn btn-soft" href="../index.html">Back to site</a>
+          <a class="btn btn-success" href="#demoList">Browse</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="caption demo-meta mb-4 mb-md-5">A quick index of interactive pages in this repo.</div>
+
+    <main id="demoList">
+      <div class="row g-3 g-md-4" id="cards"></div>
+
+      <div class="mt-4 mt-md-5 small demo-meta">
+        Tip: these are static pages — best viewed served via GitHub Pages (or any static server).
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const demos = [
+      {
+        title: "Arduino Solar Watering — Live Dashboard",
+        href: "./arduino-solar-watering-webserver/",
+        description:
+          "Presentation-grade mock dashboard for a solar integrated watering system: simulated telemetry, REST-style endpoints, and live updates (server mode via Socket.IO / static mode via in-browser simulation).",
+        tags: ["dashboard", "telemetry", "mock", "ESP32"],
+        extraLinks: [
+          { label: "README", href: "./arduino-solar-watering-webserver/README.md" }
+        ]
+      },
+      {
+        title: "Financially Fluent — Mobile Finance App Demo",
+        href: "./financially-fluent/financially-fluent-demo/src/index.html",
+        description:
+          "Mobile-first static demo with onboarding flow, mock bank connection, dashboard, transactions, and spending breakdown using realistic UAE (AED) sample data.",
+        tags: ["mobile", "UI prototype", "UAE", "static"],
+        extraLinks: [
+          { label: "Instructions", href: "./financially-fluent/financially-fluent-demo/demo-instructions.html" },
+          { label: "README", href: "./financially-fluent/financially-fluent-demo/README.md" }
+        ]
+      },
+      {
+        title: "WaterFlow — Household Water Tracking (Mock App)",
+        href: "./water-flow/",
+        description:
+          "Dark-mode, animated web app for tracking household water usage and gamifying conservation, with simulated data stored in localStorage and optional hardware-style telemetry visuals.",
+        tags: ["dark mode", "gamification", "charts", "localStorage"],
+        extraLinks: [
+          { label: "README", href: "./water-flow/README.md" }
+        ]
+      }
+    ];
+
+    const cardsEl = document.getElementById('cards');
+
+    function makeTag(tag) {
+      const span = document.createElement('span');
+      span.className = 'badge rounded-pill tag';
+      span.textContent = tag;
+      return span;
+    }
+
+    function makeCard(demo) {
+      const col = document.createElement('div');
+      col.className = 'col-12 col-md-6 col-lg-4';
+
+      const card = document.createElement('div');
+      card.className = 'card demo-card h-100 rounded-4';
+
+      const body = document.createElement('div');
+      body.className = 'card-body d-flex flex-column';
+
+      const title = document.createElement('h2');
+      title.className = 'h5 mb-2';
+      title.textContent = demo.title;
+
+      const desc = document.createElement('p');
+      desc.className = 'demo-meta mb-3';
+      desc.textContent = demo.description;
+
+      const tagsWrap = document.createElement('div');
+      tagsWrap.className = 'd-flex flex-wrap gap-2 mb-3';
+      (demo.tags || []).forEach(t => tagsWrap.appendChild(makeTag(t)));
+
+      const actions = document.createElement('div');
+      actions.className = 'mt-auto d-flex flex-wrap gap-2';
+
+      const openBtn = document.createElement('a');
+      openBtn.className = 'btn btn-primary';
+      openBtn.href = demo.href;
+      openBtn.textContent = 'Open';
+
+      actions.appendChild(openBtn);
+
+      (demo.extraLinks || []).forEach(l => {
+        const a = document.createElement('a');
+        a.className = 'btn btn-soft';
+        a.href = l.href;
+        a.textContent = l.label;
+        actions.appendChild(a);
+      });
+
+      body.appendChild(title);
+      body.appendChild(desc);
+      body.appendChild(tagsWrap);
+      body.appendChild(actions);
+
+      card.appendChild(body);
+      col.appendChild(card);
+      return col;
+    }
+
+    demos.forEach(d => cardsEl.appendChild(makeCard(d)));
+
+    // Matrix background (accent yellow on dark green)
+    (function initMatrixBg() {
+      const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduceMotion) return;
+
+      const canvas = document.getElementById('matrixBg');
+      if (!canvas) return;
+
+      const ctx = canvas.getContext('2d');
+      const accent = '#ffb800';
+      const bg = '#002724';
+
+      let width = 0;
+      let height = 0;
+      let columns = 0;
+      let drops = [];
+      let fontSize = 16;
+
+      const alphabet = (
+        '01AKBARQ' +
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
+        '0123456789' +
+        'アイウエオカキクケコサシスセソタチツテトナニヌネノ'
+      );
+      const chars = alphabet.split('');
+
+      function resize() {
+        const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+        width = Math.floor(window.innerWidth);
+        height = Math.floor(window.innerHeight);
+
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+        canvas.width = Math.floor(width * dpr);
+        canvas.height = Math.floor(height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        fontSize = Math.max(14, Math.min(20, Math.floor(width / 80)));
+        columns = Math.floor(width / fontSize);
+        drops = new Array(columns).fill(0).map(() => Math.floor(Math.random() * (height / fontSize)));
+      }
+
+      function tick() {
+        // Slight fade for trailing effect
+        ctx.fillStyle = 'rgba(0, 39, 36, 0.12)';
+        ctx.fillRect(0, 0, width, height);
+
+        ctx.font = `${fontSize}px Oxanium, monospace`;
+        ctx.textBaseline = 'top';
+
+        for (let i = 0; i < drops.length; i++) {
+          const x = i * fontSize;
+          const y = drops[i] * fontSize;
+          const char = chars[(Math.random() * chars.length) | 0];
+
+          // Bright head + dim trail
+          ctx.fillStyle = 'rgba(255, 184, 0, 0.9)';
+          ctx.fillText(char, x, y);
+
+          // Reset drop randomly after it passes bottom
+          if (y > height && Math.random() > 0.975) {
+            drops[i] = 0;
+          }
+          drops[i]++;
+        }
+
+        requestAnimationFrame(tick);
+      }
+
+      // Prime background
+      canvas.style.backgroundColor = bg;
+      resize();
+
+      let resizeTimer = null;
+      window.addEventListener('resize', () => {
+        if (resizeTimer) window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(resize, 120);
+      });
+
+      // Start
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, width, height);
+      ctx.fillStyle = accent;
+      tick();
+    })();
+  </script>
+</body>
+</html>
