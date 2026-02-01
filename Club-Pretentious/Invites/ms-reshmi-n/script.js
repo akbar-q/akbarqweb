@@ -3,6 +3,7 @@
   const page = document.getElementById('page');
   const envelope = document.querySelector('.envelope');
   const toggle = document.getElementById('toggleMotion');
+  const acceptBtn = document.getElementById('acceptBtn');
 
   const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReduced) {
@@ -14,6 +15,25 @@
     const reduced = root.classList.toggle('reduced-motion');
     toggle.setAttribute('aria-pressed', reduced ? 'true' : 'false');
   });
+
+  // Mailto acceptance (prefilled, suitably pretentious)
+  if (acceptBtn) {
+    const subject = 'Acceptance — Club Pretentious Invitation';
+    const body = [
+      'President Qamar,',
+      '',
+      'With due appreciation for the club’s commendable restraint, I accept the invitation to attend Club Pretentious.',
+      'I shall arrive punctually and appropriately attired in classical Western tailoring—quietly deliberate, never hurried, and entirely free of fast fashion.',
+      '',
+      'Kindly consider this my confirmation.',
+      '',
+      'With measured enthusiasm,',
+      'Reshmi N.'
+    ].join('\n');
+
+    const href = `mailto:akbar@akbarq.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    acceptBtn.setAttribute('href', href);
+  }
 
   // 3D tilt (politely ridiculous)
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
