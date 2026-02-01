@@ -108,6 +108,20 @@ body.welcome-open .wrap{
 .nav__link--active{ border-color: rgba(241,227,181,.34); background: rgba(241,227,181,.06); }
 .nav__btn{ cursor: pointer; }
 
+@media (max-width: 900px){
+  .topbar{ flex-wrap: wrap; align-items:flex-start; }
+  .brand{ flex: 1 1 220px; }
+  .nav{ flex-wrap: wrap; justify-content:flex-start; width:100%; }
+}
+
+@media (max-width: 600px){
+  .topbar{ padding: 14px 14px; gap: 12px; }
+  .nav{ gap: 8px; }
+  .nav__link{ font-size: 10px; padding: 8px 9px; }
+  .brand__name{ font-size: 12px; }
+  .brand__tag{ font-size: 11px; }
+}
+
 .welcome{
   position: fixed;
   inset: 0;

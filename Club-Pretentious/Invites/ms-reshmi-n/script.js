@@ -11,8 +11,12 @@
   const welcomeBackdrop = document.getElementById('welcomeBackdrop');
   const welcomeEnter = document.getElementById('welcomeEnter');
   const clubAudio = document.getElementById('clubAudio');
+  const muteBtn = document.getElementById('muteBtn');
 
   const WELCOME_SEEN_KEY = 'cp_welcome_seen_v1';
+  const AUDIO_STATE_KEY = 'cp_audio_state_v1';
+  const AUDIO_TIME_KEY = 'cp_audio_time_v1';
+  const AUDIO_MUTED_KEY = 'cp_audio_muted_v1';
 
   const openWelcome = () => {
     if (!welcome) return;
@@ -39,10 +43,54 @@
   const startAudio = async () => {
     if (!clubAudio) return;
     try {
+      try {
+        const muted = localStorage.getItem(AUDIO_MUTED_KEY) === '1';
+        clubAudio.muted = muted;
+      } catch {
+        // ignore storage failures
+      }
       clubAudio.volume = 0.85;
       await clubAudio.play();
+      try {
+        localStorage.setItem(AUDIO_STATE_KEY, 'on');
+      } catch {
+        // ignore storage failures
+      }
     } catch {
       // If playback fails, we still proceed; browser policy may require another gesture.
+    }
+  };
+
+  const applyMutedState = (muted) => {
+    if (clubAudio) clubAudio.muted = muted;
+    if (muteBtn) muteBtn.setAttribute('aria-pressed', muted ? 'true' : 'false');
+  };
+
+  const loadMutedState = () => {
+    try {
+      const muted = localStorage.getItem(AUDIO_MUTED_KEY) === '1';
+      applyMutedState(muted);
+    } catch {
+      // ignore storage failures
+    }
+  };
+
+  const toggleMuted = () => {
+    const next = !(clubAudio?.muted ?? false);
+    applyMutedState(next);
+    try {
+      localStorage.setItem(AUDIO_MUTED_KEY, next ? '1' : '0');
+    } catch {
+      // ignore storage failures
+    }
+  };
+
+  const saveAudioTime = () => {
+    if (!clubAudio) return;
+    try {
+      localStorage.setItem(AUDIO_TIME_KEY, String(clubAudio.currentTime || 0));
+    } catch {
+      // ignore storage failures
     }
   };
 
@@ -63,6 +111,9 @@
     }
   });
 
+  muteBtn?.addEventListener('click', toggleMuted);
+  loadMutedState();
+
   // Auto-open once per session
   try {
     const alreadySeen = sessionStorage.getItem(WELCOME_SEEN_KEY) === '1';
@@ -75,6 +126,25 @@
   } catch {
     if (welcome) setTimeout(openWelcome, 220);
   }
+
+  // Attempt to resume audio across sub pages if previously started.
+  try {
+    const shouldResume = localStorage.getItem(AUDIO_STATE_KEY) === 'on';
+    if (shouldResume && clubAudio) {
+      const savedTime = Number(localStorage.getItem(AUDIO_TIME_KEY) || 0);
+      if (!Number.isNaN(savedTime) && savedTime > 0) {
+        clubAudio.currentTime = savedTime;
+      }
+      setTimeout(() => {
+        startAudio();
+      }, 250);
+    }
+  } catch {
+    // ignore storage failures
+  }
+
+  window.addEventListener('pagehide', saveAudioTime);
+  window.addEventListener('beforeunload', saveAudioTime);
 
   const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReduced) {
