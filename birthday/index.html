@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Akbar Qamar Birthday - December 8</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="birthday-root">
+    <header class="birthday-header">
+      <h1>Akbar Qamar Birthday</h1>
+      <div class="controls">
+        <button id="prev">◀</button>
+        <button id="play">Play</button>
+        <button id="next">▶</button>
+        <button id="randomize">Random</button>
+        <label class="opt">
+          <input id="autoplayCheck" type="checkbox"> Autoplay
+        </label>
+      </div>
+    </header>
+
+    <main class="viewer">
+      <div class="elapsed-time">
+        <div class="time-display">
+          <span id="years" class="time-val">0</span><span class="time-label">Y</span>
+          <span id="months" class="time-val">0</span><span class="time-label">M</span>
+          <span id="days" class="time-val">0</span><span class="time-label">D</span>
+          <span id="hours" class="time-val">0</span><span class="time-label">H</span>
+          <span id="minutes" class="time-val">0</span><span class="time-label">m</span>
+        </div>
+      </div>
+
+      <div id="slideshow" class="slideshow">
+        <img id="current" alt="Birthday photo" src="" loading="lazy">
+      </div>
+      <div id="caption" class="caption"></div>
+      <div id="thumbs" class="thumbs"></div>
+    </main>
+
+    <footer class="birthday-footer">
+      <p class="years">December 8, 2001</p>
+      <p class="note">A collection of memories and moments.</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
