@@ -320,7 +320,7 @@ body.welcome-open .wrap{
     transform: none;
   }
   .timeline__item{
-    grid-template-columns: 24px 1fr;
+    grid-template-columns: 24px minmax(0, 1fr);
   }
   .timeline__dot{
     grid-column: 1;
@@ -331,6 +331,11 @@ body.welcome-open .wrap{
     grid-column: 2;
     text-align: left;
     width: 100%;
+    max-width: 100%;
+  }
+  .timeline__item--left .timeline__card,
+  .timeline__item--right .timeline__card{
+    justify-self: stretch;
   }
 }
 
