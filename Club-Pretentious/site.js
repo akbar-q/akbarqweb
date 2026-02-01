@@ -13,6 +13,8 @@
   const welcomeEnter = document.getElementById('welcomeEnter');
   const clubAudio = document.getElementById('clubAudio');
 
+  const WELCOME_SEEN_KEY = 'cp_welcome_seen_v1';
+
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightboxImg');
   const lightboxTitle = document.getElementById('lightboxTitle');
@@ -60,6 +62,14 @@
     document.body.classList.remove('welcome-open');
   };
 
+  const markWelcomeSeen = () => {
+    try {
+      sessionStorage.setItem(WELCOME_SEEN_KEY, '1');
+    } catch {
+      // ignore storage failures
+    }
+  };
+
   const startAudio = async () => {
     if (!clubAudio) return;
     try {
@@ -76,13 +86,35 @@
 
   welcomeEnter?.addEventListener('click', async () => {
     await startAudio();
+    markWelcomeSeen();
     closeWelcome();
   });
 
-  welcomeBackdrop?.addEventListener('click', closeWelcome);
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeWelcome();
+  welcomeBackdrop?.addEventListener('click', () => {
+    markWelcomeSeen();
+    closeWelcome();
   });
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      markWelcomeSeen();
+      closeWelcome();
+    }
+  });
+
+  // Auto-open once per session
+  try {
+    const alreadySeen = sessionStorage.getItem(WELCOME_SEEN_KEY) === '1';
+    if (!alreadySeen && welcome) {
+      // Small delay so first paint happens before blur/overlay.
+      setTimeout(() => {
+        openWelcome();
+        markWelcomeSeen();
+      }, 220);
+    }
+  } catch {
+    // If storage is blocked, still auto-open.
+    if (welcome) setTimeout(openWelcome, 220);
+  }
 
   const openLightbox = (src, title) => {
     if (!lightbox || !lightboxImg || !lightboxTitle || !lightboxOpen) return;

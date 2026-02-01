@@ -12,6 +12,8 @@
   const welcomeEnter = document.getElementById('welcomeEnter');
   const clubAudio = document.getElementById('clubAudio');
 
+  const WELCOME_SEEN_KEY = 'cp_welcome_seen_v1';
+
   const openWelcome = () => {
     if (!welcome) return;
     document.body.classList.add('welcome-open');
@@ -24,6 +26,14 @@
     welcome.classList.remove('welcome--open');
     welcome.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('welcome-open');
+  };
+
+  const markWelcomeSeen = () => {
+    try {
+      sessionStorage.setItem(WELCOME_SEEN_KEY, '1');
+    } catch {
+      // ignore storage failures
+    }
   };
 
   const startAudio = async () => {
@@ -39,12 +49,32 @@
   welcomeBtn?.addEventListener('click', openWelcome);
   welcomeEnter?.addEventListener('click', async () => {
     await startAudio();
+    markWelcomeSeen();
     closeWelcome();
   });
-  welcomeBackdrop?.addEventListener('click', closeWelcome);
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeWelcome();
+  welcomeBackdrop?.addEventListener('click', () => {
+    markWelcomeSeen();
+    closeWelcome();
   });
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      markWelcomeSeen();
+      closeWelcome();
+    }
+  });
+
+  // Auto-open once per session
+  try {
+    const alreadySeen = sessionStorage.getItem(WELCOME_SEEN_KEY) === '1';
+    if (!alreadySeen && welcome) {
+      setTimeout(() => {
+        openWelcome();
+        markWelcomeSeen();
+      }, 220);
+    }
+  } catch {
+    if (welcome) setTimeout(openWelcome, 220);
+  }
 
   const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReduced) {
