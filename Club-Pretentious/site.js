@@ -6,6 +6,13 @@
   const galleryPanel = document.getElementById('gallery');
   const manifestoTab = document.getElementById('manifestoTab');
 
+  // Shared welcome modal + audio
+  const welcomeBtn = document.getElementById('welcomeBtn');
+  const welcome = document.getElementById('welcome');
+  const welcomeBackdrop = document.getElementById('welcomeBackdrop');
+  const welcomeEnter = document.getElementById('welcomeEnter');
+  const clubAudio = document.getElementById('clubAudio');
+
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightboxImg');
   const lightboxTitle = document.getElementById('lightboxTitle');
@@ -37,6 +44,44 @@
     history.pushState(null, '', '#manifesto');
     syncTabs();
     document.getElementById('manifesto')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  const openWelcome = () => {
+    if (!welcome) return;
+    document.body.classList.add('welcome-open');
+    welcome.classList.add('welcome--open');
+    welcome.setAttribute('aria-hidden', 'false');
+  };
+
+  const closeWelcome = () => {
+    if (!welcome) return;
+    welcome.classList.remove('welcome--open');
+    welcome.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('welcome-open');
+  };
+
+  const startAudio = async () => {
+    if (!clubAudio) return;
+    try {
+      clubAudio.volume = 0.85;
+      await clubAudio.play();
+    } catch {
+      // If playback fails, we still proceed; browser policy may require another gesture.
+    }
+  };
+
+  welcomeBtn?.addEventListener('click', () => {
+    openWelcome();
+  });
+
+  welcomeEnter?.addEventListener('click', async () => {
+    await startAudio();
+    closeWelcome();
+  });
+
+  welcomeBackdrop?.addEventListener('click', closeWelcome);
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeWelcome();
   });
 
   const openLightbox = (src, title) => {

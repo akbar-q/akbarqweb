@@ -5,6 +5,47 @@
   const toggle = document.getElementById('toggleMotion');
   const acceptBtn = document.getElementById('acceptBtn');
 
+  // Shared welcome modal + audio (invite-local)
+  const welcomeBtn = document.getElementById('welcomeBtn');
+  const welcome = document.getElementById('welcome');
+  const welcomeBackdrop = document.getElementById('welcomeBackdrop');
+  const welcomeEnter = document.getElementById('welcomeEnter');
+  const clubAudio = document.getElementById('clubAudio');
+
+  const openWelcome = () => {
+    if (!welcome) return;
+    document.body.classList.add('welcome-open');
+    welcome.classList.add('welcome--open');
+    welcome.setAttribute('aria-hidden', 'false');
+  };
+
+  const closeWelcome = () => {
+    if (!welcome) return;
+    welcome.classList.remove('welcome--open');
+    welcome.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('welcome-open');
+  };
+
+  const startAudio = async () => {
+    if (!clubAudio) return;
+    try {
+      clubAudio.volume = 0.85;
+      await clubAudio.play();
+    } catch {
+      // If playback fails, we still proceed; browser policy may require another gesture.
+    }
+  };
+
+  welcomeBtn?.addEventListener('click', openWelcome);
+  welcomeEnter?.addEventListener('click', async () => {
+    await startAudio();
+    closeWelcome();
+  });
+  welcomeBackdrop?.addEventListener('click', closeWelcome);
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeWelcome();
+  });
+
   const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReduced) {
     root.classList.add('reduced-motion');

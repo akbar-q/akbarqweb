@@ -44,6 +44,7 @@
 
     <nav class="nav" aria-label="Primary">
       <a class="nav__link" href="../">Home</a>
+      <button class="nav__link nav__btn" id="welcomeBtn" type="button">View</button>
       <a class="nav__link" href="../join.html">Request to Join</a>
       <a class="nav__link nav__link--active" href="./">Members</a>
     </nav>
@@ -64,8 +65,8 @@
         <div class="panel__sub">As presently constituted</div>
       </div>
 
-      <div class="panel__body prose">
-        <p><strong>Akbar Q</strong> — President</p>
+      <div class="panel__body">
+        <div class="members" id="members">Loading…</div>
       </div>
 
       <div class="panel__foot">
@@ -73,5 +74,71 @@
       </div>
     </section>
   </main>
+
+  <audio id="clubAudio" preload="auto" loop>
+    <source src="../music.m4a" type="audio/mp4" />
+  </audio>
+
+  <div class="welcome" id="welcome" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="welcome__backdrop" id="welcomeBackdrop" aria-hidden="true"></div>
+    <div class="welcome__card" role="document">
+      <div class="welcome__kicker">Welcome</div>
+      <div class="welcome__title">Club Pretentious</div>
+      <div class="welcome__copy">
+        Enter with composure. Sound is optional; standards are not.
+      </div>
+      <div class="welcome__actions">
+        <button class="lb-btn" id="welcomeEnter" type="button">Enter</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (async () => {
+      const host = document.getElementById('members');
+      try {
+        const res = await fetch('./list.txt', { cache: 'no-cache' });
+        if (!res.ok) throw new Error(String(res.status));
+
+        const text = await res.text();
+        const lines = text
+          .split(/\r?\n/)
+          .map((l) => l.trim())
+          .filter(Boolean);
+
+        if (!lines.length) {
+          host.textContent = 'No members listed.';
+          return;
+        }
+
+        const frag = document.createDocumentFragment();
+        for (const line of lines) {
+          const parts = line.split(';').map((p) => p.trim()).filter(Boolean);
+          const name = parts[0] || line;
+          const role = parts[1] || 'Member';
+
+          const row = document.createElement('div');
+          row.className = 'memberRow';
+
+          const left = document.createElement('div');
+          left.className = 'memberName';
+          left.textContent = name;
+
+          const right = document.createElement('div');
+          right.className = 'memberRole';
+          right.textContent = role;
+
+          row.append(left, right);
+          frag.appendChild(row);
+        }
+
+        host.replaceChildren(frag);
+      } catch {
+        host.textContent = 'Could not load Members/list.txt.';
+      }
+    })();
+  </script>
+
+  <script src="../site.js"></script>
 </body>
 </html>

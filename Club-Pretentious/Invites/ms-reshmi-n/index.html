@@ -24,9 +24,9 @@
 
   <main class="page" id="page">
     <header class="masthead">
-      <div class="crest" aria-hidden="true">
+      <a class="crest homeLink" href="../../" aria-label="Club Pretentious home">
         <div class="crest-ring"></div>
-        <div class="crest-inner">
+        <div class="crest-inner" aria-hidden="true">
           <svg class="crest-icon" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
             <path class="ci-stroke" d="M20 44c-6-4-9-10-9-17 0-6 3-12 8-16" />
             <path class="ci-stroke" d="M44 44c6-4 9-10 9-17 0-6-3-12-8-16" />
@@ -40,18 +40,18 @@
             <circle class="ci-fill" cx="42" cy="30" r="1.4" />
           </svg>
         </div>
-      </div>
+      </a>
     </header>
 
     <section class="envelope" aria-label="Invitation envelope">
       <div class="envelope-shadow" aria-hidden="true"></div>
       <div class="envelope-sheen" aria-hidden="true"></div>
 
-      <div class="seal" aria-hidden="true">
+      <a class="seal seal-link" href="../../" aria-label="Club Pretentious home">
         <div class="seal-wax"></div>
         <div class="seal-mark">AQ</div>
         <div class="seal-glint"></div>
-      </div>
+      </a>
 
       <article class="letter" aria-label="Invitation letter">
         <div class="letter-top" aria-hidden="true"></div>
@@ -119,6 +119,7 @@
 
           <div class="actions" aria-label="Invitation response actions">
             <a class="accept" id="acceptBtn" href="#" rel="nofollow">Accept (with measured enthusiasm)</a>
+            <a class="accept accept--secondary" href="../../" rel="nofollow">Home</a>
           </div>
 
           <div class="signoff">
@@ -144,9 +145,27 @@
     <footer class="smallprint">
       <span class="hint">Tip: move your cursor slowly. The paper notices.</span>
       <span class="sep" aria-hidden="true">·</span>
+      <button class="quiet" id="welcomeBtn" type="button">View</button>
+      <span class="sep" aria-hidden="true">·</span>
       <button class="quiet" id="toggleMotion" type="button" aria-pressed="false">Reduce motion</button>
     </footer>
   </main>
+
+  <audio id="clubAudio" preload="none" loop>
+    <source src="../../music.m4a" type="audio/mp4" />
+  </audio>
+
+  <div class="welcome" id="welcome" aria-hidden="true">
+    <div class="welcome__backdrop" id="welcomeBackdrop" aria-hidden="true"></div>
+    <div class="welcome__card" role="dialog" aria-modal="true" aria-label="Welcome">
+      <div class="welcome__kicker">A Small Indulgence</div>
+      <div class="welcome__title">Welcome</div>
+      <p class="welcome__copy">Proceed, should you wish the room to remember you.</p>
+      <div class="welcome__actions">
+        <button class="welcome__enter" id="welcomeEnter" type="button">Enter</button>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
