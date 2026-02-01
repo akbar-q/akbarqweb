@@ -3,6 +3,60 @@
 // Final countdown interface
 // =============================================
 
+(() => {
+    const PASSWORD = 'clubpretentious';
+    const ACCESS_KEY = 'eol_access_ok_v1';
+    const overlay = document.getElementById('lockOverlay');
+    const form = document.getElementById('lockForm');
+    const input = document.getElementById('lockInput');
+    const error = document.getElementById('lockError');
+
+    const unlock = () => {
+        document.body.classList.remove('locked');
+        if (overlay) overlay.setAttribute('aria-hidden', 'true');
+    };
+
+    const lock = () => {
+        document.body.classList.add('locked');
+        if (overlay) overlay.setAttribute('aria-hidden', 'false');
+        input?.focus();
+    };
+
+    const hasAccess = () => {
+        try {
+            return localStorage.getItem(ACCESS_KEY) === '1';
+        } catch {
+            return false;
+        }
+    };
+
+    const grantAccess = () => {
+        try {
+            localStorage.setItem(ACCESS_KEY, '1');
+        } catch {
+            // ignore storage failures
+        }
+        unlock();
+    };
+
+    if (hasAccess()) {
+        unlock();
+    } else {
+        lock();
+    }
+
+    form?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const value = (input?.value || '').trim();
+        if (value === PASSWORD) {
+            if (error) error.textContent = '';
+            grantAccess();
+        } else {
+            if (error) error.textContent = 'Incorrect password.';
+        }
+    });
+})();
+
 class EOLCountdown {
     constructor() {
         // Target: 8:00 PM, 27 December 2025 GMT+4

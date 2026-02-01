@@ -10,6 +10,18 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="lock-overlay" id="lockOverlay" aria-hidden="true">
+        <div class="lock-card" role="dialog" aria-modal="true" aria-label="Restricted">
+            <div class="lock-title">Restricted</div>
+            <div class="lock-subtitle">This page is blurred until a password is provided.</div>
+            <form class="lock-form" id="lockForm">
+                <input class="lock-input" id="lockInput" type="password" autocomplete="current-password" placeholder="Password" aria-label="Password" />
+                <button class="lock-btn" type="submit">Enter</button>
+            </form>
+            <div class="lock-error" id="lockError" aria-live="polite"></div>
+        </div>
+    </div>
+
     <div class="void-background">
         <div class="floating-particles"></div>
         

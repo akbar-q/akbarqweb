@@ -20,6 +20,97 @@ body {
 }
 
 /* =============================================
+   ACCESS LOCK
+   ============================================= */
+
+body.locked .void-background {
+    filter: blur(14px) saturate(0.7);
+    transition: filter 0.4s ease;
+    pointer-events: none;
+}
+
+.lock-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    place-items: center;
+    padding: 24px;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(6px);
+}
+
+body.locked .lock-overlay {
+    display: grid;
+}
+
+.lock-card {
+    width: min(520px, 100%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(10, 10, 10, 0.9), rgba(6, 6, 6, 0.75));
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+    text-align: center;
+}
+
+.lock-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.2rem;
+    letter-spacing: 0.4rem;
+    text-transform: uppercase;
+    color: #e0e0e0;
+}
+
+.lock-subtitle {
+    margin-top: 8px;
+    color: #8d8d8d;
+    font-size: 0.95rem;
+}
+
+.lock-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.lock-input {
+    flex: 1 1 240px;
+    min-width: 220px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.lock-btn {
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.lock-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.lock-error {
+    margin-top: 10px;
+    min-height: 18px;
+    color: #ff8a8a;
+    font-size: 0.9rem;
+}
+
+/* =============================================
    BACKGROUND & ATMOSPHERE
    ============================================= */
 
