@@ -5,6 +5,8 @@
   const galleryTab = document.getElementById('galleryTab');
   const galleryPanel = document.getElementById('gallery');
   const manifestoTab = document.getElementById('manifestoTab');
+  const meditationsText = document.getElementById('meditationsText');
+  const poetryText = document.getElementById('poetryText');
 
   // Shared welcome modal + audio
   const welcomeBtn = document.getElementById('welcomeBtn');
@@ -185,6 +187,46 @@
 
   window.addEventListener('pagehide', saveAudioTime);
   window.addEventListener('beforeunload', saveAudioTime);
+
+  // Meditations & Poetry rotation
+  const meditations = [
+    'Elegance is not a costume but a posture of mind; one may borrow a jacket, but not composure.',
+    'Time, when respected, becomes a collaborator; hurry is a theft we commit against ourselves.',
+    'Taste is not a list of prohibitions; it is the practice of attention, quietly and repeatedly.',
+    'The room learns who to welcome by how we enter it: unhurried, unannounced, unafraid of silence.',
+    'Restraint is not absence; it is the deliberate placement of what remains.',
+    'A well-set table is a small philosophy: every object knows its reason for being there.',
+    'We dress for the occasion not to impress, but to align with what the moment asks of us.',
+    'Conversation is a craft of timing; a pause can be as eloquent as a sentence.',
+    'To be composed is to keep one’s edges neat even when the world insists on noise.',
+    'We prefer the deliberate because the deliberate notices what the hurried cannot see.'
+  ];
+
+  const cycleText = (el, list, { random = false, interval = 10000 } = {}) => {
+    if (!el || !Array.isArray(list) || list.length === 0) return;
+    let index = 0;
+    let lastIndex = -1;
+
+    const pickNext = () => {
+      if (random) {
+        let next = Math.floor(Math.random() * list.length);
+        if (list.length > 1) {
+          while (next === lastIndex) next = Math.floor(Math.random() * list.length);
+        }
+        lastIndex = next;
+        el.textContent = list[next];
+      } else {
+        el.textContent = list[index % list.length];
+        index += 1;
+      }
+    };
+
+    pickNext();
+    setInterval(pickNext, interval);
+  };
+
+  cycleText(meditationsText, meditations, { random: false, interval: 10000 });
+  cycleText(poetryText, meditations, { random: true, interval: 10000 });
 
   const openLightbox = (src, title) => {
     if (!lightbox || !lightboxImg || !lightboxTitle || !lightboxOpen) return;
