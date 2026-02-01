@@ -45,6 +45,7 @@
     <nav class="nav" aria-label="Primary">
       <a class="nav__link" href="#manifesto" id="manifestoTab">Manifesto</a>
       <a class="nav__link" href="#gallery" id="galleryTab">Gallery</a>
+      <a class="nav__link" href="#events" id="eventsTab">Events</a>
       <button class="nav__link nav__btn" id="welcomeBtn" type="button">View</button>
       <button class="nav__link nav__btn" id="muteBtn" type="button" aria-pressed="false">Mute</button>
       <a class="nav__link" href="join.html">Request to Join</a>
@@ -123,6 +124,49 @@
 
       <div class="panel__foot">
         <div class="note">A line remains for ten seconds, then yields.</div>
+      </div>
+    </section>
+
+    <section class="panel" id="events" aria-label="Events timeline">
+      <div class="panel__head">
+        <div class="panel__title">Events</div>
+        <div class="panel__sub">Newest to oldest</div>
+      </div>
+
+      <div class="panel__body">
+        <div class="timeline">
+          <article class="timeline__item">
+            <div class="timeline__marker"></div>
+            <div class="timeline__content">
+              <div class="timeline__date">14 Feb 2026</div>
+              <h3 class="timeline__title">Club Beach BBQ and Movie Night</h3>
+              <p class="timeline__text">
+                Salt, smoke, and a screen under a disciplined sky. An evening of conversation, cinema, and unhurried fires.
+              </p>
+              <div class="timeline__media" data-event-folder="events/2026-02-14-club-beach-bbq-movie-night/">
+                <div class="timeline__media-note">Event photos will scroll here.</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="timeline__item">
+            <div class="timeline__marker"></div>
+            <div class="timeline__content">
+              <div class="timeline__date">02 Feb 2026</div>
+              <h3 class="timeline__title">Creation of the Website</h3>
+              <p class="timeline__text">
+                A modest archive is opened. We begin to document the occasions with the restraint they deserve.
+              </p>
+              <div class="timeline__media" data-event-folder="events/2026-02-02-website-creation/">
+                <div class="timeline__media-note">Event photos will scroll here.</div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="panel__foot">
+        <div class="note">Images will live in /events with one folder per event.</div>
       </div>
     </section>
 

@@ -215,6 +215,81 @@ body.welcome-open .wrap{
 .note{ color: rgba(239,231,210,.72); font-size: 12px; }
 .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; color: rgba(241,227,181,.88); }
 
+/* Events timeline */
+.timeline{
+  position: relative;
+  display: grid;
+  gap: 18px;
+  padding: 12px 4px 6px 26px;
+}
+.timeline::before{
+  content:"";
+  position:absolute;
+  left: 10px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(241,227,181,.45), rgba(241,227,181,.08));
+}
+.timeline__item{
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+.timeline__marker{
+  position: absolute;
+  left: -4px;
+  top: 8px;
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, rgba(241,227,181,.9), rgba(210,179,108,.5));
+  box-shadow: 0 0 0 4px rgba(241,227,181,.08);
+}
+.timeline__content{
+  border: 1px solid rgba(241,227,181,.12);
+  border-radius: 16px;
+  padding: 14px 14px 12px;
+  background: rgba(0,0,0,.18);
+}
+.timeline__date{
+  font-family:"Cinzel", ui-serif, serif;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  font-size: 11px;
+  color: rgba(241,227,181,.8);
+}
+.timeline__title{
+  margin: 6px 0 8px;
+  font-family:"Cinzel", ui-serif, serif;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  font-size: 14px;
+}
+.timeline__text{
+  margin: 0 0 10px;
+  color: rgba(239,231,210,.84);
+  line-height: 1.5;
+}
+.timeline__media{
+  border: 1px dashed rgba(241,227,181,.18);
+  border-radius: 12px;
+  padding: 14px;
+  min-height: 88px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: rgba(255,255,255,.02);
+}
+.timeline__media-note{
+  color: rgba(239,231,210,.65);
+  font-size: 12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  text-align:center;
+}
+
 .inline{
   color: rgba(241,227,181,.90);
   text-decoration: none;

@@ -5,6 +5,8 @@
   const galleryTab = document.getElementById('galleryTab');
   const galleryPanel = document.getElementById('gallery');
   const manifestoTab = document.getElementById('manifestoTab');
+  const eventsTab = document.getElementById('eventsTab');
+  const eventsPanel = document.getElementById('events');
   const meditationsText = document.getElementById('meditationsText');
   const poetryText = document.getElementById('poetryText');
 
@@ -31,9 +33,11 @@
   const syncTabs = () => {
     const hash = (location.hash || '').toLowerCase();
     const isGallery = hash === '#gallery';
+    const isEvents = hash === '#events';
     const isManifesto = hash === '#manifesto' || hash === '';
     galleryTab?.classList.toggle('nav__link--active', isGallery);
     manifestoTab?.classList.toggle('nav__link--active', isManifesto);
+    eventsTab?.classList.toggle('nav__link--active', isEvents);
   };
 
   window.addEventListener('hashchange', syncTabs);
@@ -52,6 +56,13 @@
     history.pushState(null, '', '#manifesto');
     syncTabs();
     document.getElementById('manifesto')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  eventsTab?.addEventListener('click', (e) => {
+    e.preventDefault();
+    history.pushState(null, '', '#events');
+    syncTabs();
+    eventsPanel?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
   const openWelcome = () => {
