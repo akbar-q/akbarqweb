@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>Club Pretentious — Invitation for Ms Reshmi N.</title>
+  <meta name="description" content="A formal invitation to Club Pretentious." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="stage" aria-hidden="true">
+    <div class="bg" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="spotlight" aria-hidden="true"></div>
+    <canvas class="dust" id="dust" aria-hidden="true"></canvas>
+  </div>
+
+  <main class="page" id="page">
+    <header class="masthead">
+      <div class="crest" aria-hidden="true">
+        <div class="crest-ring"></div>
+        <div class="crest-inner">
+          <div class="monogram">CP</div>
+          <div class="crest-sub">Club Pretentious</div>
+        </div>
+      </div>
+
+      <div class="masthead-text">
+        <div class="kicker">Office of the President</div>
+        <div class="date">1 February 2026</div>
+      </div>
+    </header>
+
+    <section class="envelope" aria-label="Invitation envelope">
+      <div class="envelope-shadow" aria-hidden="true"></div>
+      <div class="envelope-sheen" aria-hidden="true"></div>
+
+      <div class="seal" aria-hidden="true">
+        <div class="seal-wax"></div>
+        <div class="seal-mark">AQ</div>
+        <div class="seal-glint"></div>
+      </div>
+
+      <article class="letter" aria-label="Invitation letter">
+        <div class="letter-top" aria-hidden="true"></div>
+
+        <div class="letter-body">
+          <h1 class="title">
+            <span class="title-orn">Invitation</span>
+            <span class="title-main">Club Pretentious</span>
+          </h1>
+
+          <p class="to">Ms Reshmi N.</p>
+
+          <p class="lede">
+            It is not our habit to <em>invite</em> so much as to <em>acknowledge</em>—and yet, on this occasion,
+            we permit ourselves a rare gesture of inclusion.
+          </p>
+
+          <p>
+            You are hereby extended an invitation to attend <strong>Club Pretentious</strong>, an institution of cultivated restraint
+            and ceremonial elegance, where discretion is a virtue, taste is a responsibility, and effort is assumed.
+          </p>
+
+          <p>
+            Club Pretentious exists for those who understand that refinement is not an accessory; it is an operating system.
+            Our gatherings are not “events.” They are <strong>occasions</strong>. Conversation is pursued with care, wit is deployed with precision,
+            and one arrives on time as though punctuality were a family crest.
+          </p>
+
+          <h2 class="section">Membership & Conduct</h2>
+          <ul class="bullets">
+            <li><strong>Exclusivity</strong>: Admission is selective, not to flatter ourselves (though it does), but to protect the atmosphere.</li>
+            <li><strong>Comportment</strong>: We prefer the unhurried cadence of people who have read at least one book for no practical reason.</li>
+            <li><strong>Presentation</strong>: We dress as though the evening has been anticipated.</li>
+          </ul>
+
+          <h2 class="section">Dress Code (Observed, Not Debated)</h2>
+          <p>
+            Our dress code is simply <strong>classical Western fashion</strong>—for both men and women—executed with restraint,
+            good fit, and a certain quiet seriousness.
+          </p>
+          <p>
+            In brief: <strong>tailored, traditional, and not fast fashion</strong>.
+          </p>
+          <ul class="bullets">
+            <li>Well-cut <strong>suits</strong>, <strong>sport coats</strong>, blazers, waistcoats, and structured outerwear (wool overcoats, trench coats).</li>
+            <li><strong>Classic shirts</strong> and blouses; ties, scarves, and tasteful accessories when chosen with intent.</li>
+            <li><strong>Tailored trousers</strong>, skirts, and dresses in traditional silhouettes.</li>
+            <li><strong>Proper footwear</strong> (leather oxfords, loafers, brogues, boots, or equally formal equivalents).</li>
+          </ul>
+
+          <p class="aside">
+            We do not “ban” casual wear; we simply note that it would be an earnest misunderstanding.
+          </p>
+
+          <h2 class="section">A Note on Acceptance</h2>
+          <p>
+            Should you accept, your presence will be regarded as a compliment to the club,
+            and your absence will be regarded as evidence of self-control—either is respectable.
+          </p>
+
+          <p class="rsvp">
+            To confirm attendance, reply with a brief acceptance.
+            <span class="muted">Excess enthusiasm is not required.</span>
+          </p>
+
+          <div class="signoff">
+            <div class="closing">With measured anticipation,</div>
+            <div class="signature">Akbar Qamar</div>
+            <div class="role">President, Club Pretentious</div>
+          </div>
+
+          <p class="postscript">
+            <span class="ps">Postscript (optional, but correct):</span>
+            A pen is preferred over a phone when making notes of anything worth remembering.
+          </p>
+
+          <div class="footer-fleuron" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+
+        <div class="letter-bottom" aria-hidden="true"></div>
+      </article>
+    </section>
+
+    <footer class="smallprint">
+      <span class="hint">Tip: move your cursor slowly. The paper notices.</span>
+      <span class="sep" aria-hidden="true">·</span>
+      <button class="quiet" id="toggleMotion" type="button" aria-pressed="false">Reduce motion</button>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
