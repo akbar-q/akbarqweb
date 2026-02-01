@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>27.12.2025</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&family=JetBrains+Mono:wght@100;200;400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="lock-overlay" id="lockOverlay" aria-hidden="true">
+        <div class="lock-card" role="dialog" aria-modal="true" aria-label="Restricted">
+            <div class="lock-title">Restricted</div>
+            <div class="lock-subtitle">This page is blurred until a password is provided.</div>
+            <form class="lock-form" id="lockForm">
+                <input class="lock-input" id="lockInput" type="password" autocomplete="current-password" placeholder="Password" aria-label="Password" />
+                <button class="lock-btn" type="submit">Enter</button>
+            </form>
+            <div class="lock-error" id="lockError" aria-live="polite"></div>
+        </div>
+    </div>
+
+    <div class="void-background">
+        <div class="floating-particles"></div>
+        
+        <div class="main-container">
+            <header class="main-header">
+                <h1 class="title-text" data-text="EOL">EOL</h1>
+                <div class="subtitle breathing">
+                    <span class="dots-animation">counting down<span class="dots"></span></span>
+                </div>
+            </header>
+
+            <main class="countdown-container">
+                <div class="countdown-wrapper breathing-slow">
+                    <div class="countdown-display">
+                        <div class="time-unit">
+                            <span class="time-number" id="days">00</span>
+                            <span class="time-label">D</span>
+                            <div class="decay-line"></div>
+                        </div>
+                        
+                        <div class="separator">
+                            <span class="blink">.</span>
+                        </div>
+                        
+                        <div class="time-unit">
+                            <span class="time-number" id="hours">00</span>
+                            <span class="time-label">H</span>
+                            <div class="decay-line"></div>
+                        </div>
+                        
+                        <div class="separator">
+                            <span class="blink">.</span>
+                        </div>
+                        
+                        <div class="time-unit">
+                            <span class="time-number" id="minutes">00</span>
+                            <span class="time-label">M</span>
+                            <div class="decay-line"></div>
+                        </div>
+                        
+                        <div class="separator">
+                            <span class="blink">.</span>
+                        </div>
+                        
+                        <div class="time-unit">
+                            <span class="time-number" id="seconds">00</span>
+                            <span class="time-label">S</span>
+                            <div class="decay-line"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message-area">
+                    <div class="message-container">
+                        <p class="status-message" id="message">
+                            borrowed time is being returned
+                        </p>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="status-footer">
+                <div class="signal-line"></div>
+                <div class="status-indicator">●</div>
+            </footer>
+        </div>
+
+        <div class="bottom-quotes">
+            <p class="bottom-message" id="bottom-message">
+                Death is the final, silent indulgence.
+            </p>
+        </div>
+
+        <div class="ambient-sounds">
+            <!-- Invisible audio elements for atmosphere -->
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <a href="/memorial/" class="birthday-btn" title="Memorial">Memorial</a>
+    <style>
+    .birthday-btn{position:fixed;right:1.5rem;bottom:1.5rem;background:#e74c3c;color:#fff;padding:1rem 1.25rem;border-radius:999px;font-size:1.05rem;font-weight:700;text-decoration:none;box-shadow:0 6px 18px rgba(0,0,0,.35);z-index:9999}
+    .birthday-btn:hover{transform:translateY(-3px);transition:transform .15s}
+    </style>
+</body>
+</html>
