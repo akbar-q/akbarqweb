@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>Club Pretentious</title>
+  <meta name="description" content="Club Pretentious — a gallery of occasions." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="site.css" />
+</head>
+<body>
+  <div class="bg" aria-hidden="true">
+    <div class="bg__vignette"></div>
+    <div class="bg__grain"></div>
+    <div class="bg__glow"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="brand" aria-label="Club Pretentious">
+      <div class="brand__mark" aria-hidden="true">
+        <svg class="mark" viewBox="0 0 64 64" focusable="false" aria-hidden="true">
+          <path class="m-stroke" d="M20 44c-6-4-9-10-9-17 0-6 3-12 8-16" />
+          <path class="m-stroke" d="M44 44c6-4 9-10 9-17 0-6-3-12-8-16" />
+          <path class="m-stroke" d="M24 47c3 3 7 5 8 5s5-2 8-5" />
+          <path class="m-stroke" d="M22 30l10-10 10 10" />
+          <path class="m-stroke" d="M23 30h18" />
+          <path class="m-stroke" d="M26 30v6" />
+          <path class="m-stroke" d="M38 30v6" />
+          <circle class="m-fill" cx="32" cy="18" r="1.8" />
+          <circle class="m-fill" cx="22" cy="30" r="1.4" />
+          <circle class="m-fill" cx="42" cy="30" r="1.4" />
+        </svg>
+      </div>
+      <div class="brand__text">
+        <div class="brand__name">Club Pretentious</div>
+        <div class="brand__tag">A small gallery of large occasions</div>
+      </div>
+    </div>
+
+    <nav class="nav" aria-label="Primary">
+      <a class="nav__link" href="Invites/ms-reshmi-n/">Invite</a>
+      <a class="nav__link" href="Invites/">Invites</a>
+      <a class="nav__link" href="Members/">Members</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div class="hero__card">
+        <div class="hero__kicker">No rush. No noise.</div>
+        <h1 class="hero__title">Classical taste, documented.</h1>
+        <p class="hero__copy">
+          This page presents the club’s imagery with appropriate restraint: filename, provenance-by-title, and measured detail.
+        </p>
+      </div>
+    </section>
+
+    <section class="panel" aria-label="Image gallery">
+      <div class="panel__head">
+        <div class="panel__title">Gallery</div>
+        <div class="panel__sub" id="count">Loading…</div>
+      </div>
+
+      <div class="grid" id="grid" aria-live="polite"></div>
+
+      <div class="panel__foot">
+        <div class="note">
+          Images are sourced from <span class="mono">/images</span> and enumerated in <span class="mono">/images/manifest.json</span>.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <template id="cardTmpl">
+    <article class="card">
+      <div class="card__media">
+        <img class="card__img" alt="" loading="lazy" />
+        <div class="card__shine" aria-hidden="true"></div>
+      </div>
+      <div class="card__body">
+        <div class="card__name"></div>
+        <div class="card__meta"></div>
+      </div>
+    </article>
+  </template>
+
+  <script src="site.js"></script>
+</body>
+</html>
