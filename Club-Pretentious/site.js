@@ -2,6 +2,68 @@
   const grid = document.getElementById('grid');
   const count = document.getElementById('count');
   const tmpl = document.getElementById('cardTmpl');
+  const galleryTab = document.getElementById('galleryTab');
+  const galleryPanel = document.getElementById('gallery');
+  const manifestoTab = document.getElementById('manifestoTab');
+
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxTitle = document.getElementById('lightboxTitle');
+  const lightboxClose = document.getElementById('lightboxClose');
+  const lightboxBackdrop = document.getElementById('lightboxBackdrop');
+  const lightboxOpen = document.getElementById('lightboxOpen');
+
+  const syncTabs = () => {
+    const hash = (location.hash || '').toLowerCase();
+    const isGallery = hash === '#gallery';
+    const isManifesto = hash === '#manifesto' || hash === '';
+    galleryTab?.classList.toggle('nav__link--active', isGallery);
+    manifestoTab?.classList.toggle('nav__link--active', isManifesto);
+  };
+
+  window.addEventListener('hashchange', syncTabs);
+  syncTabs();
+
+  galleryTab?.addEventListener('click', (e) => {
+    // Ensure smooth behavior even if the browser doesn't scroll for hash changes.
+    e.preventDefault();
+    history.pushState(null, '', '#gallery');
+    syncTabs();
+    galleryPanel?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  manifestoTab?.addEventListener('click', (e) => {
+    e.preventDefault();
+    history.pushState(null, '', '#manifesto');
+    syncTabs();
+    document.getElementById('manifesto')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  const openLightbox = (src, title) => {
+    if (!lightbox || !lightboxImg || !lightboxTitle || !lightboxOpen) return;
+    lightboxImg.src = src;
+    lightboxImg.alt = title || '';
+    lightboxTitle.textContent = title || 'Image';
+    lightboxOpen.setAttribute('href', src);
+    lightbox.classList.add('lightbox--open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeLightbox = () => {
+    if (!lightbox || !lightboxImg) return;
+    lightbox.classList.remove('lightbox--open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    // prevent flash of old image on reopen
+    lightboxImg.src = '';
+  };
+
+  lightboxClose?.addEventListener('click', closeLightbox);
+  lightboxBackdrop?.addEventListener('click', closeLightbox);
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
+  });
 
   const toTitle = (fileBase) => {
     const cleaned = fileBase
@@ -43,6 +105,10 @@
 
     img.src = safeSrc(filename);
     img.alt = base;
+
+    img.addEventListener('click', () => {
+      openLightbox(safeSrc(filename), filename);
+    });
 
     img.addEventListener('load', () => {
       meta.textContent = `${toTitle(base)}${year ? ` • ${year}` : ''} • ${ext.toUpperCase()} • ${img.naturalWidth}×${img.naturalHeight}`;
