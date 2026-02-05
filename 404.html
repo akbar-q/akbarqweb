@@ -6,9 +6,260 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
-	<!-- Redirect all 404s to /memorial/ -->
-	<meta http-equiv="refresh" content="0; url=/memorial/" />
-	<script>if(location.pathname.indexOf('/memorial')===-1){window.location.replace('/memorial/');}</script>
+	<script>
+		(function () {
+			"use strict";
+
+			var FALLBACK = "/memorial/";
+
+			function safeDecode(value) {
+				try {
+					return decodeURIComponent(value);
+				} catch (e) {
+					return value;
+				}
+			}
+
+			function normalizeKey(pathname) {
+				var path = String(pathname || "/");
+				path = path.replace(/\\/g, "/");
+				path = safeDecode(path);
+				path = path.replace(/\s+/g, " ").trim();
+				if (!path.startsWith("/")) path = "/" + path;
+
+				path = path.replace(/_/g, "-");
+				path = path.replace(/\s/g, "-");
+				path = path.replace(/\/{2,}/g, "/");
+				path = path.replace(/-+/g, "-");				
+
+				// Remove default documents.
+				path = path.replace(/\/(index)(\.html?)?$/i, "");
+				if (path === "") path = "/";
+
+				// Normalize trailing slash (keep only for root in the key).
+				if (path.length > 1 && path.endsWith("/")) path = path.slice(0, -1);
+				return path.toLowerCase();
+			}
+
+			function withTrailingSlash(path) {
+				return path.endsWith("/") ? path : path + "/";
+			}
+
+			function go(targetPath) {
+				if (!targetPath) return;
+				var target = String(targetPath);
+				if (!target.startsWith("/")) target = "/" + target;
+
+				var nextUrl = new URL(target, window.location.origin);
+				nextUrl.search = window.location.search || "";
+				nextUrl.hash = window.location.hash || "";
+
+				var current = window.location.pathname + (window.location.search || "") + (window.location.hash || "");
+				var next = nextUrl.pathname + nextUrl.search + nextUrl.hash;
+				if (current === next) return;
+
+				window.location.replace(nextUrl.toString());
+			}
+
+			// Canonical paths (case-sensitive as they exist in the repo).
+			var canonicalPaths = [
+				"/",
+				"/index.html",
+				"/memorial/",
+				"/meme/",
+				"/meme/dank.html",
+				"/meme-maker/",
+				"/game/snake.html",
+				"/gogogo/",
+				"/AR/",
+				"/DE/",
+				"/DE/home.html",
+				"/energy/",
+				"/eol/",
+				"/Club-Pretentious/",
+				"/Club-Pretentious/join.html",
+				"/Club-Pretentious/Members/",
+				"/Club-Pretentious/Invites/ms-reshmi-n/",
+				"/Club-Pretentious/Invites/zoe-v/"
+			];
+
+			var canonicalByLower = Object.create(null);
+			for (var i = 0; i < canonicalPaths.length; i++) {
+				canonicalByLower[normalizeKey(canonicalPaths[i])] = canonicalPaths[i];
+			}
+
+			// Explicit misspellings / aliases (normalized keys -> canonical path).
+			var redirects = Object.create(null);
+			function addAliases(aliases, canonical) {
+				for (var j = 0; j < aliases.length; j++) {
+					redirects[normalizeKey(aliases[j])] = canonical;
+				}
+			}
+
+			// Club Pretentious: common misspellings, spacing, punctuation, casing.
+			addAliases(
+				[
+					"/club-pretentious",
+					"/clubpretentious",
+					"/club_pretentious",
+					"/club pretentious",
+					"/club-pretensious",
+					"/club-pretencious",
+					"/club-pretentios",
+					"/club-pretentiuos",
+					"/club-pretentiouss",
+					"/club-pretenious",
+					"/club-pretenchous",
+					"/club-prestentious",
+					"/club-prentious",
+					"/club-pretentious.html",
+					"/clubpretentious.html",
+					"/club-pretentious/index",
+					"/club-pretentious/index.html"
+				],
+				"/Club-Pretentious/"
+			);
+
+			// Join page: missing extension, common typos.
+			addAliases(
+				[
+					"/club-pretentious/join",
+					"/club-pretentious/join/",
+					"/club-pretentious/join.htm",
+					"/clubpretentious/join",
+					"/clubpretentious/join/",
+					"/clubpretencious/join",
+					"/clubpretensious/join",
+					"/clubpretentiuos/join",
+					"/club-pretentious/join-us",
+					"/club-pretentious/joinus",
+					"/club-pretentious/request",
+					"/club-pretentious/request-to-join",
+					"/club-pretentious/reqest-to-join",
+					"/club-pretentious/request-to-joim",
+					"/club-pretentious/jion",
+					"/club-pretentious/joim",
+					"/club-pretentious/join.html"
+				],
+				"/Club-Pretentious/join.html"
+			);
+
+			// Members page: common typos and singular/plural.
+			addAliases(
+				[
+					"/club-pretentious/members",
+					"/club-pretentious/members/",
+					"/clubpretentious/members",
+					"/clubpretentious/members/",
+					"/clubpretencious/members",
+					"/clubpretensious/members",
+					"/clubpretentious/member",
+					"/club-pretentious/member",
+					"/club-pretentious/member/",
+					"/club-pretentious/memeber",
+					"/club-pretentious/memebers",
+					"/club-pretentious/membars",
+					"/club-pretentious/members/index.html",
+					"/club-pretentious/members/index"
+				],
+				"/Club-Pretentious/Members/"
+			);
+
+			// Invites landing: no index page exists; send to club home.
+			addAliases(
+				[
+					"/club-pretentious/invite",
+					"/club-pretentious/invites",
+					"/club-pretentious/invitations",
+					"/club-pretentious/invites/",
+					"/club-pretentious/invite/",
+					"/club-pretentious/invtes",
+					"/clubpretentious/invite",
+					"/clubpretentious/invites",
+					"/clubpretencious/invites",
+					"/clubpretensious/invites"
+				],
+				"/Club-Pretentious/"
+			);
+
+			// Specific invite pages: common wrong casing/spacing.
+			addAliases(
+				[
+					"/club-pretentious/invites/ms-reshmi-n",
+					"/club-pretentious/invites/ms-reshmi-n/",
+					"/clubpretentious/invites/ms-reshmi-n",
+					"/clubpretentious/invites/ms-reshmi-n/",
+					"/club-pretentious/invites/ms-reshmi",
+					"/club-pretentious/invites/reshmi",
+					"/club-pretentious/invites/reshmi-n"
+				],
+				"/Club-Pretentious/Invites/ms-reshmi-n/"
+			);
+			addAliases(
+				[
+					"/club-pretentious/invites/zoe-v",
+					"/club-pretentious/invites/zoe-v/",
+					"/clubpretentious/invites/zoe-v",
+					"/clubpretentious/invites/zoe-v/",
+					"/club-pretentious/invites/zoe",
+					"/club-pretentious/invites/zoe-v/index.html",
+					"/club-pretentious/invites/zoe-v/index"
+				],
+				"/Club-Pretentious/Invites/zoe-v/"
+			);
+
+			var requestedPath = window.location.pathname || "/";
+			var requestedKey = normalizeKey(requestedPath);
+
+			// If the request is already in /memorial, do nothing (avoid loops).
+			if (requestedKey.indexOf("/memorial/") === 0) return;
+
+			// 1) Explicit redirect aliases/misspellings.
+			if (redirects[requestedKey]) {
+				go(redirects[requestedKey]);
+				return;
+			}
+
+			// 2) Case-insensitive match against known canonical paths.
+			if (canonicalByLower[requestedKey] && canonicalByLower[requestedKey] !== requestedPath) {
+				go(canonicalByLower[requestedKey]);
+				return;
+			}
+
+			// 3) Common extension mistakes.
+			if (requestedKey.endsWith(".htm")) {
+				var htmlKey = requestedKey + "l";
+				if (canonicalByLower[htmlKey]) {
+					go(canonicalByLower[htmlKey]);
+					return;
+				}
+			}
+			if (!/\.[a-z0-9]{1,6}$/i.test(requestedKey)) {
+				var impliedHtmlKey = requestedKey + ".html";
+				if (canonicalByLower[impliedHtmlKey]) {
+					go(canonicalByLower[impliedHtmlKey]);
+					return;
+				}
+				var impliedIndexKey = requestedKey + "/index.html";
+				if (canonicalByLower[normalizeKey(impliedIndexKey)]) {
+					go(canonicalByLower[normalizeKey(impliedIndexKey)]);
+					return;
+				}
+			}
+
+			// 4) Heuristic: if it smells like Club Pretentious, send to the club.
+			if (requestedKey.indexOf("/club") === 0 && requestedKey.indexOf("pret") !== -1) {
+				go("/Club-Pretentious/");
+				return;
+			}
+
+			// Final fallback: keep existing behaviour (send users to memorial).
+			go(FALLBACK);
+		})();
+	</script>
+	<noscript>
+		<meta http-equiv="refresh" content="2; url=/memorial/" />
+	</noscript>
   <link rel="shortcut icon" href="assets/images/logospin.gif" type="image/x-icon">
   <meta name="description" content="">
   
