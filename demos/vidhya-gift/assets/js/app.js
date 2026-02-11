@@ -1,5 +1,206 @@
 const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+function ensureSparkleLayer() {
+  let layer = document.querySelector(".sparkle-layer");
+  if (layer) return layer;
+  layer = document.createElement("div");
+  layer.className = "sparkle-layer";
+  layer.setAttribute("aria-hidden", "true");
+  document.body.appendChild(layer);
+  return layer;
+}
+
+function initSparkles() {
+  if (reduceMotion) return;
+  const layer = ensureSparkleLayer();
+
+  function spawn(x, y, size) {
+    const s = document.createElement("div");
+    s.className = "sparkle";
+    const px = Math.max(8, Math.min(window.innerWidth - 8, x));
+    const py = Math.max(8, Math.min(window.innerHeight - 8, y));
+    const wh = Math.max(10, Math.min(22, size));
+    s.style.left = `${px}px`;
+    s.style.top = `${py}px`;
+    s.style.width = `${wh}px`;
+    s.style.height = `${wh}px`;
+    layer.appendChild(s);
+    window.setTimeout(() => s.remove(), 950);
+  }
+
+  // gentle ambient sparkles
+  const ambient = () => {
+    spawn(Math.random() * window.innerWidth, Math.random() * window.innerHeight, 10 + Math.random() * 12);
+    const nextIn = 700 + Math.floor(Math.random() * 1400);
+    window.setTimeout(ambient, nextIn);
+  };
+  window.setTimeout(ambient, 900);
+
+  // sparkle trail on pointer move (throttled)
+  let last = 0;
+  window.addEventListener(
+    "pointermove",
+    (e) => {
+      const now = performance.now();
+      if (now - last < 80) return;
+      last = now;
+      spawn(e.clientX + (Math.random() * 10 - 5), e.clientY + (Math.random() * 10 - 5), 10 + Math.random() * 10);
+    },
+    { passive: true }
+  );
+
+  // sparkle burst on click/tap
+  window.addEventListener(
+    "pointerdown",
+    (e) => {
+      for (let i = 0; i < 7; i += 1) {
+        spawn(e.clientX + (Math.random() * 30 - 15), e.clientY + (Math.random() * 30 - 15), 10 + Math.random() * 12);
+      }
+    },
+    { passive: true }
+  );
+}
+
+function initPageTransitions() {
+  // fade in
+  if (!reduceMotion) {
+    window.requestAnimationFrame(() => {
+      document.body.classList.add("is-enter");
+    });
+  } else {
+    document.body.classList.add("is-enter");
+  }
+
+  if (reduceMotion) return;
+
+  function isSameOriginLink(a) {
+    try {
+      const url = new URL(a.href, window.location.href);
+      return url.origin === window.location.origin;
+    } catch {
+      return false;
+    }
+  }
+
+  document.addEventListener("click", (e) => {
+    const a = e.target && e.target.closest ? e.target.closest("a") : null;
+    if (!a) return;
+    if (!a.getAttribute("href")) return;
+    if (a.target && a.target !== "_self") return;
+    if (a.hasAttribute("download")) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if (!isSameOriginLink(a)) return;
+
+    const href = a.getAttribute("href");
+    if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:")) return;
+
+    // let lightbox / gallery clicks through (they're not anchors)
+    e.preventDefault();
+
+    const navigate = () => {
+      window.location.href = a.href;
+    };
+
+    // If ViewTransition API exists, rely on browser. Otherwise do manual fade.
+    if ("startViewTransition" in document) {
+      navigate();
+      return;
+    }
+
+    document.body.classList.add("is-leaving");
+    window.setTimeout(navigate, 200);
+  });
+}
+
+function initWomenInScienceDayPopup() {
+  // Home page only
+  const path = (window.location.pathname || "").toLowerCase();
+  if (!(path.endsWith("/vidhya-gift/") || path.endsWith("/vidhya-gift/index.html"))) return;
+
+  const now = new Date();
+  const isFeb11 = now.getMonth() === 1 && now.getDate() === 11;
+  if (!isFeb11) return;
+
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  const d = String(now.getDate()).padStart(2, "0");
+  const key = `vidhyaGift.wisday.dismissed.${y}-${m}-${d}`;
+
+  try {
+    if (localStorage.getItem(key) === "1") return;
+  } catch {
+    // ignore
+  }
+
+  const overlay = document.createElement("div");
+  overlay.className = "wisday";
+  overlay.setAttribute("role", "dialog");
+  overlay.setAttribute("aria-modal", "true");
+  overlay.setAttribute("aria-label", "Happy Women in Science Day");
+
+  const card = document.createElement("div");
+  card.className = "wisday-card";
+
+  const top = document.createElement("div");
+  top.className = "wisday-top";
+  const title = document.createElement("h2");
+  title.className = "wisday-title";
+  title.textContent = "Happy Women in Science Day";
+  top.appendChild(title);
+
+  const body = document.createElement("div");
+  body.className = "wisday-body";
+  const p1 = document.createElement("p");
+  p1.textContent = "Today, we celebrate the women who turn curiosity into discovery — and courage into progress.";
+  const p2 = document.createElement("p");
+  p2.textContent = "Dr Vidhya, thank you for being a bright example of brilliance with heart.";
+  body.appendChild(p1);
+  body.appendChild(p2);
+
+  const actions = document.createElement("div");
+  actions.className = "wisday-actions";
+
+  const confetti = document.createElement("button");
+  confetti.type = "button";
+  confetti.className = "button secondary";
+  confetti.textContent = "Celebrate";
+  confetti.addEventListener("click", () => {
+    const trigger = document.querySelector("[data-confetti]");
+    if (trigger) trigger.click();
+  });
+
+  const close = document.createElement("button");
+  close.type = "button";
+  close.className = "button";
+  close.textContent = "Close";
+
+  const dismiss = () => {
+    overlay.remove();
+    try {
+      localStorage.setItem(key, "1");
+    } catch {
+      // ignore
+    }
+  };
+
+  close.addEventListener("click", dismiss);
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) dismiss();
+  });
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && document.body.contains(overlay)) dismiss();
+  });
+
+  actions.appendChild(confetti);
+  actions.appendChild(close);
+
+  card.appendChild(top);
+  card.appendChild(body);
+  card.appendChild(actions);
+  overlay.appendChild(card);
+  document.body.appendChild(overlay);
+}
+
 function initFloatingStickers() {
   if (reduceMotion) return;
   const layer = document.querySelector(".floating-stickers");
@@ -342,7 +543,10 @@ function initConfetti() {
 }
 
 initFloatingStickers();
+initPageTransitions();
+initSparkles();
 initJokeRotator();
 initReveal();
 initGallery();
 initConfetti();
+initWomenInScienceDayPopup();
