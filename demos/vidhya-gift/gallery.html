@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gallery for Dr Vidhya</title>
+  <meta name="description" content="A pastel photo gallery for Dr Vidhya." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Caveat:wght@500;700&family=Fuzzy+Bubbles:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./assets/css/style.css" />
+</head>
+<body>
+  <div class="floating-stickers" aria-hidden="true"></div>
+  <div class="page">
+    <header>
+      <div class="brand">
+        <div class="brand-badge">DV</div>
+        <div>
+          <h1>Gallery</h1>
+          <p>Photos + pastel frames</p>
+        </div>
+      </div>
+      <nav>
+        <a href="./index.html">Home</a>
+        <a href="./moments.html">Moments</a>
+        <a href="./gallery.html">Gallery</a>
+        <a href="./notes.html">Notes</a>
+      </nav>
+    </header>
+
+    <section class="section">
+      <h2>Drop your favorite photos here</h2>
+      <div class="panel">
+        <p>
+          Add any images to the <strong>photos</strong> folder (keep any filenames you like).
+          Then run <strong>generate_photos_json.ps1</strong> to update the manifest so this
+          page can auto-display everything on a static site.
+        </p>
+        <div class="gallery-grid" data-gallery-grid>
+          <div class="photo-tile missing">
+            <div class="label">Loading photos…</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">Every photo is a sparkle.</div>
+  </div>
+  <script src="./assets/js/app.js"></script>
+</body>
+</html>
