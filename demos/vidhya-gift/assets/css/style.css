@@ -253,6 +253,10 @@ button:focus-visible,
   box-shadow: var(--shadow);
 }
 
+.panel.tight {
+  padding: 16px;
+}
+
 .timeline {
   display: grid;
   gap: 20px;
@@ -274,10 +278,151 @@ button:focus-visible,
   transform: translateY(0);
 }
 
-.gallery-grid {
+
+.ig-feed {
+  width: min(100%, 740px);
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 18px;
+}
+
+.ig-card {
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  border: 2px dashed rgba(43, 43, 61, 0.12);
+}
+
+.ig-head {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.ig-title {
+  font-family: "Caveat", cursive;
+  font-size: 1.35rem;
+  margin: 0;
+}
+
+.ig-meta {
+  font-size: 0.9rem;
+  color: rgba(43, 43, 61, 0.65);
+}
+
+.ig-imageWrap {
+  background: linear-gradient(135deg, #fff1f5, #f6fff7 60%, #f1fbff);
+}
+
+.ig-image {
+  width: 100%;
+  height: auto;
+  max-height: 74vh;
+  display: block;
+  object-fit: contain;
+  cursor: zoom-in;
+}
+
+.ig-actions {
+  padding: 12px 16px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.likeBtn {
+  appearance: none;
+  border: 2px solid rgba(43, 43, 61, 0.12);
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--deep-ink);
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: "Fuzzy Bubbles", sans-serif;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.likeBtn:hover,
+.likeBtn:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+
+.likeBtn.is-liked {
+  background: var(--pink);
+}
+
+.likeCount {
+  font-family: "Caveat", cursive;
+  font-size: 1.25rem;
+  color: rgba(43, 43, 61, 0.85);
+}
+
+.likeCount b {
+  font-family: "Bungee Shade", sans-serif;
+  font-weight: 400;
+  font-size: 1.1rem;
+  margin-right: 6px;
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(27, 27, 43, 0.78);
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  z-index: 50;
+}
+
+.lightbox[hidden] {
+  display: none;
+}
+
+.lightbox-card {
+  width: min(100%, 980px);
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.lightbox-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+}
+
+.lightbox-title {
+  margin: 0;
+  font-family: "Caveat", cursive;
+  font-size: 1.5rem;
+}
+
+.lightbox-close {
+  appearance: none;
+  border: 2px solid rgba(43, 43, 61, 0.12);
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-family: "Fuzzy Bubbles", sans-serif;
+}
+
+.lightbox-img {
+  width: 100%;
+  height: auto;
+  max-height: 86vh;
+  object-fit: contain;
+  display: block;
+  background: #fff;
 }
 
 .photo-figure {
@@ -444,6 +589,20 @@ button:focus-visible,
   nav {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .ig-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ig-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .likeCount {
+    text-align: center;
   }
 }
 

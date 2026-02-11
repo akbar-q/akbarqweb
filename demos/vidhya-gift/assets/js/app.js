@@ -26,12 +26,12 @@ function initJokeRotator() {
   if (!target) return;
 
   const jokes = [
-    "Your sparkle is 70% science, 30% magic.",
-    "Proof that kindness can be a superpower.",
-    "If joy had a mascot, it would be you.",
-    "Your laughter is the unofficial soundtrack.",
-    "Caffeine? Optional. You? Essential.",
-    "Doctor of brilliance, keeper of good vibes."
+    "You make the hard parts feel gentle.",
+    "Kindness, but make it legendary.",
+    "Your calm is a lighthouse.",
+    "Learning with you feels like sunrise.",
+    "Your laughter turns nerves into courage.",
+    "Brilliant mind. Golden heart."
   ];
 
   let index = Math.floor(Math.random() * jokes.length);
@@ -70,8 +70,10 @@ function initReveal() {
 }
 
 function initGallery() {
-  const grid = document.querySelector("[data-gallery-grid]");
-  if (!grid) return;
+  const feed = document.querySelector("[data-ig-feed]");
+  if (!feed) return;
+
+  const storagePrefix = "vidhyaGift.likes.";
 
   function prettifyTitle(input) {
     if (!input) return "";
@@ -87,38 +89,187 @@ function initGallery() {
     return `./photos/${encodeURIComponent(fileName)}`;
   }
 
-  function makePhotoFigure(item) {
-    const figure = document.createElement("figure");
-    figure.className = "photo-figure";
+  function hashString(str) {
+    let h = 2166136261;
+    for (let i = 0; i < str.length; i += 1) {
+      h ^= str.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return h >>> 0;
+  }
 
-    const tile = document.createElement("div");
-    tile.className = "photo-tile";
+  function getStoredState(key, fallback) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) return fallback;
+      return JSON.parse(raw);
+    } catch {
+      return fallback;
+    }
+  }
 
-    const label = document.createElement("div");
-    label.className = "label";
-    label.textContent = "Loading…";
-    tile.appendChild(label);
+  function setStoredState(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch {
+      // ignore
+    }
+  }
 
-    const caption = document.createElement("figcaption");
-    caption.className = "photo-caption";
-    caption.textContent = prettifyTitle(item.title || item.file);
+  function ensureLightbox() {
+    let lb = document.querySelector("[data-lightbox]");
+    if (lb) return lb;
 
+    lb = document.createElement("div");
+    lb.className = "lightbox";
+    lb.setAttribute("data-lightbox", "");
+    lb.hidden = true;
+
+    const card = document.createElement("div");
+    card.className = "lightbox-card";
+
+    const top = document.createElement("div");
+    top.className = "lightbox-top";
+
+    const title = document.createElement("h3");
+    title.className = "lightbox-title";
+    title.textContent = "";
+
+    const close = document.createElement("button");
+    close.className = "lightbox-close";
+    close.type = "button";
+    close.textContent = "Close";
+
+    const img = document.createElement("img");
+    img.className = "lightbox-img";
+    img.alt = "";
+
+    close.addEventListener("click", () => {
+      lb.hidden = true;
+      img.src = "";
+    });
+
+    lb.addEventListener("click", (e) => {
+      if (e.target === lb) close.click();
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !lb.hidden) close.click();
+    });
+
+    top.appendChild(title);
+    top.appendChild(close);
+    card.appendChild(top);
+    card.appendChild(img);
+    lb.appendChild(card);
+    document.body.appendChild(lb);
+
+    lb._set = ({ src, titleText }) => {
+      title.textContent = titleText || "";
+      img.src = src;
+      img.alt = titleText || "Photo";
+      lb.hidden = false;
+    };
+
+    return lb;
+  }
+
+  function formatLikes(n) {
+    return `${n.toLocaleString()} likes`;
+  }
+
+  function makeCard(item) {
+    const titleText = prettifyTitle(item.title || item.file);
     const src = photoUrl(item.file);
+    const key = `${storagePrefix}${item.file}`;
 
-    const img = new Image();
-    img.onload = () => {
-      tile.style.backgroundImage = `url(${src})`;
-      tile.classList.add("loaded");
-    };
-    img.onerror = () => {
-      tile.classList.add("missing");
-      label.textContent = "Missing image";
-    };
+    const seed = hashString(item.file);
+    const base = 18 + (seed % 260);
+
+    const state = getStoredState(key, { liked: false, likes: base });
+    if (typeof state.likes !== "number" || state.likes < 0) state.likes = base;
+    state.liked = Boolean(state.liked);
+
+    const card = document.createElement("article");
+    card.className = "ig-card";
+
+    const head = document.createElement("div");
+    head.className = "ig-head";
+
+    const titleWrap = document.createElement("div");
+    const title = document.createElement("h3");
+    title.className = "ig-title";
+    title.textContent = titleText;
+    const meta = document.createElement("div");
+    meta.className = "ig-meta";
+    meta.textContent = "Tap to view full screen";
+    titleWrap.appendChild(title);
+    titleWrap.appendChild(meta);
+
+    head.appendChild(titleWrap);
+
+    const imageWrap = document.createElement("div");
+    imageWrap.className = "ig-imageWrap";
+
+    const img = document.createElement("img");
+    img.className = "ig-image";
+    img.loading = "lazy";
+    img.decoding = "async";
+    img.alt = titleText;
     img.src = src;
+    imageWrap.appendChild(img);
 
-    figure.appendChild(tile);
-    figure.appendChild(caption);
-    return figure;
+    const actions = document.createElement("div");
+    actions.className = "ig-actions";
+
+    const likeBtn = document.createElement("button");
+    likeBtn.className = "likeBtn";
+    likeBtn.type = "button";
+    likeBtn.textContent = state.liked ? "Liked" : "Like";
+    if (state.liked) likeBtn.classList.add("is-liked");
+
+    const likeCount = document.createElement("div");
+    likeCount.className = "likeCount";
+    likeCount.innerHTML = `<b>♡</b> <span>${formatLikes(state.likes)}</span>`;
+    const likeCountSpan = likeCount.querySelector("span");
+
+    function setLikes(nextLikes) {
+      state.likes = Math.max(0, Math.floor(nextLikes));
+      likeCountSpan.textContent = formatLikes(state.likes);
+      setStoredState(key, state);
+    }
+
+    likeBtn.addEventListener("click", () => {
+      state.liked = !state.liked;
+      likeBtn.textContent = state.liked ? "Liked" : "Like";
+      likeBtn.classList.toggle("is-liked", state.liked);
+      setLikes(state.likes + (state.liked ? 1 : -1));
+    });
+
+    const lb = ensureLightbox();
+    img.addEventListener("click", () => {
+      lb._set({ src, titleText });
+    });
+
+    actions.appendChild(likeBtn);
+    actions.appendChild(likeCount);
+
+    card.appendChild(head);
+    card.appendChild(imageWrap);
+    card.appendChild(actions);
+
+    if (!reduceMotion) {
+      const bump = () => {
+        const chance = (hashString(item.file + String(Date.now())) % 100) / 100;
+        if (chance > 0.55) setLikes(state.likes + 1);
+        const nextIn = 2600 + Math.floor(Math.random() * 6200);
+        window.setTimeout(bump, nextIn);
+      };
+      const startIn = 1200 + Math.floor((seed % 7) * 500);
+      window.setTimeout(bump, startIn);
+    }
+
+    return card;
   }
 
   async function loadManifest() {
@@ -135,7 +286,7 @@ function initGallery() {
   (async () => {
     try {
       const items = await loadManifest();
-      grid.innerHTML = "";
+      feed.innerHTML = "";
 
       if (!items.length) {
         const empty = document.createElement("div");
@@ -144,20 +295,20 @@ function initGallery() {
         label.className = "label";
         label.textContent = "No photos yet — add some to /photos and regenerate photos.json.";
         empty.appendChild(label);
-        grid.appendChild(empty);
+        feed.appendChild(empty);
         return;
       }
 
-      items.forEach((item) => grid.appendChild(makePhotoFigure(item)));
-    } catch (e) {
-      grid.innerHTML = "";
+      items.forEach((item) => feed.appendChild(makeCard(item)));
+    } catch {
+      feed.innerHTML = "";
       const fail = document.createElement("div");
       fail.className = "photo-tile missing";
       const label = document.createElement("div");
       label.className = "label";
       label.textContent = "Couldn’t load photos.json — run generate_photos_json.ps1.";
       fail.appendChild(label);
-      grid.appendChild(fail);
+      feed.appendChild(fail);
     }
   })();
 }
