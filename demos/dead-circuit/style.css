@@ -1109,21 +1109,6 @@ button:disabled {
   100% { opacity: 0; }
 }
 
-@keyframes chipBlink {
-  0%, 100% { opacity: 0.35; }
-  50% { opacity: 0.95; }
-}
-
-@keyframes hintFlash {
-  0% { transform: translateY(2px); }
-  100% { transform: translateY(0); }
-}
-
-@keyframes botBob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-}
-
 @media (prefers-reduced-motion: reduce) {
   body:not(.force-motion) .alarm-spinner,
   body:not(.force-motion) .alarm-core,
@@ -1147,10 +1132,7 @@ button:disabled {
 
   body:not(.force-motion) .lamp,
   body:not(.force-motion) .command-line::after,
-  body:not(.force-motion) .event-toast.show,
-  body:not(.force-motion) .chip-grid span,
-  body:not(.force-motion) .hint-box.flash,
-  body:not(.force-motion) .bot-svg {
+  body:not(.force-motion) .event-toast.show {
     animation: none;
   }
 }

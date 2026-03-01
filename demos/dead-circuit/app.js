@@ -57,8 +57,6 @@ const dom = {
   lampDiag: document.getElementById('lampDiag'),
   lampRepair: document.getElementById('lampRepair'),
   commandLine: document.getElementById('commandLine'),
-  badgeRack: document.getElementById('badgeRack'),
-  botBubble: document.getElementById('botBubble'),
   eventToast: document.getElementById('eventToast'),
   scopeCanvas: document.getElementById('scopeCanvas'),
   fxCanvas: document.getElementById('fxCanvas'),
