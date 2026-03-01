@@ -157,8 +157,8 @@ function animateFx() {
 
 function maybeTriggerLightning() {
   const now = performance.now();
-  const gap = state.alertLevel === 'critical' ? 1300 : state.alertLevel === 'warning' ? 2600 : 7000;
-  const chance = state.alertLevel === 'critical' ? 0.06 : state.alertLevel === 'warning' ? 0.028 : 0.007;
+  const gap = state.alertLevel === 'critical' ? 900 : state.alertLevel === 'warning' ? 1800 : 4200;
+  const chance = state.alertLevel === 'critical' ? 0.08 : state.alertLevel === 'warning' ? 0.045 : 0.02;
 
   if (now - state.fx.lastLightningAt < gap || Math.random() > chance) {
     return;
@@ -247,9 +247,13 @@ function shouldReduceMotion() {
 
 function readFxPreference() {
   try {
-    return window.localStorage.getItem('deadCircuit.forceMotion') === '1';
+    const stored = window.localStorage.getItem('deadCircuit.forceMotion');
+    if (stored === null) {
+      return true;
+    }
+    return stored === '1';
   } catch {
-    return false;
+    return true;
   }
 }
 
