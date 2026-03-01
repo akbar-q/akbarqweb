@@ -9,6 +9,8 @@ const dom = {
   restartBtn: document.getElementById('restartBtn'),
   playAgainBtn: document.getElementById('playAgainBtn'),
   nextScenarioBtn: document.getElementById('nextScenarioBtn'),
+  alarmModule: document.getElementById('alarmModule'),
+  alarmLabel: document.getElementById('alarmLabel'),
   teamBadge: document.getElementById('teamBadge'),
   scenarioBadge: document.getElementById('scenarioBadge'),
   timerBadge: document.getElementById('timerBadge'),
@@ -27,7 +29,9 @@ const dom = {
   repairOptions: document.getElementById('repairOptions'),
   checkRepairBtn: document.getElementById('checkRepairBtn'),
   logFeed: document.getElementById('logFeed'),
-  finalSummary: document.getElementById('finalSummary')
+  finalSummary: document.getElementById('finalSummary'),
+  fxCanvas: document.getElementById('fxCanvas'),
+  lightningFlash: document.getElementById('lightningFlash')
 };
 
 const state = {
@@ -44,7 +48,18 @@ const state = {
   timeRemaining: 0,
   selectedFaults: new Set(),
   selectedRepairs: new Set(),
-  measuredNodes: new Set()
+  measuredNodes: new Set(),
+  alertLevel: 'stable',
+  fx: {
+    enabled: true,
+    canvas: null,
+    ctx: null,
+    drops: [],
+    streams: 0,
+    chars: '01ΩλΔ∑⊕⊗⟂↯⎓⎍⎐',
+    rafId: null,
+    lastLightningAt: 0
+  }
 };
 
 const modeMultiplier = {
@@ -62,10 +77,112 @@ const modePenalty = {
 async function init() {
   const res = await fetch('./scenarios.json');
   state.data = await res.json();
+  initVisualFx();
   renderPitchCards();
   bindEvents();
   dom.teamName.value = 'Kirchhoff Crew';
   logLine('info', 'System ready. Choose a pitch and start the mission.');
+}
+
+function initVisualFx() {
+  if (!dom.fxCanvas || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    state.fx.enabled = false;
+    return;
+  }
+
+  const canvas = dom.fxCanvas;
+  const ctx = canvas.getContext('2d', { alpha: true });
+  state.fx.canvas = canvas;
+  state.fx.ctx = ctx;
+
+  const resize = () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    state.fx.streams = Math.max(18, Math.floor(canvas.width / 26));
+    state.fx.drops = Array.from({ length: state.fx.streams }, () => Math.random() * canvas.height);
+  };
+
+  resize();
+  window.addEventListener('resize', resize);
+  animateFx();
+}
+
+function animateFx() {
+  if (!state.fx.enabled || !state.fx.ctx || !state.fx.canvas) {
+    return;
+  }
+
+  const { ctx, canvas, drops, chars } = state.fx;
+  ctx.fillStyle = 'rgba(6, 10, 16, 0.12)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.font = '16px Oxanium, monospace';
+
+  for (let i = 0; i < drops.length; i += 1) {
+    const char = chars[Math.floor(Math.random() * chars.length)];
+    const x = i * 26;
+    const y = drops[i];
+    const intensity = state.alertLevel === 'critical' ? 0.95 : state.alertLevel === 'warning' ? 0.8 : 0.68;
+    ctx.fillStyle = `rgba(90, 255, 180, ${intensity})`;
+    ctx.fillText(char, x, y);
+
+    const speed = state.alertLevel === 'critical' ? 5.6 : state.alertLevel === 'warning' ? 4.4 : 3.2;
+    drops[i] += speed + Math.random() * 2;
+    if (drops[i] > canvas.height + 20 && Math.random() > 0.95) {
+      drops[i] = -18;
+    }
+  }
+
+  maybeTriggerLightning();
+  state.fx.rafId = window.requestAnimationFrame(animateFx);
+}
+
+function maybeTriggerLightning() {
+  const now = performance.now();
+  const gap = state.alertLevel === 'critical' ? 1300 : state.alertLevel === 'warning' ? 2600 : 7000;
+  const chance = state.alertLevel === 'critical' ? 0.06 : state.alertLevel === 'warning' ? 0.028 : 0.007;
+
+  if (now - state.fx.lastLightningAt < gap || Math.random() > chance) {
+    return;
+  }
+
+  state.fx.lastLightningAt = now;
+  if (dom.lightningFlash) {
+    dom.lightningFlash.classList.remove('active');
+    void dom.lightningFlash.offsetWidth;
+    dom.lightningFlash.classList.add('active');
+    window.setTimeout(() => dom.lightningFlash.classList.remove('active'), 240);
+  }
+
+  drawLightningBolt();
+}
+
+function drawLightningBolt() {
+  if (!state.fx.ctx || !state.fx.canvas) {
+    return;
+  }
+
+  const { ctx, canvas } = state.fx;
+  const startX = Math.random() * canvas.width;
+  const segments = 9 + Math.floor(Math.random() * 6);
+  let x = startX;
+  let y = -10;
+
+  ctx.save();
+  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = 'rgba(183, 236, 255, 0.95)';
+  ctx.shadowBlur = 12;
+  ctx.shadowColor = 'rgba(134, 214, 255, 0.95)';
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+
+  for (let i = 0; i < segments; i += 1) {
+    x += (Math.random() - 0.5) * 34;
+    y += canvas.height / segments;
+    ctx.lineTo(x, y);
+  }
+
+  ctx.stroke();
+  ctx.restore();
 }
 
 function renderPitchCards() {
@@ -116,6 +233,7 @@ function startMission() {
   dom.introPanel.classList.add('hidden');
   dom.completePanel.classList.add('hidden');
   dom.gamePanel.classList.remove('hidden');
+  setAlertLevel('stable');
 
   logLine('info', `Mission started for ${state.teamName} in ${state.mode.toUpperCase()} mode.`);
   logLine('info', state.data.pitches[state.selectedPitch]);
@@ -317,6 +435,7 @@ function startTimer(seconds) {
     if (state.timeRemaining <= 0) {
       clearInterval(state.intervalId);
       state.strikes += 1;
+      setAlertLevel('critical');
       logLine('bad', 'Timeout. Scenario lock triggered. Moving to next challenge.');
       syncStats();
       dom.nextScenarioBtn.classList.remove('hidden');
@@ -332,6 +451,7 @@ function finishMission() {
 
   const rank = state.score >= 1300 ? 'Lab Legends' : state.score >= 900 ? 'Fault Hunters' : 'Circuit Survivors';
   dom.finalSummary.textContent = `${state.teamName} completed ${state.data.scenarios.length} scenarios with score ${state.score}, strikes ${state.strikes}, and rank ${rank}.`;
+  setAlertLevel('stable');
 
   logLine('good', `Mission complete. Final rank: ${rank}.`);
 }
@@ -354,6 +474,7 @@ function resetToIntro() {
   dom.teamBadge.textContent = 'Team: Unassigned';
   dom.scenarioBadge.textContent = 'Scenario 0/0';
   dom.timerBadge.textContent = '00:00';
+  setAlertLevel('stable');
   syncStats();
   setPhase('Briefing');
   logLine('info', 'Mission reset. Configure team and relaunch.');
@@ -363,6 +484,36 @@ function updateTimerDisplay() {
   const min = String(Math.floor(Math.max(0, state.timeRemaining) / 60)).padStart(2, '0');
   const sec = String(Math.max(0, state.timeRemaining) % 60).padStart(2, '0');
   dom.timerBadge.textContent = `${min}:${sec}`;
+
+  if (state.timeRemaining <= 30) {
+    setAlertLevel('critical');
+  } else if (state.timeRemaining <= 60) {
+    setAlertLevel('warning');
+  } else {
+    setAlertLevel('stable');
+  }
+}
+
+function setAlertLevel(level) {
+  state.alertLevel = level;
+  dom.alarmModule.classList.remove('warning', 'critical');
+  dom.timerBadge.classList.remove('warning', 'critical');
+
+  if (level === 'warning') {
+    dom.alarmModule.classList.add('warning');
+    dom.timerBadge.classList.add('warning');
+    dom.alarmLabel.textContent = 'ALARM · ELEVATED';
+    return;
+  }
+
+  if (level === 'critical') {
+    dom.alarmModule.classList.add('critical');
+    dom.timerBadge.classList.add('critical');
+    dom.alarmLabel.textContent = 'ALARM · CRITICAL';
+    return;
+  }
+
+  dom.alarmLabel.textContent = 'ALARM · STABLE';
 }
 
 function syncStats() {

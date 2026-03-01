@@ -20,6 +20,30 @@ body {
   font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
   color: var(--text);
   background: radial-gradient(circle at 20% 20%, #102435, #060a10 55%);
+  overflow-x: hidden;
+}
+
+.fx-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.lightning-flash {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 50% 32%, rgba(160, 214, 255, 0.68), rgba(160, 214, 255, 0));
+  opacity: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.lightning-flash.active {
+  animation: lightningFlash 0.22s ease-out;
 }
 
 .scanlines {
@@ -28,6 +52,7 @@ body {
   pointer-events: none;
   background: repeating-linear-gradient(to bottom, transparent 0, transparent 2px, rgba(255,255,255,0.025) 3px);
   opacity: 0.25;
+  z-index: 3;
 }
 
 .topbar {
@@ -42,6 +67,7 @@ body {
   justify-content: space-between;
   align-items: center;
   gap: 0.8rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
 }
 
 .back-link {
@@ -57,6 +83,74 @@ body {
   justify-content: flex-end;
 }
 
+.alarm-module {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.55rem;
+  border-radius: 0.6rem;
+  border: 1px solid #2f5c73;
+  background: linear-gradient(180deg, #102332, #0a1520);
+  color: #d8f4ff;
+  min-width: 165px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.alarm-spinner {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 2px solid rgba(100, 188, 220, 0.32);
+  border-top-color: #76dfff;
+  animation: spin 1.8s linear infinite;
+}
+
+.alarm-core {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #66dbff;
+  box-shadow: 0 0 0 0 rgba(102, 219, 255, 0.5);
+  animation: pulseCore 1.9s ease-in-out infinite;
+}
+
+.alarm-module strong {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+}
+
+.alarm-module.warning {
+  border-color: #7b6b1e;
+  box-shadow: 0 0 0 1px rgba(241, 206, 67, 0.16), 0 0 22px rgba(241, 206, 67, 0.2);
+}
+
+.alarm-module.warning .alarm-core {
+  background: #ffd260;
+  box-shadow: 0 0 0 0 rgba(255, 210, 96, 0.52);
+}
+
+.alarm-module.warning .alarm-spinner {
+  border-top-color: #ffd260;
+  animation-duration: 1s;
+}
+
+.alarm-module.critical {
+  border-color: #8c2f43;
+  box-shadow: 0 0 0 1px rgba(255, 98, 124, 0.18), 0 0 24px rgba(255, 98, 124, 0.28);
+  animation: jitter 0.16s steps(2, end) infinite;
+}
+
+.alarm-module.critical .alarm-core {
+  background: #ff667f;
+  box-shadow: 0 0 0 0 rgba(255, 102, 127, 0.65);
+  animation-duration: 0.7s;
+}
+
+.alarm-module.critical .alarm-spinner {
+  border-top-color: #ff667f;
+  animation-duration: 0.5s;
+}
+
 .status-pill {
   padding: 0.35rem 0.6rem;
   border: 1px solid #2b4c64;
@@ -70,11 +164,20 @@ body {
   color: #ffd2d8;
 }
 
+.status-pill.danger.warning {
+  animation: timerPulse 1.2s ease-in-out infinite;
+}
+
+.status-pill.danger.critical {
+  animation: timerPulse 0.45s ease-in-out infinite;
+  box-shadow: 0 0 0 1px rgba(255, 102, 127, 0.3), 0 0 16px rgba(255, 102, 127, 0.4);
+}
+
 .shell {
   width: min(1180px, 100% - 2rem);
   margin: 1rem auto 2rem;
   position: relative;
-  z-index: 1;
+  z-index: 4;
 }
 
 .card {
@@ -83,6 +186,8 @@ body {
   border-radius: 1rem;
   padding: 1rem;
   margin-bottom: 1rem;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35);
+  animation: cardBreath 4.2s ease-in-out infinite;
 }
 
 h1, h2, h3 {
@@ -139,6 +244,13 @@ input, select {
   background: #10202d;
   padding: 0.8rem;
   cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pitch-card:hover {
+  transform: translateY(-2px);
+  border-color: #3f7394;
+  box-shadow: 0 8px 16px rgba(9, 32, 45, 0.45);
 }
 
 .pitch-card.active {
@@ -174,6 +286,13 @@ button {
 button.primary {
   background: linear-gradient(90deg, #27beef, #31d89e);
   color: #03232d;
+  box-shadow: 0 8px 18px rgba(39, 190, 239, 0.25);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+button.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(39, 190, 239, 0.36);
 }
 
 button.ghost {
@@ -222,6 +341,19 @@ button:disabled {
   border-radius: 0.8rem;
   background: #0d171f;
   padding: 0.9rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.subcard::before {
+  content: "";
+  position: absolute;
+  inset: -30% -10% auto -10%;
+  height: 60%;
+  background: linear-gradient(180deg, rgba(52, 143, 182, 0.22), rgba(52, 143, 182, 0));
+  transform: translateY(-32%);
+  animation: shimmerSweep 3.8s linear infinite;
+  pointer-events: none;
 }
 
 .component-board {
@@ -310,6 +442,7 @@ button:disabled {
 .log-line.bad {
   background: #311821;
   border: 1px solid #85465a;
+  animation: logAlert 0.4s ease;
 }
 
 .actions-row {
@@ -320,6 +453,68 @@ button:disabled {
 
 .hidden {
   display: none;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulseCore {
+  0% { box-shadow: 0 0 0 0 rgba(102, 219, 255, 0.5); transform: scale(1); }
+  50% { box-shadow: 0 0 0 10px rgba(102, 219, 255, 0); transform: scale(1.12); }
+  100% { box-shadow: 0 0 0 0 rgba(102, 219, 255, 0); transform: scale(1); }
+}
+
+@keyframes jitter {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(1px); }
+  50% { transform: translateX(-1px); }
+  75% { transform: translateX(1px); }
+}
+
+@keyframes timerPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+@keyframes cardBreath {
+  0%, 100% { box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35); }
+  50% { box-shadow: 0 16px 30px rgba(0, 0, 0, 0.42); }
+}
+
+@keyframes shimmerSweep {
+  0% { transform: translateY(-32%); }
+  100% { transform: translateY(220%); }
+}
+
+@keyframes logAlert {
+  0% { transform: translateX(-3px); }
+  50% { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes lightningFlash {
+  0% { opacity: 0; }
+  20% { opacity: 0.8; }
+  100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alarm-spinner,
+  .alarm-core,
+  .card,
+  .subcard::before,
+  .status-pill.danger.warning,
+  .status-pill.danger.critical,
+  .alarm-module.critical {
+    animation: none;
+  }
+
+  .fx-canvas,
+  .lightning-flash,
+  .scanlines {
+    display: none;
+  }
 }
 
 @media (max-width: 900px) {
