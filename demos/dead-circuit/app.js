@@ -39,6 +39,14 @@ const dom = {
   signalBar: document.getElementById('signalBar'),
   loadBar: document.getElementById('loadBar'),
   thermalBar: document.getElementById('thermalBar'),
+  threatStat: document.getElementById('threatStat'),
+  threatValue: document.getElementById('threatValue'),
+  threatBar: document.getElementById('threatBar'),
+  lampPower: document.getElementById('lampPower'),
+  lampDiag: document.getElementById('lampDiag'),
+  lampRepair: document.getElementById('lampRepair'),
+  commandLine: document.getElementById('commandLine'),
+  eventToast: document.getElementById('eventToast'),
   scopeCanvas: document.getElementById('scopeCanvas'),
   fxCanvas: document.getElementById('fxCanvas'),
   lightningFlash: document.getElementById('lightningFlash')
@@ -82,7 +90,10 @@ const state = {
     volume: 0.45,
     ctx: null,
     master: null,
-    tickIntervalId: null
+    tickIntervalId: null,
+    humOsc: null,
+    humGain: null,
+    pulseIntervalId: null
   }
 };
 
@@ -110,6 +121,7 @@ async function init() {
   bindEvents();
   dom.teamName.value = 'Kirchhoff Crew';
   updateHud();
+  updateCommandLine('SYS BOOT // Awaiting team authorization...');
   logLine('info', 'System ready. Choose a pitch and start the mission.');
 }
 
@@ -378,10 +390,12 @@ function toggleSoundEnabled() {
 
   if (!state.audio.enabled) {
     stopTickLoop();
+    stopAmbientBed();
   } else {
     primeAudioContext();
     if (!dom.gamePanel.classList.contains('hidden')) {
       startTickLoop();
+      startAmbientBed();
       playSound('ui');
     }
   }
@@ -501,6 +515,75 @@ function stopTickLoop() {
   }
 }
 
+function startAmbientBed() {
+  if (!state.audio.enabled || !state.audio.ctx || !state.audio.master || state.audio.humOsc) {
+    return;
+  }
+
+  const osc = state.audio.ctx.createOscillator();
+  const gain = state.audio.ctx.createGain();
+  osc.type = 'sawtooth';
+  osc.frequency.value = 62;
+  gain.gain.value = 0.018;
+
+  osc.connect(gain);
+  gain.connect(state.audio.master);
+  osc.start();
+
+  state.audio.humOsc = osc;
+  state.audio.humGain = gain;
+  updateAmbientByAlert();
+}
+
+function stopAmbientBed() {
+  if (state.audio.humOsc) {
+    state.audio.humOsc.stop();
+    state.audio.humOsc.disconnect();
+    state.audio.humOsc = null;
+  }
+  if (state.audio.humGain) {
+    state.audio.humGain.disconnect();
+    state.audio.humGain = null;
+  }
+  stopCriticalPulse();
+}
+
+function updateAmbientByAlert() {
+  if (!state.audio.humOsc || !state.audio.humGain || !state.audio.ctx) {
+    return;
+  }
+
+  const now = state.audio.ctx.currentTime;
+  const targetFreq = state.alertLevel === 'critical' ? 88 : state.alertLevel === 'warning' ? 74 : 62;
+  const targetGain = state.alertLevel === 'critical' ? 0.032 : state.alertLevel === 'warning' ? 0.024 : 0.018;
+
+  state.audio.humOsc.frequency.setTargetAtTime(targetFreq, now, 0.08);
+  state.audio.humGain.gain.setTargetAtTime(targetGain, now, 0.12);
+
+  if (state.alertLevel === 'critical') {
+    startCriticalPulse();
+  } else {
+    stopCriticalPulse();
+  }
+}
+
+function startCriticalPulse() {
+  if (state.audio.pulseIntervalId || !state.audio.enabled) {
+    return;
+  }
+
+  state.audio.pulseIntervalId = window.setInterval(() => {
+    playSound('alarm');
+  }, 650);
+}
+
+function stopCriticalPulse() {
+  if (state.audio.pulseIntervalId) {
+    window.clearInterval(state.audio.pulseIntervalId);
+    state.audio.pulseIntervalId = null;
+  }
+}
+
 function initScope() {
   if (!dom.scopeCanvas) {
     return;
@@ -575,6 +658,7 @@ function updateHud() {
   const signal = clamp(Math.round(timeRatio * 75 + (state.diagnosed ? 18 : 0) - state.strikes * 8), 2, 100);
   const load = clamp(Math.round((1 - timeRatio) * 58 + state.inspected * 1.1 + baseDifficulty), 4, 100);
   const thermal = clamp(Math.round(load * 0.72 + state.strikes * 11), 3, 100);
+  const threat = clamp(Math.round(100 - signal * 0.55 + thermal * 0.38 + state.strikes * 6), 5, 100);
 
   dom.signalStat.textContent = `${signal}%`;
   dom.loadStat.textContent = `${load}%`;
@@ -582,6 +666,41 @@ function updateHud() {
   dom.signalBar.style.width = `${signal}%`;
   dom.loadBar.style.width = `${load}%`;
   dom.thermalBar.style.width = `${thermal}%`;
+
+  dom.threatValue.textContent = `${threat}%`;
+  dom.threatBar.style.width = `${threat}%`;
+  dom.threatBar.classList.remove('warn', 'bad');
+
+  if (threat >= 75) {
+    dom.threatStat.textContent = 'SEVERE';
+    dom.threatBar.classList.add('bad');
+  } else if (threat >= 45) {
+    dom.threatStat.textContent = 'ELEVATED';
+    dom.threatBar.classList.add('warn');
+  } else {
+    dom.threatStat.textContent = 'LOW';
+  }
+
+  updateStatusLamps(signal, thermal);
+}
+
+function updateStatusLamps(signal, thermal) {
+  setLampState(dom.lampPower, signal > 35 ? 'ok' : signal > 20 ? 'warn' : 'bad');
+
+  const diagState = state.diagnosed ? 'ok' : state.measuredNodes.size > 0 ? 'warn' : 'bad';
+  setLampState(dom.lampDiag, diagState);
+
+  const repairState = state.diagnosed ? (state.selectedRepairs.size > 0 ? 'warn' : 'ok') : thermal > 65 ? 'bad' : 'warn';
+  setLampState(dom.lampRepair, repairState);
+}
+
+function setLampState(lamp, mode) {
+  if (!lamp) {
+    return;
+  }
+
+  lamp.classList.remove('ok', 'warn', 'bad');
+  lamp.classList.add(mode);
 }
 
 function applyThemeState() {
@@ -594,6 +713,53 @@ function applyThemeState() {
   } else if (state.alertLevel === 'critical') {
     document.body.classList.add('alert-critical');
   }
+}
+
+function updateCommandLine(text, type = 'info') {
+  if (!dom.commandLine) {
+    return;
+  }
+
+  dom.commandLine.classList.remove('warn', 'bad');
+  if (type === 'warn') {
+    dom.commandLine.classList.add('warn');
+  }
+  if (type === 'bad') {
+    dom.commandLine.classList.add('bad');
+  }
+
+  dom.commandLine.textContent = text;
+}
+
+function showEventToast(text, type = 'info') {
+  if (!dom.eventToast) {
+    return;
+  }
+
+  dom.eventToast.classList.remove('hidden', 'show', 'good', 'bad');
+  if (type === 'good') {
+    dom.eventToast.classList.add('good');
+  }
+  if (type === 'bad') {
+    dom.eventToast.classList.add('bad');
+  }
+  dom.eventToast.textContent = text;
+  void dom.eventToast.offsetWidth;
+  dom.eventToast.classList.add('show');
+
+  window.clearTimeout(showEventToast.timeoutId);
+  showEventToast.timeoutId = window.setTimeout(() => {
+    dom.eventToast.classList.add('hidden');
+    dom.eventToast.classList.remove('show', 'good', 'bad');
+  }, 1400);
+}
+
+function flashState(kind) {
+  const className = kind === 'good' ? 'flash-good' : 'flash-bad';
+  document.body.classList.remove('flash-good', 'flash-bad');
+  void document.body.offsetWidth;
+  document.body.classList.add(className);
+  window.setTimeout(() => document.body.classList.remove(className), 520);
 }
 
 function clamp(value, min, max) {
@@ -616,7 +782,10 @@ function startMission() {
   setAlertLevel('stable');
   applyThemeState();
   startTickLoop();
+  startAmbientBed();
   playSound('ui');
+  updateCommandLine('MISSION AUTHORIZED // Establishing diagnostic channel...');
+  showEventToast('Mission started. Control console online.', 'good');
 
   logLine('info', `Mission started for ${state.teamName} in ${state.mode.toUpperCase()} mode.`);
   logLine('info', state.data.pitches[state.selectedPitch]);
@@ -653,6 +822,8 @@ function loadScenario(index) {
   startTimer(adjustedTime);
   syncStats();
   playSound('ui');
+  updateCommandLine(`Scenario loaded: ${scenario.title} // Diagnose ${scenario.requiredFaultCount} fault(s).`);
+  showEventToast(`Scenario ${index + 1} active. Timer armed.`);
 
   logLine('info', `Scenario loaded: ${scenario.title}. Time budget: ${adjustedTime}s.`);
 }
@@ -668,7 +839,9 @@ function renderComponents(scenario) {
       syncStats();
       playSound('probe');
       logLine('info', `${component.name}: ${component.clue}`);
+      updateCommandLine(`Inspecting ${component.name}... clue captured.`);
       if (component.isFault) {
+        showEventToast(`Anomaly flagged near ${component.name}.`, 'bad');
         logLine('good', `Suspicious behavior detected near ${component.name}.`);
       }
     });
@@ -694,6 +867,7 @@ function renderMeasurements(scenario) {
       state.timeRemaining = Math.max(5, state.timeRemaining - 4);
       updateTimerDisplay();
       playSound('probe');
+      updateCommandLine(`Probe ${item.node} => ${reading}. Baseline ${item.normal}.`);
     });
     dom.measureBoard.appendChild(btn);
   });
@@ -765,11 +939,17 @@ function validateDiagnosis() {
     dom.checkRepairBtn.disabled = false;
     setPhase('Repair');
     playSound('good');
+    flashState('good');
+    showEventToast('Diagnosis confirmed. Repair channel unlocked.', 'good');
+    updateCommandLine('Fault map validated. Proceeding to controlled repair sequence.');
     logLine('good', 'Diagnosis validated. Fault map matches measured evidence.');
   } else {
     state.strikes += 1;
     state.score = Math.max(0, state.score - 35);
     playSound('bad');
+    flashState('bad');
+    showEventToast('Diagnosis mismatch. Re-check probes.', 'bad');
+    updateCommandLine('Diagnosis failed // cross-check faults and retest nodes.', 'bad');
     logLine('bad', 'Diagnosis mismatch. Re-evaluate clues and measurement deltas.');
   }
 
@@ -780,6 +960,7 @@ function validateRepair() {
   const scenario = state.data.scenarios[state.scenarioIndex];
   if (!state.diagnosed) {
     playSound('bad');
+    showEventToast('Repair locked until diagnosis passes.', 'bad');
     logLine('bad', 'Repair phase locked. Validate diagnosis first.');
     return;
   }
@@ -795,10 +976,16 @@ function validateRepair() {
     dom.nextScenarioBtn.classList.remove('hidden');
     setPhase('Cleared');
     playSound('good');
+    flashState('good');
+    showEventToast('System restored. Stage cleared.', 'good');
+    updateCommandLine('Repair accepted // system nominal. Load next scenario.');
   } else {
     state.strikes += 1;
     state.score = Math.max(0, state.score - 45);
     playSound('bad');
+    flashState('bad');
+    showEventToast('Unsafe or incomplete repair plan.', 'bad');
+    updateCommandLine('Repair rejected // remove unsafe actions and retry.', 'bad');
     logLine('bad', 'Repair plan incomplete or unsafe. Remove unnecessary actions.');
   }
 
@@ -821,10 +1008,14 @@ function startTimer(seconds) {
 
     if (state.timeRemaining === 60) {
       playSound('alarm');
+      showEventToast('1 minute remaining.', 'bad');
+      updateCommandLine('Timer threshold reached: 60s remaining.', 'warn');
       logLine('bad', 'One minute remaining. Team, commit to a fault hypothesis now.');
     }
     if (state.timeRemaining === 30) {
       playSound('alarm');
+      showEventToast('30 seconds. Final decisions.', 'bad');
+      updateCommandLine('Critical threshold: 30s remaining. Commit now.', 'bad');
       logLine('bad', 'Thirty seconds. Finalize diagnosis and execute only essential repairs.');
     }
 
@@ -833,6 +1024,9 @@ function startTimer(seconds) {
       state.strikes += 1;
       setAlertLevel('critical');
       playSound('bad');
+      flashState('bad');
+      showEventToast('Timeout lock triggered.', 'bad');
+      updateCommandLine('Timeout detected // scenario quarantined.', 'bad');
       logLine('bad', 'Timeout. Scenario lock triggered. Moving to next challenge.');
       syncStats();
       dom.nextScenarioBtn.classList.remove('hidden');
@@ -844,6 +1038,7 @@ function startTimer(seconds) {
 function finishMission() {
   clearInterval(state.intervalId);
   stopTickLoop();
+  stopAmbientBed();
   dom.gamePanel.classList.add('hidden');
   dom.completePanel.classList.remove('hidden');
 
@@ -851,6 +1046,8 @@ function finishMission() {
   dom.finalSummary.textContent = `${state.teamName} completed ${state.data.scenarios.length} scenarios with score ${state.score}, strikes ${state.strikes}, and rank ${rank}.`;
   setAlertLevel('stable');
   playSound('good');
+  flashState('good');
+  showEventToast(`Mission complete. Rank: ${rank}.`, 'good');
 
   logLine('good', `Mission complete. Final rank: ${rank}.`);
 }
@@ -858,6 +1055,7 @@ function finishMission() {
 function resetToIntro() {
   clearInterval(state.intervalId);
   stopTickLoop();
+  stopAmbientBed();
   dom.completePanel.classList.add('hidden');
   dom.gamePanel.classList.add('hidden');
   dom.introPanel.classList.remove('hidden');
@@ -877,6 +1075,7 @@ function resetToIntro() {
   setAlertLevel('stable');
   syncStats();
   applyThemeState();
+  updateCommandLine('SYS BOOT // Awaiting team authorization...');
   setPhase('Briefing');
   logLine('info', 'Mission reset. Configure team and relaunch.');
 }
@@ -893,6 +1092,8 @@ function updateTimerDisplay() {
   } else {
     setAlertLevel('stable');
   }
+
+  updateHud();
 }
 
 function setAlertLevel(level) {
@@ -908,6 +1109,7 @@ function setAlertLevel(level) {
     if (previous !== level) {
       playSound('alarm');
     }
+    updateAmbientByAlert();
     applyThemeState();
     return;
   }
@@ -919,11 +1121,13 @@ function setAlertLevel(level) {
     if (previous !== level) {
       playSound('alarm');
     }
+    updateAmbientByAlert();
     applyThemeState();
     return;
   }
 
   dom.alarmLabel.textContent = 'ALARM · STABLE';
+  updateAmbientByAlert();
   applyThemeState();
 }
 

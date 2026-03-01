@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css?v=20260301d" />
+  <link rel="stylesheet" href="./style.css?v=20260301e" />
 </head>
 <body>
   <canvas id="fxCanvas" class="fx-canvas" aria-hidden="true"></canvas>
@@ -81,6 +81,30 @@
           <div class="scope-head">Live Telemetry Scope</div>
           <canvas id="scopeCanvas" width="900" height="120" aria-hidden="true"></canvas>
         </div>
+        <div class="hud-aux-grid">
+          <div class="status-matrix">
+            <div class="matrix-head">Subsystem Status</div>
+            <div class="status-lamps">
+              <div class="lamp-row"><span class="lamp" id="lampPower"></span><span>Power Rail</span></div>
+              <div class="lamp-row"><span class="lamp" id="lampDiag"></span><span>Diagnostics</span></div>
+              <div class="lamp-row"><span class="lamp" id="lampRepair"></span><span>Repair Chain</span></div>
+            </div>
+          </div>
+
+          <div class="command-console">
+            <div class="matrix-head">Command Console</div>
+            <div id="commandLine" class="command-line">SYS BOOT // Awaiting team authorization...</div>
+          </div>
+
+          <div class="threat-block">
+            <div class="matrix-head">Threat Index</div>
+            <div class="threat-readout">
+              <strong id="threatStat">LOW</strong>
+              <span id="threatValue">18%</span>
+            </div>
+            <div class="threat-track"><div id="threatBar" class="threat-fill"></div></div>
+          </div>
+        </div>
       </section>
 
       <div class="grid two gap-xl">
@@ -140,6 +164,8 @@
     </section>
   </main>
 
-  <script src="./app.js?v=20260301d" defer></script>
+  <div id="eventToast" class="event-toast hidden" aria-live="polite"></div>
+
+  <script src="./app.js?v=20260301e" defer></script>
 </body>
 </html>
