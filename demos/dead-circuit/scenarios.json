@@ -17,6 +17,34 @@
         "Find the protective component failure",
         "Correct resistor substitution in divider branch"
       ],
+      "teaching": {
+        "vocationalScenario": "You are maintenance technicians assigned to a college workshop where a low-voltage teaching bench has failed before practical assessments. Learners must apply safe fault-finding procedure, accurate measurement, and documented repair decisions.",
+        "lectureSegment": [
+          "Introduce safe isolation, proving dead, and visual inspection sequence.",
+          "Recap series/parallel voltage drops and protective device function.",
+          "Model a structured fault log: symptom, test, inference, action."
+        ],
+        "activitySegment": [
+          "Teams inspect board, log first observations, and assign technician roles.",
+          "Learners probe nodes, compare measured values to expected values, and shortlist faults.",
+          "Teams execute repair plan, re-test, and present maintenance justification."
+        ],
+        "pass": [
+          "Follow a safe process and identify at least one correct fault.",
+          "Use basic measurements and complete a simple fault report.",
+          "Restore operation with tutor guidance."
+        ],
+        "merit": [
+          "Independently identify both core faults using measurement evidence.",
+          "Justify component replacement choices against circuit behaviour.",
+          "Demonstrate effective team communication and role allocation."
+        ],
+        "distinction": [
+          "Diagnose and repair faults efficiently with minimal unnecessary actions.",
+          "Evaluate alternative hypotheses and reject them using data.",
+          "Produce professional maintenance documentation suitable for handover."
+        ]
+      },
       "components": [
         {
           "id": "fuse-f1",
@@ -91,6 +119,34 @@
         "Confirm MOSFET gate path integrity",
         "Re-establish safe startup path"
       ],
+      "teaching": {
+        "vocationalScenario": "You are called to an industrial learning cell where a conveyor driver has failed mid-production simulation. Learners must apply maintenance troubleshooting under time pressure while maintaining safe procedure and traceability.",
+        "lectureSegment": [
+          "Review motor driver architecture and flyback protection purpose.",
+          "Explain gate-drive path, continuity checks, and safe test points.",
+          "Discuss maintenance risk of unsafe temporary shortcuts."
+        ],
+        "activitySegment": [
+          "Teams map likely fault domains before touching hardware.",
+          "Learners collect electrical evidence at gate, drain, and current nodes.",
+          "Teams propose and execute a repair sequence, then verify safe restart."
+        ],
+        "pass": [
+          "Identify one likely control-path fault and one safe corrective action.",
+          "Use continuity and voltage tests appropriately.",
+          "Complete a basic maintenance log."
+        ],
+        "merit": [
+          "Identify both faults with evidence-linked reasoning.",
+          "Carry out a safe and ordered repair process with minimal tutor input.",
+          "Explain why unsafe alternatives are rejected."
+        ],
+        "distinction": [
+          "Deliver a rapid, accurate diagnosis with clean re-commissioning checks.",
+          "Correlate measurements to switching behaviour and protection design.",
+          "Present a professional technical debrief with preventive recommendations."
+        ]
+      },
       "components": [
         {
           "id": "d1",
@@ -165,6 +221,34 @@
         "Detect missing emitter degeneration",
         "Remove incorrect coupling capacitor polarity"
       ],
+      "teaching": {
+        "vocationalScenario": "You are advanced maintenance trainees preparing a public engineering showcase rig. The amplifier chain fails thermal and quality checks. Learners must deliver high-standard diagnosis, repair, and technical reporting.",
+        "lectureSegment": [
+          "Explain transistor bias stability and thermal runaway indicators.",
+          "Review emitter degeneration and linearity in service contexts.",
+          "Discuss capacitor polarity failures and quality assurance checks."
+        ],
+        "activitySegment": [
+          "Teams analyse distorted waveform symptoms and assign test strategy.",
+          "Learners capture key bias and distortion readings, then triage fault causes.",
+          "Teams apply full repair, validate performance restoration, and defend decisions."
+        ],
+        "pass": [
+          "Identify at least two relevant faults using guided measurements.",
+          "Apply basic corrective actions with supervision.",
+          "Record final operating state after repair."
+        ],
+        "merit": [
+          "Diagnose all key faults and implement a coherent repair plan.",
+          "Demonstrate accurate interpretation of bias and distortion evidence.",
+          "Produce structured notes linking fault causes to outcomes."
+        ],
+        "distinction": [
+          "Deliver precise and efficient full restoration with robust verification.",
+          "Evaluate circuit behaviour at system level and predict reliability impact.",
+          "Present an industry-style maintenance report with future mitigation actions."
+        ]
+      },
       "components": [
         {
           "id": "rbias",

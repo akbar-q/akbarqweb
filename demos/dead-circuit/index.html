@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css?v=20260301e" />
+  <link rel="stylesheet" href="./style.css?v=20260301g" />
 </head>
 <body>
   <canvas id="fxCanvas" class="fx-canvas" aria-hidden="true"></canvas>
@@ -38,6 +38,11 @@
     <section class="card intro" id="introPanel">
       <h1>DEAD CIRCUIT</h1>
       <p class="lead">Timed EEE fault-hunt escape challenges. Diagnose fast. Repair cleanly. Escape together.</p>
+
+      <section class="teacher-pitch">
+        <h2>Teaching Tool Mode (BTEC-Ready)</h2>
+        <p class="muted">Each mission maps to vocational engineering maintenance outcomes with Pass, Merit, and Distinction evidence pathways for lecture + practical delivery.</p>
+      </section>
 
       <div class="grid two">
         <div>
@@ -94,6 +99,7 @@
           <div class="command-console">
             <div class="matrix-head">Command Console</div>
             <div id="commandLine" class="command-line">SYS BOOT // Awaiting team authorization...</div>
+            <div id="badgeRack" class="badge-rack"></div>
           </div>
 
           <div class="threat-block">
@@ -118,13 +124,49 @@
           <div><span>Strikes</span><strong id="strikeStat">0</strong></div>
           <div><span>Inspections</span><strong id="inspectStat">0</strong></div>
           <div><span>Phase</span><strong id="phaseStat">Briefing</strong></div>
+          <div><span>Combo</span><strong id="comboStat">x0</strong></div>
+          <div><span>XP</span><strong id="xpStat">0</strong></div>
+          <div><span>Hints</span><strong id="hintTokenStat">0</strong></div>
         </div>
       </div>
+
+      <section class="subcard teaching-panel">
+        <h3>Vocational Delivery Plan</h3>
+        <p class="muted" id="vocScenario"></p>
+        <div class="grid two">
+          <div>
+            <h4>Lecture Segment</h4>
+            <ul id="lecturePlan" class="teach-list"></ul>
+          </div>
+          <div>
+            <h4>Hands-on Activity</h4>
+            <ul id="activityPlan" class="teach-list"></ul>
+          </div>
+        </div>
+        <div class="grid two">
+          <div>
+            <h4>Pass (P)</h4>
+            <ul id="passCriteria" class="teach-list"></ul>
+          </div>
+          <div>
+            <h4>Merit (M)</h4>
+            <ul id="meritCriteria" class="teach-list"></ul>
+          </div>
+        </div>
+        <div>
+          <h4>Distinction (D)</h4>
+          <ul id="distCriteria" class="teach-list"></ul>
+        </div>
+      </section>
 
       <div class="grid two gap-xl">
         <section class="subcard">
           <h3>1) Probe & Observe</h3>
           <p class="muted">Inspect components and probe test nodes to build your fault hypothesis.</p>
+          <div class="chip-grid" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
           <div id="componentBoard" class="component-board"></div>
           <div id="measureBoard" class="measure-board"></div>
         </section>
@@ -132,6 +174,10 @@
         <section class="subcard">
           <h3>2) Diagnose Faults</h3>
           <p class="muted" id="diagnoseRule"></p>
+          <div class="hint-row">
+            <button id="hintBtn" class="ghost" type="button">Use Hint Token</button>
+            <div id="hintText" class="hint-box">Hints appear here when requested.</div>
+          </div>
           <div id="faultOptions" class="stack"></div>
           <button id="checkDiagnosisBtn" class="primary">Validate Diagnosis</button>
         </section>
@@ -164,8 +210,28 @@
     </section>
   </main>
 
+  <aside class="helper-bot" id="helperBot" aria-live="polite">
+    <svg viewBox="0 0 180 180" class="bot-svg" role="img" aria-label="Sparky maintenance helper robot">
+      <defs>
+        <linearGradient id="botShell" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#67e8ff" />
+          <stop offset="100%" stop-color="#6fffa9" />
+        </linearGradient>
+      </defs>
+      <rect x="32" y="42" width="116" height="84" rx="18" fill="#0c1f2c" stroke="url(#botShell)" stroke-width="6"/>
+      <circle cx="68" cy="80" r="14" fill="#07131d" stroke="#7aefff" stroke-width="4"/>
+      <circle cx="112" cy="80" r="14" fill="#07131d" stroke="#7aefff" stroke-width="4"/>
+      <circle cx="68" cy="80" r="6" fill="#7aefff"/>
+      <circle cx="112" cy="80" r="6" fill="#7aefff"/>
+      <rect x="62" y="106" width="56" height="10" rx="5" fill="#7bffba"/>
+      <rect x="80" y="22" width="20" height="20" rx="8" fill="#112938" stroke="#7aefff" stroke-width="4"/>
+      <line x1="90" y1="42" x2="90" y2="20" stroke="#7aefff" stroke-width="4"/>
+    </svg>
+    <div id="botBubble" class="bot-bubble">Hi, I am Sparky. I can nudge learners with diagnosis hints.</div>
+  </aside>
+
   <div id="eventToast" class="event-toast hidden" aria-live="polite"></div>
 
-  <script src="./app.js?v=20260301e" defer></script>
+  <script src="./app.js?v=20260301g" defer></script>
 </body>
 </html>
