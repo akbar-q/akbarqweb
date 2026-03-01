@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dead Circuit — Interactive EEE Escape Lab Demo</title>
+  <meta name="description" content="Dead Circuit reimagines EEE labs as timed escape-room fault diagnosis challenges." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="scanlines"></div>
+  <header class="topbar">
+    <a class="back-link" href="../index.html">← Back to Demos</a>
+    <div class="status-cluster">
+      <div class="status-pill" id="teamBadge">Team: Unassigned</div>
+      <div class="status-pill" id="scenarioBadge">Scenario 0/0</div>
+      <div class="status-pill danger" id="timerBadge">00:00</div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="card intro" id="introPanel">
+      <h1>DEAD CIRCUIT</h1>
+      <p class="lead">Timed EEE fault-hunt escape challenges. Diagnose fast. Repair cleanly. Escape together.</p>
+
+      <div class="grid two">
+        <div>
+          <label for="teamName">Team Name</label>
+          <input id="teamName" maxlength="30" placeholder="e.g., Kirchhoff Crew" />
+        </div>
+        <div>
+          <label for="difficultyMode">Pressure Mode</label>
+          <select id="difficultyMode">
+            <option value="standard">Standard</option>
+            <option value="hard">Hard</option>
+            <option value="extreme">Extreme</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="pitch-grid" id="pitchOptions"></div>
+
+      <div class="intro-actions">
+        <button id="startBtn" class="primary">Start Mission</button>
+      </div>
+    </section>
+
+    <section class="card hidden" id="gamePanel">
+      <div class="grid two gap-xl">
+        <div>
+          <h2 id="scenarioTitle">Scenario</h2>
+          <p id="scenarioBrief" class="muted"></p>
+          <ul id="objectivesList" class="objectives"></ul>
+        </div>
+        <div class="mission-meta">
+          <div><span>Score</span><strong id="scoreStat">0</strong></div>
+          <div><span>Strikes</span><strong id="strikeStat">0</strong></div>
+          <div><span>Inspections</span><strong id="inspectStat">0</strong></div>
+          <div><span>Phase</span><strong id="phaseStat">Briefing</strong></div>
+        </div>
+      </div>
+
+      <div class="grid two gap-xl">
+        <section class="subcard">
+          <h3>1) Probe & Observe</h3>
+          <p class="muted">Inspect components and probe test nodes to build your fault hypothesis.</p>
+          <div id="componentBoard" class="component-board"></div>
+          <div id="measureBoard" class="measure-board"></div>
+        </section>
+
+        <section class="subcard">
+          <h3>2) Diagnose Faults</h3>
+          <p class="muted" id="diagnoseRule"></p>
+          <div id="faultOptions" class="stack"></div>
+          <button id="checkDiagnosisBtn" class="primary">Validate Diagnosis</button>
+        </section>
+      </div>
+
+      <section class="subcard">
+        <h3>3) Execute Repair Plan</h3>
+        <p class="muted">Choose only the actions required to restore operation.</p>
+        <div id="repairOptions" class="repair-grid"></div>
+        <button id="checkRepairBtn" class="primary" disabled>Validate Repair</button>
+      </section>
+
+      <section class="subcard">
+        <h3>Mission Feed</h3>
+        <div id="logFeed" class="log-feed"></div>
+      </section>
+
+      <div class="actions-row">
+        <button id="nextScenarioBtn" class="primary hidden">Load Next Scenario</button>
+        <button id="restartBtn" class="ghost">Restart Run</button>
+      </div>
+    </section>
+
+    <section class="card hidden" id="completePanel">
+      <h2>Mission Complete</h2>
+      <p id="finalSummary" class="lead"></p>
+      <div class="intro-actions">
+        <button id="playAgainBtn" class="primary">Play Again</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>

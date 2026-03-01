@@ -1,0 +1,236 @@
+{
+  "pitches": {
+    "A": "Dead Circuit reimagines EEE labs as timed escape-room challenges designed to combat the biggest crisis in engineering education: students who show up but switch off. Teams are dropped into broken systems with one job: find the fault, fix it, escape.",
+    "B": "Engineering students are disengaging at alarming rates. Dead Circuit answers with escape-room-style lab scenarios where teams diagnose realistically broken systems under timed pressure using probe-measure-hypothesis-repair loops.",
+    "C": "Students do not need more slides. They need stakes. Dead Circuit transforms EEE labs into timed escape rooms where teams repair broken electrical systems before the clock hits zero."
+  },
+  "scenarios": [
+    {
+      "id": "campus-dc-01",
+      "title": "Campus Subpanel Blackout",
+      "difficulty": "Intro",
+      "timeLimit": 210,
+      "requiredFaultCount": 2,
+      "brief": "A teaching wing has lost low-voltage distribution. Restore a DC feeder board before backup power drains.",
+      "objectives": [
+        "Validate source and load continuity",
+        "Find the protective component failure",
+        "Correct resistor substitution in divider branch"
+      ],
+      "components": [
+        {
+          "id": "fuse-f1",
+          "name": "Fuse F1",
+          "clue": "Visual inspection: fuse element is open.",
+          "isFault": true
+        },
+        {
+          "id": "r2",
+          "name": "Resistor R2",
+          "clue": "Band code does not match schematic value.",
+          "isFault": true
+        },
+        {
+          "id": "supply-v1",
+          "name": "Supply V1",
+          "clue": "Output reads nominal under no-load test.",
+          "isFault": false
+        },
+        {
+          "id": "load-l1",
+          "name": "Load L1",
+          "clue": "Load resistance measured in expected range.",
+          "isFault": false
+        }
+      ],
+      "measurements": [
+        {
+          "node": "Vin",
+          "normal": "24.0 V",
+          "broken": "24.1 V"
+        },
+        {
+          "node": "After F1",
+          "normal": "23.8 V",
+          "broken": "0.0 V"
+        },
+        {
+          "node": "Divider Midpoint",
+          "normal": "12.0 V",
+          "broken": "8.1 V"
+        }
+      ],
+      "repairOptions": [
+        {
+          "id": "replace-fuse",
+          "label": "Replace F1 with rated fuse",
+          "isRequired": true
+        },
+        {
+          "id": "swap-r2",
+          "label": "Replace R2 with schematic value",
+          "isRequired": true
+        },
+        {
+          "id": "increase-supply",
+          "label": "Raise supply to 30V",
+          "isRequired": false
+        }
+      ],
+      "debrief": "Protection and divider accuracy were both compromised. Correcting both restored regulated distribution."
+    },
+    {
+      "id": "motor-driver-02",
+      "title": "Conveyor Motor Driver Lockout",
+      "difficulty": "Intermediate",
+      "timeLimit": 185,
+      "requiredFaultCount": 2,
+      "brief": "A conveyor motor refuses to start during an automated packing assessment. Driver board reports gate activity but no rotation.",
+      "objectives": [
+        "Verify freewheel protection orientation",
+        "Confirm MOSFET gate path integrity",
+        "Re-establish safe startup path"
+      ],
+      "components": [
+        {
+          "id": "d1",
+          "name": "Flyback Diode D1",
+          "clue": "Stripe orientation is opposite to schematic direction.",
+          "isFault": true
+        },
+        {
+          "id": "gate-trace",
+          "name": "Gate Trace",
+          "clue": "Continuity test fails between driver IC and MOSFET gate.",
+          "isFault": true
+        },
+        {
+          "id": "q1",
+          "name": "MOSFET Q1",
+          "clue": "Static diode mode test passes.",
+          "isFault": false
+        },
+        {
+          "id": "motor",
+          "name": "Motor Coil",
+          "clue": "Winding resistance is nominal.",
+          "isFault": false
+        }
+      ],
+      "measurements": [
+        {
+          "node": "Gate",
+          "normal": "10.0 V pulse",
+          "broken": "0.3 V floating"
+        },
+        {
+          "node": "Drain",
+          "normal": "PWM switching",
+          "broken": "Constant 24 V"
+        },
+        {
+          "node": "Motor Current",
+          "normal": "2.1 A peak",
+          "broken": "0.0 A"
+        }
+      ],
+      "repairOptions": [
+        {
+          "id": "flip-diode",
+          "label": "Reorient D1 to correct polarity",
+          "isRequired": true
+        },
+        {
+          "id": "bridge-gate",
+          "label": "Repair open gate connection",
+          "isRequired": true
+        },
+        {
+          "id": "short-source-drain",
+          "label": "Short MOSFET source-drain for test",
+          "isRequired": false
+        }
+      ],
+      "debrief": "Protection orientation and gate continuity were both blockers. Driver output became valid only after both fixes."
+    },
+    {
+      "id": "amp-bias-03",
+      "title": "Audio Amplifier Distortion Emergency",
+      "difficulty": "Advanced",
+      "timeLimit": 165,
+      "requiredFaultCount": 3,
+      "brief": "A lab demo amplifier overheats and clips badly. Recover stable bias and signal swing before the public showcase.",
+      "objectives": [
+        "Identify bias network drift",
+        "Detect missing emitter degeneration",
+        "Remove incorrect coupling capacitor polarity"
+      ],
+      "components": [
+        {
+          "id": "rbias",
+          "name": "Bias Pot RBias",
+          "clue": "Wiper is set far beyond target quiescent point.",
+          "isFault": true
+        },
+        {
+          "id": "re",
+          "name": "Emitter Resistor RE",
+          "clue": "Open-circuit reading detected.",
+          "isFault": true
+        },
+        {
+          "id": "c-in",
+          "name": "Input Coupling Capacitor Cin",
+          "clue": "Electrolytic polarity reversed relative to DC bias.",
+          "isFault": true
+        },
+        {
+          "id": "speaker",
+          "name": "Speaker Load",
+          "clue": "Impedance sweep is healthy.",
+          "isFault": false
+        }
+      ],
+      "measurements": [
+        {
+          "node": "Collector Q2",
+          "normal": "6.0 V",
+          "broken": "11.4 V"
+        },
+        {
+          "node": "Emitter Q2",
+          "normal": "1.2 V",
+          "broken": "0.0 V"
+        },
+        {
+          "node": "Output THD",
+          "normal": "< 2%",
+          "broken": "18%"
+        }
+      ],
+      "repairOptions": [
+        {
+          "id": "rebias",
+          "label": "Reset RBias to target idle current",
+          "isRequired": true
+        },
+        {
+          "id": "replace-re",
+          "label": "Replace RE and verify drop",
+          "isRequired": true
+        },
+        {
+          "id": "flip-cin",
+          "label": "Correct Cin polarity",
+          "isRequired": true
+        },
+        {
+          "id": "disconnect-feedback",
+          "label": "Disable feedback loop permanently",
+          "isRequired": false
+        }
+      ],
+      "debrief": "Bias, emitter stabilization, and coupling direction all impacted linear operation. Closing all three faults restored headroom and thermal stability."
+    }
+  ]
+}
