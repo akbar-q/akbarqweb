@@ -9,6 +9,7 @@ const dom = {
   restartBtn: document.getElementById('restartBtn'),
   playAgainBtn: document.getElementById('playAgainBtn'),
   nextScenarioBtn: document.getElementById('nextScenarioBtn'),
+  fxToggle: document.getElementById('fxToggle'),
   alarmModule: document.getElementById('alarmModule'),
   alarmLabel: document.getElementById('alarmLabel'),
   teamBadge: document.getElementById('teamBadge'),
@@ -52,6 +53,8 @@ const state = {
   alertLevel: 'stable',
   fx: {
     enabled: true,
+    initialized: false,
+    forceMotion: false,
     canvas: null,
     ctx: null,
     drops: [],
@@ -77,6 +80,7 @@ const modePenalty = {
 async function init() {
   const res = await fetch('./scenarios.json');
   state.data = await res.json();
+  applyFxPreference(readFxPreference());
   initVisualFx();
   renderPitchCards();
   bindEvents();
@@ -85,15 +89,30 @@ async function init() {
 }
 
 function initVisualFx() {
-  if (!dom.fxCanvas || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if (!dom.fxCanvas || shouldReduceMotion()) {
     state.fx.enabled = false;
+    return;
+  }
+
+  if (state.fx.initialized) {
+    state.fx.enabled = true;
+    if (!state.fx.rafId) {
+      animateFx();
+    }
     return;
   }
 
   const canvas = dom.fxCanvas;
   const ctx = canvas.getContext('2d', { alpha: true });
+  if (!ctx) {
+    state.fx.enabled = false;
+    return;
+  }
+
   state.fx.canvas = canvas;
   state.fx.ctx = ctx;
+  state.fx.enabled = true;
+  state.fx.initialized = true;
 
   const resize = () => {
     canvas.width = window.innerWidth;
@@ -219,6 +238,62 @@ function bindEvents() {
   dom.nextScenarioBtn.addEventListener('click', nextScenario);
   dom.checkDiagnosisBtn.addEventListener('click', validateDiagnosis);
   dom.checkRepairBtn.addEventListener('click', validateRepair);
+  dom.fxToggle.addEventListener('click', toggleFxPreference);
+}
+
+function shouldReduceMotion() {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches && !state.fx.forceMotion;
+}
+
+function readFxPreference() {
+  try {
+    return window.localStorage.getItem('deadCircuit.forceMotion') === '1';
+  } catch {
+    return false;
+  }
+}
+
+function toggleFxPreference() {
+  applyFxPreference(!state.fx.forceMotion);
+
+  if (!shouldReduceMotion() && !state.fx.enabled) {
+    initVisualFx();
+    logLine('good', 'FX forced ON. Dynamic visuals enabled.');
+  } else if (shouldReduceMotion()) {
+    disableVisualFx();
+    logLine('info', 'FX set to AUTO. Reduced-motion preference is active.');
+  }
+}
+
+function applyFxPreference(forceMotion) {
+  state.fx.forceMotion = forceMotion;
+
+  try {
+    window.localStorage.setItem('deadCircuit.forceMotion', forceMotion ? '1' : '0');
+  } catch {
+    // no-op
+  }
+
+  if (forceMotion) {
+    document.body.classList.add('force-motion');
+    dom.fxToggle.textContent = 'FX: ON';
+    dom.fxToggle.classList.add('forced');
+  } else {
+    document.body.classList.remove('force-motion');
+    dom.fxToggle.textContent = 'FX: AUTO';
+    dom.fxToggle.classList.remove('forced');
+  }
+}
+
+function disableVisualFx() {
+  state.fx.enabled = false;
+  if (state.fx.rafId) {
+    window.cancelAnimationFrame(state.fx.rafId);
+    state.fx.rafId = null;
+  }
+  if (state.fx.ctx && state.fx.canvas) {
+    state.fx.ctx.clearRect(0, 0, state.fx.canvas.width, state.fx.canvas.height);
+  }
 }
 
 function startMission() {

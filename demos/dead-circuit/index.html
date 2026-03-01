@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./style.css?v=20260301b" />
 </head>
 <body>
   <canvas id="fxCanvas" class="fx-canvas" aria-hidden="true"></canvas>
@@ -17,6 +17,7 @@
   <header class="topbar">
     <a class="back-link" href="../index.html">← Back to Demos</a>
     <div class="status-cluster">
+      <button class="status-pill fx-toggle" id="fxToggle" type="button">FX: AUTO</button>
       <div class="alarm-module" id="alarmModule" aria-live="polite">
         <span class="alarm-spinner" id="alarmSpinner"></span>
         <span class="alarm-core" id="alarmCore"></span>
@@ -113,6 +114,6 @@
     </section>
   </main>
 
-  <script src="./app.js" defer></script>
+  <script src="./app.js?v=20260301b" defer></script>
 </body>
 </html>

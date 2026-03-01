@@ -164,6 +164,19 @@ body {
   color: #ffd2d8;
 }
 
+.fx-toggle {
+  cursor: pointer;
+  color: #d8f2ff;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.fx-toggle.forced {
+  border-color: #4bc98f;
+  color: #bfffd8;
+  box-shadow: 0 0 0 1px rgba(75, 201, 143, 0.2), 0 0 12px rgba(75, 201, 143, 0.25);
+}
+
 .status-pill.danger.warning {
   animation: timerPulse 1.2s ease-in-out infinite;
 }
@@ -500,19 +513,19 @@ button:disabled {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .alarm-spinner,
-  .alarm-core,
-  .card,
-  .subcard::before,
-  .status-pill.danger.warning,
-  .status-pill.danger.critical,
-  .alarm-module.critical {
+  body:not(.force-motion) .alarm-spinner,
+  body:not(.force-motion) .alarm-core,
+  body:not(.force-motion) .card,
+  body:not(.force-motion) .subcard::before,
+  body:not(.force-motion) .status-pill.danger.warning,
+  body:not(.force-motion) .status-pill.danger.critical,
+  body:not(.force-motion) .alarm-module.critical {
     animation: none;
   }
 
-  .fx-canvas,
-  .lightning-flash,
-  .scanlines {
+  body:not(.force-motion) .fx-canvas,
+  body:not(.force-motion) .lightning-flash,
+  body:not(.force-motion) .scanlines {
     display: none;
   }
 }
