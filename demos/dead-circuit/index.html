@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css?v=20260301e" />
+  <link rel="stylesheet" href="./style.css?v=20260301f" />
 </head>
 <body>
   <canvas id="fxCanvas" class="fx-canvas" aria-hidden="true"></canvas>
@@ -94,6 +94,7 @@
           <div class="command-console">
             <div class="matrix-head">Command Console</div>
             <div id="commandLine" class="command-line">SYS BOOT // Awaiting team authorization...</div>
+            <div id="badgeRack" class="badge-rack"></div>
           </div>
 
           <div class="threat-block">
@@ -118,6 +119,9 @@
           <div><span>Strikes</span><strong id="strikeStat">0</strong></div>
           <div><span>Inspections</span><strong id="inspectStat">0</strong></div>
           <div><span>Phase</span><strong id="phaseStat">Briefing</strong></div>
+          <div><span>Combo</span><strong id="comboStat">x0</strong></div>
+          <div><span>XP</span><strong id="xpStat">0</strong></div>
+          <div><span>Hints</span><strong id="hintTokenStat">0</strong></div>
         </div>
       </div>
 
@@ -125,6 +129,10 @@
         <section class="subcard">
           <h3>1) Probe & Observe</h3>
           <p class="muted">Inspect components and probe test nodes to build your fault hypothesis.</p>
+          <div class="chip-grid" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
           <div id="componentBoard" class="component-board"></div>
           <div id="measureBoard" class="measure-board"></div>
         </section>
@@ -132,6 +140,10 @@
         <section class="subcard">
           <h3>2) Diagnose Faults</h3>
           <p class="muted" id="diagnoseRule"></p>
+          <div class="hint-row">
+            <button id="hintBtn" class="ghost" type="button">Use Hint Token</button>
+            <div id="hintText" class="hint-box">Hints appear here when requested.</div>
+          </div>
           <div id="faultOptions" class="stack"></div>
           <button id="checkDiagnosisBtn" class="primary">Validate Diagnosis</button>
         </section>
@@ -166,6 +178,6 @@
 
   <div id="eventToast" class="event-toast hidden" aria-live="polite"></div>
 
-  <script src="./app.js?v=20260301e" defer></script>
+  <script src="./app.js?v=20260301f" defer></script>
 </body>
 </html>

@@ -394,6 +394,30 @@ body.flash-bad::after {
   padding: 0.55rem;
 }
 
+.badge-rack {
+  margin-top: 0.45rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.badge-chip {
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  border: 1px solid #35556a;
+  background: #10212d;
+  color: #b9ceda;
+  padding: 0.2rem 0.42rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.badge-chip.on {
+  border-color: rgba(var(--accent-main-rgb), 0.65);
+  color: #dff9ff;
+  box-shadow: 0 0 0 1px rgba(var(--accent-main-rgb), 0.2), 0 0 10px rgba(var(--accent-main-rgb), 0.25);
+}
+
 .matrix-head {
   font-family: "Oxanium", Inter, sans-serif;
   font-size: 0.72rem;
@@ -687,7 +711,7 @@ button:disabled {
 
 .mission-meta {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
   gap: 0.6rem;
 }
 
@@ -725,6 +749,53 @@ button:disabled {
   transform: translateY(-32%);
   animation: shimmerSweep 3.8s linear infinite;
   pointer-events: none;
+}
+
+.chip-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.3rem;
+  margin: 0.3rem 0 0.75rem;
+}
+
+.chip-grid span {
+  height: 7px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(var(--accent-main-rgb), 0.18), rgba(var(--accent-main-rgb), 0.85));
+  opacity: 0.45;
+  animation: chipBlink 1.9s ease-in-out infinite;
+}
+
+.chip-grid span:nth-child(3n) {
+  animation-delay: 0.4s;
+}
+
+.chip-grid span:nth-child(4n) {
+  animation-delay: 0.8s;
+}
+
+.hint-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.6rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.hint-box {
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  padding: 0.46rem 0.58rem;
+  border-radius: 0.58rem;
+  border: 1px dashed #38586b;
+  background: rgba(11, 30, 40, 0.65);
+  color: #cde7f4;
+  font-size: 0.86rem;
+}
+
+.hint-box.flash {
+  animation: hintFlash 0.4s ease;
 }
 
 .component-board {
@@ -769,10 +840,81 @@ button:disabled {
 
 .fault-item,
 .repair-item {
-  background: #122433;
-  border: 1px solid #304f65;
+  background: #0f2230;
+  border: 1px solid #2d4c61;
   border-radius: 0.55rem;
-  padding: 0.55rem;
+  padding: 0.5rem 0.58rem;
+  display: flex;
+  align-items: center;
+  gap: 0.62rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+}
+
+.fault-item:hover,
+.repair-item:hover {
+  transform: translateY(-1px);
+  border-color: #43708c;
+}
+
+.fault-item input,
+.repair-item input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toggle-shell {
+  width: 42px;
+  height: 22px;
+  border-radius: 999px;
+  background: #253847;
+  border: 1px solid #436172;
+  position: relative;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.toggle-knob {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: #bed4df;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.option-copy {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  color: #dbeaf3;
+  font-size: 0.92rem;
+}
+
+.option-copy small {
+  font-size: 0.74rem;
+  color: #92b0c3;
+  margin-top: 0.15rem;
+}
+
+.fault-item input:checked + .toggle-shell,
+.repair-item input:checked + .toggle-shell {
+  background: rgba(var(--accent-main-rgb), 0.28);
+  border-color: rgba(var(--accent-main-rgb), 0.75);
+}
+
+.fault-item input:checked + .toggle-shell .toggle-knob,
+.repair-item input:checked + .toggle-shell .toggle-knob {
+  transform: translateX(20px);
+  background: #ffffff;
+}
+
+.fault-item input:checked ~ .option-copy,
+.repair-item input:checked ~ .option-copy {
+  color: #f1fbff;
 }
 
 .repair-grid {
@@ -901,6 +1043,16 @@ button:disabled {
   100% { opacity: 0; }
 }
 
+@keyframes chipBlink {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.95; }
+}
+
+@keyframes hintFlash {
+  0% { transform: translateY(2px); }
+  100% { transform: translateY(0); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   body:not(.force-motion) .alarm-spinner,
   body:not(.force-motion) .alarm-core,
@@ -924,7 +1076,9 @@ button:disabled {
 
   body:not(.force-motion) .lamp,
   body:not(.force-motion) .command-line::after,
-  body:not(.force-motion) .event-toast.show {
+  body:not(.force-motion) .event-toast.show,
+  body:not(.force-motion) .chip-grid span,
+  body:not(.force-motion) .hint-box.flash {
     animation: none;
   }
 }

@@ -23,10 +23,15 @@ const dom = {
   scoreStat: document.getElementById('scoreStat'),
   strikeStat: document.getElementById('strikeStat'),
   inspectStat: document.getElementById('inspectStat'),
+  comboStat: document.getElementById('comboStat'),
+  xpStat: document.getElementById('xpStat'),
+  hintTokenStat: document.getElementById('hintTokenStat'),
   phaseStat: document.getElementById('phaseStat'),
   componentBoard: document.getElementById('componentBoard'),
   measureBoard: document.getElementById('measureBoard'),
   diagnoseRule: document.getElementById('diagnoseRule'),
+  hintBtn: document.getElementById('hintBtn'),
+  hintText: document.getElementById('hintText'),
   faultOptions: document.getElementById('faultOptions'),
   checkDiagnosisBtn: document.getElementById('checkDiagnosisBtn'),
   repairOptions: document.getElementById('repairOptions'),
@@ -46,6 +51,7 @@ const dom = {
   lampDiag: document.getElementById('lampDiag'),
   lampRepair: document.getElementById('lampRepair'),
   commandLine: document.getElementById('commandLine'),
+  badgeRack: document.getElementById('badgeRack'),
   eventToast: document.getElementById('eventToast'),
   scopeCanvas: document.getElementById('scopeCanvas'),
   fxCanvas: document.getElementById('fxCanvas'),
@@ -59,6 +65,8 @@ const state = {
   teamName: 'Unassigned',
   scenarioIndex: 0,
   score: 0,
+  xp: 0,
+  combo: 0,
   strikes: 0,
   inspected: 0,
   diagnosed: false,
@@ -67,6 +75,10 @@ const state = {
   selectedFaults: new Set(),
   selectedRepairs: new Set(),
   measuredNodes: new Set(),
+  hintTokens: 0,
+  currentHints: [],
+  hintCursor: 0,
+  badges: new Set(),
   alertLevel: 'stable',
   fx: {
     enabled: true,
@@ -121,6 +133,7 @@ async function init() {
   bindEvents();
   dom.teamName.value = 'Kirchhoff Crew';
   updateHud();
+  updateBadges();
   updateCommandLine('SYS BOOT // Awaiting team authorization...');
   logLine('info', 'System ready. Choose a pitch and start the mission.');
 }
@@ -275,6 +288,7 @@ function bindEvents() {
   dom.nextScenarioBtn.addEventListener('click', nextScenario);
   dom.checkDiagnosisBtn.addEventListener('click', validateDiagnosis);
   dom.checkRepairBtn.addEventListener('click', validateRepair);
+  dom.hintBtn.addEventListener('click', useHintToken);
   dom.fxToggle.addEventListener('click', toggleFxPreference);
   dom.soundToggle.addEventListener('click', toggleSoundEnabled);
   dom.soundVolume.addEventListener('input', onVolumeChange);
@@ -762,6 +776,87 @@ function flashState(kind) {
   window.setTimeout(() => document.body.classList.remove(className), 520);
 }
 
+function initializeScenarioHints(scenario) {
+  const difficultyTokens = state.mode === 'extreme' ? 1 : state.mode === 'hard' ? 2 : 3;
+  state.hintTokens = difficultyTokens;
+  state.hintCursor = 0;
+
+  const faultHints = scenario.components
+    .filter(component => component.isFault)
+    .map(component => `Check ${component.name}: ${component.clue}`);
+
+  const measurementHints = scenario.measurements
+    .filter(entry => entry.broken !== entry.normal)
+    .map(entry => `${entry.node} deviates from baseline (${entry.broken} vs ${entry.normal}).`);
+
+  state.currentHints = [
+    `Start with protection and bias path checks. ${scenario.requiredFaultCount} fault(s) exist.`,
+    ...measurementHints,
+    ...faultHints
+  ];
+
+  dom.hintText.textContent = 'Hints appear here when requested.';
+}
+
+function useHintToken() {
+  if (state.hintTokens <= 0) {
+    showEventToast('No hint tokens left this scenario.', 'bad');
+    updateCommandLine('Hint request denied // token budget exhausted.', 'bad');
+    playSound('bad');
+    return;
+  }
+
+  const hint = state.currentHints[state.hintCursor] || 'No deeper hint remains. Trust your measurements.';
+  state.hintCursor += 1;
+  state.hintTokens -= 1;
+
+  dom.hintText.textContent = hint;
+  dom.hintText.classList.remove('flash');
+  void dom.hintText.offsetWidth;
+  dom.hintText.classList.add('flash');
+
+  playSound('ui');
+  showEventToast(`Hint delivered. Tokens left: ${state.hintTokens}.`);
+  updateCommandLine(`Hint channel open // ${hint}`, 'warn');
+  syncStats();
+}
+
+function grantXp(amount) {
+  state.xp = Math.max(0, state.xp + amount);
+}
+
+function adjustCombo(delta, reset = false) {
+  if (reset) {
+    state.combo = 0;
+    return;
+  }
+
+  state.combo = Math.max(0, state.combo + delta);
+}
+
+function updateBadges() {
+  if (!dom.badgeRack) {
+    return;
+  }
+
+  const badgeDefs = [
+    { id: 'scout', label: 'Scout', active: state.inspected >= 3 },
+    { id: 'analyst', label: 'Analyst', active: state.measuredNodes.size >= 2 },
+    { id: 'streak', label: 'Streak', active: state.combo >= 2 },
+    { id: 'veteran', label: 'Veteran', active: state.xp >= 350 }
+  ];
+
+  badgeDefs.forEach(def => {
+    if (def.active) {
+      state.badges.add(def.id);
+    }
+  });
+
+  dom.badgeRack.innerHTML = badgeDefs
+    .map(def => `<span class="badge-chip${state.badges.has(def.id) ? ' on' : ''}">${def.label}</span>`)
+    .join('');
+}
+
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
 }
@@ -772,6 +867,9 @@ function startMission() {
   state.mode = dom.difficultyMode.value;
   state.scenarioIndex = 0;
   state.score = 0;
+  state.xp = 0;
+  state.combo = 0;
+  state.badges.clear();
   state.strikes = modePenalty[state.mode];
   state.inspected = 0;
 
@@ -802,6 +900,7 @@ function loadScenario(index) {
   state.selectedFaults.clear();
   state.selectedRepairs.clear();
   state.measuredNodes.clear();
+  initializeScenarioHints(scenario);
 
   dom.checkRepairBtn.disabled = true;
   dom.nextScenarioBtn.classList.add('hidden');
@@ -836,6 +935,7 @@ function renderComponents(scenario) {
     btn.innerHTML = `<strong>${component.name}</strong><small>Tap to inspect physical clue</small>`;
     btn.addEventListener('click', () => {
       state.inspected += 1;
+      grantXp(8);
       syncStats();
       playSound('probe');
       logLine('info', `${component.name}: ${component.clue}`);
@@ -862,6 +962,7 @@ function renderMeasurements(scenario) {
         return;
       }
       state.measuredNodes.add(item.node);
+      grantXp(12);
       const reading = item.broken;
       logLine('info', `${item.node} measured: ${reading} (expected ${item.normal}).`);
       state.timeRemaining = Math.max(5, state.timeRemaining - 4);
@@ -877,7 +978,7 @@ function renderFaultOptions(scenario) {
   dom.faultOptions.innerHTML = '';
   scenario.components.forEach(item => {
     const wrapper = document.createElement('label');
-    wrapper.className = 'fault-item';
+    wrapper.className = 'fault-item option-item';
 
     const box = document.createElement('input');
     box.type = 'checkbox';
@@ -892,9 +993,15 @@ function renderFaultOptions(scenario) {
     });
 
     const txt = document.createElement('span');
-    txt.textContent = ` ${item.name}`;
+    txt.className = 'option-copy';
+    txt.innerHTML = `<span>${item.name}</span><small>Mark as suspected fault</small>`;
+
+    const toggleShell = document.createElement('span');
+    toggleShell.className = 'toggle-shell';
+    toggleShell.innerHTML = '<span class="toggle-knob"></span>';
 
     wrapper.appendChild(box);
+    wrapper.appendChild(toggleShell);
     wrapper.appendChild(txt);
     dom.faultOptions.appendChild(wrapper);
   });
@@ -904,7 +1011,7 @@ function renderRepairOptions(scenario) {
   dom.repairOptions.innerHTML = '';
   scenario.repairOptions.forEach(item => {
     const wrapper = document.createElement('label');
-    wrapper.className = 'repair-item';
+    wrapper.className = 'repair-item option-item';
 
     const box = document.createElement('input');
     box.type = 'checkbox';
@@ -919,9 +1026,15 @@ function renderRepairOptions(scenario) {
     });
 
     const txt = document.createElement('span');
-    txt.textContent = ` ${item.label}`;
+    txt.className = 'option-copy';
+    txt.innerHTML = `<span>${item.label}</span><small>Toggle to include in repair plan</small>`;
+
+    const toggleShell = document.createElement('span');
+    toggleShell.className = 'toggle-shell';
+    toggleShell.innerHTML = '<span class="toggle-knob"></span>';
 
     wrapper.appendChild(box);
+    wrapper.appendChild(toggleShell);
     wrapper.appendChild(txt);
     dom.repairOptions.appendChild(wrapper);
   });
@@ -935,6 +1048,8 @@ function validateDiagnosis() {
 
   if (countOk && matchOk) {
     state.score += 120 + state.timeRemaining;
+    grantXp(90);
+    adjustCombo(1);
     state.diagnosed = true;
     dom.checkRepairBtn.disabled = false;
     setPhase('Repair');
@@ -946,6 +1061,7 @@ function validateDiagnosis() {
   } else {
     state.strikes += 1;
     state.score = Math.max(0, state.score - 35);
+    adjustCombo(0, true);
     playSound('bad');
     flashState('bad');
     showEventToast('Diagnosis mismatch. Re-check probes.', 'bad');
@@ -970,6 +1086,8 @@ function validateRepair() {
 
   if (isCorrect) {
     state.score += 180 + state.timeRemaining * 2;
+    grantXp(140);
+    adjustCombo(1);
     logLine('good', 'Repair successful. System restored before total failure.');
     logLine('info', scenario.debrief);
     clearInterval(state.intervalId);
@@ -982,6 +1100,7 @@ function validateRepair() {
   } else {
     state.strikes += 1;
     state.score = Math.max(0, state.score - 45);
+    adjustCombo(0, true);
     playSound('bad');
     flashState('bad');
     showEventToast('Unsafe or incomplete repair plan.', 'bad');
@@ -1061,17 +1180,24 @@ function resetToIntro() {
   dom.introPanel.classList.remove('hidden');
 
   state.score = 0;
+  state.xp = 0;
+  state.combo = 0;
   state.strikes = 0;
   state.inspected = 0;
   state.scenarioIndex = 0;
   state.selectedFaults.clear();
   state.selectedRepairs.clear();
   state.measuredNodes.clear();
+  state.badges.clear();
+  state.hintTokens = 0;
+  state.currentHints = [];
+  state.hintCursor = 0;
 
   dom.logFeed.innerHTML = '';
   dom.teamBadge.textContent = 'Team: Unassigned';
   dom.scenarioBadge.textContent = 'Scenario 0/0';
   dom.timerBadge.textContent = '00:00';
+  dom.hintText.textContent = 'Hints appear here when requested.';
   setAlertLevel('stable');
   syncStats();
   applyThemeState();
@@ -1135,7 +1261,12 @@ function syncStats() {
   dom.scoreStat.textContent = state.score;
   dom.strikeStat.textContent = state.strikes;
   dom.inspectStat.textContent = state.inspected;
+  dom.comboStat.textContent = `x${state.combo}`;
+  dom.xpStat.textContent = state.xp;
+  dom.hintTokenStat.textContent = state.hintTokens;
+  dom.hintBtn.disabled = state.hintTokens <= 0;
   updateHud();
+  updateBadges();
 }
 
 function setPhase(phase) {
