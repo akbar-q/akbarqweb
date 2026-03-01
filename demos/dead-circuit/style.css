@@ -8,6 +8,8 @@
   --accent2: #78f58f;
   --warn: #ff6174;
   --soft: #1a2935;
+  --accent-main: #30d0ff;
+  --accent-main-rgb: 48, 208, 255;
 }
 
 * {
@@ -21,6 +23,44 @@ body {
   color: var(--text);
   background: radial-gradient(circle at 20% 20%, #102435, #060a10 55%);
   overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(var(--accent-main-rgb), 0.08) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(var(--accent-main-rgb), 0.08) 1px, transparent 1px);
+  background-size: 22px 22px;
+  opacity: 0.24;
+  z-index: 1;
+}
+
+body.mode-standard {
+  --accent-main: #2fd8ff;
+  --accent-main-rgb: 47, 216, 255;
+}
+
+body.mode-hard {
+  --accent-main: #ffbf4b;
+  --accent-main-rgb: 255, 191, 75;
+}
+
+body.mode-extreme {
+  --accent-main: #ff5f72;
+  --accent-main-rgb: 255, 95, 114;
+}
+
+body.alert-warning {
+  --accent-main: #ffd16f;
+  --accent-main-rgb: 255, 209, 111;
+}
+
+body.alert-critical {
+  --accent-main: #ff6076;
+  --accent-main-rgb: 255, 96, 118;
 }
 
 .fx-canvas {
@@ -93,6 +133,25 @@ body {
   gap: 0.5rem;
   flex-wrap: wrap;
   justify-content: flex-end;
+}
+
+.volume-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.28rem 0.5rem;
+  border-radius: 0.55rem;
+  border: 1px solid #2b4c64;
+  background: #0f1d28;
+  color: #d8f2ff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.volume-wrap input {
+  width: 82px;
+  accent-color: var(--accent-main);
 }
 
 .alarm-module {
@@ -171,6 +230,17 @@ body {
   font-size: 0.85rem;
 }
 
+.sound-toggle.active {
+  border-color: #4bc98f;
+  color: #bfffd8;
+  box-shadow: 0 0 0 1px rgba(75, 201, 143, 0.2), 0 0 12px rgba(75, 201, 143, 0.25);
+}
+
+.sound-toggle.muted {
+  border-color: #6b3f44;
+  color: #ffd4da;
+}
+
 .status-pill.danger {
   border-color: #6c2430;
   color: #ffd2d8;
@@ -213,6 +283,97 @@ body {
   margin-bottom: 1rem;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35);
   animation: cardBreath 2.2s ease-in-out infinite;
+}
+
+.hud-panel {
+  border: 1px solid rgba(var(--accent-main-rgb), 0.4);
+  border-radius: 0.9rem;
+  background: linear-gradient(180deg, rgba(9, 23, 32, 0.9), rgba(8, 18, 26, 0.9));
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 0 0 1px rgba(var(--accent-main-rgb), 0.12), 0 0 24px rgba(var(--accent-main-rgb), 0.14);
+}
+
+.hud-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.gauge-block {
+  background: #0a141d;
+  border: 1px solid #234255;
+  border-radius: 0.65rem;
+  padding: 0.55rem;
+}
+
+.gauge-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.45rem;
+  font-family: "Oxanium", Inter, sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+}
+
+.gauge-head span {
+  color: #9db8c8;
+  text-transform: uppercase;
+}
+
+.gauge-head strong {
+  color: #dff8ff;
+}
+
+.gauge-track {
+  height: 9px;
+  border-radius: 999px;
+  background: #10202c;
+  border: 1px solid #263d4e;
+  overflow: hidden;
+}
+
+.gauge-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(var(--accent-main-rgb), 0.45), rgba(var(--accent-main-rgb), 1));
+  transition: width 0.3s ease;
+}
+
+.gauge-fill.warn {
+  background: linear-gradient(90deg, #8d7f2f, #ffcb5f);
+}
+
+.gauge-fill.danger {
+  background: linear-gradient(90deg, #84394a, #ff5f72);
+}
+
+.scope-block {
+  margin-top: 0.8rem;
+  background: #08121a;
+  border: 1px solid #234255;
+  border-radius: 0.7rem;
+  padding: 0.45rem 0.55rem 0.55rem;
+}
+
+.scope-head {
+  font-family: "Oxanium", Inter, sans-serif;
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  color: #a8cedc;
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+}
+
+#scopeCanvas {
+  width: 100%;
+  height: 98px;
+  display: block;
+  border-radius: 0.5rem;
+  border: 1px solid #223949;
+  background: #050c12;
 }
 
 h1, h2, h3 {
@@ -545,9 +706,14 @@ button:disabled {
   body:not(.force-motion) .scanlines {
     display: none;
   }
+
+  body:not(.force-motion) .topbar::after {
+    animation: none;
+  }
 }
 
 @media (max-width: 900px) {
+  .hud-grid,
   .grid.two,
   .pitch-grid {
     grid-template-columns: 1fr;

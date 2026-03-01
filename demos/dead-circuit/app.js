@@ -10,6 +10,8 @@ const dom = {
   playAgainBtn: document.getElementById('playAgainBtn'),
   nextScenarioBtn: document.getElementById('nextScenarioBtn'),
   fxToggle: document.getElementById('fxToggle'),
+  soundToggle: document.getElementById('soundToggle'),
+  soundVolume: document.getElementById('soundVolume'),
   alarmModule: document.getElementById('alarmModule'),
   alarmLabel: document.getElementById('alarmLabel'),
   teamBadge: document.getElementById('teamBadge'),
@@ -31,6 +33,13 @@ const dom = {
   checkRepairBtn: document.getElementById('checkRepairBtn'),
   logFeed: document.getElementById('logFeed'),
   finalSummary: document.getElementById('finalSummary'),
+  signalStat: document.getElementById('signalStat'),
+  loadStat: document.getElementById('loadStat'),
+  thermalStat: document.getElementById('thermalStat'),
+  signalBar: document.getElementById('signalBar'),
+  loadBar: document.getElementById('loadBar'),
+  thermalBar: document.getElementById('thermalBar'),
+  scopeCanvas: document.getElementById('scopeCanvas'),
   fxCanvas: document.getElementById('fxCanvas'),
   lightningFlash: document.getElementById('lightningFlash')
 };
@@ -62,6 +71,18 @@ const state = {
     chars: '01ΩλΔ∑⊕⊗⟂↯⎓⎍⎐',
     rafId: null,
     lastLightningAt: 0
+  },
+  scope: {
+    ctx: null,
+    phase: 0,
+    intervalId: null
+  },
+  audio: {
+    enabled: true,
+    volume: 0.45,
+    ctx: null,
+    master: null,
+    tickIntervalId: null
   }
 };
 
@@ -81,10 +102,14 @@ async function init() {
   const res = await fetch('./scenarios.json');
   state.data = await res.json();
   applyFxPreference(readFxPreference());
+  restoreAudioPreferences();
+  applyThemeState();
   initVisualFx();
+  initScope();
   renderPitchCards();
   bindEvents();
   dom.teamName.value = 'Kirchhoff Crew';
+  updateHud();
   logLine('info', 'System ready. Choose a pitch and start the mission.');
 }
 
@@ -239,6 +264,16 @@ function bindEvents() {
   dom.checkDiagnosisBtn.addEventListener('click', validateDiagnosis);
   dom.checkRepairBtn.addEventListener('click', validateRepair);
   dom.fxToggle.addEventListener('click', toggleFxPreference);
+  dom.soundToggle.addEventListener('click', toggleSoundEnabled);
+  dom.soundVolume.addEventListener('input', onVolumeChange);
+
+  document.addEventListener(
+    'pointerdown',
+    () => {
+      primeAudioContext();
+    },
+    { once: true }
+  );
 }
 
 function shouldReduceMotion() {
@@ -300,7 +335,273 @@ function disableVisualFx() {
   }
 }
 
+function restoreAudioPreferences() {
+  try {
+    const enabled = window.localStorage.getItem('deadCircuit.soundEnabled');
+    const volume = window.localStorage.getItem('deadCircuit.soundVolume');
+    state.audio.enabled = enabled !== '0';
+    if (volume !== null) {
+      const parsed = Number(volume);
+      if (!Number.isNaN(parsed)) {
+        state.audio.volume = clamp(parsed, 0, 1);
+      }
+    }
+  } catch {
+    state.audio.enabled = true;
+  }
+
+  dom.soundVolume.value = String(Math.round(state.audio.volume * 100));
+  refreshSoundUi();
+}
+
+function persistAudioPreferences() {
+  try {
+    window.localStorage.setItem('deadCircuit.soundEnabled', state.audio.enabled ? '1' : '0');
+    window.localStorage.setItem('deadCircuit.soundVolume', String(state.audio.volume));
+  } catch {
+    // no-op
+  }
+}
+
+function onVolumeChange() {
+  state.audio.volume = clamp(Number(dom.soundVolume.value) / 100, 0, 1);
+  if (state.audio.master) {
+    state.audio.master.gain.value = state.audio.volume;
+  }
+  persistAudioPreferences();
+}
+
+function toggleSoundEnabled() {
+  state.audio.enabled = !state.audio.enabled;
+  refreshSoundUi();
+  persistAudioPreferences();
+
+  if (!state.audio.enabled) {
+    stopTickLoop();
+  } else {
+    primeAudioContext();
+    if (!dom.gamePanel.classList.contains('hidden')) {
+      startTickLoop();
+      playSound('ui');
+    }
+  }
+}
+
+function refreshSoundUi() {
+  if (state.audio.enabled) {
+    dom.soundToggle.textContent = 'SOUND: ON';
+    dom.soundToggle.classList.add('active');
+    dom.soundToggle.classList.remove('muted');
+    return;
+  }
+
+  dom.soundToggle.textContent = 'SOUND: OFF';
+  dom.soundToggle.classList.add('muted');
+  dom.soundToggle.classList.remove('active');
+}
+
+function primeAudioContext() {
+  if (!state.audio.enabled) {
+    return;
+  }
+
+  if (!state.audio.ctx) {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) {
+      return;
+    }
+    state.audio.ctx = new AudioCtx();
+    state.audio.master = state.audio.ctx.createGain();
+    state.audio.master.gain.value = state.audio.volume;
+    state.audio.master.connect(state.audio.ctx.destination);
+  }
+
+  if (state.audio.ctx.state === 'suspended') {
+    state.audio.ctx.resume();
+  }
+}
+
+function playSound(type) {
+  if (!state.audio.enabled || !state.audio.ctx || !state.audio.master) {
+    return;
+  }
+
+  const ctx = state.audio.ctx;
+  const now = ctx.currentTime;
+
+  if (type === 'tick') {
+    beep({ freq: 680, attack: 0.001, decay: 0.045, gain: 0.06, type: 'square' });
+    return;
+  }
+
+  if (type === 'good') {
+    beep({ freq: 520, attack: 0.002, decay: 0.11, gain: 0.13, type: 'triangle' });
+    beep({ freq: 760, attack: 0.01, decay: 0.14, gain: 0.11, type: 'sine', offset: 0.045 });
+    return;
+  }
+
+  if (type === 'bad') {
+    beep({ freq: 180, attack: 0.001, decay: 0.2, gain: 0.14, type: 'sawtooth' });
+    return;
+  }
+
+  if (type === 'probe') {
+    beep({ freq: 920, attack: 0.002, decay: 0.06, gain: 0.07, type: 'square' });
+    return;
+  }
+
+  if (type === 'alarm') {
+    beep({ freq: 480, attack: 0.002, decay: 0.12, gain: 0.1, type: 'square' });
+    beep({ freq: 350, attack: 0.012, decay: 0.18, gain: 0.09, type: 'square', offset: 0.1 });
+    return;
+  }
+
+  if (type === 'ui') {
+    beep({ freq: 340, attack: 0.002, decay: 0.07, gain: 0.08, type: 'triangle' });
+    beep({ freq: 430, attack: 0.006, decay: 0.06, gain: 0.06, type: 'triangle', offset: 0.03 });
+    return;
+  }
+
+  beep({ freq: 420, attack: 0.001, decay: 0.08, gain: 0.08, type: 'triangle' });
+
+  function beep({ freq, attack, decay, gain, type, offset = 0 }) {
+    const oscillator = ctx.createOscillator();
+    const envelope = ctx.createGain();
+    oscillator.type = type;
+    oscillator.frequency.value = freq;
+    envelope.gain.value = 0;
+    oscillator.connect(envelope);
+    envelope.connect(state.audio.master);
+
+    const start = now + offset;
+    envelope.gain.setValueAtTime(0, start);
+    envelope.gain.linearRampToValueAtTime(gain, start + attack);
+    envelope.gain.exponentialRampToValueAtTime(0.0001, start + attack + decay);
+
+    oscillator.start(start);
+    oscillator.stop(start + attack + decay + 0.02);
+  }
+}
+
+function startTickLoop() {
+  stopTickLoop();
+  if (!state.audio.enabled) {
+    return;
+  }
+
+  state.audio.tickIntervalId = window.setInterval(() => {
+    playSound('tick');
+  }, 1000);
+}
+
+function stopTickLoop() {
+  if (state.audio.tickIntervalId) {
+    window.clearInterval(state.audio.tickIntervalId);
+    state.audio.tickIntervalId = null;
+  }
+}
+
+function initScope() {
+  if (!dom.scopeCanvas) {
+    return;
+  }
+
+  const ctx = dom.scopeCanvas.getContext('2d');
+  if (!ctx) {
+    return;
+  }
+  state.scope.ctx = ctx;
+
+  if (state.scope.intervalId) {
+    window.clearInterval(state.scope.intervalId);
+  }
+  state.scope.intervalId = window.setInterval(drawScope, 70);
+}
+
+function drawScope() {
+  const ctx = state.scope.ctx;
+  const canvas = dom.scopeCanvas;
+  if (!ctx || !canvas) {
+    return;
+  }
+
+  const w = canvas.width;
+  const h = canvas.height;
+  const level = state.alertLevel === 'critical' ? 1 : state.alertLevel === 'warning' ? 0.6 : 0.3;
+
+  ctx.fillStyle = 'rgba(4, 11, 16, 0.45)';
+  ctx.fillRect(0, 0, w, h);
+
+  ctx.strokeStyle = 'rgba(90, 130, 150, 0.22)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x <= w; x += 40) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, h);
+    ctx.stroke();
+  }
+
+  for (let y = 0; y <= h; y += 24) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(w, y);
+    ctx.stroke();
+  }
+
+  ctx.strokeStyle = `rgba(${state.alertLevel === 'critical' ? '255,96,118' : state.alertLevel === 'warning' ? '255,209,111' : '73,232,255'}, 0.95)`;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+
+  for (let x = 0; x < w; x += 4) {
+    const wave = Math.sin((x + state.scope.phase) / 28) * (8 + level * 10);
+    const noise = (Math.random() - 0.5) * (2 + level * 6);
+    const y = h * 0.5 + wave + noise;
+    if (x === 0) {
+      ctx.moveTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
+  }
+
+  ctx.stroke();
+  state.scope.phase += 4 + level * 3;
+}
+
+function updateHud() {
+  const scenario = state.data?.scenarios?.[state.scenarioIndex];
+  const baseDifficulty = state.mode === 'extreme' ? 28 : state.mode === 'hard' ? 18 : 10;
+  const timeRatio = scenario ? clamp(state.timeRemaining / Math.max(1, Math.floor(scenario.timeLimit * modeMultiplier[state.mode])), 0, 1) : 1;
+
+  const signal = clamp(Math.round(timeRatio * 75 + (state.diagnosed ? 18 : 0) - state.strikes * 8), 2, 100);
+  const load = clamp(Math.round((1 - timeRatio) * 58 + state.inspected * 1.1 + baseDifficulty), 4, 100);
+  const thermal = clamp(Math.round(load * 0.72 + state.strikes * 11), 3, 100);
+
+  dom.signalStat.textContent = `${signal}%`;
+  dom.loadStat.textContent = `${load}%`;
+  dom.thermalStat.textContent = `${thermal}%`;
+  dom.signalBar.style.width = `${signal}%`;
+  dom.loadBar.style.width = `${load}%`;
+  dom.thermalBar.style.width = `${thermal}%`;
+}
+
+function applyThemeState() {
+  document.body.classList.remove('mode-standard', 'mode-hard', 'mode-extreme');
+  document.body.classList.remove('alert-warning', 'alert-critical');
+  document.body.classList.add(`mode-${state.mode}`);
+
+  if (state.alertLevel === 'warning') {
+    document.body.classList.add('alert-warning');
+  } else if (state.alertLevel === 'critical') {
+    document.body.classList.add('alert-critical');
+  }
+}
+
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
 function startMission() {
+  primeAudioContext();
   state.teamName = (dom.teamName.value || '').trim() || 'Circuit Squad';
   state.mode = dom.difficultyMode.value;
   state.scenarioIndex = 0;
@@ -313,6 +614,9 @@ function startMission() {
   dom.completePanel.classList.add('hidden');
   dom.gamePanel.classList.remove('hidden');
   setAlertLevel('stable');
+  applyThemeState();
+  startTickLoop();
+  playSound('ui');
 
   logLine('info', `Mission started for ${state.teamName} in ${state.mode.toUpperCase()} mode.`);
   logLine('info', state.data.pitches[state.selectedPitch]);
@@ -348,6 +652,7 @@ function loadScenario(index) {
   const adjustedTime = Math.floor(scenario.timeLimit * modeMultiplier[state.mode]);
   startTimer(adjustedTime);
   syncStats();
+  playSound('ui');
 
   logLine('info', `Scenario loaded: ${scenario.title}. Time budget: ${adjustedTime}s.`);
 }
@@ -361,6 +666,7 @@ function renderComponents(scenario) {
     btn.addEventListener('click', () => {
       state.inspected += 1;
       syncStats();
+      playSound('probe');
       logLine('info', `${component.name}: ${component.clue}`);
       if (component.isFault) {
         logLine('good', `Suspicious behavior detected near ${component.name}.`);
@@ -378,6 +684,7 @@ function renderMeasurements(scenario) {
     btn.textContent = `Probe ${item.node}`;
     btn.addEventListener('click', () => {
       if (state.measuredNodes.has(item.node)) {
+        playSound('ui');
         logLine('info', `Probe ${item.node} already sampled.`);
         return;
       }
@@ -386,6 +693,7 @@ function renderMeasurements(scenario) {
       logLine('info', `${item.node} measured: ${reading} (expected ${item.normal}).`);
       state.timeRemaining = Math.max(5, state.timeRemaining - 4);
       updateTimerDisplay();
+      playSound('probe');
     });
     dom.measureBoard.appendChild(btn);
   });
@@ -406,6 +714,7 @@ function renderFaultOptions(scenario) {
       } else {
         state.selectedFaults.delete(item.id);
       }
+      playSound('ui');
     });
 
     const txt = document.createElement('span');
@@ -432,6 +741,7 @@ function renderRepairOptions(scenario) {
       } else {
         state.selectedRepairs.delete(item.id);
       }
+      playSound('ui');
     });
 
     const txt = document.createElement('span');
@@ -454,10 +764,12 @@ function validateDiagnosis() {
     state.diagnosed = true;
     dom.checkRepairBtn.disabled = false;
     setPhase('Repair');
+    playSound('good');
     logLine('good', 'Diagnosis validated. Fault map matches measured evidence.');
   } else {
     state.strikes += 1;
     state.score = Math.max(0, state.score - 35);
+    playSound('bad');
     logLine('bad', 'Diagnosis mismatch. Re-evaluate clues and measurement deltas.');
   }
 
@@ -467,6 +779,7 @@ function validateDiagnosis() {
 function validateRepair() {
   const scenario = state.data.scenarios[state.scenarioIndex];
   if (!state.diagnosed) {
+    playSound('bad');
     logLine('bad', 'Repair phase locked. Validate diagnosis first.');
     return;
   }
@@ -481,9 +794,11 @@ function validateRepair() {
     clearInterval(state.intervalId);
     dom.nextScenarioBtn.classList.remove('hidden');
     setPhase('Cleared');
+    playSound('good');
   } else {
     state.strikes += 1;
     state.score = Math.max(0, state.score - 45);
+    playSound('bad');
     logLine('bad', 'Repair plan incomplete or unsafe. Remove unnecessary actions.');
   }
 
@@ -505,9 +820,11 @@ function startTimer(seconds) {
     updateTimerDisplay();
 
     if (state.timeRemaining === 60) {
+      playSound('alarm');
       logLine('bad', 'One minute remaining. Team, commit to a fault hypothesis now.');
     }
     if (state.timeRemaining === 30) {
+      playSound('alarm');
       logLine('bad', 'Thirty seconds. Finalize diagnosis and execute only essential repairs.');
     }
 
@@ -515,6 +832,7 @@ function startTimer(seconds) {
       clearInterval(state.intervalId);
       state.strikes += 1;
       setAlertLevel('critical');
+      playSound('bad');
       logLine('bad', 'Timeout. Scenario lock triggered. Moving to next challenge.');
       syncStats();
       dom.nextScenarioBtn.classList.remove('hidden');
@@ -525,18 +843,21 @@ function startTimer(seconds) {
 
 function finishMission() {
   clearInterval(state.intervalId);
+  stopTickLoop();
   dom.gamePanel.classList.add('hidden');
   dom.completePanel.classList.remove('hidden');
 
   const rank = state.score >= 1300 ? 'Lab Legends' : state.score >= 900 ? 'Fault Hunters' : 'Circuit Survivors';
   dom.finalSummary.textContent = `${state.teamName} completed ${state.data.scenarios.length} scenarios with score ${state.score}, strikes ${state.strikes}, and rank ${rank}.`;
   setAlertLevel('stable');
+  playSound('good');
 
   logLine('good', `Mission complete. Final rank: ${rank}.`);
 }
 
 function resetToIntro() {
   clearInterval(state.intervalId);
+  stopTickLoop();
   dom.completePanel.classList.add('hidden');
   dom.gamePanel.classList.add('hidden');
   dom.introPanel.classList.remove('hidden');
@@ -555,6 +876,7 @@ function resetToIntro() {
   dom.timerBadge.textContent = '00:00';
   setAlertLevel('stable');
   syncStats();
+  applyThemeState();
   setPhase('Briefing');
   logLine('info', 'Mission reset. Configure team and relaunch.');
 }
@@ -574,6 +896,7 @@ function updateTimerDisplay() {
 }
 
 function setAlertLevel(level) {
+  const previous = state.alertLevel;
   state.alertLevel = level;
   dom.alarmModule.classList.remove('warning', 'critical');
   dom.timerBadge.classList.remove('warning', 'critical');
@@ -582,6 +905,10 @@ function setAlertLevel(level) {
     dom.alarmModule.classList.add('warning');
     dom.timerBadge.classList.add('warning');
     dom.alarmLabel.textContent = 'ALARM · ELEVATED';
+    if (previous !== level) {
+      playSound('alarm');
+    }
+    applyThemeState();
     return;
   }
 
@@ -589,16 +916,22 @@ function setAlertLevel(level) {
     dom.alarmModule.classList.add('critical');
     dom.timerBadge.classList.add('critical');
     dom.alarmLabel.textContent = 'ALARM · CRITICAL';
+    if (previous !== level) {
+      playSound('alarm');
+    }
+    applyThemeState();
     return;
   }
 
   dom.alarmLabel.textContent = 'ALARM · STABLE';
+  applyThemeState();
 }
 
 function syncStats() {
   dom.scoreStat.textContent = state.score;
   dom.strikeStat.textContent = state.strikes;
   dom.inspectStat.textContent = state.inspected;
+  updateHud();
 }
 
 function setPhase(phase) {
