@@ -12,6 +12,12 @@
       "timeLimit": 210,
       "requiredFaultCount": 2,
       "brief": "A teaching wing has lost low-voltage distribution. Restore a DC feeder board before backup power drains.",
+      "preTaskBrief": [
+        "Safety first: verify isolation and confirm test instrument setup before touching the panel.",
+        "Focus points under time pressure: protection path, continuity path, and divider midpoint voltage.",
+        "Record one sentence per action: test performed, reading observed, and what it means."
+      ],
+      "stretchTask": "Advanced extension: explain how a wrong divider value could mislead a downstream control input and propose a preventive maintenance check.",
       "objectives": [
         "Validate source and load continuity",
         "Find the protective component failure",
@@ -114,6 +120,12 @@
       "timeLimit": 185,
       "requiredFaultCount": 2,
       "brief": "A conveyor motor refuses to start during an automated packing assessment. Driver board reports gate activity but no rotation.",
+      "preTaskBrief": [
+        "Set a diagnostic sequence before action: diode orientation -> gate continuity -> current path.",
+        "Ignore non-critical noise; capture only readings that confirm or reject a fault hypothesis.",
+        "Assign one learner as safety checker to challenge unsafe shortcut decisions."
+      ],
+      "stretchTask": "Advanced extension: relate gate floating behavior to switching losses and discuss how this might impact thermal stress over repeated cycles.",
       "objectives": [
         "Verify freewheel protection orientation",
         "Confirm MOSFET gate path integrity",
@@ -216,6 +228,12 @@
       "timeLimit": 165,
       "requiredFaultCount": 3,
       "brief": "A lab demo amplifier overheats and clips badly. Recover stable bias and signal swing before the public showcase.",
+      "preTaskBrief": [
+        "Start with a bias plan: identify expected DC operating points before replacing parts.",
+        "Prioritise mission-critical nodes: collector, emitter, and output distortion indicator.",
+        "Use a team callout routine: read value, compare baseline, agree implication before action."
+      ],
+      "stretchTask": "Advanced extension: estimate how each fault contributes to THD increase and propose a post-repair verification checklist for quality assurance.",
       "objectives": [
         "Identify bias network drift",
         "Detect missing emitter degeneration",
@@ -315,6 +333,340 @@
         }
       ],
       "debrief": "Bias, emitter stabilization, and coupling direction all impacted linear operation. Closing all three faults restored headroom and thermal stability."
+    },
+    {
+      "id": "plc-sensor-04",
+      "title": "Tank Level PLC False Alarm",
+      "difficulty": "Intermediate",
+      "timeLimit": 180,
+      "requiredFaultCount": 2,
+      "brief": "A process training skid keeps tripping high-level alarms even when the tank is half full. Restore stable sensor input for the PLC.",
+      "preTaskBrief": [
+        "Identify signal chain order first: sensor output -> conditioning stage -> PLC analog input.",
+        "Focus on one variable at a time; avoid changing both hardware and software simultaneously.",
+        "Record expected voltage/current range before probing live nodes."
+      ],
+      "stretchTask": "Advanced extension: propose a calibration and maintenance schedule that would prevent repeat false alarms.",
+      "objectives": [
+        "Verify sensor supply and return integrity",
+        "Identify conditioning stage offset source",
+        "Recover stable PLC input scaling"
+      ],
+      "teaching": {
+        "vocationalScenario": "Learners are maintenance technicians on a process-control training rig. They must resolve unstable instrumentation while preserving safe troubleshooting protocol and diagnostic traceability.",
+        "lectureSegment": [
+          "Review instrumentation loops and analog signal standards used in process systems.",
+          "Explain offset errors and how they appear at PLC input channels.",
+          "Discuss maintenance documentation for calibration-critical systems."
+        ],
+        "activitySegment": [
+          "Teams map the complete sensor-to-PLC chain before testing.",
+          "Learners capture measurements at each stage and isolate the fault domain.",
+          "Teams apply correction and verify stable alarm behavior under simulation."
+        ],
+        "pass": [
+          "Follow a safe test sequence and identify one correct fault contributor.",
+          "Use measurements to compare expected and actual signal values.",
+          "Return system to operational status with tutor support."
+        ],
+        "merit": [
+          "Accurately diagnose both faults and justify corrective actions.",
+          "Demonstrate clear signal-chain reasoning during troubleshooting.",
+          "Record a structured fault-and-fix report."
+        ],
+        "distinction": [
+          "Restore system quickly with minimal unnecessary interventions.",
+          "Critically evaluate other possible fault causes using evidence.",
+          "Produce a professional maintenance recommendation including calibration control."
+        ]
+      },
+      "components": [
+        {
+          "id": "sensor-s1",
+          "name": "Level Sensor S1",
+          "clue": "Output drifts upward at rest despite stable tank level.",
+          "isFault": true
+        },
+        {
+          "id": "r-pullup",
+          "name": "Pull-up Resistor RPU",
+          "clue": "Measured value is significantly lower than design target.",
+          "isFault": true
+        },
+        {
+          "id": "plc-ai0",
+          "name": "PLC AI0 Channel",
+          "clue": "Input module self-test passes.",
+          "isFault": false
+        },
+        {
+          "id": "psu-24v",
+          "name": "24V Instrument Supply",
+          "clue": "Supply remains within tolerance under load.",
+          "isFault": false
+        }
+      ],
+      "measurements": [
+        {
+          "node": "Sensor Output",
+          "normal": "2.4 V",
+          "broken": "4.1 V drifting"
+        },
+        {
+          "node": "Conditioning Output",
+          "normal": "2.5 V",
+          "broken": "4.4 V"
+        },
+        {
+          "node": "PLC AI0",
+          "normal": "50% level",
+          "broken": "88% level"
+        }
+      ],
+      "repairOptions": [
+        {
+          "id": "replace-sensor",
+          "label": "Replace/trim level sensor S1",
+          "isRequired": true
+        },
+        {
+          "id": "replace-rpu",
+          "label": "Replace pull-up resistor to design value",
+          "isRequired": true
+        },
+        {
+          "id": "disable-alarm",
+          "label": "Disable high-level alarm permanently",
+          "isRequired": false
+        }
+      ],
+      "debrief": "Both sensor drift and conditioning bias error contributed to false alarms. Correcting both restored stable process signaling."
+    },
+    {
+      "id": "starter-trip-05",
+      "title": "Three-Phase Pump Starter Trip",
+      "difficulty": "Advanced",
+      "timeLimit": 170,
+      "requiredFaultCount": 3,
+      "brief": "A workshop pump starter drops out seconds after energizing. Restore reliable start-up while preserving protective coordination.",
+      "preTaskBrief": [
+        "Confirm lockout/tagout and verify all three phases before control testing.",
+        "Separate power faults from control faults in your test sequence.",
+        "Do not bypass protection as a permanent fix."
+      ],
+      "stretchTask": "Advanced extension: explain how nuisance tripping differs from protective coordination failure and suggest commissioning checks.",
+      "objectives": [
+        "Identify phase continuity/protection issues",
+        "Verify contactor coil health and hold circuit",
+        "Correct overload/protection configuration"
+      ],
+      "teaching": {
+        "vocationalScenario": "Learners act as industrial maintenance technicians responding to repeated starter trips in a simulated plant environment.",
+        "lectureSegment": [
+          "Review three-phase starter circuits and overload relay functions.",
+          "Explain control hold-in logic and contactor failure modes.",
+          "Discuss safe re-commissioning checks in rotating machinery systems."
+        ],
+        "activitySegment": [
+          "Teams build a starter troubleshooting flowchart before probing.",
+          "Learners validate supply, overload, and contactor subsystems with evidence.",
+          "Teams perform repair and confirm stable starter operation over repeated cycles."
+        ],
+        "pass": [
+          "Identify at least two relevant faults using guided checks.",
+          "Apply safe repair actions under supervision.",
+          "Record outcome after restart verification."
+        ],
+        "merit": [
+          "Diagnose all major faults with evidence-based logic.",
+          "Demonstrate effective sequencing between control and power checks.",
+          "Provide clear justification for protection settings."
+        ],
+        "distinction": [
+          "Restore stable operation efficiently while preserving protection integrity.",
+          "Evaluate potential long-term reliability risks and mitigation.",
+          "Produce industry-standard maintenance handover notes."
+        ]
+      },
+      "components": [
+        {
+          "id": "fuse-l2",
+          "name": "Phase Fuse L2",
+          "clue": "Fuse continuity on L2 is open.",
+          "isFault": true
+        },
+        {
+          "id": "coil-k1",
+          "name": "Contactor Coil K1",
+          "clue": "Coil resistance is outside expected range.",
+          "isFault": true
+        },
+        {
+          "id": "olr",
+          "name": "Overload Relay",
+          "clue": "Current setting is lower than motor FLC requirement.",
+          "isFault": true
+        },
+        {
+          "id": "aux-hold",
+          "name": "Auxiliary Hold Contact",
+          "clue": "Contact path is continuous.",
+          "isFault": false
+        }
+      ],
+      "measurements": [
+        {
+          "node": "L1-L2",
+          "normal": "400 V",
+          "broken": "0 V"
+        },
+        {
+          "node": "K1 Coil",
+          "normal": "230 V control",
+          "broken": "intermittent collapse"
+        },
+        {
+          "node": "Trip Time",
+          "normal": "No trip",
+          "broken": "2.3 s"
+        }
+      ],
+      "repairOptions": [
+        {
+          "id": "replace-fuse-l2",
+          "label": "Replace blown L2 fuse",
+          "isRequired": true
+        },
+        {
+          "id": "replace-k1-coil",
+          "label": "Replace contactor coil K1",
+          "isRequired": true
+        },
+        {
+          "id": "set-olr",
+          "label": "Set overload relay to motor FLC",
+          "isRequired": true
+        },
+        {
+          "id": "bypass-olr",
+          "label": "Bypass overload relay to keep running",
+          "isRequired": false
+        }
+      ],
+      "debrief": "Phase loss, weak coil behavior, and incorrect overload setting combined to cause trip instability. Full coordinated correction restored safe starter performance."
+    },
+    {
+      "id": "signal-cabinet-06",
+      "title": "Signal Conditioning Cabinet Drift",
+      "difficulty": "Advanced+",
+      "timeLimit": 155,
+      "requiredFaultCount": 3,
+      "brief": "A condition-monitoring cabinet is outputting unstable trend data. Recover a clean and trusted signal chain before maintenance decisions are compromised.",
+      "preTaskBrief": [
+        "Define your reference first: identify what 'good' waveform and offset should be.",
+        "Prioritise grounding and reference integrity before replacing active parts.",
+        "Use comparative reasoning: sensor input, amplifier stage, filtered output."
+      ],
+      "stretchTask": "Advanced extension: estimate how noise and offset error could mislead predictive maintenance thresholds.",
+      "objectives": [
+        "Validate reference ground and offset conditions",
+        "Locate gain-stage drift source",
+        "Restore stable conditioned output signal"
+      ],
+      "teaching": {
+        "vocationalScenario": "Learners are tasked with maintaining a monitoring cabinet where poor signal quality risks incorrect service decisions and unnecessary downtime.",
+        "lectureSegment": [
+          "Review op-amp conditioning roles in industrial sensing.",
+          "Explain grounding, offset, and gain drift impact on maintenance analytics.",
+          "Introduce verification criteria for signal quality handover."
+        ],
+        "activitySegment": [
+          "Teams establish expected signal behavior before probing.",
+          "Learners compare readings across the signal path and isolate fault origins.",
+          "Teams repair, validate waveform quality, and justify maintenance confidence."
+        ],
+        "pass": [
+          "Perform basic signal checks and identify at least two suspect points.",
+          "Carry out corrective actions with tutor guidance.",
+          "Confirm improved signal output after repair."
+        ],
+        "merit": [
+          "Diagnose all key faults and explain their impact on measurement quality.",
+          "Demonstrate systematic troubleshooting with minimal supervision.",
+          "Document post-repair verification steps clearly."
+        ],
+        "distinction": [
+          "Restore full signal integrity efficiently and defend diagnosis with strong evidence.",
+          "Evaluate system-level consequences of poor signal quality.",
+          "Deliver assessor-ready technical report suitable for maintenance planning."
+        ]
+      },
+      "components": [
+        {
+          "id": "gnd-lug",
+          "name": "Reference Ground Lug",
+          "clue": "Ground lug shows loose termination and intermittent continuity.",
+          "isFault": true
+        },
+        {
+          "id": "r-fb",
+          "name": "Feedback Resistor Rfb",
+          "clue": "Measured resistance is above tolerance by a large margin.",
+          "isFault": true
+        },
+        {
+          "id": "u2",
+          "name": "Op-Amp U2",
+          "clue": "Input offset exceeds expected specification.",
+          "isFault": true
+        },
+        {
+          "id": "filter-c",
+          "name": "Output Filter Capacitor",
+          "clue": "Capacitance and ESR test within expected bounds.",
+          "isFault": false
+        }
+      ],
+      "measurements": [
+        {
+          "node": "Input Sensor",
+          "normal": "1.2 V clean",
+          "broken": "1.2 V clean"
+        },
+        {
+          "node": "Amp Output",
+          "normal": "3.6 V stable",
+          "broken": "4.8 V noisy"
+        },
+        {
+          "node": "Offset",
+          "normal": "< 20 mV",
+          "broken": "160 mV"
+        }
+      ],
+      "repairOptions": [
+        {
+          "id": "tighten-gnd",
+          "label": "Re-terminate reference ground lug",
+          "isRequired": true
+        },
+        {
+          "id": "replace-rfb",
+          "label": "Replace drifted feedback resistor",
+          "isRequired": true
+        },
+        {
+          "id": "replace-u2",
+          "label": "Replace op-amp U2 and recheck offset",
+          "isRequired": true
+        },
+        {
+          "id": "increase-filter-cap",
+          "label": "Increase filter capacitor value indiscriminately",
+          "isRequired": false
+        }
+      ],
+      "debrief": "Ground reference instability, gain drift, and op-amp offset combined to corrupt cabinet outputs. Correcting all three restored trustworthy conditioning performance."
     }
   ]
 }

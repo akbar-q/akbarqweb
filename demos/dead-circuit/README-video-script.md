@@ -148,3 +148,124 @@ Style: **cinematic thriller intro -> high-energy edtech reveal**
 - Use controlled props; avoid filming live electrical tampering.
 - Sparks should be simulated with VFX or safe practical FX under supervision.
 - Mark opening sequence as dramatized in final credits if required.
+
+---
+
+## Full Narrator Read (1 Take, ~145 words)
+
+> "A system fails in the dark.
+> 
+> In most labs, that becomes another worksheet.
+> 
+> In Dead Circuit, it becomes a mission.
+> 
+> Students enter timed engineering maintenance challenges where they inspect, measure, diagnose, and repair real fault patterns under pressure.
+> 
+> No passive watching. No copy-paste practicals.
+> 
+> Every action has consequence: the timer drops, the team responds, and the circuit either recovers or collapses.
+> 
+> And this is not just gamification for its own sake.
+> 
+> Each scenario maps to vocational delivery with structured lecture framing, hands-on activity, and clear Pass, Merit, Distinction evidence pathways.
+> 
+> Dead Circuit turns engagement into measurable performance.
+> 
+> From disengaged sessions to high-stakes, evidence-based engineering learning.
+> 
+> Ready for classroom pilot." 
+
+---
+
+## 90-Second Fast Cut Version (Alt)
+
+### 0:00–0:22
+- Keep your sabotage hook but reduce each shot by ~30% duration.
+- End on blackout + `THE SYSTEM IS DOWN`.
+
+### 0:22–0:45
+- Instant UI reveal.
+- Show scenario start, alarm module, threat meter, custom toggles.
+
+### 0:45–1:08
+- Rapid gameplay loop: probe -> diagnose -> repair -> success flash.
+
+### 1:08–1:24
+- Teaching panel closeups: vocational scenario + P/M/D criteria.
+
+### 1:24–1:30
+- End card + CTA: `PILOT READY // DEAD CIRCUIT`.
+
+---
+
+## On-Screen Caption Pack (Copy/Paste)
+
+Use these as punch-in overlays:
+
+- `FAULT DETECTED`
+- `TIME IS LIVE`
+- `EVIDENCE > GUESSWORK`
+- `DIAGNOSE // REPAIR // VERIFY`
+- `PASS // MERIT // DISTINCTION`
+- `LECTURE + HANDS-ON IN ONE FLOW`
+- `NO PASSIVE LEARNERS`
+- `CLASSROOM PILOT READY`
+
+---
+
+## Shot Priority Checklist (If Time Is Limited)
+
+If you can only capture essentials, do these first:
+
+1. Boots + silhouette + panel sabotage (hook)
+2. Glitch reveal into app dashboard
+3. One full scenario loop: inspect -> diagnose -> repair
+4. P/M/D teaching panel closeup
+5. Final title card + CTA
+
+---
+
+## Pitch-Target Endings (Pick One)
+
+### A) For Academic Staff
+**VO line:**
+> "Dead Circuit embeds assessment evidence into active learning, not after it."
+
+**End text:**
+- `ASSESSMENT-ALIGNED ENGAGEMENT`
+
+### B) For Senior Leadership / Funding Panel
+**VO line:**
+> "Dead Circuit converts lab attendance into observable, assessable performance."
+
+**End text:**
+- `SCALABLE // MODULAR // CURRICULUM READY`
+
+### C) For Students / Open Day
+**VO line:**
+> "Fix the fault before time runs out—or the whole team goes down."
+
+**End text:**
+- `CAN YOU ESCAPE THE CIRCUIT?`
+
+---
+
+## Editing Blueprint (Simple)
+
+- **Color grade:**
+	- Act 1: cold blue/green shadows
+	- Act 2: neon cyan + warning amber/red accents
+- **Typography:** all caps, wide tracking, short phrases (2–5 words)
+- **Transitions:** hard cuts for tension, glitch cuts for UI reveal, one clean fade for final CTA
+- **Sound mix target:**
+	- VO at -6 dB
+	- SFX peaks at -9 dB
+	- Music bed around -18 dB to -14 dB
+
+---
+
+## Legal/Practical Guardrails
+
+- Avoid recognizable copyrighted character likeness in wardrobe/makeup references.
+- Keep the villain look original (silhouette, coat, gloves, posture) without copying specific IP.
+- If filming in college spaces, capture after-hours and remove identifiable student records from frame.

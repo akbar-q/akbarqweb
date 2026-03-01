@@ -20,6 +20,11 @@ const dom = {
   scenarioTitle: document.getElementById('scenarioTitle'),
   scenarioBrief: document.getElementById('scenarioBrief'),
   objectivesList: document.getElementById('objectivesList'),
+  preTaskPanel: document.getElementById('preTaskPanel'),
+  preTaskNote: document.getElementById('preTaskNote'),
+  preTaskList: document.getElementById('preTaskList'),
+  stretchTask: document.getElementById('stretchTask'),
+  beginTaskBtn: document.getElementById('beginTaskBtn'),
   vocScenario: document.getElementById('vocScenario'),
   lecturePlan: document.getElementById('lecturePlan'),
   activityPlan: document.getElementById('activityPlan'),
@@ -84,6 +89,8 @@ const state = {
   currentHints: [],
   hintCursor: 0,
   badges: new Set(),
+  taskLive: false,
+  pendingStartSeconds: 0,
   alertLevel: 'stable',
   fx: {
     enabled: true,
@@ -323,6 +330,7 @@ function bindEvents() {
   dom.restartBtn.addEventListener('click', resetToIntro);
   dom.playAgainBtn.addEventListener('click', resetToIntro);
   dom.nextScenarioBtn.addEventListener('click', nextScenario);
+  dom.beginTaskBtn.addEventListener('click', beginTimedTask);
   dom.checkDiagnosisBtn.addEventListener('click', validateDiagnosis);
   dom.checkRepairBtn.addEventListener('click', validateRepair);
   dom.hintBtn.addEventListener('click', useHintToken);
@@ -835,6 +843,59 @@ function initializeScenarioHints(scenario) {
   dom.hintText.textContent = 'Hints appear here when requested.';
 }
 
+function populatePreTaskBriefing(scenario, adjustedTime) {
+  const preBrief = scenario.preTaskBrief || [
+    'Confirm safe isolation and visual inspection order before touching components.',
+    'Identify expected vs measured values for key nodes before selecting faults.',
+    'Assign team roles: lead tester, recorder, safety checker.'
+  ];
+
+  dom.preTaskList.innerHTML = preBrief.map(item => `<li>${item}</li>`).join('');
+  dom.preTaskNote.textContent = 'Read this first: essential context appears here before the timed challenge begins.';
+
+  if (scenario.stretchTask) {
+    dom.stretchTask.innerHTML = `<strong>Stretch Task (Advanced)</strong><br>${scenario.stretchTask}`;
+    dom.stretchTask.classList.remove('hidden');
+  } else {
+    dom.stretchTask.classList.add('hidden');
+  }
+
+  dom.beginTaskBtn.textContent = `Begin Timed Challenge (${adjustedTime}s)`;
+}
+
+function setTaskInteractionEnabled(enabled) {
+  const interactiveSelectors = [
+    '.component-btn',
+    '.measure-btn',
+    '#faultOptions input',
+    '#repairOptions input',
+    '#checkDiagnosisBtn',
+    '#checkRepairBtn',
+    '#hintBtn'
+  ];
+
+  interactiveSelectors.forEach(selector => {
+    document.querySelectorAll(selector).forEach(element => {
+      element.disabled = !enabled;
+    });
+  });
+}
+
+function beginTimedTask() {
+  if (state.taskLive || state.pendingStartSeconds <= 0) {
+    return;
+  }
+
+  state.taskLive = true;
+  dom.preTaskPanel.classList.add('hidden');
+  setTaskInteractionEnabled(true);
+  startTimer(state.pendingStartSeconds);
+  setPhase('Diagnosis');
+  showEventToast('Timer started. Execute your maintenance plan.', 'good');
+  updateCommandLine('Timed session live // gather evidence and commit decisions.');
+  setBotMessage('Sparky says: Great, now race the clock with safe, evidence-first decisions.');
+}
+
 function useHintToken() {
   if (state.hintTokens <= 0) {
     showEventToast('No hint tokens left this scenario.', 'bad');
@@ -937,6 +998,7 @@ function loadScenario(index) {
   state.selectedFaults.clear();
   state.selectedRepairs.clear();
   state.measuredNodes.clear();
+  state.taskLive = false;
   initializeScenarioHints(scenario);
 
   dom.checkRepairBtn.disabled = true;
@@ -953,10 +1015,13 @@ function loadScenario(index) {
   renderMeasurements(scenario);
   renderFaultOptions(scenario);
   renderRepairOptions(scenario);
-  setPhase('Diagnosis');
+  setTaskInteractionEnabled(false);
+  setPhase('Briefing');
 
   const adjustedTime = Math.floor(scenario.timeLimit * modeMultiplier[state.mode]);
-  startTimer(adjustedTime);
+  state.pendingStartSeconds = adjustedTime;
+  populatePreTaskBriefing(scenario, adjustedTime);
+  dom.preTaskPanel.classList.remove('hidden');
   syncStats();
   playSound('ui');
   updateCommandLine(`Scenario loaded: ${scenario.title} // Diagnose ${scenario.requiredFaultCount} fault(s).`);
@@ -1080,6 +1145,12 @@ function renderRepairOptions(scenario) {
 }
 
 function validateDiagnosis() {
+  if (!state.taskLive) {
+    showEventToast('Start the timed challenge from the Pre-Task Briefing first.', 'bad');
+    playSound('bad');
+    return;
+  }
+
   const scenario = state.data.scenarios[state.scenarioIndex];
   const expected = new Set(scenario.components.filter(c => c.isFault).map(c => c.id));
   const countOk = state.selectedFaults.size === scenario.requiredFaultCount;
@@ -1114,6 +1185,12 @@ function validateDiagnosis() {
 }
 
 function validateRepair() {
+  if (!state.taskLive) {
+    showEventToast('Start the timed challenge from the Pre-Task Briefing first.', 'bad');
+    playSound('bad');
+    return;
+  }
+
   const scenario = state.data.scenarios[state.scenarioIndex];
   if (!state.diagnosed) {
     playSound('bad');
@@ -1185,6 +1262,7 @@ function startTimer(seconds) {
     if (state.timeRemaining <= 0) {
       clearInterval(state.intervalId);
       state.strikes += 1;
+      state.taskLive = false;
       setAlertLevel('critical');
       playSound('bad');
       flashState('bad');
@@ -1202,6 +1280,7 @@ function finishMission() {
   clearInterval(state.intervalId);
   stopTickLoop();
   stopAmbientBed();
+  state.taskLive = false;
   dom.gamePanel.classList.add('hidden');
   dom.completePanel.classList.remove('hidden');
 
@@ -1237,12 +1316,15 @@ function resetToIntro() {
   state.hintTokens = 0;
   state.currentHints = [];
   state.hintCursor = 0;
+  state.taskLive = false;
+  state.pendingStartSeconds = 0;
 
   dom.logFeed.innerHTML = '';
   dom.teamBadge.textContent = 'Team: Unassigned';
   dom.scenarioBadge.textContent = 'Scenario 0/0';
   dom.timerBadge.textContent = '00:00';
   dom.hintText.textContent = 'Hints appear here when requested.';
+  dom.preTaskPanel.classList.remove('hidden');
   setAlertLevel('stable');
   syncStats();
   applyThemeState();
