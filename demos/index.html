@@ -86,8 +86,100 @@
       border-radius: 1.25rem !important;
     }
 
+    .card.demo-card.dead-circuit-card {
+      position: relative;
+      overflow: hidden;
+      border-color: rgba(68, 239, 161, 0.5);
+      box-shadow: 0 0 0 1px rgba(68, 239, 161, 0.22), 0 12px 26px rgba(0, 0, 0, 0.28);
+      animation: dcPulse 2.1s ease-in-out infinite;
+    }
+
+    .card.demo-card.dead-circuit-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(110deg, transparent 10%, rgba(64, 240, 180, 0.20) 44%, transparent 78%);
+      transform: translateX(-120%);
+      animation: dcSweep 2.8s linear infinite;
+    }
+
+    .card.demo-card.dead-circuit-card::after {
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      top: 12px;
+      right: 12px;
+      border-radius: 999px;
+      background: #ff5f73;
+      box-shadow: 0 0 0 0 rgba(255, 95, 115, 0.55);
+      animation: dcAlarm 1s ease-in-out infinite;
+      pointer-events: none;
+    }
+
     .card.demo-card .card-body {
       border-radius: 1.25rem !important;
+    }
+
+    .dc-preview {
+      margin-top: 0.2rem;
+      margin-bottom: 0.85rem;
+      border: 1px solid rgba(88, 216, 255, 0.3);
+      border-radius: 0.7rem;
+      background: rgba(8, 30, 44, 0.7);
+      overflow: hidden;
+    }
+
+    .dc-preview .dc-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: rgba(216, 255, 243, 0.86);
+      padding: 0.34rem 0.52rem;
+      border-bottom: 1px solid rgba(88, 216, 255, 0.24);
+    }
+
+    .dc-preview .dc-wave {
+      height: 28px;
+      position: relative;
+      background:
+        repeating-linear-gradient(90deg,
+          rgba(74, 252, 182, 0.0) 0 8px,
+          rgba(74, 252, 182, 0.15) 8px 9px,
+          rgba(74, 252, 182, 0.0) 9px 16px);
+      animation: dcMatrixSlide 1.3s linear infinite;
+    }
+
+    .dc-preview .dc-wave::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(74, 252, 182, 0.24), rgba(74, 252, 182, 0.02));
+      mix-blend-mode: screen;
+    }
+
+    @keyframes dcPulse {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-2px); }
+    }
+
+    @keyframes dcSweep {
+      0% { transform: translateX(-120%); }
+      100% { transform: translateX(120%); }
+    }
+
+    @keyframes dcAlarm {
+      0% { box-shadow: 0 0 0 0 rgba(255, 95, 115, 0.55); }
+      100% { box-shadow: 0 0 0 10px rgba(255, 95, 115, 0); }
+    }
+
+    @keyframes dcMatrixSlide {
+      0% { background-position-x: 0; }
+      100% { background-position-x: 32px; }
     }
 
     .topbar {
@@ -122,6 +214,15 @@
     }
 
     a { text-decoration: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card.demo-card.dead-circuit-card,
+      .card.demo-card.dead-circuit-card::before,
+      .card.demo-card.dead-circuit-card::after,
+      .dc-preview .dc-wave {
+        animation: none;
+      }
+    }
   </style>
 </head>
 <body class="text-light">
@@ -219,6 +320,11 @@
       const card = document.createElement('div');
       card.className = 'card demo-card h-100 rounded-4';
 
+      const isDeadCircuit = demo.href === './dead-circuit/';
+      if (isDeadCircuit) {
+        card.classList.add('dead-circuit-card');
+      }
+
       const body = document.createElement('div');
       body.className = 'card-body d-flex flex-column';
 
@@ -233,6 +339,19 @@
       const tagsWrap = document.createElement('div');
       tagsWrap.className = 'd-flex flex-wrap gap-2 mb-3';
       (demo.tags || []).forEach(t => tagsWrap.appendChild(makeTag(t)));
+
+      if (isDeadCircuit) {
+        const preview = document.createElement('div');
+        preview.className = 'dc-preview';
+        preview.innerHTML = `
+          <div class="dc-header">
+            <span>LIVE SIGNAL</span>
+            <span>ALARM ACTIVE</span>
+          </div>
+          <div class="dc-wave"></div>
+        `;
+        body.appendChild(preview);
+      }
 
       const actions = document.createElement('div');
       actions.className = 'mt-auto d-flex flex-wrap gap-2';
