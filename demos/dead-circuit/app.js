@@ -213,6 +213,9 @@ async function init() {
   dom.teamName.value = 'Kirchhoff Crew';
   updateHud();
   updateBadges();
+  initializeLeaderboard();
+  dom.quizQuestion.textContent = 'Answer timed questions to earn bonus points.';
+  dom.runnerScore.textContent = 'Distance: 0m';
   updateCommandLine('SYS BOOT // Awaiting team authorization...');
   logLine('info', 'System ready. Choose a pitch and start the mission.');
 }
@@ -404,6 +407,11 @@ function bindEvents() {
   dom.fxToggle.addEventListener('click', toggleFxPreference);
   dom.soundToggle.addEventListener('click', toggleSoundEnabled);
   dom.soundVolume.addEventListener('input', onVolumeChange);
+  dom.nextIntelBtn.addEventListener('click', revealNextIntel);
+  dom.quizStartBtn.addEventListener('click', startQuizRound);
+  dom.runnerStartBtn.addEventListener('click', startRunnerGame);
+  dom.runnerLeftBtn.addEventListener('click', () => shiftRunnerLane(-1));
+  dom.runnerRightBtn.addEventListener('click', () => shiftRunnerLane(1));
 
   dom.stageTabs.forEach(tab => {
     tab.addEventListener('click', () => {
@@ -418,6 +426,257 @@ function bindEvents() {
     },
     { once: true }
   );
+
+  document.addEventListener('keydown', event => {
+    if (!state.runner.active) {
+      return;
+    }
+    if (event.key === 'ArrowLeft') {
+      shiftRunnerLane(-1);
+    }
+    if (event.key === 'ArrowRight') {
+      shiftRunnerLane(1);
+    }
+  });
+}
+
+function initializeIntelStream(scenario, preBrief) {
+  state.intelQueue = [
+    ...scenario.objectives.map(text => ({ target: 'objective', text })),
+    ...preBrief.map(text => ({ target: 'brief', text }))
+  ];
+  state.intelShown = 0;
+  dom.objectivesList.innerHTML = '';
+  dom.preTaskList.innerHTML = '';
+  updateIntelCounter();
+  dom.nextIntelBtn.disabled = false;
+  revealNextIntel();
+  revealNextIntel();
+}
+
+function revealNextIntel() {
+  const next = state.intelQueue.shift();
+  if (!next) {
+    dom.nextIntelBtn.disabled = true;
+    updateIntelCounter();
+    return;
+  }
+
+  const li = document.createElement('li');
+  li.textContent = next.text;
+  if (next.target === 'objective') {
+    dom.objectivesList.appendChild(li);
+  } else {
+    dom.preTaskList.appendChild(li);
+  }
+
+  state.intelShown += 1;
+  playSound('ui');
+  updateIntelCounter();
+}
+
+function updateIntelCounter() {
+  const total = state.intelShown + state.intelQueue.length;
+  dom.intelCount.textContent = `${state.intelShown} / ${total} Intel`;
+}
+
+function initializeLeaderboard() {
+  state.leaderboard.entries = [
+    { id: 'player', name: state.teamName, score: 120, isPlayer: true },
+    { id: 'bot-1', name: 'Volt Vipers', score: 130, isPlayer: false },
+    { id: 'bot-2', name: 'Relay Raiders', score: 118, isPlayer: false },
+    { id: 'bot-3', name: 'Node Ninjas', score: 110, isPlayer: false },
+    { id: 'bot-4', name: 'Fault Fangs', score: 102, isPlayer: false }
+  ];
+  renderLeaderboard();
+}
+
+function startLeaderboardLoop() {
+  stopLeaderboardLoop();
+  state.leaderboard.intervalId = window.setInterval(updateLeaderboard, 1100);
+}
+
+function stopLeaderboardLoop() {
+  if (state.leaderboard.intervalId) {
+    window.clearInterval(state.leaderboard.intervalId);
+    state.leaderboard.intervalId = null;
+  }
+}
+
+function updateLeaderboard() {
+  if (!state.leaderboard.entries.length) {
+    return;
+  }
+
+  const player = state.leaderboard.entries.find(entry => entry.isPlayer);
+  if (!player) {
+    return;
+  }
+
+  const pressure = state.timeRemaining > 0 ? clamp(1 - state.timeRemaining / 240, 0, 1) : 0.5;
+  const playerTarget = state.score + state.xp * 0.28 + state.combo * 18 - state.strikes * 22;
+  player.score = Math.max(player.score, Math.round(playerTarget));
+
+  let rivalOffset = 18 + Math.floor(Math.random() * 26);
+  state.leaderboard.entries.forEach(entry => {
+    if (entry.isPlayer) {
+      return;
+    }
+
+    const jitter = Math.floor((Math.random() - 0.5) * 16);
+    const desired = player.score + rivalOffset + jitter + Math.round(pressure * 24);
+    entry.score = Math.round(entry.score + (desired - entry.score) * 0.26);
+    rivalOffset += 10 + Math.floor(Math.random() * 12);
+  });
+
+  state.leaderboard.entries.sort((a, b) => b.score - a.score);
+  renderLeaderboard();
+}
+
+function renderLeaderboard() {
+  if (!dom.leaderboardList) {
+    return;
+  }
+
+  const playerIndex = state.leaderboard.entries.findIndex(entry => entry.isPlayer);
+  dom.leaderPulse.textContent = `Live Rank: #${playerIndex + 1}`;
+
+  dom.leaderboardList.innerHTML = state.leaderboard.entries
+    .map((entry, index) => {
+      const rowClass = `${entry.isPlayer ? 'player' : ''} ${entry.isPlayer && index > 0 ? 'surge' : ''}`.trim();
+      return `<div class="leader-row ${rowClass}"><strong>#${index + 1}</strong><span>${entry.name}</span><strong>${Math.round(entry.score)}</strong></div>`;
+    })
+    .join('');
+}
+
+function startQuizRound() {
+  stopQuizTimer();
+  state.quiz.active = true;
+  state.quiz.timeLeft = 8;
+  state.quiz.question = quizBank[Math.floor(Math.random() * quizBank.length)];
+  dom.quizTimer.textContent = `${state.quiz.timeLeft}s`;
+  dom.quizQuestion.textContent = state.quiz.question.question;
+
+  dom.quizAnswers.innerHTML = '';
+  state.quiz.question.options.forEach((option, index) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-answer';
+    btn.type = 'button';
+    btn.textContent = option;
+    btn.addEventListener('click', () => answerQuiz(index, btn));
+    dom.quizAnswers.appendChild(btn);
+  });
+
+  state.quiz.timerId = window.setInterval(() => {
+    state.quiz.timeLeft -= 1;
+    dom.quizTimer.textContent = `${Math.max(state.quiz.timeLeft, 0)}s`;
+    if (state.quiz.timeLeft <= 0) {
+      stopQuizTimer();
+      state.quiz.active = false;
+      dom.quizQuestion.textContent = 'Too slow. Start a new quiz run for bonus points.';
+      showEventToast('Quiz timeout. No bonus awarded.', 'bad');
+      playSound('bad');
+    }
+  }, 1000);
+}
+
+function answerQuiz(index, selectedButton) {
+  if (!state.quiz.active || !state.quiz.question) {
+    return;
+  }
+
+  const correct = index === state.quiz.question.answer;
+  state.quiz.active = false;
+  stopQuizTimer();
+
+  if (correct) {
+    selectedButton.classList.add('correct');
+    state.score += 60;
+    grantXp(40);
+    showEventToast('Quiz perfect. Bonus +60.', 'good');
+    playSound('good');
+    updateCommandLine('Bonus channel: quiz cleared, score boosted.');
+  } else {
+    selectedButton.classList.add('wrong');
+    state.score = Math.max(0, state.score - 20);
+    showEventToast('Quiz wrong. -20 penalty.', 'bad');
+    playSound('bad');
+  }
+
+  syncStats();
+}
+
+function stopQuizTimer() {
+  if (state.quiz.timerId) {
+    window.clearInterval(state.quiz.timerId);
+    state.quiz.timerId = null;
+  }
+}
+
+function startRunnerGame() {
+  stopRunnerGame(false);
+  state.runner.active = true;
+  state.runner.distance = 0;
+  state.runner.lane = 1;
+  state.runner.obstacleLane = Math.floor(Math.random() * 3);
+  state.runner.obstacleY = 8;
+  renderRunner();
+
+  state.runner.intervalId = window.setInterval(() => {
+    state.runner.obstacleY += 10;
+    state.runner.distance += 3;
+
+    const nearPlayer = state.runner.obstacleY > 102;
+    if (nearPlayer && state.runner.obstacleLane === state.runner.lane) {
+      state.score = Math.max(0, state.score - 35);
+      state.strikes += 1;
+      stopRunnerGame(true);
+      showEventToast('Runner collision. -35 and strike +1.', 'bad');
+      playSound('bad');
+      syncStats();
+      return;
+    }
+
+    if (state.runner.obstacleY > 142) {
+      state.runner.obstacleY = 8;
+      state.runner.obstacleLane = Math.floor(Math.random() * 3);
+      state.score += 12;
+      grantXp(8);
+      syncStats();
+    }
+
+    dom.runnerScore.textContent = `Distance: ${state.runner.distance}m`;
+    renderRunner();
+  }, 120);
+}
+
+function stopRunnerGame(collision = false) {
+  if (state.runner.intervalId) {
+    window.clearInterval(state.runner.intervalId);
+    state.runner.intervalId = null;
+  }
+  if (state.runner.active && !collision) {
+    state.score += Math.floor(state.runner.distance * 0.4);
+    grantXp(Math.floor(state.runner.distance * 0.15));
+    syncStats();
+  }
+  state.runner.active = false;
+}
+
+function shiftRunnerLane(delta) {
+  if (!state.runner.active) {
+    return;
+  }
+  state.runner.lane = clamp(state.runner.lane + delta, 0, 2);
+  renderRunner();
+  playSound('ui');
+}
+
+function renderRunner() {
+  const laneClass = ['lane-left', 'lane-center', 'lane-right'];
+  dom.runnerPlayer.className = `runner-player ${laneClass[state.runner.lane]}`;
+  dom.runnerObstacle.className = `runner-obstacle ${laneClass[state.runner.obstacleLane]}`;
+  dom.runnerObstacle.style.top = `${state.runner.obstacleY}px`;
 }
 
 function setStage(stage, fromUser = false) {
@@ -959,7 +1218,6 @@ function populatePreTaskBriefing(scenario, adjustedTime) {
     'Assign team roles: lead tester, recorder, safety checker.'
   ];
 
-  dom.preTaskList.innerHTML = preBrief.map(item => `<li>${item}</li>`).join('');
   dom.preTaskNote.textContent = 'Read this first: essential context appears here before the timed challenge begins.';
 
   if (scenario.stretchTask) {
@@ -970,6 +1228,7 @@ function populatePreTaskBriefing(scenario, adjustedTime) {
   }
 
   dom.beginTaskBtn.textContent = `Begin Timed Challenge (${adjustedTime}s)`;
+  return preBrief;
 }
 
 function setTaskInteractionEnabled(enabled) {
@@ -1080,6 +1339,7 @@ function startMission() {
   state.badges.clear();
   state.strikes = modePenalty[state.mode];
   state.inspected = 0;
+  initializeLeaderboard();
 
   dom.teamBadge.textContent = `Team: ${state.teamName}`;
   dom.introPanel.classList.add('hidden');
@@ -1101,6 +1361,7 @@ function startMission() {
     dom.loadingPanel.classList.add('hidden');
     dom.gamePanel.classList.remove('hidden');
     startTickLoop();
+    startLeaderboardLoop();
     startAmbientBed();
     updateCommandLine('Control console online // Scenario stream linked.');
     showEventToast('Mission systems ready.', 'good');
@@ -1119,6 +1380,15 @@ function loadScenario(index) {
   state.selectedRepairs.clear();
   state.measuredNodes.clear();
   state.taskLive = false;
+  stopQuizTimer();
+  state.quiz.active = false;
+  dom.quizQuestion.textContent = 'Answer timed questions to earn bonus points.';
+  dom.quizAnswers.innerHTML = '';
+  dom.quizTimer.textContent = '08s';
+  stopRunnerGame(false);
+  state.runner.distance = 0;
+  dom.runnerScore.textContent = 'Distance: 0m';
+  renderRunner();
   initializeScenarioHints(scenario);
 
   dom.checkRepairBtn.disabled = true;
@@ -1140,7 +1410,8 @@ function loadScenario(index) {
 
   const adjustedTime = Math.floor(scenario.timeLimit * modeMultiplier[state.mode]);
   state.pendingStartSeconds = adjustedTime;
-  populatePreTaskBriefing(scenario, adjustedTime);
+  const preBrief = populatePreTaskBriefing(scenario, adjustedTime);
+  initializeIntelStream(scenario, preBrief);
   dom.preTaskPanel.classList.remove('hidden');
   setStage('briefing');
   syncStats();
@@ -1407,6 +1678,9 @@ function startTimer(seconds) {
 function finishMission() {
   clearInterval(state.intervalId);
   stopTickLoop();
+  stopLeaderboardLoop();
+  stopQuizTimer();
+  stopRunnerGame(false);
   stopAmbientBed();
   state.taskLive = false;
   dom.gamePanel.classList.add('hidden');
@@ -1427,6 +1701,9 @@ function resetToIntro() {
   window.clearTimeout(state.loadingTimeoutId);
   clearInterval(state.intervalId);
   stopTickLoop();
+  stopLeaderboardLoop();
+  stopQuizTimer();
+  stopRunnerGame(false);
   stopAmbientBed();
   dom.completePanel.classList.add('hidden');
   dom.loadingPanel.classList.add('hidden');
@@ -1448,12 +1725,19 @@ function resetToIntro() {
   state.hintCursor = 0;
   state.taskLive = false;
   state.pendingStartSeconds = 0;
+  state.intelQueue = [];
+  state.intelShown = 0;
 
   dom.logFeed.innerHTML = '';
   dom.teamBadge.textContent = 'Team: Unassigned';
   dom.scenarioBadge.textContent = 'Scenario 0/0';
   dom.timerBadge.textContent = '00:00';
   dom.hintText.textContent = 'Hints appear here when requested.';
+  dom.quizQuestion.textContent = 'Answer timed questions to earn bonus points.';
+  dom.quizAnswers.innerHTML = '';
+  dom.quizTimer.textContent = '08s';
+  dom.runnerScore.textContent = 'Distance: 0m';
+  updateIntelCounter();
   dom.preTaskPanel.classList.remove('hidden');
   setAlertLevel('stable');
   syncStats();
@@ -1526,6 +1810,7 @@ function syncStats() {
   dom.hintBtn.disabled = state.hintTokens <= 0;
   updateHud();
   updateBadges();
+  renderLeaderboard();
 }
 
 function setPhase(phase) {
