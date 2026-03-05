@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css?v=20260301e" />
+  <link rel="stylesheet" href="./style.css?v=20260305b" />
 </head>
 <body>
   <canvas id="fxCanvas" class="fx-canvas" aria-hidden="true"></canvas>
@@ -39,6 +39,24 @@
       <h1>DEAD CIRCUIT</h1>
       <p class="lead">Timed EEE fault-hunt escape challenges. Diagnose fast. Repair cleanly. Escape together.</p>
 
+      <div class="comic-splash" aria-hidden="true">
+        <article class="comic-cell">
+          <span class="comic-icon">⚡</span>
+          <strong>Fault</strong>
+          <p>A system goes dark.</p>
+        </article>
+        <article class="comic-cell">
+          <span class="comic-icon">🔎</span>
+          <strong>Trace</strong>
+          <p>Find evidence fast.</p>
+        </article>
+        <article class="comic-cell">
+          <span class="comic-icon">🛠️</span>
+          <strong>Recover</strong>
+          <p>Repair before timeout.</p>
+        </article>
+      </div>
+
       <section class="teacher-pitch">
         <h2>Teaching Tool Mode (BTEC-Ready)</h2>
         <p class="muted">Each mission maps to vocational engineering maintenance outcomes with Pass, Merit, and Distinction evidence pathways for lecture + practical delivery.</p>
@@ -67,6 +85,13 @@
     </section>
 
     <section class="card hidden" id="gamePanel">
+      <section class="workflow-guide" aria-label="guided flow">
+        <div class="flow-node active">1. Briefing</div>
+        <div class="flow-node">2. Probe</div>
+        <div class="flow-node">3. Diagnose</div>
+        <div class="flow-node">4. Repair</div>
+      </section>
+
       <section class="hud-panel" id="hudPanel">
         <div class="hud-grid">
           <div class="gauge-block">
@@ -115,6 +140,7 @@
 
       <div class="grid two gap-xl">
         <div>
+          <div class="chapter-divider">Mission Context</div>
           <h2 id="scenarioTitle">Scenario</h2>
           <p id="scenarioBrief" class="muted"></p>
           <ul id="objectivesList" class="objectives"></ul>
@@ -130,7 +156,8 @@
         </div>
       </div>
 
-      <section class="subcard teaching-panel">
+      <section class="subcard teaching-panel comic-panel">
+        <div class="chapter-divider">Teaching Blueprint</div>
         <h3>Vocational Delivery Plan</h3>
         <p class="muted" id="vocScenario"></p>
         <div class="grid two">
@@ -159,7 +186,8 @@
         </div>
       </section>
 
-      <section class="subcard pretask-panel" id="preTaskPanel">
+      <section class="subcard pretask-panel comic-panel" id="preTaskPanel">
+        <div class="chapter-divider">Stage Zero</div>
         <h3>Pre-Task Briefing (Timer Off)</h3>
         <p class="muted" id="preTaskNote">Read this first: key info shown here is not counted against your timer.</p>
         <ul id="preTaskList" class="teach-list"></ul>
@@ -168,7 +196,8 @@
       </section>
 
       <div class="grid two gap-xl">
-        <section class="subcard">
+        <section class="subcard seg-probe comic-panel">
+          <div class="chapter-divider">Action Zone A</div>
           <h3>1) Probe & Observe</h3>
           <p class="muted">Inspect components and probe test nodes to build your fault hypothesis.</p>
           <div class="chip-grid" aria-hidden="true">
@@ -179,7 +208,8 @@
           <div id="measureBoard" class="measure-board"></div>
         </section>
 
-        <section class="subcard">
+        <section class="subcard seg-diagnose comic-panel">
+          <div class="chapter-divider">Action Zone B</div>
           <h3>2) Diagnose Faults</h3>
           <p class="muted" id="diagnoseRule"></p>
           <div class="hint-row">
@@ -191,14 +221,16 @@
         </section>
       </div>
 
-      <section class="subcard">
+      <section class="subcard seg-repair comic-panel">
+        <div class="chapter-divider">Action Zone C</div>
         <h3>3) Execute Repair Plan</h3>
         <p class="muted">Choose only the actions required to restore operation.</p>
         <div id="repairOptions" class="repair-grid"></div>
         <button id="checkRepairBtn" class="primary" disabled>Validate Repair</button>
       </section>
 
-      <section class="subcard">
+      <section class="subcard seg-feed comic-panel">
+        <div class="chapter-divider">Live Ops Feed</div>
         <h3>Mission Feed</h3>
         <div id="logFeed" class="log-feed"></div>
       </section>
@@ -240,6 +272,6 @@
 
   <div id="eventToast" class="event-toast hidden" aria-live="polite"></div>
 
-  <script src="./app.js?v=20260301e" defer></script>
+  <script src="./app.js?v=20260305a" defer></script>
 </body>
 </html>
