@@ -155,6 +155,22 @@ body.flash-bad::after {
   justify-content: flex-end;
 }
 
+.institution-brand {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.32rem 0.58rem;
+  border-radius: 0.55rem;
+  border: 1px solid rgba(95, 152, 182, 0.35);
+  background: rgba(9, 22, 30, 0.82);
+  color: rgba(207, 233, 247, 0.88);
+  font-family: Oxanium, Inter, system-ui, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 .volume-wrap {
   display: inline-flex;
   align-items: center;
