@@ -44,11 +44,16 @@ const dom = {
   componentBoard: document.getElementById('componentBoard'),
   measureBoard: document.getElementById('measureBoard'),
   diagnoseRule: document.getElementById('diagnoseRule'),
+  learningChecklist: document.getElementById('learningChecklist'),
+  evidenceNodeSelect: document.getElementById('evidenceNodeSelect'),
   hintBtn: document.getElementById('hintBtn'),
   hintText: document.getElementById('hintText'),
   faultOptions: document.getElementById('faultOptions'),
   checkDiagnosisBtn: document.getElementById('checkDiagnosisBtn'),
   repairOptions: document.getElementById('repairOptions'),
+  safetyIso: document.getElementById('safetyIso'),
+  safetyCross: document.getElementById('safetyCross'),
+  repairChecklist: document.getElementById('repairChecklist'),
   checkRepairBtn: document.getElementById('checkRepairBtn'),
   logFeed: document.getElementById('logFeed'),
   leaderboardList: document.getElementById('leaderboardList'),
@@ -160,6 +165,11 @@ const state = {
     obstacleY: 8,
     distance: 0,
     intervalId: null
+  },
+  learning: {
+    quizPassed: false,
+    diagnosisLockUntil: 0,
+    repairLockUntil: 0
   }
 };
 
@@ -412,6 +422,9 @@ function bindEvents() {
   dom.runnerStartBtn.addEventListener('click', startRunnerGame);
   dom.runnerLeftBtn.addEventListener('click', () => shiftRunnerLane(-1));
   dom.runnerRightBtn.addEventListener('click', () => shiftRunnerLane(1));
+  dom.evidenceNodeSelect.addEventListener('change', updateLearningGateUi);
+  dom.safetyIso.addEventListener('change', updateRepairGateUi);
+  dom.safetyCross.addEventListener('change', updateRepairGateUi);
 
   dom.stageTabs.forEach(tab => {
     tab.addEventListener('click', () => {
@@ -478,6 +491,100 @@ function revealNextIntel() {
 function updateIntelCounter() {
   const total = state.intelShown + state.intelQueue.length;
   dom.intelCount.textContent = `${state.intelShown} / ${total} Intel`;
+}
+
+function getCurrentScenario() {
+  return state.data?.scenarios?.[state.scenarioIndex] || null;
+}
+
+function getLearningGateStatus() {
+  const scenario = getCurrentScenario();
+  const anomalousMeasured = (scenario?.measurements || [])
+    .filter(entry => entry.broken !== entry.normal && state.measuredNodes.has(entry.node));
+
+  const now = Date.now();
+  const cooldown = Math.max(0, Math.ceil((state.learning.diagnosisLockUntil - now) / 1000));
+
+  return {
+    inspectedOk: state.inspected >= 2,
+    measuredOk: state.measuredNodes.size >= 2,
+    intelOk: state.intelQueue.length === 0,
+    quizOk: state.learning.quizPassed,
+    evidenceOk: !!dom.evidenceNodeSelect.value,
+    anomalousMeasured,
+    cooldown,
+    ready: state.inspected >= 2
+      && state.measuredNodes.size >= 2
+      && state.intelQueue.length === 0
+      && state.learning.quizPassed
+      && !!dom.evidenceNodeSelect.value
+      && cooldown === 0
+  };
+}
+
+function updateLearningGateUi() {
+  const status = getLearningGateStatus();
+  const items = [
+    [status.inspectedOk, 'Inspect at least 2 components'],
+    [status.measuredOk, 'Probe at least 2 nodes'],
+    [status.intelOk, 'Reveal all briefing intel'],
+    [status.quizOk, 'Pass one Rapid Fault Quiz'],
+    [status.evidenceOk, 'Select primary evidence node']
+  ];
+
+  dom.learningChecklist.innerHTML = items
+    .map(([ok, label]) => `<li class="${ok ? 'ok' : 'pending'}">${ok ? '✓' : '•'} ${label}</li>`)
+    .join('');
+
+  if (status.cooldown > 0) {
+    dom.learningChecklist.innerHTML += `<li class="pending">• Diagnosis cooldown: ${status.cooldown}s</li>`;
+  }
+
+  const selected = dom.evidenceNodeSelect.value;
+  dom.evidenceNodeSelect.innerHTML = '<option value="">Select measured anomaly...</option>';
+  status.anomalousMeasured.forEach(entry => {
+    const option = document.createElement('option');
+    option.value = entry.node;
+    option.textContent = `${entry.node}: ${entry.broken} (expected ${entry.normal})`;
+    dom.evidenceNodeSelect.appendChild(option);
+  });
+
+  if (selected && status.anomalousMeasured.some(entry => entry.node === selected)) {
+    dom.evidenceNodeSelect.value = selected;
+  }
+
+  dom.checkDiagnosisBtn.disabled = !state.taskLive || !status.ready;
+}
+
+function getRepairGateStatus() {
+  const now = Date.now();
+  const cooldown = Math.max(0, Math.ceil((state.learning.repairLockUntil - now) / 1000));
+  const safetyOk = dom.safetyIso.checked && dom.safetyCross.checked;
+
+  return {
+    safetyOk,
+    diagnosedOk: state.diagnosed,
+    cooldown,
+    ready: state.taskLive && state.diagnosed && safetyOk && cooldown === 0
+  };
+}
+
+function updateRepairGateUi() {
+  const status = getRepairGateStatus();
+  const items = [
+    [status.diagnosedOk, 'Diagnosis passed'],
+    [status.safetyOk, 'Safety confirmations complete']
+  ];
+
+  dom.repairChecklist.innerHTML = items
+    .map(([ok, label]) => `<li class="${ok ? 'ok' : 'pending'}">${ok ? '✓' : '•'} ${label}</li>`)
+    .join('');
+
+  if (status.cooldown > 0) {
+    dom.repairChecklist.innerHTML += `<li class="pending">• Repair cooldown: ${status.cooldown}s</li>`;
+  }
+
+  dom.checkRepairBtn.disabled = !status.ready;
 }
 
 function initializeLeaderboard() {
@@ -552,6 +659,7 @@ function renderLeaderboard() {
 function startQuizRound() {
   stopQuizTimer();
   state.quiz.active = true;
+  state.learning.quizPassed = false;
   state.quiz.timeLeft = 8;
   state.quiz.question = quizBank[Math.floor(Math.random() * quizBank.length)];
   dom.quizTimer.textContent = `${state.quiz.timeLeft}s`;
@@ -591,6 +699,7 @@ function answerQuiz(index, selectedButton) {
 
   if (correct) {
     selectedButton.classList.add('correct');
+    state.learning.quizPassed = true;
     state.score += 60;
     grantXp(40);
     showEventToast('Quiz perfect. Bonus +60.', 'good');
@@ -598,12 +707,14 @@ function answerQuiz(index, selectedButton) {
     updateCommandLine('Bonus channel: quiz cleared, score boosted.');
   } else {
     selectedButton.classList.add('wrong');
+    state.learning.quizPassed = false;
     state.score = Math.max(0, state.score - 20);
     showEventToast('Quiz wrong. -20 penalty.', 'bad');
     playSound('bad');
   }
 
   syncStats();
+  updateLearningGateUi();
 }
 
 function stopQuizTimer() {
@@ -1247,6 +1358,9 @@ function setTaskInteractionEnabled(enabled) {
       element.disabled = !enabled;
     });
   });
+
+  updateLearningGateUi();
+  updateRepairGateUi();
 }
 
 function beginTimedTask() {
@@ -1260,6 +1374,8 @@ function beginTimedTask() {
   startTimer(state.pendingStartSeconds);
   setPhase('Probe');
   setStage('probe');
+  updateLearningGateUi();
+  updateRepairGateUi();
   showEventToast('Timer started. Execute your maintenance plan.', 'good');
   updateCommandLine('Timed session live // gather evidence and commit decisions.');
   setBotMessage('Sparky says: Great, now race the clock with safe, evidence-first decisions.');
@@ -1380,6 +1496,11 @@ function loadScenario(index) {
   state.selectedRepairs.clear();
   state.measuredNodes.clear();
   state.taskLive = false;
+  state.learning.quizPassed = false;
+  state.learning.diagnosisLockUntil = 0;
+  state.learning.repairLockUntil = 0;
+  dom.safetyIso.checked = false;
+  dom.safetyCross.checked = false;
   stopQuizTimer();
   state.quiz.active = false;
   dom.quizQuestion.textContent = 'Answer timed questions to earn bonus points.';
@@ -1415,6 +1536,8 @@ function loadScenario(index) {
   dom.preTaskPanel.classList.remove('hidden');
   setStage('briefing');
   syncStats();
+  updateLearningGateUi();
+  updateRepairGateUi();
   playSound('ui');
   updateCommandLine(`Scenario loaded: ${scenario.title} // Diagnose ${scenario.requiredFaultCount} fault(s).`);
   showEventToast(`Scenario ${index + 1} active. Timer armed.`);
@@ -1440,6 +1563,7 @@ function renderComponents(scenario) {
         showEventToast(`Anomaly flagged near ${component.name}.`, 'bad');
         logLine('good', `Suspicious behavior detected near ${component.name}.`);
       }
+      updateLearningGateUi();
     });
     dom.componentBoard.appendChild(btn);
   });
@@ -1469,6 +1593,7 @@ function renderMeasurements(scenario) {
         setStage('diagnose');
         setPhase('Diagnosis');
       }
+      updateLearningGateUi();
     });
     dom.measureBoard.appendChild(btn);
   });
@@ -1547,6 +1672,14 @@ function validateDiagnosis() {
     return;
   }
 
+  const gate = getLearningGateStatus();
+  if (!gate.ready) {
+    showEventToast('Learning checkpoint incomplete. Finish evidence steps first.', 'bad');
+    updateCommandLine('Diagnosis blocked // complete learning checkpoint before validation.', 'bad');
+    playSound('bad');
+    return;
+  }
+
   const scenario = state.data.scenarios[state.scenarioIndex];
   const expected = new Set(scenario.components.filter(c => c.isFault).map(c => c.id));
   const countOk = state.selectedFaults.size === scenario.requiredFaultCount;
@@ -1557,9 +1690,11 @@ function validateDiagnosis() {
     grantXp(90);
     adjustCombo(1);
     state.diagnosed = true;
-    dom.checkRepairBtn.disabled = false;
+    dom.safetyIso.checked = false;
+    dom.safetyCross.checked = false;
     setPhase('Repair');
     setStage('repair');
+    updateRepairGateUi();
     playSound('good');
     flashState('good');
     showEventToast('Diagnosis confirmed. Repair channel unlocked.', 'good');
@@ -1576,6 +1711,8 @@ function validateDiagnosis() {
     updateCommandLine('Diagnosis failed // cross-check faults and retest nodes.', 'bad');
     setBotMessage('Try one measured node at a time and eliminate possibilities like a maintenance pro.');
     logLine('bad', 'Diagnosis mismatch. Re-evaluate clues and measurement deltas.');
+    state.learning.diagnosisLockUntil = Date.now() + 8000;
+    updateLearningGateUi();
   }
 
   syncStats();
@@ -1584,6 +1721,14 @@ function validateDiagnosis() {
 function validateRepair() {
   if (!state.taskLive) {
     showEventToast('Start the timed challenge from the Pre-Task Briefing first.', 'bad');
+    playSound('bad');
+    return;
+  }
+
+  const repairGate = getRepairGateStatus();
+  if (!repairGate.ready) {
+    showEventToast('Repair gate locked. Confirm safety checks before validating.', 'bad');
+    updateCommandLine('Repair blocked // safety confirmation gate incomplete.', 'bad');
     playSound('bad');
     return;
   }
@@ -1625,6 +1770,10 @@ function validateRepair() {
     updateCommandLine('Repair rejected // remove unsafe actions and retry.', 'bad');
     setBotMessage('Maintenance note: reject unsafe quick fixes even under time pressure.');
     logLine('bad', 'Repair plan incomplete or unsafe. Remove unnecessary actions.');
+    state.learning.repairLockUntil = Date.now() + 7000;
+    dom.safetyIso.checked = false;
+    dom.safetyCross.checked = false;
+    updateRepairGateUi();
   }
 
   syncStats();
@@ -1725,6 +1874,9 @@ function resetToIntro() {
   state.hintCursor = 0;
   state.taskLive = false;
   state.pendingStartSeconds = 0;
+  state.learning.quizPassed = false;
+  state.learning.diagnosisLockUntil = 0;
+  state.learning.repairLockUntil = 0;
   state.intelQueue = [];
   state.intelShown = 0;
 
@@ -1733,6 +1885,9 @@ function resetToIntro() {
   dom.scenarioBadge.textContent = 'Scenario 0/0';
   dom.timerBadge.textContent = '00:00';
   dom.hintText.textContent = 'Hints appear here when requested.';
+  dom.evidenceNodeSelect.innerHTML = '<option value="">Select measured anomaly...</option>';
+  dom.safetyIso.checked = false;
+  dom.safetyCross.checked = false;
   dom.quizQuestion.textContent = 'Answer timed questions to earn bonus points.';
   dom.quizAnswers.innerHTML = '';
   dom.quizTimer.textContent = '08s';
@@ -1746,6 +1901,8 @@ function resetToIntro() {
   setBotMessage('Hi, I am Sparky. I can nudge learners with diagnosis hints.');
   setPhase('Briefing');
   setStage('briefing');
+  updateLearningGateUi();
+  updateRepairGateUi();
   logLine('info', 'Mission reset. Configure team and relaunch.');
 }
 
@@ -1763,6 +1920,8 @@ function updateTimerDisplay() {
   }
 
   updateHud();
+  updateLearningGateUi();
+  updateRepairGateUi();
 }
 
 function setAlertLevel(level) {
@@ -1811,6 +1970,8 @@ function syncStats() {
   updateHud();
   updateBadges();
   renderLeaderboard();
+  updateLearningGateUi();
+  updateRepairGateUi();
 }
 
 function setPhase(phase) {

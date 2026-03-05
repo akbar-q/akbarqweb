@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css?v=20260305f" />
+  <link rel="stylesheet" href="./style.css?v=20260305g" />
 </head>
 <body>
   <canvas id="fxCanvas" class="fx-canvas" aria-hidden="true"></canvas>
@@ -98,6 +98,7 @@
         <button class="stage-tab" type="button" data-stage="probe">Probe</button>
         <button class="stage-tab" type="button" data-stage="diagnose">Diagnose</button>
         <button class="stage-tab" type="button" data-stage="repair">Repair</button>
+        <button class="stage-tab" type="button" data-stage="engage">Boost</button>
         <button class="stage-tab" type="button" data-stage="feed">Feed</button>
       </section>
 
@@ -229,6 +230,14 @@
             <button id="hintBtn" class="ghost" type="button">Use Hint Token</button>
             <div id="hintText" class="hint-box">Hints appear here when requested.</div>
           </div>
+          <div class="learning-gate">
+            <h4>Learning Checkpoint</h4>
+            <ul id="learningChecklist" class="gate-list"></ul>
+            <label for="evidenceNodeSelect">Primary Evidence Node</label>
+            <select id="evidenceNodeSelect">
+              <option value="">Select measured anomaly...</option>
+            </select>
+          </div>
           <div id="faultOptions" class="stack"></div>
           <button id="checkDiagnosisBtn" class="primary">Validate Diagnosis</button>
         </section>
@@ -238,6 +247,12 @@
         <div class="chapter-divider">Action Zone C</div>
         <h3>3) Execute Repair Plan</h3>
         <p class="muted">Choose only the actions required to restore operation.</p>
+        <div class="safety-gate">
+          <h4>Safety Confirmation Gate</h4>
+          <label class="safety-item"><input id="safetyIso" type="checkbox" /> Isolation / lockout confirmed</label>
+          <label class="safety-item"><input id="safetyCross" type="checkbox" /> Measured values cross-checked before energizing</label>
+          <ul id="repairChecklist" class="gate-list"></ul>
+        </div>
         <div id="repairOptions" class="repair-grid"></div>
         <button id="checkRepairBtn" class="primary" disabled>Validate Repair</button>
       </section>
@@ -255,20 +270,28 @@
             <div id="leaderPulse" class="leader-pulse">Live Rank: --</div>
             <div id="leaderboardList" class="leaderboard-list"></div>
           </section>
+        </div>
+      </section>
 
+      <section class="subcard stage-section engage-hub" data-stage="engage">
+        <div class="chapter-divider">Focus Boost</div>
+        <h3 id="engageTitle">Attention Pulse Challenge</h3>
+        <p id="engagePrompt" class="muted">Quick challenge injected to restore focus. Complete one to resume mission timeline.</p>
+
+        <div class="feed-grid">
           <section class="subcard minigame-card">
-            <div class="chapter-divider">Bonus Game</div>
+            <div class="chapter-divider">Quiz Burst</div>
             <h4>Rapid Fault Quiz</h4>
             <div class="mini-topline">
               <span id="quizTimer">08s</span>
               <button id="quizStartBtn" class="ghost" type="button">Start Quiz</button>
             </div>
-            <p id="quizQuestion" class="mini-question">Answer timed questions to earn bonus points.</p>
+            <p id="quizQuestion" class="mini-question">Answer timed questions to earn mission resume access.</p>
             <div id="quizAnswers" class="quiz-answers"></div>
           </section>
 
           <section class="subcard minigame-card">
-            <div class="chapter-divider">Arcade</div>
+            <div class="chapter-divider">Runner Burst</div>
             <h4>Rail Rush (Runner)</h4>
             <div class="mini-topline">
               <span id="runnerScore">Distance: 0m</span>
@@ -283,6 +306,10 @@
               <button id="runnerRightBtn" class="ghost" type="button">Lane →</button>
             </div>
           </section>
+        </div>
+
+        <div class="actions-row">
+          <button id="resumeMissionBtn" class="primary" type="button" disabled>Resume Mission</button>
         </div>
       </section>
 
@@ -332,6 +359,6 @@
 
   <footer class="brand-footer" aria-label="Branding">Akbar Q Cloud Suite</footer>
 
-  <script src="./app.js?v=20260305c" defer></script>
+  <script src="./app.js?v=20260305d" defer></script>
 </body>
 </html>

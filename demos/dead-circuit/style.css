@@ -1110,6 +1110,55 @@ button:disabled {
   transform: rotate(45deg);
 }
 
+.learning-gate,
+.safety-gate {
+  margin: 0.45rem 0 0.75rem;
+  padding: 0.58rem 0.62rem;
+  border: 1px solid #34576d;
+  border-radius: 0.62rem;
+  background: rgba(9, 23, 34, 0.78);
+}
+
+.learning-gate h4,
+.safety-gate h4 {
+  margin: 0 0 0.35rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #d8f2ff;
+}
+
+.gate-list {
+  margin: 0 0 0.45rem;
+  padding-left: 1rem;
+  display: grid;
+  gap: 0.22rem;
+  color: #c4e0ef;
+  font-size: 0.83rem;
+}
+
+.gate-list li.ok {
+  color: #9bf5bf;
+}
+
+.gate-list li.pending {
+  color: #f4c680;
+}
+
+.safety-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.3rem;
+  color: #d4e9f7;
+}
+
+.safety-item input {
+  width: auto;
+  margin: 0;
+  accent-color: #36d8ff;
+}
+
 .stage-tabs {
   margin-top: 0.8rem;
   display: flex;
@@ -1133,6 +1182,14 @@ button:disabled {
   background: rgba(var(--accent-main-rgb), 0.16);
   color: #ecfaff;
   box-shadow: 0 0 0 1px rgba(var(--accent-main-rgb), 0.25);
+}
+
+.stage-tab[data-stage="engage"] {
+  display: none;
+}
+
+.stage-tab[data-stage="engage"].active {
+  display: inline-flex;
 }
 
 .stage-section {
@@ -1333,6 +1390,15 @@ button:disabled {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.8rem;
   margin-top: 0.85rem;
+}
+
+.engage-hub {
+  border-color: rgba(90, 180, 227, 0.8);
+  box-shadow: 0 0 0 1px rgba(90, 180, 227, 0.2), 0 14px 28px rgba(0, 0, 0, 0.35);
+}
+
+.engage-hub .feed-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .leaderboard-card,
