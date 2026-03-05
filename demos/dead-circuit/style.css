@@ -578,6 +578,26 @@ body.flash-bad::after {
   border-color: rgba(255, 99, 123, 0.8);
 }
 
+.brand-footer {
+  position: fixed;
+  left: 50%;
+  bottom: 0.6rem;
+  transform: translateX(-50%);
+  z-index: 9;
+  font-family: Oxanium, Inter, system-ui, sans-serif;
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(174, 211, 229, 0.52);
+  background: rgba(6, 14, 20, 0.52);
+  border: 1px solid rgba(67, 109, 132, 0.28);
+  border-radius: 999px;
+  padding: 0.22rem 0.62rem;
+  pointer-events: none;
+  user-select: none;
+  backdrop-filter: blur(3px);
+}
+
 .teacher-pitch {
   margin-top: 0.75rem;
   border: 1px solid #305469;
