@@ -1,6 +1,7 @@
 const dom = {
   introPanel: document.getElementById('introPanel'),
   gamePanel: document.getElementById('gamePanel'),
+  loadingPanel: document.getElementById('loadingPanel'),
   completePanel: document.getElementById('completePanel'),
   pitchOptions: document.getElementById('pitchOptions'),
   teamName: document.getElementById('teamName'),
@@ -48,6 +49,7 @@ const dom = {
   repairOptions: document.getElementById('repairOptions'),
   checkRepairBtn: document.getElementById('checkRepairBtn'),
   logFeed: document.getElementById('logFeed'),
+  badgeRack: document.getElementById('badgeRack'),
   finalSummary: document.getElementById('finalSummary'),
   signalStat: document.getElementById('signalStat'),
   loadStat: document.getElementById('loadStat'),
@@ -62,11 +64,14 @@ const dom = {
   lampDiag: document.getElementById('lampDiag'),
   lampRepair: document.getElementById('lampRepair'),
   commandLine: document.getElementById('commandLine'),
+  botBubble: document.getElementById('botBubble'),
   eventToast: document.getElementById('eventToast'),
   scopeCanvas: document.getElementById('scopeCanvas'),
   fxCanvas: document.getElementById('fxCanvas'),
   lightningFlash: document.getElementById('lightningFlash')
 };
+
+dom.stageTabs = Array.from(document.querySelectorAll('.stage-tab'));
 
 const state = {
   data: null,
@@ -118,8 +123,12 @@ const state = {
     humOsc: null,
     humGain: null,
     pulseIntervalId: null
-  }
+  },
+  currentStage: 'briefing',
+  loadingTimeoutId: null
 };
+
+const stageFlow = ['briefing', 'probe', 'diagnose', 'repair', 'feed'];
 
 const modeMultiplier = {
   standard: 1,
@@ -338,6 +347,12 @@ function bindEvents() {
   dom.soundToggle.addEventListener('click', toggleSoundEnabled);
   dom.soundVolume.addEventListener('input', onVolumeChange);
 
+  dom.stageTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      setStage(tab.dataset.stage, true);
+    });
+  });
+
   document.addEventListener(
     'pointerdown',
     () => {
@@ -345,6 +360,42 @@ function bindEvents() {
     },
     { once: true }
   );
+}
+
+function setStage(stage, fromUser = false) {
+  if (!stageFlow.includes(stage)) {
+    return;
+  }
+
+  state.currentStage = stage;
+
+  document.querySelectorAll('.stage-section').forEach(section => {
+    section.classList.toggle('hidden-stage', section.dataset.stage !== stage);
+  });
+
+  dom.stageTabs.forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.stage === stage);
+  });
+
+  updateFlowGuide(stage);
+  if (fromUser) {
+    playSound('ui');
+  }
+}
+
+function updateFlowGuide(stage) {
+  const nodes = Array.from(document.querySelectorAll('.workflow-guide .flow-node'));
+  const stepIndex = stage === 'briefing'
+    ? 0
+    : stage === 'probe'
+      ? 1
+      : stage === 'diagnose'
+        ? 2
+        : 3;
+
+  nodes.forEach((node, index) => {
+    node.classList.toggle('active', index === stepIndex);
+  });
 }
 
 function shouldReduceMotion() {
@@ -890,7 +941,8 @@ function beginTimedTask() {
   dom.preTaskPanel.classList.add('hidden');
   setTaskInteractionEnabled(true);
   startTimer(state.pendingStartSeconds);
-  setPhase('Diagnosis');
+  setPhase('Probe');
+  setStage('probe');
   showEventToast('Timer started. Execute your maintenance plan.', 'good');
   updateCommandLine('Timed session live // gather evidence and commit decisions.');
   setBotMessage('Sparky says: Great, now race the clock with safe, evidence-first decisions.');
@@ -974,18 +1026,28 @@ function startMission() {
   dom.teamBadge.textContent = `Team: ${state.teamName}`;
   dom.introPanel.classList.add('hidden');
   dom.completePanel.classList.add('hidden');
-  dom.gamePanel.classList.remove('hidden');
+  dom.gamePanel.classList.add('hidden');
+  dom.loadingPanel.classList.remove('hidden');
   setAlertLevel('stable');
   applyThemeState();
-  startTickLoop();
-  startAmbientBed();
+  setStage('briefing');
   playSound('ui');
-  updateCommandLine('MISSION AUTHORIZED // Establishing diagnostic channel...');
-  showEventToast('Mission started. Control console online.', 'good');
+  updateCommandLine('MISSION AUTHORIZED // Initializing systems...');
+  showEventToast('Loading mission systems...', 'good');
 
   logLine('info', `Mission started for ${state.teamName} in ${state.mode.toUpperCase()} mode.`);
   logLine('info', state.data.pitches[state.selectedPitch]);
-  loadScenario(0);
+
+  window.clearTimeout(state.loadingTimeoutId);
+  state.loadingTimeoutId = window.setTimeout(() => {
+    dom.loadingPanel.classList.add('hidden');
+    dom.gamePanel.classList.remove('hidden');
+    startTickLoop();
+    startAmbientBed();
+    updateCommandLine('Control console online // Scenario stream linked.');
+    showEventToast('Mission systems ready.', 'good');
+    loadScenario(0);
+  }, 2600);
 }
 
 function loadScenario(index) {
@@ -1022,6 +1084,7 @@ function loadScenario(index) {
   state.pendingStartSeconds = adjustedTime;
   populatePreTaskBriefing(scenario, adjustedTime);
   dom.preTaskPanel.classList.remove('hidden');
+  setStage('briefing');
   syncStats();
   playSound('ui');
   updateCommandLine(`Scenario loaded: ${scenario.title} // Diagnose ${scenario.requiredFaultCount} fault(s).`);
@@ -1073,6 +1136,10 @@ function renderMeasurements(scenario) {
       updateTimerDisplay();
       playSound('probe');
       updateCommandLine(`Probe ${item.node} => ${reading}. Baseline ${item.normal}.`);
+      if (state.currentStage === 'probe') {
+        setStage('diagnose');
+        setPhase('Diagnosis');
+      }
     });
     dom.measureBoard.appendChild(btn);
   });
@@ -1163,6 +1230,7 @@ function validateDiagnosis() {
     state.diagnosed = true;
     dom.checkRepairBtn.disabled = false;
     setPhase('Repair');
+    setStage('repair');
     playSound('good');
     flashState('good');
     showEventToast('Diagnosis confirmed. Repair channel unlocked.', 'good');
@@ -1212,6 +1280,7 @@ function validateRepair() {
     clearInterval(state.intervalId);
     dom.nextScenarioBtn.classList.remove('hidden');
     setPhase('Cleared');
+    setStage('feed');
     playSound('good');
     flashState('good');
     showEventToast('System restored. Stage cleared.', 'good');
@@ -1272,6 +1341,7 @@ function startTimer(seconds) {
       syncStats();
       dom.nextScenarioBtn.classList.remove('hidden');
       setPhase('Timeout');
+      setStage('feed');
     }
   }, 1000);
 }
@@ -1296,10 +1366,12 @@ function finishMission() {
 }
 
 function resetToIntro() {
+  window.clearTimeout(state.loadingTimeoutId);
   clearInterval(state.intervalId);
   stopTickLoop();
   stopAmbientBed();
   dom.completePanel.classList.add('hidden');
+  dom.loadingPanel.classList.add('hidden');
   dom.gamePanel.classList.add('hidden');
   dom.introPanel.classList.remove('hidden');
 
@@ -1331,6 +1403,7 @@ function resetToIntro() {
   updateCommandLine('SYS BOOT // Awaiting team authorization...');
   setBotMessage('Hi, I am Sparky. I can nudge learners with diagnosis hints.');
   setPhase('Briefing');
+  setStage('briefing');
   logLine('info', 'Mission reset. Configure team and relaunch.');
 }
 

@@ -820,6 +820,7 @@ body.flash-bad::after {
   border-bottom: 1px solid #355b78;
   transform: rotate(45deg);
   border-radius: 0 2px 3px 0;
+}
 
 .scope-head {
   font-family: "Oxanium", Inter, sans-serif;
@@ -1071,6 +1072,84 @@ button:disabled {
   border-right: 1px dashed #2f607d;
   border-bottom: 1px dashed #2f607d;
   transform: rotate(45deg);
+}
+
+.stage-tabs {
+  margin-top: 0.8rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.stage-tab {
+  border: 1px solid #2d4e62;
+  background: #0b1a25;
+  color: #c7e3f2;
+  font-size: 0.8rem;
+  padding: 0.44rem 0.72rem;
+  border-radius: 0.58rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.stage-tab.active {
+  border-color: rgba(var(--accent-main-rgb), 0.75);
+  background: rgba(var(--accent-main-rgb), 0.16);
+  color: #ecfaff;
+  box-shadow: 0 0 0 1px rgba(var(--accent-main-rgb), 0.25);
+}
+
+.stage-section {
+  display: block;
+}
+
+.stage-section.hidden-stage {
+  display: none !important;
+}
+
+.loading-card {
+  text-align: center;
+}
+
+.loading-track {
+  height: 12px;
+  border-radius: 999px;
+  margin: 0.95rem auto 0.7rem;
+  width: min(520px, 88%);
+  border: 1px solid #2c4f65;
+  background: #08141e;
+  overflow: hidden;
+}
+
+.loading-fill {
+  display: block;
+  height: 100%;
+  width: 36%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #30d0ff, #7af4a0);
+  animation: loadSweep 1.6s ease-in-out infinite;
+}
+
+.loading-dots {
+  display: inline-flex;
+  gap: 0.35rem;
+}
+
+.loading-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(var(--accent-main-rgb), 0.88);
+  animation: dotPulse 0.9s ease-in-out infinite;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.loading-dots span:nth-child(3) {
+  animation-delay: 0.3s;
+}
 
 .hint-box.flash {
   animation: hintFlash 0.4s ease;
@@ -1319,6 +1398,16 @@ button:disabled {
   0% { opacity: 0; }
   30% { opacity: 1; }
   100% { opacity: 0; }
+}
+
+@keyframes loadSweep {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(290%); }
+}
+
+@keyframes dotPulse {
+  0%, 100% { transform: scale(0.7); opacity: 0.45; }
+  50% { transform: scale(1); opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css?v=20260305d" />
+  <link rel="stylesheet" href="./style.css?v=20260305e" />
 </head>
 <body>
   <canvas id="fxCanvas" class="fx-canvas" aria-hidden="true"></canvas>
@@ -93,6 +93,14 @@
         <div class="flow-node">4. Repair</div>
       </section>
 
+      <section class="stage-tabs" id="stageTabs" aria-label="mission pages">
+        <button class="stage-tab active" type="button" data-stage="briefing">Briefing</button>
+        <button class="stage-tab" type="button" data-stage="probe">Probe</button>
+        <button class="stage-tab" type="button" data-stage="diagnose">Diagnose</button>
+        <button class="stage-tab" type="button" data-stage="repair">Repair</button>
+        <button class="stage-tab" type="button" data-stage="feed">Feed</button>
+      </section>
+
       <section class="hud-panel" id="hudPanel">
         <div class="hud-grid">
           <div class="gauge-block">
@@ -139,7 +147,7 @@
         </div>
       </section>
 
-      <div class="grid two gap-xl">
+      <div class="grid two gap-xl stage-section" data-stage="briefing">
         <div>
           <div class="chapter-divider">Mission Context</div>
           <h2 id="scenarioTitle">Scenario</h2>
@@ -157,7 +165,7 @@
         </div>
       </div>
 
-      <section class="subcard teaching-panel comic-panel">
+      <section class="subcard teaching-panel comic-panel stage-section" data-stage="briefing">
         <div class="chapter-divider">Teaching Blueprint</div>
         <h3>Vocational Delivery Plan</h3>
         <p class="muted" id="vocScenario"></p>
@@ -187,7 +195,7 @@
         </div>
       </section>
 
-      <section class="subcard pretask-panel comic-panel" id="preTaskPanel">
+      <section class="subcard pretask-panel comic-panel stage-section" id="preTaskPanel" data-stage="briefing">
         <div class="chapter-divider">Stage Zero</div>
         <h3>Pre-Task Briefing (Timer Off)</h3>
         <p class="muted" id="preTaskNote">Read this first: key info shown here is not counted against your timer.</p>
@@ -197,7 +205,7 @@
       </section>
 
       <div class="grid two gap-xl">
-        <section class="subcard seg-probe comic-panel">
+        <section class="subcard seg-probe comic-panel stage-section" data-stage="probe">
           <div class="chapter-divider">Action Zone A</div>
           <h3>1) Probe & Observe</h3>
           <p class="muted">Inspect components and probe test nodes to build your fault hypothesis.</p>
@@ -209,7 +217,7 @@
           <div id="measureBoard" class="measure-board"></div>
         </section>
 
-        <section class="subcard seg-diagnose comic-panel">
+        <section class="subcard seg-diagnose comic-panel stage-section" data-stage="diagnose">
           <div class="chapter-divider">Action Zone B</div>
           <h3>2) Diagnose Faults</h3>
           <p class="muted" id="diagnoseRule"></p>
@@ -222,7 +230,7 @@
         </section>
       </div>
 
-      <section class="subcard seg-repair comic-panel">
+      <section class="subcard seg-repair comic-panel stage-section" data-stage="repair">
         <div class="chapter-divider">Action Zone C</div>
         <h3>3) Execute Repair Plan</h3>
         <p class="muted">Choose only the actions required to restore operation.</p>
@@ -230,16 +238,23 @@
         <button id="checkRepairBtn" class="primary" disabled>Validate Repair</button>
       </section>
 
-      <section class="subcard seg-feed comic-panel">
+      <section class="subcard seg-feed comic-panel stage-section" data-stage="feed">
         <div class="chapter-divider">Live Ops Feed</div>
         <h3>Mission Feed</h3>
         <div id="logFeed" class="log-feed"></div>
       </section>
 
-      <div class="actions-row">
+      <div class="actions-row stage-section" data-stage="feed">
         <button id="nextScenarioBtn" class="primary hidden">Load Next Scenario</button>
         <button id="restartBtn" class="ghost">Restart Run</button>
       </div>
+    </section>
+
+    <section class="card loading-card hidden" id="loadingPanel" aria-live="polite">
+      <h2>Initializing Mission Systems</h2>
+      <p class="muted">Booting console, calibrating probes, and syncing scenario telemetry…</p>
+      <div class="loading-track" role="presentation"><span class="loading-fill"></span></div>
+      <div class="loading-dots" aria-hidden="true"><span></span><span></span><span></span></div>
     </section>
 
     <section class="card hidden" id="completePanel">
@@ -275,6 +290,6 @@
 
   <footer class="brand-footer" aria-label="Branding">Akbar Q Cloud Suite</footer>
 
-  <script src="./app.js?v=20260305a" defer></script>
+  <script src="./app.js?v=20260305b" defer></script>
 </body>
 </html>
