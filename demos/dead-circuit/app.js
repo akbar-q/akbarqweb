@@ -62,6 +62,9 @@ const dom = {
   quizStartBtn: document.getElementById('quizStartBtn'),
   quizQuestion: document.getElementById('quizQuestion'),
   quizAnswers: document.getElementById('quizAnswers'),
+  engageTitle: document.getElementById('engageTitle'),
+  engagePrompt: document.getElementById('engagePrompt'),
+  resumeMissionBtn: document.getElementById('resumeMissionBtn'),
   runnerScore: document.getElementById('runnerScore'),
   runnerStartBtn: document.getElementById('runnerStartBtn'),
   runnerTrack: document.getElementById('runnerTrack'),
@@ -170,10 +173,22 @@ const state = {
     quizPassed: false,
     diagnosisLockUntil: 0,
     repairLockUntil: 0
+  },
+  engagement: {
+    active: false,
+    returnStage: 'probe',
+    pausedTime: 0,
+    completed: false,
+    failures: 0,
+    actionCount: 0,
+    lastActionAt: Date.now(),
+    lastActionCheckpoint: 0,
+    cooldownUntil: 0,
+    mode: 'quiz'
   }
 };
 
-const stageFlow = ['briefing', 'probe', 'diagnose', 'repair', 'feed'];
+const stageFlow = ['briefing', 'probe', 'diagnose', 'repair', 'engage', 'feed'];
 
 const quizBank = [
   {
@@ -422,6 +437,7 @@ function bindEvents() {
   dom.runnerStartBtn.addEventListener('click', startRunnerGame);
   dom.runnerLeftBtn.addEventListener('click', () => shiftRunnerLane(-1));
   dom.runnerRightBtn.addEventListener('click', () => shiftRunnerLane(1));
+  dom.resumeMissionBtn.addEventListener('click', resumeFromEngagement);
   dom.evidenceNodeSelect.addEventListener('change', updateLearningGateUi);
   dom.safetyIso.addEventListener('change', updateRepairGateUi);
   dom.safetyCross.addEventListener('change', updateRepairGateUi);
@@ -451,6 +467,85 @@ function bindEvents() {
       shiftRunnerLane(1);
     }
   });
+}
+
+function registerAction() {
+  state.engagement.actionCount += 1;
+  state.engagement.lastActionAt = Date.now();
+}
+
+function maybeTriggerAdaptiveEngagement(reason = 'focus') {
+  if (state.engagement.active || !state.taskLive) {
+    return;
+  }
+  if (Date.now() < state.engagement.cooldownUntil) {
+    return;
+  }
+
+  state.engagement.active = true;
+  state.engagement.completed = false;
+  state.engagement.returnStage = state.currentStage === 'engage' ? 'probe' : state.currentStage;
+  state.engagement.pausedTime = state.timeRemaining;
+  state.engagement.mode = reason === 'failures' ? 'quiz' : Math.random() > 0.5 ? 'runner' : 'quiz';
+
+  clearInterval(state.intervalId);
+  setTaskInteractionEnabled(false);
+  setStage('engage');
+  setPhase('Focus Boost');
+
+  dom.resumeMissionBtn.disabled = true;
+  dom.engageTitle.textContent = reason === 'idle' ? 'Focus Recovery Triggered' : 'Challenge Intercept Triggered';
+  dom.engagePrompt.textContent = reason === 'idle'
+    ? 'No recent activity detected. Complete a quick challenge to re-enter mission flow.'
+    : reason === 'failures'
+      ? 'Multiple failed attempts detected. Complete a challenge to continue with sharper focus.'
+      : 'Quick challenge injected to maintain pace and attention.';
+
+  showEventToast('Focus Boost activated. Complete challenge to resume.', 'bad');
+  updateCommandLine('Adaptive mode // complete Boost challenge to resume mission.', 'warn');
+
+  if (state.engagement.mode === 'quiz') {
+    startQuizRound();
+  } else {
+    startRunnerGame();
+  }
+}
+
+function completeEngagement(modeLabel) {
+  if (!state.engagement.active) {
+    return;
+  }
+
+  state.engagement.completed = true;
+  dom.resumeMissionBtn.disabled = false;
+  showEventToast(`Boost cleared via ${modeLabel}. Resuming mission...`, 'good');
+  updateCommandLine('Focus Boost cleared // restoring mission channel.');
+  window.setTimeout(() => {
+    resumeFromEngagement();
+  }, 700);
+}
+
+function resumeFromEngagement() {
+  if (!state.engagement.active || !state.engagement.completed) {
+    return;
+  }
+
+  state.engagement.active = false;
+  state.engagement.failures = 0;
+  state.engagement.cooldownUntil = Date.now() + 16000;
+  state.engagement.lastActionAt = Date.now();
+  state.engagement.lastActionCheckpoint = state.engagement.actionCount;
+
+  stopQuizTimer();
+  stopRunnerGame(false);
+
+  setTaskInteractionEnabled(true);
+  setStage(state.engagement.returnStage);
+  setPhase(state.engagement.returnStage === 'repair' ? 'Repair' : state.engagement.returnStage === 'diagnose' ? 'Diagnosis' : 'Probe');
+
+  if (state.engagement.pausedTime > 0) {
+    startTimer(state.engagement.pausedTime);
+  }
 }
 
 function initializeIntelStream(scenario, preBrief) {
@@ -484,6 +579,7 @@ function revealNextIntel() {
   }
 
   state.intelShown += 1;
+  registerAction();
   playSound('ui');
   updateIntelCounter();
 }
@@ -705,6 +801,9 @@ function answerQuiz(index, selectedButton) {
     showEventToast('Quiz perfect. Bonus +60.', 'good');
     playSound('good');
     updateCommandLine('Bonus channel: quiz cleared, score boosted.');
+    if (state.engagement.active) {
+      completeEngagement('quiz');
+    }
   } else {
     selectedButton.classList.add('wrong');
     state.learning.quizPassed = false;
@@ -748,6 +847,11 @@ function startRunnerGame() {
       return;
     }
 
+    if (state.engagement.active && state.runner.distance >= 72) {
+      completeEngagement('runner');
+      return;
+    }
+
     if (state.runner.obstacleY > 142) {
       state.runner.obstacleY = 8;
       state.runner.obstacleLane = Math.floor(Math.random() * 3);
@@ -779,6 +883,7 @@ function shiftRunnerLane(delta) {
     return;
   }
   state.runner.lane = clamp(state.runner.lane + delta, 0, 2);
+  registerAction();
   renderRunner();
   playSound('ui');
 }
@@ -1455,6 +1560,12 @@ function startMission() {
   state.badges.clear();
   state.strikes = modePenalty[state.mode];
   state.inspected = 0;
+  state.engagement.failures = 0;
+  state.engagement.actionCount = 0;
+  state.engagement.lastActionCheckpoint = 0;
+  state.engagement.lastActionAt = Date.now();
+  state.engagement.cooldownUntil = 0;
+  state.engagement.active = false;
   initializeLeaderboard();
 
   dom.teamBadge.textContent = `Team: ${state.teamName}`;
@@ -1496,6 +1607,12 @@ function loadScenario(index) {
   state.selectedRepairs.clear();
   state.measuredNodes.clear();
   state.taskLive = false;
+  state.engagement.failures = 0;
+  state.engagement.actionCount = 0;
+  state.engagement.lastActionCheckpoint = 0;
+  state.engagement.lastActionAt = Date.now();
+  state.engagement.cooldownUntil = 0;
+  state.engagement.active = false;
   state.learning.quizPassed = false;
   state.learning.diagnosisLockUntil = 0;
   state.learning.repairLockUntil = 0;
@@ -1553,6 +1670,7 @@ function renderComponents(scenario) {
     btn.className = 'component-btn';
     btn.innerHTML = `<strong>${component.name}</strong><small>Tap to inspect physical clue</small>`;
     btn.addEventListener('click', () => {
+      registerAction();
       state.inspected += 1;
       grantXp(8);
       syncStats();
@@ -1576,6 +1694,7 @@ function renderMeasurements(scenario) {
     btn.className = 'measure-btn';
     btn.textContent = `Probe ${item.node}`;
     btn.addEventListener('click', () => {
+      registerAction();
       if (state.measuredNodes.has(item.node)) {
         playSound('ui');
         logLine('info', `Probe ${item.node} already sampled.`);
@@ -1609,6 +1728,7 @@ function renderFaultOptions(scenario) {
     box.type = 'checkbox';
     box.value = item.id;
     box.addEventListener('change', () => {
+      registerAction();
       if (box.checked) {
         state.selectedFaults.add(item.id);
       } else {
@@ -1642,6 +1762,7 @@ function renderRepairOptions(scenario) {
     box.type = 'checkbox';
     box.value = item.id;
     box.addEventListener('change', () => {
+      registerAction();
       if (box.checked) {
         state.selectedRepairs.add(item.id);
       } else {
@@ -1712,6 +1833,10 @@ function validateDiagnosis() {
     setBotMessage('Try one measured node at a time and eliminate possibilities like a maintenance pro.');
     logLine('bad', 'Diagnosis mismatch. Re-evaluate clues and measurement deltas.');
     state.learning.diagnosisLockUntil = Date.now() + 8000;
+    state.engagement.failures += 1;
+    if (state.engagement.failures >= 2) {
+      maybeTriggerAdaptiveEngagement('failures');
+    }
     updateLearningGateUi();
   }
 
@@ -1771,6 +1896,10 @@ function validateRepair() {
     setBotMessage('Maintenance note: reject unsafe quick fixes even under time pressure.');
     logLine('bad', 'Repair plan incomplete or unsafe. Remove unnecessary actions.');
     state.learning.repairLockUntil = Date.now() + 7000;
+    state.engagement.failures += 1;
+    if (state.engagement.failures >= 2) {
+      maybeTriggerAdaptiveEngagement('failures');
+    }
     dom.safetyIso.checked = false;
     dom.safetyCross.checked = false;
     updateRepairGateUi();
@@ -1787,11 +1916,33 @@ function nextScenario() {
 function startTimer(seconds) {
   clearInterval(state.intervalId);
   state.timeRemaining = seconds;
+  state.engagement.lastActionAt = Date.now();
+  state.engagement.lastActionCheckpoint = state.engagement.actionCount;
   updateTimerDisplay();
 
   state.intervalId = setInterval(() => {
+    if (state.engagement.active) {
+      return;
+    }
+
     state.timeRemaining -= 1;
     updateTimerDisplay();
+
+    if (state.timeRemaining % 10 === 0) {
+      const idleFor = Date.now() - state.engagement.lastActionAt;
+      const recentActions = state.engagement.actionCount - state.engagement.lastActionCheckpoint;
+      state.engagement.lastActionCheckpoint = state.engagement.actionCount;
+
+      if (idleFor > 18000) {
+        maybeTriggerAdaptiveEngagement('idle');
+        return;
+      }
+
+      if (recentActions <= 1 && state.timeRemaining <= state.pendingStartSeconds - 20) {
+        maybeTriggerAdaptiveEngagement('focus');
+        return;
+      }
+    }
 
     if (state.timeRemaining === 60) {
       playSound('alarm');
@@ -1826,6 +1977,7 @@ function startTimer(seconds) {
 
 function finishMission() {
   clearInterval(state.intervalId);
+  state.engagement.active = false;
   stopTickLoop();
   stopLeaderboardLoop();
   stopQuizTimer();
@@ -1874,6 +2026,12 @@ function resetToIntro() {
   state.hintCursor = 0;
   state.taskLive = false;
   state.pendingStartSeconds = 0;
+  state.engagement.active = false;
+  state.engagement.failures = 0;
+  state.engagement.actionCount = 0;
+  state.engagement.lastActionCheckpoint = 0;
+  state.engagement.lastActionAt = Date.now();
+  state.engagement.cooldownUntil = 0;
   state.learning.quizPassed = false;
   state.learning.diagnosisLockUntil = 0;
   state.learning.repairLockUntil = 0;
@@ -1892,6 +2050,7 @@ function resetToIntro() {
   dom.quizAnswers.innerHTML = '';
   dom.quizTimer.textContent = '08s';
   dom.runnerScore.textContent = 'Distance: 0m';
+  dom.resumeMissionBtn.disabled = true;
   updateIntelCounter();
   dom.preTaskPanel.classList.remove('hidden');
   setAlertLevel('stable');
