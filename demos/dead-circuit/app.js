@@ -20,6 +20,8 @@ const dom = {
   timerBadge: document.getElementById('timerBadge'),
   scenarioTitle: document.getElementById('scenarioTitle'),
   scenarioBrief: document.getElementById('scenarioBrief'),
+  nextIntelBtn: document.getElementById('nextIntelBtn'),
+  intelCount: document.getElementById('intelCount'),
   objectivesList: document.getElementById('objectivesList'),
   preTaskPanel: document.getElementById('preTaskPanel'),
   preTaskNote: document.getElementById('preTaskNote'),
@@ -49,6 +51,19 @@ const dom = {
   repairOptions: document.getElementById('repairOptions'),
   checkRepairBtn: document.getElementById('checkRepairBtn'),
   logFeed: document.getElementById('logFeed'),
+  leaderboardList: document.getElementById('leaderboardList'),
+  leaderPulse: document.getElementById('leaderPulse'),
+  quizTimer: document.getElementById('quizTimer'),
+  quizStartBtn: document.getElementById('quizStartBtn'),
+  quizQuestion: document.getElementById('quizQuestion'),
+  quizAnswers: document.getElementById('quizAnswers'),
+  runnerScore: document.getElementById('runnerScore'),
+  runnerStartBtn: document.getElementById('runnerStartBtn'),
+  runnerTrack: document.getElementById('runnerTrack'),
+  runnerObstacle: document.getElementById('runnerObstacle'),
+  runnerPlayer: document.getElementById('runnerPlayer'),
+  runnerLeftBtn: document.getElementById('runnerLeftBtn'),
+  runnerRightBtn: document.getElementById('runnerRightBtn'),
   badgeRack: document.getElementById('badgeRack'),
   finalSummary: document.getElementById('finalSummary'),
   signalStat: document.getElementById('signalStat'),
@@ -125,10 +140,53 @@ const state = {
     pulseIntervalId: null
   },
   currentStage: 'briefing',
-  loadingTimeoutId: null
+  loadingTimeoutId: null,
+  intelQueue: [],
+  intelShown: 0,
+  leaderboard: {
+    entries: [],
+    intervalId: null
+  },
+  quiz: {
+    active: false,
+    timeLeft: 8,
+    question: null,
+    timerId: null
+  },
+  runner: {
+    active: false,
+    lane: 1,
+    obstacleLane: 1,
+    obstacleY: 8,
+    distance: 0,
+    intervalId: null
+  }
 };
 
 const stageFlow = ['briefing', 'probe', 'diagnose', 'repair', 'feed'];
+
+const quizBank = [
+  {
+    question: 'A divider output is 0V instead of expected 5V. First check?',
+    options: ['Scope trigger level', 'Supply rail continuity', 'USB cable color'],
+    answer: 1
+  },
+  {
+    question: 'Fastest evidence for a blown fuse is:',
+    options: ['Visual + continuity test', 'Reboot the laptop', 'Change PLC language'],
+    answer: 0
+  },
+  {
+    question: 'Merit-level diagnosis is best shown by:',
+    options: ['Guessing likely failure', 'Measurement-backed elimination', 'Replacing all parts'],
+    answer: 1
+  },
+  {
+    question: 'Unsafe repair action under time pressure is:',
+    options: ['Documenting readings', 'Bypassing protection', 'Rechecking node values'],
+    answer: 1
+  }
+];
 
 const modeMultiplier = {
   standard: 1,
