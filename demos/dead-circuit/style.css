@@ -470,7 +470,7 @@ body.flash-bad::after {
   min-height: 64px;
   border: 1px solid #294659;
   border-radius: 0.58rem;
-  padding: 0.5rem;
+  padding: 1.05rem 0.5rem 0.5rem;
   background: #050d14;
   color: #c3f9e7;
   font-family: "Oxanium", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -479,6 +479,17 @@ body.flash-bad::after {
   line-height: 1.35;
   position: relative;
   overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(71, 116, 143, 0.16);
+}
+
+.command-line::before {
+  content: "GUIDE";
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: rgba(171, 230, 255, 0.68);
 }
 
 .command-line::after {
@@ -575,6 +586,106 @@ body.flash-bad::after {
   padding: 0.65rem;
 }
 
+.comic-splash {
+  margin-top: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.comic-cell {
+  border: 1px solid rgba(var(--accent-main-rgb), 0.4);
+  border-radius: 0.75rem;
+  background: linear-gradient(165deg, rgba(12, 29, 40, 0.95), rgba(8, 18, 26, 0.95));
+  padding: 0.55rem;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+}
+
+.comic-icon {
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(var(--accent-main-rgb), 0.45);
+  background: rgba(var(--accent-main-rgb), 0.16);
+  margin-bottom: 0.35rem;
+}
+
+.comic-cell strong {
+  display: block;
+  font-family: "Oxanium", Inter, sans-serif;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+
+.comic-cell p {
+  margin: 0;
+  color: #bcd3df;
+  font-size: 0.82rem;
+}
+
+.workflow-guide {
+  margin-bottom: 0.8rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.flow-node {
+  border: 1px solid #37576b;
+  border-radius: 0.62rem;
+  background: rgba(10, 24, 34, 0.74);
+  color: #c8ddea;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 0.45rem 0.3rem;
+}
+
+.flow-node.active {
+  border-color: rgba(var(--accent-main-rgb), 0.72);
+  box-shadow: 0 0 0 1px rgba(var(--accent-main-rgb), 0.2), 0 0 14px rgba(var(--accent-main-rgb), 0.18);
+  color: #e4f9ff;
+}
+
+.chapter-divider {
+  display: inline-flex;
+  border: 1px solid rgba(var(--accent-main-rgb), 0.5);
+  background: rgba(var(--accent-main-rgb), 0.12);
+  color: #def4ff;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.48rem;
+  margin-bottom: 0.42rem;
+}
+
+.comic-panel {
+  border-width: 2px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.32);
+}
+
+.seg-probe {
+  border-color: rgba(66, 214, 255, 0.42);
+}
+
+.seg-diagnose {
+  border-color: rgba(255, 197, 102, 0.44);
+}
+
+.seg-repair {
+  border-color: rgba(121, 238, 161, 0.44);
+}
+
+.seg-feed {
+  border-color: rgba(255, 112, 139, 0.42);
+}
+
 .teacher-pitch h2 {
   margin: 0 0 0.35rem;
   font-size: 1.06rem;
@@ -658,7 +769,21 @@ body.flash-bad::after {
   padding: 0.5rem 0.58rem;
   line-height: 1.25;
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.32);
+  position: relative;
 }
+
+.bot-bubble::after {
+  content: "";
+  position: absolute;
+  left: 22px;
+  bottom: -8px;
+  width: 14px;
+  height: 14px;
+  background: linear-gradient(135deg, rgba(10, 24, 35, 0.98), rgba(8, 17, 28, 0.95));
+  border-right: 1px solid #355b78;
+  border-bottom: 1px solid #355b78;
+  transform: rotate(45deg);
+  border-radius: 0 2px 3px 0;
 
 .scope-head {
   font-family: "Oxanium", Inter, sans-serif;
@@ -885,7 +1010,31 @@ button:disabled {
   background: rgba(11, 30, 40, 0.65);
   color: #cde7f4;
   font-size: 0.86rem;
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(77, 132, 168, 0.12);
 }
+
+.hint-box::before {
+  content: "TACTICAL NOTE";
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  font-size: 0.57rem;
+  letter-spacing: 0.08em;
+  color: rgba(149, 212, 241, 0.62);
+}
+
+.hint-box::after {
+  content: "";
+  position: absolute;
+  right: 22px;
+  bottom: -7px;
+  width: 12px;
+  height: 12px;
+  background: rgba(6, 16, 29, 0.9);
+  border-right: 1px dashed #2f607d;
+  border-bottom: 1px dashed #2f607d;
+  transform: rotate(45deg);
 
 .hint-box.flash {
   animation: hintFlash 0.4s ease;
@@ -1165,6 +1314,8 @@ button:disabled {
 }
 
 @media (max-width: 900px) {
+  .workflow-guide,
+  .comic-splash,
   .hud-aux-grid,
   .hud-grid,
   .grid.two,
