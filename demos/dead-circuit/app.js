@@ -493,7 +493,8 @@ function maybeTriggerAdaptiveEngagement(reason = 'focus') {
   setStage('engage');
   setPhase('Focus Boost');
 
-  dom.resumeMissionBtn.disabled = true;
+  dom.resumeMissionBtn.disabled = false;
+  dom.resumeMissionBtn.textContent = 'Skip Boost (-15)';
   dom.engageTitle.textContent = reason === 'idle' ? 'Focus Recovery Triggered' : 'Challenge Intercept Triggered';
   dom.engagePrompt.textContent = reason === 'idle'
     ? 'No recent activity detected. Complete a quick challenge to re-enter mission flow.'
@@ -518,6 +519,7 @@ function completeEngagement(modeLabel) {
 
   state.engagement.completed = true;
   dom.resumeMissionBtn.disabled = false;
+  dom.resumeMissionBtn.textContent = 'Resume Mission';
   showEventToast(`Boost cleared via ${modeLabel}. Resuming mission...`, 'good');
   updateCommandLine('Focus Boost cleared // restoring mission channel.');
   window.setTimeout(() => {
@@ -526,8 +528,16 @@ function completeEngagement(modeLabel) {
 }
 
 function resumeFromEngagement() {
-  if (!state.engagement.active || !state.engagement.completed) {
+  if (!state.engagement.active) {
     return;
+  }
+
+  if (!state.engagement.completed) {
+    state.score = Math.max(0, state.score - 15);
+    state.strikes += 1;
+    showEventToast('Boost skipped. -15 score and +1 strike.', 'bad');
+    playSound('bad');
+    syncStats();
   }
 
   state.engagement.active = false;
@@ -649,7 +659,7 @@ function updateLearningGateUi() {
     dom.evidenceNodeSelect.value = selected;
   }
 
-  dom.checkDiagnosisBtn.disabled = !state.taskLive || !status.ready;
+  dom.checkDiagnosisBtn.disabled = !state.taskLive;
 }
 
 function getRepairGateStatus() {
@@ -680,7 +690,7 @@ function updateRepairGateUi() {
     dom.repairChecklist.innerHTML += `<li class="pending">• Repair cooldown: ${status.cooldown}s</li>`;
   }
 
-  dom.checkRepairBtn.disabled = !status.ready;
+  dom.checkRepairBtn.disabled = !state.taskLive;
 }
 
 function initializeLeaderboard() {
@@ -780,6 +790,11 @@ function startQuizRound() {
       dom.quizQuestion.textContent = 'Too slow. Start a new quiz run for bonus points.';
       showEventToast('Quiz timeout. No bonus awarded.', 'bad');
       playSound('bad');
+      if (state.engagement.active) {
+        dom.engagePrompt.textContent = 'Boost attempt timed out. Retry quiz/runner or use Resume Mission with penalty.';
+        dom.resumeMissionBtn.disabled = false;
+        dom.resumeMissionBtn.textContent = 'Skip Boost (-15)';
+      }
     }
   }, 1000);
 }
@@ -810,6 +825,11 @@ function answerQuiz(index, selectedButton) {
     state.score = Math.max(0, state.score - 20);
     showEventToast('Quiz wrong. -20 penalty.', 'bad');
     playSound('bad');
+    if (state.engagement.active) {
+      dom.engagePrompt.textContent = 'Quiz incorrect. Retry or resume mission with a small penalty.';
+      dom.resumeMissionBtn.disabled = false;
+      dom.resumeMissionBtn.textContent = 'Skip Boost (-15)';
+    }
   }
 
   syncStats();
@@ -843,6 +863,11 @@ function startRunnerGame() {
       stopRunnerGame(true);
       showEventToast('Runner collision. -35 and strike +1.', 'bad');
       playSound('bad');
+      if (state.engagement.active) {
+        dom.engagePrompt.textContent = 'Runner collision. Retry run/quiz or resume mission with penalty.';
+        dom.resumeMissionBtn.disabled = false;
+        dom.resumeMissionBtn.textContent = 'Skip Boost (-15)';
+      }
       syncStats();
       return;
     }
@@ -1795,8 +1820,15 @@ function validateDiagnosis() {
 
   const gate = getLearningGateStatus();
   if (!gate.ready) {
+    const missing = [];
+    if (!gate.inspectedOk) missing.push('inspect 2+ components');
+    if (!gate.measuredOk) missing.push('probe 2+ nodes');
+    if (!gate.intelOk) missing.push('reveal all intel');
+    if (!gate.quizOk) missing.push('pass quiz burst');
+    if (!gate.evidenceOk) missing.push('select evidence node');
+    if (gate.cooldown > 0) missing.push(`wait ${gate.cooldown}s cooldown`);
     showEventToast('Learning checkpoint incomplete. Finish evidence steps first.', 'bad');
-    updateCommandLine('Diagnosis blocked // complete learning checkpoint before validation.', 'bad');
+    updateCommandLine(`Diagnosis blocked // ${missing.join(', ')}.`, 'bad');
     playSound('bad');
     return;
   }
@@ -1852,8 +1884,12 @@ function validateRepair() {
 
   const repairGate = getRepairGateStatus();
   if (!repairGate.ready) {
+    const missing = [];
+    if (!repairGate.diagnosedOk) missing.push('pass diagnosis');
+    if (!repairGate.safetyOk) missing.push('check both safety confirmations');
+    if (repairGate.cooldown > 0) missing.push(`wait ${repairGate.cooldown}s cooldown`);
     showEventToast('Repair gate locked. Confirm safety checks before validating.', 'bad');
-    updateCommandLine('Repair blocked // safety confirmation gate incomplete.', 'bad');
+    updateCommandLine(`Repair blocked // ${missing.join(', ')}.`, 'bad');
     playSound('bad');
     return;
   }
