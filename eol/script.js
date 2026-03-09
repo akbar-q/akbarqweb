@@ -59,8 +59,8 @@
 
 class EOLCountdown {
     constructor() {
-        // Target: 8:00 PM, 27 December 2025 GMT+4
-        this.targetDate = new Date('2025-12-27T20:00:00+04:00');
+        // Target: 8:00 PM, 1 April 2026 GMT+4
+        this.targetDate = new Date('2026-04-01T20:00:00+04:00');
         this.messages = [
             "borrowed time is being returned",
             "atlas can no longer hold up the sky",
@@ -322,7 +322,7 @@ class EOLCountdown {
                     color: #666666;
                     margin-top: 2rem;
                     letter-spacing: 0.05rem;
-                ">27.12.2025 • 20:00 GMT+4</p>
+                ">1st April 2026 • 20:00 GMT+4</p>
             </div>
         `;
     }
