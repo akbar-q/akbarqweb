@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eid Mubarak | The Quiet Crescent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="sky" aria-hidden="true"></canvas>
+
+  <main class="scene">
+    <header class="title-wrap">
+      <p class="eyebrow">the night watches in silence</p>
+      <h1 id="eidTitle">Eid Mubarak</h1>
+      <p class="subtitle">Between shadow and light, this Eid reminds us that every blessing has a story beneath it.</p>
+    </header>
+
+    <section class="orbiter" aria-label="Decorative crescent and lantern animation">
+      <div class="moon">
+        <span class="moon-cut"></span>
+      </div>
+      <div class="lantern lantern-a"></div>
+      <div class="lantern lantern-b"></div>
+      <div class="lantern lantern-c"></div>
+    </section>
+
+    <section class="cards" aria-label="Eid reflections">
+      <article class="wish">
+        <h2>The First Door</h2>
+        <p>Peace is not the absence of noise. It is the courage to choose mercy inside it.</p>
+      </article>
+      <article class="wish">
+        <h2>The Second Door</h2>
+        <p>Barakah appears in ordinary moments: shared food, patient words, and forgiven mistakes.</p>
+      </article>
+      <article class="wish">
+        <h2>The Third Door</h2>
+        <p>Joy survives dark seasons. The moon is proof that light returns in phases.</p>
+      </article>
+    </section>
+
+    <section class="cipher" aria-label="Hidden meaning">
+      <p class="cipher-label">cipher fragment</p>
+      <p id="cipherText" class="cipher-text">... - .... . / -- --- --- -. / .. ... / -. --- - / .... .. -.. .. -. --.</p>
+    </section>
+
+    <section class="controls" aria-label="Interactive controls">
+      <button id="toggleGlow" type="button">Kill The Glow</button>
+      <button id="sparkle" type="button">Summon Ash</button>
+      <button id="flipGreeting" type="button">Shift The Message</button>
+      <button id="decodeCipher" type="button">Decode The Omen</button>
+    </section>
+
+    <p id="altGreeting" class="alt" aria-live="polite"></p>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
