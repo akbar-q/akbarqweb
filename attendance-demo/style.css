@@ -220,17 +220,12 @@ img {
 .content-grid,
 .admin-grid,
 .side-stack,
-.app-topbar__actions,
 .class-list,
 .admin-list,
-.hero-card__chips,
-.class-detail__meta,
 .calendar-grid,
 .calendar-weekdays,
 .activity-log,
-.status-list,
-.admin-item__actions,
-.admin-item__meta {
+.status-list {
   display: grid;
 }
 
@@ -412,8 +407,9 @@ textarea {
 }
 
 .app-topbar__actions {
-  grid-auto-flow: column;
-  grid-auto-columns: max-content;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 10px;
   align-items: center;
 }
@@ -440,10 +436,11 @@ textarea {
 
 .hero-card__chips,
 .class-detail__meta,
-.admin-item__meta {
+.admin-item__meta,
+.admin-item__actions {
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
-  grid-auto-flow: column;
-  justify-content: start;
 }
 
 .metric-card {
@@ -499,6 +496,7 @@ textarea {
   justify-content: space-between;
   gap: 20px;
   align-items: start;
+  flex-wrap: wrap;
 }
 
 .meta-chip {
@@ -824,9 +822,7 @@ textarea {
 }
 
 .admin-item__actions {
-  grid-auto-flow: column;
-  justify-content: start;
-  gap: 10px;
+  justify-content: flex-start;
 }
 
 .toast {
