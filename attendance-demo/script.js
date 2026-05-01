@@ -202,6 +202,11 @@ function resolveApiBaseUrl() {
   }
 
   if (window.location.protocol === "http:" || window.location.protocol === "https:") {
+    const hostname = window.location.hostname.toLowerCase();
+    if (hostname === "akbarq.com" || hostname === "www.akbarq.com") {
+      return "https://api.akbarq.com";
+    }
+
     return window.location.origin;
   }
 
