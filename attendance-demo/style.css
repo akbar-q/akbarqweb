@@ -358,6 +358,44 @@ textarea {
   gap: 18px;
 }
 
+.connection-card {
+  display: grid;
+  gap: 18px;
+  padding: 22px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(31, 143, 98, 0.14), rgba(217, 178, 95, 0.08));
+  border: 1px solid rgba(31, 143, 98, 0.26);
+}
+
+.connection-form {
+  display: grid;
+  gap: 14px;
+}
+
+.connection-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pill.is-online {
+  background: rgba(31, 143, 98, 0.18);
+  border-color: rgba(31, 143, 98, 0.32);
+  color: #9af1c8;
+}
+
+.pill.is-offline {
+  background: rgba(213, 103, 90, 0.16);
+  border-color: rgba(213, 103, 90, 0.3);
+  color: #ffc0b7;
+}
+
+.pill.is-pending {
+  background: rgba(184, 139, 53, 0.16);
+  border-color: rgba(184, 139, 53, 0.3);
+  color: #ffd48a;
+}
+
 .admin-access {
   padding: 22px;
   border-radius: var(--radius-lg);
@@ -929,8 +967,21 @@ textarea {
 }
 
 @media (max-width: 1320px) {
+
+  .banner {
+    grid-template-columns: 1fr;
+  }
+
   .content-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+
+  .connection-form__actions {
+    grid-template-columns: 1fr;
+    display: grid;
   }
 }
 

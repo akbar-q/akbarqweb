@@ -1,7 +1,8 @@
 services:
   api:
     build:
-      context: ./attendance-backend
+      context: .
+      dockerfile: attendance-backend/Dockerfile
     env_file:
       - ./attendance-backend/.env
     ports:

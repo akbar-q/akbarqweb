@@ -1,10 +1,11 @@
 const express = require("express");
 
 const db = require("../db");
+const { requireTutorParamOrAdmin } = require("../middleware/auth");
 
 const router = express.Router();
 
-router.get("/:id/classes", async (req, res) => {
+router.get("/:id/classes", requireTutorParamOrAdmin("id"), async (req, res) => {
   const tutorId = String(req.params.id || "").trim().toLowerCase();
 
   const unitsResult = await db.query(

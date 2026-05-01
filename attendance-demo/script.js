@@ -2,6 +2,7 @@
 const SESSION_KEY = "aq-attendance-demo-session-v2";
 const ADMIN_SESSION_KEY = "aq-attendance-demo-admin-v1";
 const DEFAULT_ADMIN_PIN = "admin";
+const API_BASE_URL = resolveApiBaseUrl();
 const CALENDAR_YEAR_RANGE = 5;
 const AVERAGE_DRAFT_START = "2026-05-04";
 const AVERAGE_DRAFT_WEEKS = 4;
@@ -86,13 +87,20 @@ const seedData = {
 
 const state = {
   data: loadData(),
+  currentTutorProfile: loadSessionTutorProfile(),
   currentTutorId: loadSessionTutorId(),
+  currentAdminSession: loadSessionAdminSession(),
   isAdminUnlocked: loadSessionAdminUnlocked(),
   selectedClassId: null,
   selectedAdminClassId: null,
   selectedDateKey: getInitialSelectedDateKey(),
   visibleMonthKey: getMonthKey(getInitialSelectedDateKey()),
-  showAverages: true
+  showAverages: true,
+  apiConnectionState: "pending",
+  loadedAttendanceKeys: {},
+  loadingAttendanceKeys: {},
+  attendanceRetryAfter: {},
+  pendingNoteSaveTimers: {}
 };
 
 const loginPanel = document.getElementById("loginPanel");
@@ -115,6 +123,15 @@ const selectedClassTitle = document.getElementById("selectedClassTitle");
 const selectedClassMeta = document.getElementById("selectedClassMeta");
 const activityLog = document.getElementById("activityLog");
 const toast = document.getElementById("toast");
+const deploymentBadge = document.getElementById("deploymentBadge");
+const bannerStatusText = document.getElementById("bannerStatusText");
+const bannerApiBase = document.getElementById("bannerApiBase");
+const bannerApiHealth = document.getElementById("bannerApiHealth");
+const connectionPill = document.getElementById("connectionPill");
+const connectionForm = document.getElementById("connectionForm");
+const apiBaseUrlInput = document.getElementById("apiBaseUrlInput");
+const resetApiBaseUrlButton = document.getElementById("resetApiBaseUrlButton");
+const connectionMessage = document.getElementById("connectionMessage");
 
 const metricClasses = document.getElementById("metricClasses");
 const metricMarked = document.getElementById("metricMarked");
@@ -169,9 +186,115 @@ createUnitForm.addEventListener("submit", handleCreateUnit);
 createStudentForm.addEventListener("submit", handleCreateStudent);
 adminPasswordForm.addEventListener("submit", handleAdminPasswordUpdate);
 adminStudentUnitSelect.addEventListener("change", handleAdminUnitSelection);
+connectionForm.addEventListener("submit", handleConnectionSave);
+resetApiBaseUrlButton.addEventListener("click", resetConnectionBaseUrl);
 
-renderAccountGrid();
-renderApp();
+initializeApp();
+
+function resolveApiBaseUrl() {
+  const url = new URL(window.location.href);
+  const queryOverride = url.searchParams.get("apiBaseUrl");
+  const configuredOverride = window.ATTENDANCE_API_BASE_URL || localStorage.getItem("aq-attendance-api-base-url") || "";
+  const baseUrl = queryOverride || configuredOverride;
+
+  if (baseUrl) {
+    return String(baseUrl).replace(/\/+$/, "");
+  }
+
+  if (window.location.protocol === "http:" || window.location.protocol === "https:") {
+    return window.location.origin;
+  }
+
+  return "http://localhost:3001";
+}
+
+function persistApiBaseUrl(baseUrl) {
+  if (baseUrl) {
+    localStorage.setItem("aq-attendance-api-base-url", baseUrl);
+    return;
+  }
+
+  localStorage.removeItem("aq-attendance-api-base-url");
+}
+
+function formatApiBaseUrl(baseUrl) {
+  return baseUrl || "Not configured";
+}
+
+function setConnectionVisualState(stateName, message) {
+  state.apiConnectionState = stateName;
+  connectionPill.classList.remove("is-online", "is-offline", "is-pending");
+
+  if (stateName === "online") {
+    connectionPill.classList.add("is-online");
+    connectionPill.textContent = "Connected";
+    bannerApiHealth.textContent = "Online";
+    bannerStatusText.textContent = message || "Live API connection confirmed";
+    deploymentBadge.textContent = "Pilot ready";
+    return;
+  }
+
+  if (stateName === "offline") {
+    connectionPill.classList.add("is-offline");
+    connectionPill.textContent = "Offline";
+    bannerApiHealth.textContent = "Offline";
+    bannerStatusText.textContent = message || "API not reachable from this page";
+    deploymentBadge.textContent = "Needs attention";
+    return;
+  }
+
+  connectionPill.classList.add("is-pending");
+  connectionPill.textContent = "Checking";
+  bannerApiHealth.textContent = "Checking";
+  bannerStatusText.textContent = message || "Checking API connection";
+  deploymentBadge.textContent = "Pilot build";
+}
+
+async function checkApiHealth({ showFeedback = false } = {}) {
+  bannerApiBase.textContent = formatApiBaseUrl(API_BASE_URL);
+  apiBaseUrlInput.value = API_BASE_URL;
+  setConnectionVisualState("pending");
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/health`, {
+      method: "GET"
+    });
+
+    if (!response.ok) {
+      throw new Error(`Health check failed (${response.status})`);
+    }
+
+    const payload = await response.json();
+    setConnectionVisualState("online", payload?.database === "connected" ? "Live API and database are connected" : "API responded but database status is unclear");
+    connectionMessage.textContent = showFeedback ? `Connected to ${API_BASE_URL}` : "";
+    return true;
+  } catch (error) {
+    console.error("API health check failed", error);
+    setConnectionVisualState("offline", "API not reachable from this page");
+    connectionMessage.textContent = showFeedback ? (error.message || "Connection check failed") : "";
+    return false;
+  }
+}
+
+async function handleConnectionSave(event) {
+  event.preventDefault();
+  const normalizedBaseUrl = String(apiBaseUrlInput.value || "").trim().replace(/\/+$/, "");
+
+  if (!normalizedBaseUrl) {
+    connectionMessage.textContent = "Enter a valid API URL or use the default button.";
+    return;
+  }
+
+  persistApiBaseUrl(normalizedBaseUrl);
+  connectionMessage.textContent = "Saved. Reloading with the new API URL...";
+  window.location.reload();
+}
+
+function resetConnectionBaseUrl() {
+  persistApiBaseUrl("");
+  connectionMessage.textContent = "Default API resolution restored. Reloading...";
+  window.location.reload();
+}
 
 function loadData() {
   try {
@@ -298,31 +421,106 @@ function saveData(reason) {
 }
 
 function loadSessionTutorId() {
+  const storedSession = loadSessionTutorProfile();
+  if (storedSession?.id) {
+    return storedSession.id;
+  }
+
   return sessionStorage.getItem(SESSION_KEY);
 }
 
-function loadSessionAdminUnlocked() {
-  return sessionStorage.getItem(ADMIN_SESSION_KEY) === "true";
+function loadSessionTutorProfile() {
+  const raw = sessionStorage.getItem(SESSION_KEY);
+  if (!raw) {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") {
+      return null;
+    }
+
+    const tutorId = String(parsed.id || "").trim().toLowerCase();
+    if (!tutorId) {
+      return null;
+    }
+
+    return {
+      id: tutorId,
+      name: String(parsed.name || "Tutor"),
+      title: String(parsed.title || "Tutor"),
+      token: typeof parsed.token === "string" ? parsed.token : ""
+    };
+  } catch (error) {
+    return null;
+  }
 }
 
-function setSessionTutorId(tutorId) {
-  if (tutorId) {
-    sessionStorage.setItem(SESSION_KEY, tutorId);
+function loadSessionAdminUnlocked() {
+  return Boolean(loadSessionAdminSession()?.token);
+}
+
+function loadSessionAdminSession() {
+  const raw = sessionStorage.getItem(ADMIN_SESSION_KEY);
+  if (!raw) {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(raw);
+    if (typeof parsed?.token !== "string" || !parsed.token) {
+      return null;
+    }
+
+    return { token: parsed.token };
+  } catch (error) {
+    return null;
+  }
+}
+
+function setSessionTutorSession(tutorSession) {
+  if (tutorSession?.id) {
+    sessionStorage.setItem(
+      SESSION_KEY,
+      JSON.stringify({
+        id: tutorSession.id,
+        name: tutorSession.name,
+        title: tutorSession.title,
+        token: tutorSession.token || ""
+      })
+    );
   } else {
     sessionStorage.removeItem(SESSION_KEY);
   }
 }
 
 function setSessionAdminUnlocked(isUnlocked) {
-  if (isUnlocked) {
-    sessionStorage.setItem(ADMIN_SESSION_KEY, "true");
-  } else {
+  if (!isUnlocked) {
     sessionStorage.removeItem(ADMIN_SESSION_KEY);
   }
 }
 
+function setSessionAdminSession(adminSession) {
+  if (adminSession?.token) {
+    sessionStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify({ token: adminSession.token }));
+    return;
+  }
+
+  sessionStorage.removeItem(ADMIN_SESSION_KEY);
+}
+
 function getTutorById(tutorId) {
-  return state.data.tutors.find((tutor) => tutor.id === tutorId) || null;
+  const tutor = state.data.tutors.find((item) => item.id === tutorId);
+  if (tutor) {
+    return tutor;
+  }
+
+  if (state.currentTutorProfile?.id === tutorId) {
+    return state.currentTutorProfile;
+  }
+
+  return null;
 }
 
 function getClassesForTutorId(tutorId) {
@@ -364,64 +562,440 @@ function ensureClassSession(classId, dayKey = state.selectedDateKey) {
   return state.data.attendance[classId][dayKey];
 }
 
-function handleLogin(event) {
+function isRemoteTutorSession() {
+  return Boolean(state.currentTutorId && state.currentTutorProfile?.token);
+}
+
+function isRemoteAdminSession() {
+  return Boolean(state.currentAdminSession?.token);
+}
+
+function getAttendanceCacheKey(classId, dayKey) {
+  return `${classId}::${dayKey}`;
+}
+
+function markAttendanceSessionLoaded(classId, dayKey, isLoaded = true) {
+  state.loadedAttendanceKeys[getAttendanceCacheKey(classId, dayKey)] = isLoaded;
+}
+
+function hasAttendanceSessionLoaded(classId, dayKey) {
+  return Boolean(state.loadedAttendanceKeys[getAttendanceCacheKey(classId, dayKey)]);
+}
+
+function setAttendanceSessionLoading(classId, dayKey, isLoading) {
+  const cacheKey = getAttendanceCacheKey(classId, dayKey);
+  if (isLoading) {
+    state.loadingAttendanceKeys[cacheKey] = true;
+    return;
+  }
+
+  delete state.loadingAttendanceKeys[cacheKey];
+}
+
+function isAttendanceSessionLoading(classId, dayKey) {
+  return Boolean(state.loadingAttendanceKeys[getAttendanceCacheKey(classId, dayKey)]);
+}
+
+function canRetryAttendanceLoad(classId, dayKey) {
+  const retryAfter = state.attendanceRetryAfter[getAttendanceCacheKey(classId, dayKey)] || 0;
+  return retryAfter <= Date.now();
+}
+
+function normalizeAttendanceRecord(record) {
+  return {
+    status: normalizeStatus(record?.status),
+    updatedAt: record?.updatedAt || record?.updated_at || null,
+    note: typeof record?.note === "string" ? record.note : ""
+  };
+}
+
+function cacheAttendanceSession(classId, dayKey, records, updatedAt = null) {
+  const session = ensureClassSession(classId, dayKey);
+  session.records = Object.fromEntries(
+    Object.entries(records || {}).map(([studentId, record]) => [studentId, normalizeAttendanceRecord(record)])
+  );
+  session.updatedAt = updatedAt || session.updatedAt || null;
+  markAttendanceSessionLoaded(classId, dayKey, true);
+  delete state.attendanceRetryAfter[getAttendanceCacheKey(classId, dayKey)];
+}
+
+function applyAdminBootstrap(payload) {
+  const existingTutorPins = Object.fromEntries(
+    state.data.tutors.map((tutor) => [tutor.id, tutor.pin || ""])
+  );
+  const studentsByUnit = (payload?.students || []).reduce((accumulator, student) => {
+    const bucket = accumulator[student.unitId] || [];
+    bucket.push({
+      id: String(student.id || "").trim(),
+      name: String(student.name || "Student"),
+      course: String(student.course || "")
+    });
+    accumulator[student.unitId] = bucket;
+    return accumulator;
+  }, {});
+
+  state.data.tutors = (payload?.tutors || []).map((tutor) => ({
+    id: String(tutor.id || "").trim().toLowerCase(),
+    pin: existingTutorPins[String(tutor.id || "").trim().toLowerCase()] || "",
+    name: String(tutor.name || "Tutor"),
+    title: String(tutor.title || "Tutor"),
+    classIds: Array.isArray(tutor.classIds) ? tutor.classIds.map((id) => String(id || "").trim().toLowerCase()) : []
+  }));
+
+  state.data.classes = (payload?.units || []).map((unit) => ({
+    id: String(unit.id || "").trim().toLowerCase(),
+    name: String(unit.name || "Unit"),
+    room: String(unit.room || "Room not set"),
+    schedule: normalizeSchedule(unit.schedule),
+    tutorId: String(unit.tutorId || "").trim().toLowerCase(),
+    students: studentsByUnit[String(unit.id || "").trim().toLowerCase()] || []
+  }));
+
+  const validUnitIds = new Set(state.data.classes.map((course) => course.id));
+  Object.keys(state.data.attendance).forEach((unitId) => {
+    if (!validUnitIds.has(unitId)) {
+      delete state.data.attendance[unitId];
+    }
+  });
+
+  syncDataRelationships(state.data);
+}
+
+async function loadAdminWorkspace() {
+  if (!isRemoteAdminSession()) {
+    return;
+  }
+
+  const payload = await apiRequest("/admin/bootstrap", {
+    token: state.currentAdminSession.token
+  });
+
+  applyAdminBootstrap(payload);
+}
+
+async function loadAttendanceSession(classId, dayKey, { force = false, renderOnComplete = true } = {}) {
+  if (!isRemoteTutorSession()) {
+    return;
+  }
+
+  if (!force && (hasAttendanceSessionLoaded(classId, dayKey) || isAttendanceSessionLoading(classId, dayKey) || !canRetryAttendanceLoad(classId, dayKey))) {
+    return;
+  }
+
+  setAttendanceSessionLoading(classId, dayKey, true);
+
+  try {
+    const payload = await apiRequest(`/attendance/${encodeURIComponent(classId)}/${encodeURIComponent(dayKey)}`, {
+      token: state.currentTutorProfile?.token
+    });
+
+    cacheAttendanceSession(classId, dayKey, payload?.records || {});
+  } catch (error) {
+    console.error(`Failed to load attendance for ${classId} on ${dayKey}`, error);
+    state.attendanceRetryAfter[getAttendanceCacheKey(classId, dayKey)] = Date.now() + 5000;
+    if (renderOnComplete && classId === state.selectedClassId && dayKey === state.selectedDateKey) {
+      showToast("Could not load attendance from the backend for this date.");
+    }
+  } finally {
+    setAttendanceSessionLoading(classId, dayKey, false);
+    if (renderOnComplete) {
+      renderApp();
+    }
+  }
+}
+
+async function preloadTutorAttendance(classes) {
+  if (!isRemoteTutorSession() || !classes.length) {
+    return;
+  }
+
+  const requests = [];
+
+  classes.forEach((course) => {
+    const dateKeys = new Set(getScheduledCalendarDates(course));
+    dateKeys.add(state.selectedDateKey);
+
+    dateKeys.forEach((dayKey) => {
+      requests.push(loadAttendanceSession(course.id, dayKey, { renderOnComplete: false }));
+    });
+  });
+
+  await Promise.allSettled(requests);
+}
+
+function ensureAttendanceLoadedForDate(classes, dayKey) {
+  if (!isRemoteTutorSession()) {
+    return;
+  }
+
+  classes.forEach((course) => {
+    void loadAttendanceSession(course.id, dayKey);
+  });
+}
+
+async function persistAttendanceRecord(classId, dayKey, studentId, record) {
+  if (!isRemoteTutorSession()) {
+    return normalizeAttendanceRecord(record);
+  }
+
+  const payload = await apiRequest(
+    `/attendance/${encodeURIComponent(classId)}/${encodeURIComponent(dayKey)}/${encodeURIComponent(studentId)}`,
+    {
+      method: "PUT",
+      token: state.currentTutorProfile?.token,
+      body: {
+        status: record.status,
+        note: record.note || ""
+      }
+    }
+  );
+
+  return normalizeAttendanceRecord(payload?.saved || record);
+}
+
+function scheduleNoteSync(classId, dayKey, studentId) {
+  if (!isRemoteTutorSession()) {
+    return;
+  }
+
+  const timerKey = getAttendanceCacheKey(`${classId}::${studentId}`, dayKey);
+  if (state.pendingNoteSaveTimers[timerKey]) {
+    clearTimeout(state.pendingNoteSaveTimers[timerKey]);
+  }
+
+  state.pendingNoteSaveTimers[timerKey] = setTimeout(async () => {
+    delete state.pendingNoteSaveTimers[timerKey];
+
+    const record = state.data.attendance[classId]?.[dayKey]?.records?.[studentId];
+    if (!record?.status) {
+      return;
+    }
+
+    try {
+      const savedRecord = await persistAttendanceRecord(classId, dayKey, studentId, record);
+      const session = ensureClassSession(classId, dayKey);
+      session.records[studentId] = savedRecord;
+      session.updatedAt = savedRecord.updatedAt || new Date().toISOString();
+      saveData();
+      renderApp();
+    } catch (error) {
+      console.error(`Failed to sync note for ${studentId} on ${dayKey}`, error);
+      showToast("Attendance note sync failed. The latest edit is still only local.");
+    }
+  }, 500);
+}
+
+async function apiRequest(path, { method = "GET", body, token } = {}) {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {})
+    },
+    body: body ? JSON.stringify(body) : undefined
+  });
+
+  const responseText = await response.text();
+  let payload = null;
+
+  if (responseText) {
+    try {
+      payload = JSON.parse(responseText);
+    } catch (error) {
+      payload = { error: responseText };
+    }
+  }
+
+  if (!response.ok) {
+    throw new Error(payload?.error || `Request failed (${response.status})`);
+  }
+
+  return payload;
+}
+
+function upsertTutorProfile(tutor) {
+  const normalizedTutor = {
+    id: String(tutor?.id || "").trim().toLowerCase(),
+    name: String(tutor?.name || "Tutor"),
+    title: String(tutor?.title || "Tutor")
+  };
+
+  const tutorIndex = state.data.tutors.findIndex((item) => item.id === normalizedTutor.id);
+  if (tutorIndex >= 0) {
+    state.data.tutors[tutorIndex] = {
+      ...state.data.tutors[tutorIndex],
+      ...normalizedTutor
+    };
+    return state.data.tutors[tutorIndex];
+  }
+
+  const nextTutor = {
+    ...normalizedTutor,
+    pin: "",
+    classIds: []
+  };
+  state.data.tutors.push(nextTutor);
+  return nextTutor;
+}
+
+function replaceTutorClasses(tutorId, classes) {
+  const normalizedClasses = normalizeClasses(classes).map((course) => ({
+    ...course,
+    tutorId
+  }));
+
+  state.data.classes = state.data.classes
+    .filter((course) => course.tutorId !== tutorId)
+    .concat(normalizedClasses);
+
+  syncDataRelationships(state.data);
+}
+
+async function hydrateTutorWorkspace(tutorId) {
+  const payload = await apiRequest(`/tutors/${encodeURIComponent(tutorId)}/classes`, {
+    token: state.currentTutorProfile?.token
+  });
+
+  replaceTutorClasses(tutorId, payload?.classes || []);
+  await preloadTutorAttendance(getClassesForTutorId(tutorId));
+}
+
+async function initializeTutorSession(tutor, token, activityMessage) {
+  const storedTutor = upsertTutorProfile(tutor);
+
+  state.isAdminUnlocked = false;
+  state.currentAdminSession = null;
+  setSessionAdminSession(null);
+  setSessionAdminUnlocked(false);
+  state.currentTutorProfile = {
+    id: storedTutor.id,
+    name: storedTutor.name,
+    title: storedTutor.title,
+    token: token || ""
+  };
+  state.currentTutorId = storedTutor.id;
+  setSessionTutorSession(state.currentTutorProfile);
+  await hydrateTutorWorkspace(storedTutor.id);
+  state.selectedClassId = getClassesForTutorId(storedTutor.id)[0]?.id || null;
+  addActivity(activityMessage || `${storedTutor.name} opened the tutor workspace.`);
+}
+
+async function initializeApp() {
+  await checkApiHealth();
+
+  if (isRemoteAdminSession()) {
+    try {
+      state.currentTutorProfile = null;
+      state.currentTutorId = null;
+      state.isAdminUnlocked = true;
+      await loadAdminWorkspace();
+    } catch (error) {
+      console.error("Failed to restore admin session", error);
+      state.currentAdminSession = null;
+      state.isAdminUnlocked = false;
+      setSessionAdminSession(null);
+      adminAccessMessage.textContent = "Your saved admin session could not be restored. Sign in again.";
+    }
+    renderApp();
+    return;
+  }
+
+  if (state.currentTutorId) {
+    try {
+      await hydrateTutorWorkspace(state.currentTutorId);
+    } catch (error) {
+      console.error("Failed to restore tutor session", error);
+      state.currentTutorProfile = null;
+      state.currentTutorId = null;
+      setSessionTutorSession(null);
+      loginMessage.textContent = "Your saved tutor session could not be restored. Sign in again.";
+    }
+  }
+
+  renderApp();
+}
+
+async function handleLogin(event) {
   event.preventDefault();
   const loginId = document.getElementById("loginId").value.trim().toLowerCase();
   const loginPin = document.getElementById("loginPin").value.trim();
-  const tutor = state.data.tutors.find((item) => item.id === loginId && item.pin === loginPin);
+  loginMessage.textContent = "Signing in...";
 
-  if (!tutor) {
-    loginMessage.textContent = "That tutor ID and passcode combination does not match the demo accounts.";
+  try {
+    const response = await apiRequest("/auth/login", {
+      method: "POST",
+      body: {
+        id: loginId,
+        pin: loginPin
+      }
+    });
+
+    loginMessage.textContent = "";
+    await initializeTutorSession(response.tutor, response.token, `${response.tutor.name} opened the tutor workspace.`);
+    renderApp();
+    showToast(`Signed in as ${response.tutor.name}`);
+  } catch (error) {
+    loginMessage.textContent = error.message || "Unable to sign in to the backend right now.";
     return;
   }
-
-  loginMessage.textContent = "";
-  state.isAdminUnlocked = false;
-  setSessionAdminUnlocked(false);
-  state.currentTutorId = tutor.id;
-  setSessionTutorId(tutor.id);
-  state.selectedClassId = getClassesForTutorId(tutor.id)[0]?.id || null;
-  addActivity(`${tutor.name} opened the demo workspace.`);
-  renderApp();
-  showToast(`Signed in as ${tutor.name}`);
 }
 
-function handleAdminUnlock(event) {
+async function handleAdminUnlock(event) {
   event.preventDefault();
   const submittedPin = document.getElementById("adminAccessPin").value.trim();
-  if (submittedPin !== state.data.settings.adminPin) {
-    adminAccessMessage.textContent = "That admin password is not correct for the local configuration workspace.";
-    return;
-  }
+  adminAccessMessage.textContent = "Signing in...";
 
-  adminAccessMessage.textContent = "";
-  adminAccessForm.reset();
-  state.currentTutorId = null;
-  state.selectedClassId = null;
-  setSessionTutorId(null);
-  state.isAdminUnlocked = true;
-  state.selectedAdminClassId = state.data.classes[0]?.id || null;
-  setSessionAdminUnlocked(true);
-  renderApp();
-  showToast("Admin workspace unlocked");
+  try {
+    const response = await apiRequest("/auth/admin/login", {
+      method: "POST",
+      body: {
+        pin: submittedPin
+      }
+    });
+
+    state.currentTutorId = null;
+    state.currentTutorProfile = null;
+    state.selectedClassId = null;
+    setSessionTutorSession(null);
+    state.currentAdminSession = { token: response.token };
+    setSessionAdminSession(state.currentAdminSession);
+    state.isAdminUnlocked = true;
+    await loadAdminWorkspace();
+    state.selectedAdminClassId = state.data.classes[0]?.id || null;
+    adminAccessMessage.textContent = "";
+    adminAccessForm.reset();
+    renderApp();
+    showToast("Admin workspace unlocked");
+  } catch (error) {
+    adminAccessMessage.textContent = error.message || "Admin sign-in failed.";
+  }
 }
 
-function loginAsDemo(tutorId) {
+async function loginAsDemo(tutorId) {
   const tutor = getTutorById(tutorId);
   if (!tutor) {
     return;
   }
 
   document.getElementById("loginId").value = tutor.id;
-  document.getElementById("loginPin").value = tutor.pin;
-  state.isAdminUnlocked = false;
-  setSessionAdminUnlocked(false);
-  state.currentTutorId = tutor.id;
-  setSessionTutorId(tutor.id);
-  state.selectedClassId = getClassesForTutorId(tutor.id)[0]?.id || null;
-  addActivity(`${tutor.name} opened the demo workspace via preview access.`);
-  renderApp();
-  showToast(`Loaded ${tutor.name}'s tutor view`);
+  document.getElementById("loginPin").value = tutor.pin || "";
+
+  try {
+    const response = await apiRequest("/auth/login", {
+      method: "POST",
+      body: {
+        id: tutor.id,
+        pin: tutor.pin || ""
+      }
+    });
+
+    loginMessage.textContent = "";
+    await initializeTutorSession(response.tutor, response.token, `${response.tutor.name} opened the tutor workspace via preview access.`);
+    renderApp();
+    showToast(`Loaded ${response.tutor.name}'s tutor view`);
+  } catch (error) {
+    loginMessage.textContent = error.message || "Preview sign-in failed.";
+  }
 }
 
 function logout() {
@@ -429,15 +1003,18 @@ function logout() {
   if (tutor) {
     addActivity(`${tutor.name} logged out.`);
   }
+  state.currentTutorProfile = null;
   state.currentTutorId = null;
   state.selectedClassId = null;
-  setSessionTutorId(null);
+  setSessionTutorSession(null);
   renderApp();
 }
 
 function logoutAdmin() {
   state.isAdminUnlocked = false;
+  state.currentAdminSession = null;
   state.selectedAdminClassId = null;
+  setSessionAdminSession(null);
   setSessionAdminUnlocked(false);
   renderApp();
 }
@@ -445,6 +1022,8 @@ function logoutAdmin() {
 function renderApp() {
   syncDataRelationships(state.data);
   renderAccountGrid();
+  bannerApiBase.textContent = formatApiBaseUrl(API_BASE_URL);
+  apiBaseUrlInput.value = API_BASE_URL;
 
   if (state.isAdminUnlocked) {
     loginPanel.classList.add("hidden");
@@ -473,8 +1052,9 @@ function renderApp() {
   }
 
   const selectedClass = getSelectedClass();
+  ensureAttendanceLoadedForDate(assignedClasses, state.selectedDateKey);
   welcomeHeading.textContent = `${tutor.name} · ${tutor.title}`;
-  heroSummary.textContent = `${tutor.name} is viewing ${assignedClasses.length} tutor-scoped class${assignedClasses.length === 1 ? "" : "es"}. Data persists only on this browser profile until the backend release is connected.`;
+  heroSummary.textContent = `${tutor.name} is viewing ${assignedClasses.length} tutor-scoped class${assignedClasses.length === 1 ? "" : "es"}. Class data, attendance reads, and attendance writes are all using the live backend.`;
   todayLabel.textContent = `Selected date: ${formatHumanDate(state.selectedDateKey)}`;
   attendanceDateInput.value = state.selectedDateKey;
   attendanceDateInput.min = getCalendarMinDateKey();
@@ -531,6 +1111,7 @@ function renderClassDetail(course) {
   }
 
   const { session } = getClassSession(course.id);
+  const isLoadingSession = isAttendanceSessionLoading(course.id, state.selectedDateKey);
   selectedClassTitle.textContent = course.name;
   selectedClassMeta.innerHTML = `
     <span class="meta-chip">${course.room}</span>
@@ -538,6 +1119,7 @@ function renderClassDetail(course) {
     <span class="meta-chip">${formatHumanDate(state.selectedDateKey)}</span>
     <span class="meta-chip">${Object.keys(session.records).length}/${course.students.length} marked</span>
     <span class="meta-chip">Average ${formatAverage(getClassAverage(course))}</span>
+    ${isLoadingSession ? '<span class="meta-chip">Loading register...</span>' : ""}
   `;
 
   const legend = `
@@ -598,24 +1180,47 @@ function renderStudentRow(classId, student, record) {
   `;
 }
 
-function updateAttendance(classId, studentId, status) {
+async function updateAttendance(classId, studentId, status) {
   const course = state.data.classes.find((item) => item.id === classId);
   const student = course?.students.find((item) => item.id === studentId);
   if (!course || !student) {
     return;
   }
 
-  const session = ensureClassSession(classId);
+  const dayKey = state.selectedDateKey;
+  const session = ensureClassSession(classId, dayKey);
+  const previousRecord = session.records[studentId] ? { ...session.records[studentId] } : null;
+  const previousUpdatedAt = session.updatedAt;
   const existingRecord = session.records[studentId] || { note: "" };
-  session.records[studentId] = {
+  const nextRecord = {
     status,
     updatedAt: new Date().toISOString(),
     note: status === "absent" || status === "leave" ? existingRecord.note || "" : ""
   };
+  session.records[studentId] = nextRecord;
   session.updatedAt = new Date().toISOString();
   addActivity(`${student.name} marked ${status} in ${course.name} for ${formatShortDate(state.selectedDateKey)}.`);
   saveData(`${student.name} marked ${status}`);
   renderApp();
+
+  try {
+    const savedRecord = await persistAttendanceRecord(classId, dayKey, studentId, nextRecord);
+    session.records[studentId] = savedRecord;
+    session.updatedAt = savedRecord.updatedAt || session.updatedAt;
+    saveData();
+    renderApp();
+  } catch (error) {
+    console.error(`Failed to save attendance for ${studentId} on ${dayKey}`, error);
+    if (previousRecord) {
+      session.records[studentId] = previousRecord;
+    } else {
+      delete session.records[studentId];
+    }
+    session.updatedAt = previousUpdatedAt || null;
+    saveData();
+    renderApp();
+    showToast("Attendance save failed. The change was not written to the backend.");
+  }
 }
 
 function updateStudentNote(classId, studentId, note) {
@@ -625,7 +1230,8 @@ function updateStudentNote(classId, studentId, note) {
     return;
   }
 
-  const session = ensureClassSession(classId);
+  const dayKey = state.selectedDateKey;
+  const session = ensureClassSession(classId, dayKey);
   const existingRecord = session.records[studentId];
   if (!existingRecord || (existingRecord.status !== "absent" && existingRecord.status !== "leave")) {
     return;
@@ -638,6 +1244,7 @@ function updateStudentNote(classId, studentId, note) {
   };
   session.updatedAt = new Date().toISOString();
   saveData();
+  scheduleNoteSync(classId, dayKey, studentId);
 }
 
 function handleDateSelection(event) {
@@ -766,6 +1373,11 @@ function renderActivity() {
 }
 
 function renderAccountGrid() {
+  if (state.apiConnectionState === "online") {
+    accountGrid.innerHTML = '<div class="admin-empty">Preview cards are disabled on the live handoff build. Tutors should sign in with their assigned credentials.</div>';
+    return;
+  }
+
   if (!state.data.tutors.length) {
     accountGrid.innerHTML = '<div class="admin-empty">No tutor accounts exist yet. Use the admin studio to create the first local login.</div>';
     return;
@@ -783,8 +1395,8 @@ function renderAccountGrid() {
             <span class="pill">${getClassesForTutorId(tutor.id).length} class${getClassesForTutorId(tutor.id).length === 1 ? "" : "es"}</span>
           </header>
           <div>Tutor ID: ${tutor.id}</div>
-          <div>Passcode: ${tutor.pin}</div>
-          <button type="button" class="button button--ghost" data-demo-login="${tutor.id}">Open preview</button>
+          <div>${tutor.pin ? `Passcode: ${tutor.pin}` : "Passcode is hidden for backend-backed accounts"}</div>
+          ${tutor.pin ? `<button type="button" class="button button--ghost" data-demo-login="${tutor.id}">Open preview</button>` : ""}
         </article>
       `
     )
@@ -800,8 +1412,8 @@ function renderAdminPanel() {
     state.selectedAdminClassId = state.data.classes[0]?.id || null;
   }
 
-  adminHeading.textContent = "Local attendance configuration";
-  adminSummary.textContent = `The admin workspace currently holds ${state.data.tutors.length} tutor account${state.data.tutors.length === 1 ? "" : "s"}, ${state.data.classes.length} unit${state.data.classes.length === 1 ? "" : "s"}, and ${getTotalStudentCount()} student roster entries in this browser.`;
+  adminHeading.textContent = "Attendance configuration studio";
+  adminSummary.textContent = `The admin workspace currently holds ${state.data.tutors.length} tutor account${state.data.tutors.length === 1 ? "" : "s"}, ${state.data.classes.length} unit${state.data.classes.length === 1 ? "" : "s"}, and ${getTotalStudentCount()} student roster entries from the backend.`;
   adminMetricTutors.textContent = String(state.data.tutors.length);
   adminMetricUnits.textContent = String(state.data.classes.length);
   adminMetricStudents.textContent = String(getTotalStudentCount());
@@ -849,7 +1461,7 @@ function renderTutorAdminList() {
             </label>
             <label>
               Tutor password
-              <input data-field="pin" value="${escapeAttribute(tutor.pin)}">
+              <input data-field="pin" value="" placeholder="Leave blank to keep current password">
             </label>
             <label>
               Tutor ID
@@ -1008,7 +1620,7 @@ function renderStudentAdminList() {
   });
 }
 
-function handleCreateTutor(event) {
+async function handleCreateTutor(event) {
   event.preventDefault();
   const name = document.getElementById("createTutorName").value.trim();
   const id = slugifyId(document.getElementById("createTutorId").value.trim());
@@ -1025,14 +1637,24 @@ function handleCreateTutor(event) {
     return;
   }
 
-  state.data.tutors.push({ id, pin, name, title, classIds: [] });
-  createTutorForm.reset();
-  createTutorMessage.textContent = "";
-  saveData(`Tutor ${name} created`);
-  renderApp();
+  try {
+    await apiRequest("/admin/tutors", {
+      method: "POST",
+      token: state.currentAdminSession?.token,
+      body: { id, pin, name, title }
+    });
+    state.data.tutors.push({ id, pin, name, title, classIds: [] });
+    await loadAdminWorkspace();
+    createTutorForm.reset();
+    createTutorMessage.textContent = "";
+    renderApp();
+    showToast(`Tutor ${name} created`);
+  } catch (error) {
+    createTutorMessage.textContent = error.message || "Tutor creation failed.";
+  }
 }
 
-function handleCreateUnit(event) {
+async function handleCreateUnit(event) {
   event.preventDefault();
   const name = document.getElementById("createUnitName").value.trim();
   const id = slugifyId(document.getElementById("createUnitId").value.trim());
@@ -1050,23 +1672,25 @@ function handleCreateUnit(event) {
     return;
   }
 
-  state.data.classes.push({
-    id,
-    name,
-    room,
-    schedule,
-    tutorId,
-    students: []
-  });
-  state.selectedAdminClassId = id;
-  createUnitForm.reset();
-  document.getElementById("createUnitSchedule").value = "Monday";
-  createUnitMessage.textContent = "";
-  saveData(`Unit ${name} created`);
-  renderApp();
+  try {
+    await apiRequest("/admin/units", {
+      method: "POST",
+      token: state.currentAdminSession?.token,
+      body: { id, name, room, schedule, tutorId }
+    });
+    state.selectedAdminClassId = id;
+    await loadAdminWorkspace();
+    createUnitForm.reset();
+    document.getElementById("createUnitSchedule").value = "Monday";
+    createUnitMessage.textContent = "";
+    renderApp();
+    showToast(`Unit ${name} created`);
+  } catch (error) {
+    createUnitMessage.textContent = error.message || "Unit creation failed.";
+  }
 }
 
-function handleCreateStudent(event) {
+async function handleCreateStudent(event) {
   event.preventDefault();
   const course = state.data.classes.find((item) => item.id === adminStudentUnitSelect.value) || null;
   const name = document.getElementById("createStudentName").value.trim();
@@ -1080,27 +1704,32 @@ function handleCreateStudent(event) {
     return;
   }
 
-  course.students.push({
-    id: buildNextStudentId(course),
-    name,
-    course: course.name
-  });
-  createStudentForm.reset();
-  createStudentMessage.textContent = "";
-  saveData(`Student ${name} added to ${course.name}`);
-  renderApp();
+  try {
+    await apiRequest("/admin/students", {
+      method: "POST",
+      token: state.currentAdminSession?.token,
+      body: {
+        id: buildNextStudentId(course),
+        name,
+        unitId: course.id
+      }
+    });
+    await loadAdminWorkspace();
+    createStudentForm.reset();
+    createStudentMessage.textContent = "";
+    renderApp();
+    showToast(`Student ${name} added to ${course.name}`);
+  } catch (error) {
+    createStudentMessage.textContent = error.message || "Student creation failed.";
+  }
 }
 
-function handleAdminPasswordUpdate(event) {
+async function handleAdminPasswordUpdate(event) {
   event.preventDefault();
   const currentPin = document.getElementById("adminCurrentPin").value.trim();
   const nextPin = document.getElementById("adminNewPin").value.trim();
   const confirmPin = document.getElementById("adminConfirmPin").value.trim();
 
-  if (currentPin !== state.data.settings.adminPin) {
-    adminPasswordMessage.textContent = "Current admin password is incorrect.";
-    return;
-  }
   if (!nextPin) {
     adminPasswordMessage.textContent = "New admin password cannot be empty.";
     return;
@@ -1110,11 +1739,22 @@ function handleAdminPasswordUpdate(event) {
     return;
   }
 
-  state.data.settings.adminPin = nextPin;
-  adminPasswordForm.reset();
-  adminPasswordMessage.textContent = "";
-  saveData("Admin password updated");
-  renderApp();
+  try {
+    await apiRequest("/admin/settings/admin-password", {
+      method: "PUT",
+      token: state.currentAdminSession?.token,
+      body: {
+        currentPin,
+        newPin: nextPin
+      }
+    });
+    adminPasswordForm.reset();
+    adminPasswordMessage.textContent = "";
+    renderApp();
+    showToast("Admin password updated");
+  } catch (error) {
+    adminPasswordMessage.textContent = error.message || "Admin password update failed.";
+  }
 }
 
 function handleAdminUnitSelection(event) {
@@ -1122,7 +1762,7 @@ function handleAdminUnitSelection(event) {
   renderApp();
 }
 
-function saveTutor(tutorId, card) {
+async function saveTutor(tutorId, card) {
   const tutor = getTutorById(tutorId);
   if (!tutor || !card) {
     return;
@@ -1132,19 +1772,31 @@ function saveTutor(tutorId, card) {
   const title = card.querySelector('[data-field="title"]').value.trim() || `Tutor · ${name}`;
   const pin = card.querySelector('[data-field="pin"]').value.trim();
 
-  if (!name || !pin) {
-    showToast("Tutor name and password are required");
+  if (!name) {
+    showToast("Tutor name is required");
     return;
   }
 
-  tutor.name = name;
-  tutor.title = title;
-  tutor.pin = pin;
-  saveData(`Tutor ${name} updated`);
-  renderApp();
+  try {
+    tutor.name = name;
+    tutor.title = title;
+    if (pin) {
+      tutor.pin = pin;
+    }
+    await apiRequest(`/admin/tutors/${encodeURIComponent(tutorId)}`, {
+      method: "PUT",
+      token: state.currentAdminSession?.token,
+      body: { name, title, pin }
+    });
+    await loadAdminWorkspace();
+    renderApp();
+    showToast(`Tutor ${name} updated`);
+  } catch (error) {
+    showToast(error.message || "Tutor update failed");
+  }
 }
 
-function deleteTutor(tutorId) {
+async function deleteTutor(tutorId) {
   const tutor = getTutorById(tutorId);
   if (!tutor) {
     return;
@@ -1155,17 +1807,20 @@ function deleteTutor(tutorId) {
     return;
   }
 
-  state.data.classes.forEach((course) => {
-    if (course.tutorId === tutorId) {
-      course.tutorId = "";
-    }
-  });
-  state.data.tutors = state.data.tutors.filter((item) => item.id !== tutorId);
-  saveData(`Tutor ${tutor.name} removed`);
-  renderApp();
+  try {
+    await apiRequest(`/admin/tutors/${encodeURIComponent(tutorId)}`, {
+      method: "DELETE",
+      token: state.currentAdminSession?.token
+    });
+    await loadAdminWorkspace();
+    renderApp();
+    showToast(`Tutor ${tutor.name} removed`);
+  } catch (error) {
+    showToast(error.message || "Tutor removal failed");
+  }
 }
 
-function saveUnit(unitId, card) {
+async function saveUnit(unitId, card) {
   const course = state.data.classes.find((item) => item.id === unitId);
   if (!course || !card) {
     return;
@@ -1181,15 +1836,21 @@ function saveUnit(unitId, card) {
     return;
   }
 
-  course.name = name;
-  course.room = room;
-  course.schedule = schedule;
-  course.tutorId = tutorId;
-  saveData(`Unit ${name} updated`);
-  renderApp();
+  try {
+    await apiRequest(`/admin/units/${encodeURIComponent(unitId)}`, {
+      method: "PUT",
+      token: state.currentAdminSession?.token,
+      body: { name, room, schedule, tutorId }
+    });
+    await loadAdminWorkspace();
+    renderApp();
+    showToast(`Unit ${name} updated`);
+  } catch (error) {
+    showToast(error.message || "Unit update failed");
+  }
 }
 
-function deleteUnit(unitId) {
+async function deleteUnit(unitId) {
   const course = state.data.classes.find((item) => item.id === unitId);
   if (!course) {
     return;
@@ -1200,19 +1861,27 @@ function deleteUnit(unitId) {
     return;
   }
 
-  state.data.classes = state.data.classes.filter((item) => item.id !== unitId);
-  delete state.data.attendance[unitId];
-  if (state.selectedAdminClassId === unitId) {
-    state.selectedAdminClassId = state.data.classes[0]?.id || null;
+  try {
+    await apiRequest(`/admin/units/${encodeURIComponent(unitId)}`, {
+      method: "DELETE",
+      token: state.currentAdminSession?.token
+    });
+    delete state.data.attendance[unitId];
+    if (state.selectedAdminClassId === unitId) {
+      state.selectedAdminClassId = null;
+    }
+    if (state.selectedClassId === unitId) {
+      state.selectedClassId = null;
+    }
+    await loadAdminWorkspace();
+    renderApp();
+    showToast(`Unit ${course.name} removed`);
+  } catch (error) {
+    showToast(error.message || "Unit removal failed");
   }
-  if (state.selectedClassId === unitId) {
-    state.selectedClassId = getAssignedClasses()[0]?.id || null;
-  }
-  saveData(`Unit ${course.name} removed`);
-  renderApp();
 }
 
-function saveStudent(unitId, studentId, card) {
+async function saveStudent(unitId, studentId, card) {
   const course = state.data.classes.find((item) => item.id === unitId);
   const student = course?.students.find((item) => item.id === studentId);
   if (!course || !student || !card) {
@@ -1225,12 +1894,21 @@ function saveStudent(unitId, studentId, card) {
     return;
   }
 
-  student.name = name;
-  saveData(`Student ${name} updated`);
-  renderApp();
+  try {
+    await apiRequest(`/admin/students/${encodeURIComponent(studentId)}`, {
+      method: "PUT",
+      token: state.currentAdminSession?.token,
+      body: { name }
+    });
+    await loadAdminWorkspace();
+    renderApp();
+    showToast(`Student ${name} updated`);
+  } catch (error) {
+    showToast(error.message || "Student update failed");
+  }
 }
 
-function deleteStudent(unitId, studentId) {
+async function deleteStudent(unitId, studentId) {
   const course = state.data.classes.find((item) => item.id === unitId);
   const student = course?.students.find((item) => item.id === studentId);
   if (!course || !student) {
@@ -1242,12 +1920,20 @@ function deleteStudent(unitId, studentId) {
     return;
   }
 
-  course.students = course.students.filter((item) => item.id !== studentId);
-  Object.values(state.data.attendance[unitId] || {}).forEach((session) => {
-    delete session.records[studentId];
-  });
-  saveData(`Student ${student.name} removed`);
-  renderApp();
+  try {
+    await apiRequest(`/admin/students/${encodeURIComponent(studentId)}`, {
+      method: "DELETE",
+      token: state.currentAdminSession?.token
+    });
+    Object.values(state.data.attendance[unitId] || {}).forEach((session) => {
+      delete session.records[studentId];
+    });
+    await loadAdminWorkspace();
+    renderApp();
+    showToast(`Student ${student.name} removed`);
+  } catch (error) {
+    showToast(error.message || "Student removal failed");
+  }
 }
 
 function buildTutorOptions(selectedId) {

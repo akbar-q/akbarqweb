@@ -2,11 +2,14 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY attendance-backend/package*.json ./attendance-backend/
+WORKDIR /app/attendance-backend
 RUN npm ci --omit=dev
 
-COPY . .
+COPY attendance-backend ./
+COPY attendance-demo ../attendance-demo
+COPY assets ../assets
 
 EXPOSE 3001
 
-CMD ["npm", "run", "start"]
+ENTRYPOINT ["npm", "run", "start"]

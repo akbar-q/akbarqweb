@@ -5,7 +5,26 @@ const db = require("../db");
 const router = express.Router();
 const VALID_STATUSES = new Set(["present", "late", "absent", "leave"]);
 
-router.get("/:classId/:date", async (req, res) => {
+async function ensureUnitAccess(req, res, next) {
+  if (req.auth?.role === "admin") {
+    return next();
+  }
+
+  const classId = String(req.params.classId || "").trim().toLowerCase();
+  const tutorId = String(req.auth?.sub || "").trim().toLowerCase();
+  const result = await db.query(
+    "SELECT 1 FROM units WHERE id = $1 AND tutor_id = $2",
+    [classId, tutorId]
+  );
+
+  if (!result.rows[0]) {
+    return res.status(403).json({ error: "Forbidden" });
+  }
+
+  return next();
+}
+
+router.get("/:classId/:date", ensureUnitAccess, async (req, res) => {
   const { classId, date } = req.params;
 
   const result = await db.query(
@@ -28,7 +47,7 @@ router.get("/:classId/:date", async (req, res) => {
   return res.json({ classId, date, records });
 });
 
-router.put("/:classId/:date/:studentId", async (req, res) => {
+router.put("/:classId/:date/:studentId", ensureUnitAccess, async (req, res) => {
   const { classId, date, studentId } = req.params;
   const { status, note } = req.body || {};
 

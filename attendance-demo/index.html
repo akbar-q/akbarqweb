@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Phase-one student attendance tracking demo by Akbar Q. Local browser storage only.">
+  <meta name="description" content="Student attendance tracking by Akbar Q with calendar-based registers, tutor login, admin tools, and a live API connection.">
   <title>Akbar Q Attendance Studio</title>
   <link rel="icon" type="image/gif" href="../assets/images/logospin.gif">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,25 +20,25 @@
   <div class="shell">
     <section class="banner card">
       <div>
-        <span class="pill pill--warning">Phase 1 Demo</span>
+        <span class="pill pill--warning" id="deploymentBadge">Pilot build</span>
         <h1>Akbar Q Attendance Studio</h1>
         <p>
-          This work-in-development build stores attendance data locally in the current browser only.
-          It is suitable for demonstrations and interface review, not full-time operational use.
+          Calendar-based attendance marking with tutor login, admin management, and a live backend connection.
+          Use the connection panel below if this page needs to point at a different API host.
         </p>
-        <div class="live-status" aria-label="Animated demo preview is active">
+        <div class="live-status" aria-label="Application and API status are available">
           <span class="live-status__dot" aria-hidden="true"></span>
-          <span>Animated preview active</span>
+          <span id="bannerStatusText">Ready to verify API connection</span>
         </div>
       </div>
       <div class="banner__meta">
         <div>
-          <span class="meta__label">Storage mode</span>
-          <strong>Local browser only</strong>
+          <span class="meta__label">API endpoint</span>
+          <strong id="bannerApiBase">Checking...</strong>
         </div>
         <div>
-          <span class="meta__label">Production backend ETA</span>
-          <strong>7 days</strong>
+          <span class="meta__label">Backend health</span>
+          <strong id="bannerApiHealth">Unknown</strong>
         </div>
       </div>
     </section>
@@ -54,10 +54,34 @@
             </div>
           </div>
           <p class="login-panel__copy">
-            This phase-one preview uses one shared demo login for the EEE attendance interface.
-            Authentication is intentionally lightweight until the backend release lands.
+            Tutors sign in against the live attendance API. If this page was opened from a file or moved to another device,
+            confirm the API URL below before handing it to users.
           </p>
         </div>
+
+        <section class="connection-card" aria-labelledby="connectionCardTitle">
+          <div class="section-heading section-heading--tight">
+            <div>
+              <p class="eyebrow">Connection</p>
+              <h3 id="connectionCardTitle">API endpoint</h3>
+            </div>
+            <span class="pill" id="connectionPill">Checking...</span>
+          </div>
+
+          <form class="connection-form" id="connectionForm">
+            <label>
+              Attendance API URL
+              <input id="apiBaseUrlInput" name="apiBaseUrl" type="url" inputmode="url" placeholder="https://api.akbarq.com">
+            </label>
+
+            <div class="connection-form__actions">
+              <button type="submit" class="button button--primary">Save and test connection</button>
+              <button type="button" class="button button--ghost" id="resetApiBaseUrlButton">Use default</button>
+            </div>
+
+            <p class="form-message" id="connectionMessage" role="status" aria-live="polite"></p>
+          </form>
+        </section>
 
         <form class="login-form" id="loginForm">
           <label>
@@ -83,7 +107,7 @@
             <div class="section-heading">
               <div>
                 <p class="eyebrow">Admin controls</p>
-                <h3>Local configuration access</h3>
+                <h3>Administrative access</h3>
               </div>
             </div>
 
@@ -97,7 +121,7 @@
             </form>
 
             <p class="subtle admin-helper">
-              Local demo default starts as <strong>admin</strong>. You can change it inside the admin workspace.
+              Default admin password starts as <strong>admin</strong>. Change it inside the admin workspace before handoff.
             </p>
           </div>
         </div>
@@ -126,14 +150,14 @@
         <section class="hero-grid">
           <article class="hero-card card hero-card--statement">
             <p class="eyebrow">Operational notice</p>
-            <h3>Local-only attendance capture for interface review.</h3>
+            <h3>Live tutor workspace backed by the attendance API.</h3>
             <p id="heroSummary">
-              Data is being recorded into this browser on this device only. Export often if you need a temporary backup.
+              Classes and sign-in now come from the live backend. Attendance changes are written straight through to the API.
             </p>
             <div class="hero-card__chips">
-              <span class="pill">Demo auth</span>
+              <span class="pill">JWT auth</span>
               <span class="pill">Tutor-scoped classes</span>
-              <span class="pill">No backend yet</span>
+              <span class="pill">Calendar attendance</span>
             </div>
           </article>
 
@@ -156,9 +180,9 @@
           </article>
 
           <article class="metric-card card">
-            <span class="metric-card__label">Browser records</span>
+            <span class="metric-card__label">Cached records</span>
             <strong class="metric-card__value" id="metricStored">0</strong>
-            <span class="metric-card__foot">Persistent on this device only</span>
+            <span class="metric-card__foot">Local cache retained for resilience on this device</span>
           </article>
         </section>
 
