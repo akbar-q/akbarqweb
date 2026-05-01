@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -78,6 +78,28 @@
             <h3>Demo login</h3>
           </div>
           <div class="account-grid" id="accountGrid"></div>
+
+          <div class="admin-access">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Admin controls</p>
+                <h3>Local configuration access</h3>
+              </div>
+            </div>
+
+            <form class="login-form" id="adminAccessForm">
+              <label>
+                Admin password
+                <input id="adminAccessPin" name="adminAccessPin" type="password" autocomplete="current-password" placeholder="admin" required>
+              </label>
+              <button type="submit" class="button button--ghost">Open admin studio</button>
+              <p class="form-message" id="adminAccessMessage" role="status" aria-live="polite"></p>
+            </form>
+
+            <p class="subtle admin-helper">
+              Local demo default starts as <strong>admin</strong>. You can change it inside the admin workspace.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -122,9 +144,15 @@
           </article>
 
           <article class="metric-card card">
-            <span class="metric-card__label">Marked today</span>
+            <span class="metric-card__label">Marked on date</span>
             <strong class="metric-card__value" id="metricMarked">0</strong>
-            <span class="metric-card__foot">Across selected tutor groups</span>
+            <span class="metric-card__foot">Across the selected attendance date</span>
+          </article>
+
+          <article class="metric-card card">
+            <span class="metric-card__label">4-week average</span>
+            <strong class="metric-card__value" id="metricAverage">0%</strong>
+            <span class="metric-card__foot">Present plus late across the May timetable draft</span>
           </article>
 
           <article class="metric-card card">
@@ -155,10 +183,41 @@
                 <div class="class-detail__meta" id="selectedClassMeta"></div>
               </div>
 
-              <label class="notes-field">
-                Tutor session note
-                <textarea id="sessionNotes" rows="3" placeholder="Add a local note for this demo session."></textarea>
-              </label>
+              <div class="register-toolbar">
+                <label class="notes-field date-field">
+                  Attendance date
+                  <input id="attendanceDateInput" type="date">
+                </label>
+
+                <label class="toggle-field" for="showAverageToggle">
+                  <input id="showAverageToggle" type="checkbox" checked>
+                  <span>Show 4-week average next to each name</span>
+                </label>
+              </div>
+
+              <section class="calendar-panel" aria-labelledby="calendarPanelTitle">
+                <div class="section-heading section-heading--tight">
+                  <div>
+                    <p class="eyebrow">Attendance calendar</p>
+                    <h5 id="calendarPanelTitle">Browse any month within five years either side of today</h5>
+                  </div>
+                  <div class="calendar-nav" aria-label="Calendar month navigation">
+                    <button class="button button--ghost calendar-nav__button" id="calendarPrevButton" type="button">Previous</button>
+                    <strong class="calendar-nav__label" id="calendarMonthLabel">May 2026</strong>
+                    <button class="button button--ghost calendar-nav__button" id="calendarNextButton" type="button">Next</button>
+                  </div>
+                </div>
+                <div class="calendar-weekdays" aria-hidden="true">
+                  <span>Mon</span>
+                  <span>Tue</span>
+                  <span>Wed</span>
+                  <span>Thu</span>
+                  <span>Fri</span>
+                  <span>Sat</span>
+                  <span>Sun</span>
+                </div>
+                <div class="calendar-grid" id="calendarGrid"></div>
+              </section>
 
               <div class="attendance-table" id="attendanceTable"></div>
             </div>
@@ -202,6 +261,211 @@
               <div class="export-card__footer" id="lastSavedLabel">No local edits yet.</div>
             </article>
           </aside>
+        </section>
+      </section>
+
+      <section class="admin-panel hidden" id="adminPanel">
+        <header class="app-topbar card">
+          <div class="brand-lockup">
+            <img src="../assets/images/logospin.gif" alt="Akbar Q logo" class="brand-lockup__logo">
+            <div>
+              <p class="eyebrow">Admin Studio</p>
+              <h2 id="adminHeading">Local attendance configuration</h2>
+            </div>
+          </div>
+
+          <div class="app-topbar__actions">
+            <button class="button button--ghost" id="adminExportCsvButton" type="button">Export CSV backup</button>
+            <button class="button button--ghost" id="adminExportButton" type="button">Export JSON</button>
+            <label class="button button--ghost button--file" for="adminImportInput">Import data</label>
+            <input id="adminImportInput" type="file" accept="application/json" hidden>
+            <button class="button button--ghost" id="adminResetButton" type="button">Reset device data</button>
+            <button class="button button--primary" id="adminLogoutButton" type="button">Lock admin</button>
+          </div>
+        </header>
+
+        <section class="hero-grid">
+          <article class="hero-card card hero-card--statement">
+            <p class="eyebrow">Admin notice</p>
+            <h3>GUI management for locally stored tutors, units, and rosters.</h3>
+            <p id="adminSummary">
+              Use this workspace to prepare the data model for backend integration later while keeping everything local for now.
+            </p>
+            <div class="hero-card__chips">
+              <span class="pill">Local config</span>
+              <span class="pill">CRUD ready</span>
+              <span class="pill">Backend handoff friendly</span>
+            </div>
+          </article>
+
+          <article class="metric-card card">
+            <span class="metric-card__label">Tutors</span>
+            <strong class="metric-card__value" id="adminMetricTutors">0</strong>
+            <span class="metric-card__foot">Configured local user accounts</span>
+          </article>
+
+          <article class="metric-card card">
+            <span class="metric-card__label">Units</span>
+            <strong class="metric-card__value" id="adminMetricUnits">0</strong>
+            <span class="metric-card__foot">Live or draft teaching groups</span>
+          </article>
+
+          <article class="metric-card card">
+            <span class="metric-card__label">Students</span>
+            <strong class="metric-card__value" id="adminMetricStudents">0</strong>
+            <span class="metric-card__foot">Roster entries across all units</span>
+          </article>
+
+          <article class="metric-card card">
+            <span class="metric-card__label">Unassigned units</span>
+            <strong class="metric-card__value" id="adminMetricUnassigned">0</strong>
+            <span class="metric-card__foot">Ready to attach to a tutor</span>
+          </article>
+        </section>
+
+        <section class="admin-grid">
+          <article class="card admin-card">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Security</p>
+                <h3>Admin password</h3>
+              </div>
+            </div>
+
+            <form class="admin-form" id="adminPasswordForm">
+              <label>
+                Current password
+                <input id="adminCurrentPin" type="password" autocomplete="current-password" required>
+              </label>
+              <label>
+                New password
+                <input id="adminNewPin" type="password" autocomplete="new-password" required>
+              </label>
+              <label>
+                Confirm new password
+                <input id="adminConfirmPin" type="password" autocomplete="new-password" required>
+              </label>
+              <button type="submit" class="button button--primary">Update admin password</button>
+              <p class="form-message" id="adminPasswordMessage" role="status" aria-live="polite"></p>
+            </form>
+          </article>
+
+          <article class="card admin-card">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Users</p>
+                <h3>Create tutor account</h3>
+              </div>
+            </div>
+
+            <form class="admin-form" id="createTutorForm">
+              <label>
+                Tutor name
+                <input id="createTutorName" type="text" placeholder="Akbar Qamar" required>
+              </label>
+              <label>
+                Tutor ID
+                <input id="createTutorId" type="text" placeholder="eee" required>
+              </label>
+              <label>
+                Tutor password
+                <input id="createTutorPin" type="text" placeholder="password" required>
+              </label>
+              <label>
+                Title
+                <input id="createTutorTitle" type="text" placeholder="Tutor · Engineering attendance">
+              </label>
+              <button type="submit" class="button button--primary">Add tutor</button>
+              <p class="form-message" id="createTutorMessage" role="status" aria-live="polite"></p>
+            </form>
+          </article>
+
+          <article class="card admin-card admin-card--span">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Users</p>
+                <h3>Tutor directory</h3>
+              </div>
+            </div>
+            <div class="admin-list" id="adminTutorList"></div>
+          </article>
+
+          <article class="card admin-card">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Units</p>
+                <h3>Create teaching unit</h3>
+              </div>
+            </div>
+
+            <form class="admin-form" id="createUnitForm">
+              <label>
+                Unit name
+                <input id="createUnitName" type="text" placeholder="Unit 4020" required>
+              </label>
+              <label>
+                Unit code
+                <input id="createUnitId" type="text" placeholder="unit-4020" required>
+              </label>
+              <label>
+                Room or description
+                <input id="createUnitRoom" type="text" placeholder="Tuesday register" required>
+              </label>
+              <label>
+                Scheduled day
+                <select id="createUnitSchedule" required>
+                  <option value="Monday">Monday</option>
+                  <option value="Tuesday">Tuesday</option>
+                  <option value="Wednesday">Wednesday</option>
+                  <option value="Thursday">Thursday</option>
+                  <option value="Friday">Friday</option>
+                  <option value="Saturday">Saturday</option>
+                  <option value="Sunday">Sunday</option>
+                </select>
+              </label>
+              <label>
+                Assigned tutor
+                <select id="createUnitTutorId"></select>
+              </label>
+              <button type="submit" class="button button--primary">Add unit</button>
+              <p class="form-message" id="createUnitMessage" role="status" aria-live="polite"></p>
+            </form>
+          </article>
+
+          <article class="card admin-card admin-card--span">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Units</p>
+                <h3>Unit directory</h3>
+              </div>
+            </div>
+            <div class="admin-list" id="adminUnitList"></div>
+          </article>
+
+          <article class="card admin-card admin-card--span">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Roster</p>
+                <h3>Student management</h3>
+              </div>
+            </div>
+
+            <label class="notes-field">
+              Select unit
+              <select id="adminStudentUnitSelect"></select>
+            </label>
+
+            <form class="admin-form admin-form--inline" id="createStudentForm">
+              <label>
+                Student name
+                <input id="createStudentName" type="text" placeholder="New student name" required>
+              </label>
+              <button type="submit" class="button button--primary">Add student</button>
+            </form>
+            <p class="form-message" id="createStudentMessage" role="status" aria-live="polite"></p>
+
+            <div class="admin-list" id="adminStudentList"></div>
+          </article>
         </section>
       </section>
     </main>
