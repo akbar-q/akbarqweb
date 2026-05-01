@@ -1,2 +1,4 @@
 *.mobirise
 music/.stfolder/syncthing-folder-b6d4aa.txt
+**/node_modules/
+
