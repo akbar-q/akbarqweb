@@ -464,6 +464,7 @@ textarea {
 .class-browser {
   display: grid;
   gap: 20px;
+  min-width: 0;
 }
 
 .class-list {
@@ -489,6 +490,7 @@ textarea {
 .class-detail {
   display: grid;
   gap: 18px;
+  min-width: 0;
 }
 
 .class-detail__header {
@@ -497,6 +499,10 @@ textarea {
   gap: 20px;
   align-items: start;
   flex-wrap: wrap;
+}
+
+.class-detail__header > * {
+  min-width: 0;
 }
 
 .meta-chip {
@@ -509,7 +515,7 @@ textarea {
 
 .register-toolbar {
   display: grid;
-  grid-template-columns: minmax(210px, 0.5fr) auto;
+  grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
   gap: 16px;
   align-items: end;
 }
@@ -653,13 +659,14 @@ textarea {
 
 .student-row {
   display: grid;
-  grid-template-columns: minmax(220px, 1.15fr) minmax(130px, 0.55fr) minmax(320px, 1fr) minmax(220px, 0.9fr);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.65fr) minmax(0, 1fr) minmax(0, 0.9fr);
   gap: 16px;
   padding: 18px;
   border-radius: var(--radius-lg);
   background: rgba(255, 255, 255, 0.035);
   border: 1px solid rgba(255, 255, 255, 0.07);
   align-items: start;
+  min-width: 0;
 }
 
 .student-row__identity,
@@ -667,6 +674,7 @@ textarea {
 .student-row__actions {
   display: grid;
   gap: 8px;
+  min-width: 0;
 }
 
 .student-row__course,
@@ -678,6 +686,13 @@ textarea {
 
 .student-row__actions {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.student-row__note,
+.student-note-input,
+.status-button,
+.meta-chip {
+  min-width: 0;
 }
 
 .status-button {
@@ -883,7 +898,6 @@ textarea {
 
 @media (max-width: 1180px) {
   .hero-grid,
-  .content-grid,
   .admin-grid,
   .student-row,
   .admin-item__grid,
@@ -911,6 +925,12 @@ textarea {
   .admin-item__header {
     grid-template-columns: 1fr;
     display: grid;
+  }
+}
+
+@media (max-width: 1320px) {
+  .content-grid {
+    grid-template-columns: 1fr;
   }
 }
 
