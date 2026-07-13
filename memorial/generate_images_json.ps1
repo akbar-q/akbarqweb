@@ -1,13 +1,13 @@
 <#
-Generate images.json listing for the birthday page.
-Place this script inside the `birthday` folder and run it in PowerShell.
-It will scan the ./images folder (non-recursive), sort by LastWriteTime (chronological),
-and write `images.json` (an array of paths like "images/filename.jpg").
+Generate images.json listing for the memorial page.
+Place this script inside the `memorial` folder and run it in PowerShell.
+It scans the ./images folder (non-recursive), sorts by LastWriteTime (chronological),
+and writes `images.json` with full and thumbnail paths.
 #>
 
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $imagesDir = Join-Path $scriptDir 'images'
-$thumbDir = Join-Path $scriptDir 'thumbnails'
+$thumbDir = Join-Path $imagesDir 'thumbnails'
 $out = Join-Path $scriptDir 'images.json'
 
 if(-not (Test-Path $imagesDir)){
