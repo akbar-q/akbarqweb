@@ -460,10 +460,6 @@
         "thumb":  "thumbnails/IMG_20231103_220731_result.jpg"
     },
     {
-        "full":  "images/IMG_20231124_214105_result.jpg",
-        "thumb":  "thumbnails/IMG_20231124_214105_result.jpg"
-    },
-    {
         "full":  "images/IMG_20231214_151857_result.jpg",
         "thumb":  "thumbnails/IMG_20231214_151857_result.jpg"
     },
@@ -716,14 +712,6 @@
         "thumb":  "thumbnails/IMG_20250524_132558_result.jpg"
     },
     {
-        "full":  "images/IMG_20250524_133052_result.jpg",
-        "thumb":  "thumbnails/IMG_20250524_133052_result.jpg"
-    },
-    {
-        "full":  "images/IMG_20250524_135105_result.jpg",
-        "thumb":  "thumbnails/IMG_20250524_135105_result.jpg"
-    },
-    {
         "full":  "images/IMG_20250524_135722_result.jpg",
         "thumb":  "thumbnails/IMG_20250524_135722_result.jpg"
     },
@@ -790,10 +778,6 @@
     {
         "full":  "images/IMG-20230210-WA0001_result.jpg",
         "thumb":  "thumbnails/IMG-20230210-WA0001_result.jpg"
-    },
-    {
-        "full":  "images/IMG-20230218-WA0002_result.jpg",
-        "thumb":  "thumbnails/IMG-20230218-WA0002_result.jpg"
     },
     {
         "full":  "images/IMG-20230218-WA0028_result.jpg",
@@ -1380,12 +1364,12 @@
         "thumb":  "images/IMG_20251120_124440_1.jpg"
     },
     {
-        "full":  "images/IMG_20260827_181716.jpg",
-        "thumb":  "images/IMG_20260827_181716.jpg"
-    },
-    {
         "full":  "images/IMG_20260827_155833.jpg",
         "thumb":  "images/IMG_20260827_155833.jpg"
+    },
+    {
+        "full":  "images/IMG_20260827_181716.jpg",
+        "thumb":  "images/IMG_20260827_181716.jpg"
     },
     {
         "full":  "images/IMG_20260819_122106.jpg",
@@ -1398,5 +1382,13 @@
     {
         "full":  "images/IMG_20260729_112815.jpg",
         "thumb":  "images/IMG_20260729_112815.jpg"
+    },
+    {
+        "full":  "images/IMG_20231124_214105_result.jpg",
+        "thumb":  "thumbnails/IMG_20231124_214105_result.jpg"
+    },
+    {
+        "full":  "images/IMG-20230218-WA0002_result.jpg",
+        "thumb":  "thumbnails/IMG-20230218-WA0002_result.jpg"
     }
 ]
